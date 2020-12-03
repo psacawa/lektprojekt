@@ -11,7 +11,7 @@ logger.setLevel(logging.INFO)
 
 
 class Command(BaseCommand):
-    help = "Load a parallel corpus into the default database."
+    help = "Load some useful PostgreSQL views into the default database."
 
     def handle(self, *args, **options):
         logger.debug(options)
