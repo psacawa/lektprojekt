@@ -1,4 +1,5 @@
-"""LektProject Main URL Configuration
+"""
+LektProject Main URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.1/topics/http/urls/
@@ -15,7 +16,29 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.urls import include, re_path
+from django.conf import settings
+from allauth.account.views import EmailVerificationSentView, ConfirmEmailView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path(r"admin/", admin.site.urls),
+    path(r"api/", include("lekt.urls")),
+    path(r"auth/", include("dj_rest_auth.urls")),
+    path(r"auth/registration/", include("dj_rest_auth.registration.urls")),
+    re_path(
+        r"^auth/confirm-email/(?P<key>[-:\w]+)/$",
+        ConfirmEmailView.as_view(),
+        name="account_confirm_email",
+    ),
+    path(
+        "auth/confirm-email/",
+        EmailVerificationSentView.as_view(),
+        name="account_email_verification_sent",
+    ),
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        path("__debug__", include(debug_toolbar.urls)),
+    ] + urlpatterns
