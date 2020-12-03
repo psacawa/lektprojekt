@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
 
 from model_utils.managers import InheritanceManager
 from polymorphic.models import PolymorphicModel
@@ -406,21 +405,3 @@ class WordAnnotation(models.Model):
 
     def __repr__(self):
         return f"<WordAnnotation norm={self.word.norm} annot={self.annot.value}>"
-
-
-def createUserProfile(sender, **kwargs):
-    """Create a UserProfile object immediately about User creations"""
-    try:
-        user = kwargs["instance"]
-    except Exception as e:
-        logger.error(e)
-        raise e
-    try:
-        if kwargs["created"]:
-            user_profile = UserProfile(user=user)
-            user_profile.save()
-    except Exception as e:
-        logger.error(e)
-        raise e
-
-post_save.connect(createUserProfile, sender=User)
