@@ -11,12 +11,18 @@ from lekt import managers
 import logging
 logger = logging.getLogger(__name__)
 
-class TimestampMixin: 
+class TimestampedModel(models.Model): 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        abstract = True
+        # Any model that inherits from `TimestampedModel` should is ordered in 
+        #  reverse-chronological order. This can be overriden on a per-model basis 
+        ordering = ['-created_at', '-updated_at']
 
-class Language(models.Model, TimestampMixin):
+
+class Language(TimestampedModel, models.Model):
     """ Represent of a language. """
 
     id = models.AutoField(primary_key=True, db_column="lang_id")
@@ -36,7 +42,7 @@ class Language(models.Model, TimestampMixin):
         return self.name
 
 
-class Voice(models.Model, TimestampMixin):
+class Voice(TimestampedModel):
     """ Represents a particular language's accent: e.g. castellano spanish"""
 
     id = models.AutoField(primary_key=True, db_column="voice_id")
@@ -61,7 +67,7 @@ class Voice(models.Model, TimestampMixin):
         return self.name
 
 
-class Annotation(models.Model, TimestampMixin):
+class Annotation(TimestampedModel):
     """
     Key-value annotation showing grammatical data determined by NLP engine.
     """
@@ -98,7 +104,7 @@ class Annotation(models.Model, TimestampMixin):
         return f"{self.value}"
 
 
-class Word(models.Model, TimestampMixin):
+class Word(TimestampedModel):
     """
     This model stores the word as parsed by Spacy, including all NLP annotations.
     That includes part of speech and grammatical annotations
@@ -163,7 +169,7 @@ class Word(models.Model, TimestampMixin):
         return self.norm
 
 
-class Phrase(models.Model, TimestampMixin):
+class Phrase(TimestampedModel):
     """
     Represents a single phrase in a single language.
     """
@@ -206,7 +212,7 @@ class Phrase(models.Model, TimestampMixin):
         return self.text
 
 
-class PhrasePair(models.Model, TimestampMixin):
+class PhrasePair(TimestampedModel):
     """
     Represents a pair of phrases that are translations of one another. The attributes base
     and target should be understood in the send of base and target language. 
@@ -257,7 +263,7 @@ class PhrasePair(models.Model, TimestampMixin):
         return f"<{self.base.text} {self.target.text}>"
 
 
-class UserProfile(models.Model, TimestampMixin):
+class UserProfile(TimestampedModel):
     """ Proxy model for User. User profiles internal to Lekt application. In accordance
     with Django best practices, applications will leave the User model for auth purposes,
     and UserProfile will be used for application-specific purpses.""" 
@@ -274,7 +280,7 @@ class UserProfile(models.Model, TimestampMixin):
         return self.user.username
 
 
-class Subscription(models.Model, TimestampMixin):
+class Subscription(TimestampedModel):
     """
     Represents the configuration data for a single language pair tracked by a single user.
     A user may start learning with Spanish with the Castellano voice as the base
