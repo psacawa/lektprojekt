@@ -11,6 +11,10 @@ tags
 # Persistent undo
 [._]*.un~
 
+# coc.nvim
+.vim
+
+
 ### Python ###
 # pyenv
 .python-version

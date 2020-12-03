@@ -45,3 +45,6 @@ dmypy.json
 
 # profiling data
 .prof
+
+*.tmp
+assets
