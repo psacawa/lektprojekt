@@ -10,4 +10,5 @@ class LektConfig(AppConfig):
 
     def ready(self):
         logger.info(f"Application {self.name} ready.")
-        # attach signals
+        #  TODO 03/12/20 psacawa: start should blocked until a set of data migrations has
+        #  occurred
