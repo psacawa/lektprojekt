@@ -26,7 +26,7 @@ SECRET_KEY = 'dzif4vpy6wc-y3nmon9eexcgz39-*wq1ew)csp7*u18s8g)m#5'
 # the DEBUG variable is interpreted by django to turn on the server in development mode
 # DEVELOPMENT is an alias with a friendly name for the config
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = ENVIRONMENT == "development"
+DEBUG = (ENVIRONMENT == "development")
 DEVELOPMENT = DEBUG
 
 ALLOWED_HOSTS = ["lektprojekt.com", "127.0.0.1", "localhost"]
@@ -42,10 +42,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sites",
-
-    # developer convenience
-    "django_extensions",
-    "debug_toolbar",
 
     # REST API
     "rest_framework",
@@ -65,7 +61,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",

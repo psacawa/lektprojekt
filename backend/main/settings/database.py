@@ -5,7 +5,9 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "lektprojekt-db",
-        "USER": "lektprojekt_pg_user",
+        # In development mode a database superuser is used
+        # who can delete and recrete the database
+        "USER": "lektprojekt_pg_admin" if DEVELOPMENT else "lektprojekt_pg_user", 
         "PASSWORD": "pass",
         "HOST": "localhost",
     }
