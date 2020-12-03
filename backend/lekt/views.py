@@ -1,32 +1,16 @@
-import sys
 import logging
-import operator
+from operator import __or__
 from functools import reduce
-from typing import List
 
-from django.shortcuts import render
-from django.http import HttpResponse, Http404
 from django.utils.datastructures import MultiValueDictKeyError
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import User
 from django.db.models import Q, Count
-from django.conf import settings
-from rest_framework import mixins, generics, viewsets
-from rest_framework.viewsets import ModelViewSet
-from rest_framework import status
-from rest_framework import pagination
-from rest_framework.decorators import api_view
+from rest_framework import generics, viewsets
 from rest_framework.request import Request
-from rest_framework.response import Response
-from rest_framework.serializers import Serializer
-from rest_framework.views import APIView
-from rest_framework import status
 from rest_framework import permissions
 from rest_framework.exceptions import ParseError
 from rest_framework import filters
-from sqlalchemy import select, func
-from sqlalchemy.sql.schema import Table
-from aldjemy.core import Cache
 
 from . import serializers
 from .models import (
@@ -35,7 +19,6 @@ from .models import (
     TrackedItem,
     TrackedWord,
     TrackedAnnotation,
-    UserProfile,
     Language,
     Voice,
     Subscription,
@@ -346,13 +329,13 @@ class PhrasePairSuggestionView(generics.ListAPIView):
 
         twords = TrackedWord.objects.filter(subscription_id=subscription_id)
         twords_q = reduce(
-            operator.__or__,
+            __or__,
             [Q(target__words__id=tw.word_id) for tw in twords if tw.active],
             Q(),
         )
         tannots = TrackedAnnotation.objects.filter(subscription_id=subscription_id)
         tannots_q = reduce(
-            operator.__or__,
+            __or__,
             [
                 Q(target__words__annotations__id=ta.annotation_id)
                 for ta in tannots
@@ -367,7 +350,6 @@ class PhrasePairSuggestionView(generics.ListAPIView):
             return PhrasePair.objects.none()
         # generate Count of exact those types tracked items which are actually tracked
         if len(twords_q) > 0 and len(tannots_q) == 0:
-            #  tcount = Count("target__words", filter=twords_q)
             tcount = Count("target__words", filter=twords_q)
         else:
             tcount = Count("target__words__annotations", filter=tannots_q)
@@ -379,47 +361,8 @@ class PhrasePairSuggestionView(generics.ListAPIView):
             PhrasePair.objects.filter(
                 base__lang_id=sub.base_lang_id, target__lang_id=sub.target_lang_id
             )
-            .annotate(
-                score=
-                #  Count("target__words__annotations", filter=tannots_q) +
-                #  Count("target__words", filter=twords_q)
-                tcount
-            )
-            #  .filter(score__gt=0)
+            .annotate(score=tcount)
             .filter(target__words__in=tword_ids)
             .select_related("base", "target")
             .order_by("-score")
         )
-        #  pp =PhrasePair.objects.first()
-        #  pp.score = 234
-        #  return [pp]
-        return suggested_pairs
-
-
-def word_query_():
-    """This is just an example of how to query the DB using SQLAlchemy. Table attributes
-    are exactly as they appear in  """
-
-    tables = Cache.meta.tables
-    SAWord: Table = table["lekt_word"]
-    SAPhrase: Table = table["lekt_phrase"]
-    SAPhraseWord: Table = table["lekt_phrase_words"]
-    SALanguage = table["lekt_language"]
-    tp = SAPhrase.alias()
-    pw = SAPhraseWord.alias()
-    tw = SAPhrase.alias()
-    tl = SALanguage.alias()
-
-    sel = [tp.c.text]
-
-    q = (
-        select(sel)
-        .select_from(
-            tp.join(pw, pw.c.phrase_id == tp.c.phrase_id)
-            .join(tw, tw.c.word_id == pw.c.word_id)
-            .join(tl, tl.c.lang_id == tp.c.lang_id)
-        )
-        .where(tl.c.lid == "es")
-        .group_by(score.desc())
-        .limit(20)
-    )
