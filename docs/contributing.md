@@ -1,4 +1,4 @@
-We use the tags listed below when writing commit comments. 50 letters max, any more should be in the body of the commit message. Emoticons are not allowed in them. See `git log` for examples. This is a loose guideline.
+We use the tags listed below when writing commit comments. The commit header should be 50 letters max. Any more should be in the body of the commit message. If there is a commit body then end the header with `...` to indicate that. This is all for the purpose of enabling easy browsing with `git log --pretty=oneline`. See `git log` for examples. This is a loose guideline.
 
 - Add = Create a capability e.g. feature, test, dependency.
 - Remove = Remove a capability e.g. feature, test, dependency.
