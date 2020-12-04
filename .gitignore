@@ -19,3 +19,4 @@ tags
 # pyenv
 .python-version
 
+*.sqlite*
