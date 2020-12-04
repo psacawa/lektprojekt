@@ -22,9 +22,14 @@ pip install virtualenv
 virtualenv venv
 source venv/bin/activate
 
+# install dependencies
+cd backend
+pip install -r requirements.txt
+spacy download es_core_news_md
+spacy download en_core_web_md
+
 # load data
 aws s3 cp lektprojekt-assets/corpora/sd_phrases.csv asssets/
-cd backend
 python3 manage.py migrate
 python3 manage.py load_corpus assets/sd_phrases.csv --limit 1000
 
