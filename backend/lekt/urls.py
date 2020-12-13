@@ -17,4 +17,5 @@ urlpatterns += [
     path(r"select/", views.PhrasePairSuggestionView.as_view(), name="select"),
     path(r"words/", views.WordCompletionView.as_view(), name="word-completion"),
     path(r"phrases/", views.PhraseCompletionView.as_view(), name="phrase-completion"),
+    path(r"suggestion/", views.GimpedView.as_view(), name="suggestion"),
 ]

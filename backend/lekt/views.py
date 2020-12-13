@@ -6,10 +6,12 @@ from django.utils.datastructures import MultiValueDictKeyError
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import User
 from django.db.models import Q, Count
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework import generics, viewsets
 from rest_framework.request import Request
 from rest_framework import permissions
-from rest_framework.exceptions import ParseError
+from rest_framework.exceptions import ParseError, ValidationError
 from rest_framework import filters
 
 from . import serializers
@@ -176,8 +178,8 @@ class PhrasePairMixin(object):
 
 
 class PhrasePairListView(generics.ListAPIView):
-    """ 
-    List phrase pairs from a language, to a language, containing target word. 
+    """
+    List phrase pairs from a language, to a language, containing target word.
 
     base: Understands lid
     target: Understands lid
@@ -304,8 +306,47 @@ class TrackedWordViewSet(viewsets.ModelViewSet):
             return serializers.TrackedWordPostSerializer
 
 
+@method_decorator(cache_page(60 * 60), name="dispatch")
+class GimpedView(generics.ListAPIView):
+    """
+    This endpoint just shows phrase pairs for a give language pair such
+    that the target language phrase contains a particular word.
+    E.g. /api/suggestion?base=en&target=es&word=perro
+    """
+
+    serializer_class = serializers.PhrasePairSerializer
+
+    def get_queryset(self):
+        try:
+            base_lid = self.request.query_params["base"]
+        except Exception as e:
+            raise ValidationError(
+                detail="View didn't receive required query param base"
+            )
+
+        try:
+            target_lid = self.request.query_params["target"]
+        except Exception as e:
+            raise ValidationError(
+                detail="View didn't receive required query param target"
+            )
+
+        try:
+            word = self.request.query_params["word"]
+        except Exception as e:
+            raise ValidationError(
+                detail="View didn't receive required query param word"
+            )
+
+        return PhrasePair.objects.filter(
+            base__lang__lid=base_lid,
+            target__lang__lid=target_lid,
+            target__words__norm=word,
+        )
+
+
 class PhrasePairSuggestionView(generics.ListAPIView):
-    """ 
+    """
     Viewset yielding phrase pairs suggested for a given subscription ordered by score.
     """
 
