@@ -9,12 +9,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-from os.path import join, abspath, dirname
-from os import environ
+from os.path import join, abspath, dirname, isdir
+from os import environ, mkdir
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = "/".join(abspath(__file__).split("/")[:-3])
 ASSET_DIR = join(BASE_DIR, "assets")
+LOGS_DIR = join(BASE_DIR, "logs")
+if not isdir(LOGS_DIR):
+    mkdir(LOGS_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
