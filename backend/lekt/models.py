@@ -106,6 +106,39 @@ class Voice(TimestampedModel):
         return self.name
 
 
+class Corpus(TimestampedModel, models.Model):
+    """
+    Model representing source of phrases.
+
+    These exist in a one-to-many relationship with :model:`lekt.PhrasePair` models.
+    """
+
+    name = models.CharField(
+        max_length=100, unique=True, verbose_name="Parallel corpus name"
+    )
+    domain = models.CharField(
+        max_length=100,
+        blank=True,
+        help_text="""Domain of data
+            source, in case of scraping""",
+    )
+    languages = models.ManyToManyField(
+        Language,
+        help_text="""Two languages associated with
+            the corpus""",
+    )
+
+    def remove(self):
+        self.phrasepair_set.all().delete()
+        #  TODO 09/12/20 psacawa: finish this
+
+    def __repr__(self):
+        return f"<Corpus source={self.name} domain={self.domain}>"
+
+    def __str__(self):
+        return self.name
+
+
 class Annotation(TimestampedModel):
     """
     Model representing **annotation** indicating grammatical data determined by NLP engine.
@@ -324,29 +357,29 @@ class PhrasePair(TimestampedModel):
     """
 
     id = models.AutoField(primary_key=True, db_column="phrasepair_id")
+    # because dererred constraints don't work in 
+    #  TODO 15/12/20 psacawa: find out why transaction.atomic() doesn't work
     base = models.OneToOneField(
         Phrase,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True,
         related_name="pair_from",
         verbose_name="Base language phrase",
     )
     target = models.OneToOneField(
         Phrase,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True,
         related_name="pair_to",
         verbose_name="Target language phrase",
     )
 
-    SOURCE_CHOICES = [
-        ("SD", "www.spanishdict.com"),
-        ("GPT3-en-es", "OpenAI GPT3 en-es"),
-    ]
-    source = models.CharField(
-        max_length=10,
-        choices=SOURCE_CHOICES,
+    source = models.ForeignKey(
+        Corpus,
         verbose_name="Source of the data",
-        help_text="""This is one element of a discrete set of sources of examples which 
+        help_text="""This is one of a set of sources of examples which 
         are added and tracked manually by administrators.""",
+        on_delete=models.PROTECT,
     )
 
     active = models.BooleanField(
@@ -522,7 +555,7 @@ class TrackedWord(TrackedItem):
 
 class PhraseWord(models.Model):
     """
-    Phrase to Word many-to-many bridge with the additional data of the ordering in which 
+    Phrase to Word many-to-many bridge with the additional data of the ordering in which
     the words appear in the phrase.
     """
 

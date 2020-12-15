@@ -1,132 +1,137 @@
 from collections import namedtuple
-from django.db import IntegrityError
+import pandas as pd
+import json
+import logging
 from math import sqrt
 from os.path import join
-from progress.bar import Bar
-from spacy.tokens.doc import Doc
-import logging
-import pandas as pd
-import spacy
+import sqlite3
 import sys
-import gc
-import json
-from django.conf import settings
-from django.db import transaction
-from .language import LanguageParser
-from lekt import models
+from typing import List
 
+from django.conf import settings
+from django.db import IntegrityError, connection, transaction
+
+from lekt import models
+from lekt.models import Corpus, Language, Phrase, Word, PhrasePair
+from progress.bar import Bar
+from lekt.loaders.language import EnglishParser, SpanishParser, LanguageParser
 
 logger: logging.Logger = logging.getLogger(__name__)
-logger.setLevel(logging.CRITICAL)
+logger.addHandler(logging.StreamHandler(sys.stdout))
 
 ValidationData = namedtuple("ValidationData", ["length", "propriety"])
 
+default_parsers = {
+    "en": EnglishParser,
+    "es": SpanishParser,
+}
 
-class SpacyCorpusLoader(object):
-    """ 
-    This class serves to load a specfic corpus, as represented by a flat csv file
-    and performs the NLP to enter it into the database. Some decoupling possible to
-    separate ETL. It may be necessary later to refactor to inheritance strategy a la
-    Django views.
-    Notions of 'base', 'target' within the variable names of this models are strictly
-    a matter of convention. Their is no intrinsic directionality to the parallel 
-    corpora used as input.
-    Intended use:
 
-    migrations.RunPython (
-        SpacyCorpusLoader (
-            *args
+class CorpusManager(object):
+
+    parsers: List[LanguageParser]
+
+    def __init__(self, corpus, *args, **kwargs):
+        self.corpus = corpus
+        self.connection = sqlite3.connect(f"file:{corpus}?mode=ro", uri=True)
+        self.lids = self.connection.execute("select lang1, lang2 from meta").fetchone()
+        self.langs = [Language.objects.get(lid=lid) for lid in self.lids]
+        self.name = self.connection.execute("select name from meta").fetchone()[0]
+        self.domain = self.connection.execute("select domain from meta").fetchone()[0]
+        self.init_corpus()
+        self.init_parsers()
+
+    def init_corpus(self):
+        self.corpus, self.created = Corpus.objects.get_or_create(
+            name=self.name, domain=self.domain
         )
-    ) 
-    """
+        if self.created:
+            self.corpus.languages.add(*self.langs)
 
-    def __init__(self, parallel_corpus, **kwargs):
-        """
-        `parallel_corpus` must be a flat file of examples to read from. This file must 
-        have indices and column names. Constructor will verify that base/target `lid`s  
-        correspond to the column name of the first/second columns respectively.
+    def init_parsers(self):
+        """Set the parsers(pipelines) involved"""
+        self.parsers = [default_parsers.get(lid, LanguageParser)() for lid in self.lids]
 
-        :parallel_corpus: e.g. sd_examples.csv
-        :base_lid: e.g. 'en'
-        :base_model: e.g. en_core_web_md
-        :target_lid: e.g. 'en'
-        :target_model: e.g. 'es_core_news_md'
-        """
-        self.parallel_corpus = parallel_corpus
+    def remove(self):
+        """Delete existing PhrasePairs/Phrases asssociated with the corpus"""
+        Phrase.objects.filter(pair_from__source=self.corpus).delete()
+        PhrasePair.objects.filter(source=self.corpus).delete()
 
-        Base = kwargs.pop("base", lambda: None)
-        Target = kwargs.pop("target", lambda: None)
-        self.base_loader = Base()
-        self.target_loader = Target()
-
-        self.base_lid = self.base_loader.lid
-        self.target_lid = self.target_loader.lid
-
-        try:
-            self.df: pd.DataFrame = pd.read_csv(self.parallel_corpus, index_col=0)
-        except Exception as e:
-            logger.error(f"Unable to read SD data from {self.parallel_corpus}.")
-            raise
-
-    def __call__(self, limit=None):
+    def load(self, reload=False, limit=None):
         """
         This is the entrypoint to the migration as called by RunPython
         """
-        if isinstance(limit, int):
-            df = self.df[:limit]
-        else:
-            df = self.df
 
-        progress: Bar = Bar(f"Processing parallel corpus", max=len(df))
-        for i, s in df.iterrows():
-            self.process_pair(s)
+        if not self.created and reload:
+            self.remove()
+        elif not self.created:
+            print(
+                f"Corpus {self.name} already present in database. Send --reload to reload from scratch"
+            )
+            sys.exit()
+
+        select_cmd = "select * from phrases"
+        if isinstance(limit, int):
+            select_cmd += f" limit {limit}"
+        else:
+            limit = self.connection.execute("select count(*) from phrases").fetchone()[
+                0
+            ]
+
+        progress: Bar = Bar(f"Processing parallel corpus", max=limit)
+        for record in self.connection.execute(select_cmd):
+            self.process_phrasepair(record[1], record[2])
             progress.next()
+
         progress.finish()
 
-        #  self.base_loader.compute_occurences()
-        #  self.target_loader.compute_occurences()
+    def create_corpus(self):
+        """Add corpus model to database."""
+        corpus: Corpus = Corpus.objects.create(name=self.name, domain=self.domain)
+        corpus.languages.add(Language.objects.filter(lid__in=self.langs))
+        return corpus
 
-    def process_pair(self, pair: pd.Series):
-        """ Process an example pair, represented in the format of a pandas Series """
-        base_raw = pair[self.base_lid]
-        target_raw = pair[self.target_lid]
+    def process_phrasepair(self, *phrase_texts):
+        assert len(phrase_texts) == 2, "Phrase pair must have two elements"
+        logger.debug(phrase_texts)
+        phrases = []
+        for i, text in enumerate(phrase_texts):
+            phrases.append(self.parsers[i].process_phrase(text=text))
 
-        try:
-            base_phrase = self.base_loader.process_phrase(base_raw)
-            target_phrase = self.target_loader.process_phrase(target_raw)
-        except IntegrityError as e:
-            # TODO: this should complain when a oari is repeated, but how would the lang
-            #  loaders in principle know about that
-            #  ipdb.set_trace ()
-            logger.error(f"{e}")
-            return
-
-        active = self.valid_phrase_pair(base_phrase, target_phrase)
-
-        forward_pair = models.PhrasePair.objects.create(
-            base=base_phrase, target=target_phrase, source="SD", active=active
+        active = self.valid_phrase_pair(*phrases)
+        PhrasePair.objects.bulk_create(
+            [
+                PhrasePair(
+                    base=phrases[0],
+                    target=phrases[1],
+                    source=self.corpus,
+                    active=active,
+                ),
+                PhrasePair(
+                    base=phrases[1],
+                    target=phrases[0],
+                    source=self.corpus,
+                    active=active,
+                ),
+            ]
         )
-        backward_pair = models.PhrasePair.objects.create(
-            base=target_phrase, target=base_phrase, source="SD", active=active
-        )
 
-    def valid_phrase_pair(self, base_phrase, target_phrase) -> bool:
+    def valid_phrase_pair(self, *phrases) -> bool:
         """
         Validates a phrase pair for suitability for active inclusion in the database.
         Invalid pairs are still included, but with 'active' attribute False.
         """
-        #  base_data = self.get_validation_data(self.base_nlp(base_phrase.text))
-        #  target_data = self.get_validation_data(self.target_nlp(target_phrase.text))
-        base_data = base_phrase.validation_data
-        target_data = target_phrase.validation_data
-        l2_prop = sqrt(base_data.propriety ** 2 + target_data.propriety ** 2)
-        avg_len = (base_data.length + target_data.length) / 2
+        validation_data = [phrase.validation_data for phrase in phrases]
+        l2_prop = sqrt(
+            validation_data[0].propriety ** 2 + validation_data[1].propriety ** 2
+        )
+        avg_len = (validation_data[0].length + validation_data[1].length) / 2
 
         #  arbitrary criterion
         valid = l2_prop < 0.4 and avg_len >= 4
         if not valid:
             logger.debug(
-                f"Found invalid phrase pair: {base_phrase.text} {target_phrase.text}"
+                f"Found invalid phrase pair: {phrases[0].text} {phrases[1].text}"
             )
 
         return valid
