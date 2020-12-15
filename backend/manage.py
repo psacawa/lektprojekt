@@ -3,6 +3,8 @@
 import os
 import sys
 
+#  adding this import causes tracebacks to be rendered in colour
+import colored_traceback.auto
 
 def main():
     """Run administrative tasks."""
