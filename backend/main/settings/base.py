@@ -23,13 +23,13 @@ if not isdir(LOGS_DIR):
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'dzif4vpy6wc-y3nmon9eexcgz39-*wq1ew)csp7*u18s8g)m#5'
+SECRET_KEY = "dzif4vpy6wc-y3nmon9eexcgz39-*wq1ew)csp7*u18s8g)m#5"
 
 
 # the DEBUG variable is interpreted by django to turn on the server in development mode
 # DEVELOPMENT is an alias with a friendly name for the config
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = (ENVIRONMENT == "development")
+DEBUG = ENVIRONMENT == "development"
 DEVELOPMENT = DEBUG
 
 ALLOWED_HOSTS = ["lektprojekt.com", "127.0.0.1", "localhost"]
@@ -46,12 +46,10 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
     "django.contrib.admindocs",
-
     # REST API
     "rest_framework",
     "rest_framework.authtoken",
     "django_filters",
-
     # accounts
     "allauth",
     "allauth.account",
@@ -59,7 +57,6 @@ INSTALLED_APPS = [
     "dj_rest_auth",
     "dj_rest_auth.registration",
     "drf_yasg",
-
     # applications
     "lekt",
     "main",

@@ -21,10 +21,8 @@ from django.conf import settings
 from allauth.account.views import EmailVerificationSentView, ConfirmEmailView
 
 urlpatterns = [
-
-    path(r'admin/doc/', include('django.contrib.admindocs.urls')),
+    path(r"admin/doc/", include("django.contrib.admindocs.urls")),
     path(r"admin/", admin.site.urls),
-
     path(r"api/", include("lekt.urls")),
     path(r"auth/", include("dj_rest_auth.urls")),
     path(r"auth/registration/", include("dj_rest_auth.registration.urls")),
@@ -42,6 +40,7 @@ urlpatterns = [
 
 if settings.DEBUG:
     import debug_toolbar
+
     urlpatterns = [
         path("__debug__", include(debug_toolbar.urls)),
     ] + urlpatterns

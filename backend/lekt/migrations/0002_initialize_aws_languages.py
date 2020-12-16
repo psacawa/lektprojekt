@@ -3,6 +3,7 @@ from django.db.migrations import RunPython
 
 from lekt.loaders.loaders import PollyLoader
 
+
 def forwards(apps, schema_editor):
     """Load languages, voices, and assign defaults."""
     polly_loader = PollyLoader(apps)

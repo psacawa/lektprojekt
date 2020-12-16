@@ -4,7 +4,9 @@ from django.contrib.auth.models import User
 from .models import UserProfile
 
 import logging
+
 logger = logging.getLogger(__name__)
+
 
 @receiver(post_save, sender=User)
 def createUserProfile(sender, created: bool, instance: User, **kwargs):

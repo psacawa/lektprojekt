@@ -44,6 +44,8 @@ Here we list *most* technologies/libraries used, with an emphasis on the clarify
 
 - **spacy** - natural language processing library
 - **poetry** - rought npm for python, supports separation of prod/dev dependencies, deterministic builds
+- **pre-commit** - manage pre-commit hooks: `pre-commit install` to install
+- **black** - opinionated code formatter
 - **pip** - package management
 
 ## Frontend

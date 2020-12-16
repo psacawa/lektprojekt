@@ -357,7 +357,7 @@ class PhrasePair(TimestampedModel):
     """
 
     id = models.AutoField(primary_key=True, db_column="phrasepair_id")
-    # because dererred constraints don't work in 
+    # because dererred constraints don't work in
     #  TODO 15/12/20 psacawa: find out why transaction.atomic() doesn't work
     base = models.OneToOneField(
         Phrase,

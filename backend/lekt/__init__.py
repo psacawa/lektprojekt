@@ -1,1 +1,1 @@
-default_app_config = 'lekt.apps.LektConfig' 
+default_app_config = "lekt.apps.LektConfig"

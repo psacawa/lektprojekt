@@ -161,7 +161,7 @@ class APITests(AccountCreator, JqTestCase):
 
 
 class FrontendViewTests(AccountCreator, TestCase):
-    """ 
+    """
     Test frontend views.
     fixtures = ["test_data_1000.json"]
     """

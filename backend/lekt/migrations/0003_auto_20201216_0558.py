@@ -7,19 +7,23 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('lekt', '0002_initialize_aws_languages'),
+        ("lekt", "0002_initialize_aws_languages"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='trackeditem',
-            name='created_at',
-            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now, verbose_name='time of creation'),
+            model_name="trackeditem",
+            name="created_at",
+            field=models.DateTimeField(
+                auto_now_add=True,
+                default=django.utils.timezone.now,
+                verbose_name="time of creation",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='trackeditem',
-            name='updated_at',
-            field=models.DateTimeField(auto_now=True, verbose_name='time of update'),
+            model_name="trackeditem",
+            name="updated_at",
+            field=models.DateTimeField(auto_now=True, verbose_name="time of update"),
         ),
     ]

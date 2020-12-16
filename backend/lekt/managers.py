@@ -27,9 +27,9 @@ class LektQuerySet(models.QuerySet):
 
 
 class PhrasePairQuerySet(LektManager):
-    """ 
-    QuerySet/Manager for a particular base/target language, 
-    which is specified as a parameter to the constructor.   
+    """
+    QuerySet/Manager for a particular base/target language,
+    which is specified as a parameter to the constructor.
 
     base_lid = the manager will return pairs from this langauge's lid
     target_lid = the manager will return pairs to this langauge's lid

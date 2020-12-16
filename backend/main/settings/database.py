@@ -7,7 +7,7 @@ DATABASES = {
         "NAME": "lektprojekt-db",
         # In development mode a database superuser is used
         # who can delete and recrete the database
-        "USER": "lektprojekt_pg_admin" if DEVELOPMENT else "lektprojekt_pg_user", 
+        "USER": "lektprojekt_pg_admin" if DEVELOPMENT else "lektprojekt_pg_user",
         "PASSWORD": "django-pass",
         "HOST": "localhost",
     }
