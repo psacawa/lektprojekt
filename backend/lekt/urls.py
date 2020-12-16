@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
+from django.conf import settings
 
 from . import views
 
@@ -19,3 +20,8 @@ urlpatterns += [
     path(r"phrases/", views.PhraseCompletionView.as_view(), name="phrase-completion"),
     path(r"suggestion/", views.GimpedView.as_view(), name="suggestion"),
 ]
+
+if settings.DEBUG:
+    urlpatterns.append(
+        path(r"docs/", views.docs_schema_view.with_ui("redoc"), name="schema-redoc")
+    )

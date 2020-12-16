@@ -26,7 +26,7 @@ class TimestampedModel(models.Model):
         ordering = ["-created_at", "-updated_at"]
 
 
-class Language(TimestampedModel, models.Model):
+class Language(TimestampedModel):
     """
     Model representing an indvidual **language**.
     """
@@ -106,7 +106,7 @@ class Voice(TimestampedModel):
         return self.name
 
 
-class Corpus(TimestampedModel, models.Model):
+class Corpus(TimestampedModel):
     """
     Model representing source of phrases.
 
@@ -494,7 +494,7 @@ class Subscription(TimestampedModel):
         return f"({self.owner}: {self.base_lang.lid}, {self.target_lang.lid})"
 
 
-class TrackedItem(PolymorphicModel):
+class TrackedItem(PolymorphicModel, TimestampedModel):
     """
     Base class for items that a user may be presently tracking.
     Derived classes include TrackedAnnotation and TrackedWord.
