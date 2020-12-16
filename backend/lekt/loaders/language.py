@@ -10,8 +10,7 @@ from typing import Tuple
 import logging
 import re
 import spacy
-from lekt import models
-from lekt.models import Word, Phrase, Language, Annotation, PhraseWord
+from lekt.models import Lexeme, Word, Phrase, Language, Annotation, PhraseWord, Language
 from string import Template
 import importlib
 
@@ -57,7 +56,7 @@ class LanguageParser(object):
         logger.debug(f"Selected model {self.modelname}")
         logger.debug("Obtaining Language")
         try:
-            self.lang = models.Language.objects.get(lid=self.lid)
+            self.lang = Language.objects.get(lid=self.lid)
         except IntegrityError as e:
             logger.error("Languages {self.lid} not created yet.")
             raise
@@ -71,7 +70,7 @@ class LanguageParser(object):
 
     def process_phrase(self, text: str) -> Tuple[Model, ValidationData]:
         with transaction.atomic():
-            phrase = models.Phrase.objects.create(text=text, lang=self.lang)
+            phrase = Phrase.objects.create(text=text, lang=self.lang)
             doc = self.nlp(text)
             validation_data = self.get_validation_data(doc)
             cur_phrase_words = []
@@ -97,10 +96,19 @@ class LanguageParser(object):
                 lemma = lemma.lower()
 
                 try:
-                    cur_word = self.get_word(
+                    cur_lexeme = self.get_lexeme(
                         lemma=lemma,
-                        norm=norm,
                         pos=pos,
+                    )
+                except MultipleObjectsReturned as e:
+                    logger.error(
+                        "Lexeme get_or create returned multiple objects on {lemma}, {pos}"
+                    )
+
+                try:
+                    cur_word = self.get_word(
+                        lexeme=cur_lexeme,
+                        norm=norm,
                         tag=tag,
                         ent_type=ent_type,
                         is_oov=is_oov,
@@ -108,8 +116,8 @@ class LanguageParser(object):
                     )
                 except MultipleObjectsReturned as e:
                     logger.error(
-                        f"Word get_or create returned multiple objects "
-                        "on {lemma},{norm},{pos}, {tag} "
+                        "Word get_or create returned multiple objects "
+                        f"on {lemma},{norm},{pos}, {tag} "
                     )
 
                 # this is an ad hoc means to determine if the word hase been processed before
@@ -148,18 +156,16 @@ class LanguageParser(object):
     @functools.lru_cache(maxsize=2 ** 17)
     def get_word(
         self,
-        lemma=None,
+        lexeme=None,
         norm=None,
-        pos=None,
         tag=None,
         ent_type=None,
         is_oov=None,
         is_stop=None,
     ):
-        cur_word, word_created = models.Word.objects.get_or_create(
-            lemma=lemma,
+        cur_word, word_created = Word.objects.get_or_create(
+            lexeme=lexeme,
             norm=norm,
-            pos=pos,
             tag=tag,
             ent_type=ent_type,
             is_oov=is_oov,
@@ -169,6 +175,19 @@ class LanguageParser(object):
         cur_word.word_created = word_created
         return cur_word
 
+    @functools.lru_cache(maxsize=2 ** 17)
+    def get_lexeme(
+        self,
+        lemma=None,
+        pos=None,
+    ):
+        cur_lexeme, lexeme_created = Lexeme.objects.get_or_create(
+            lemma=lemma,
+            pos=pos,
+        )
+        cur_lexeme.lexeme_created = lexeme_created
+        return cur_lexeme
+
     @functools.lru_cache()
     def get_annotation(self, **kwargs):
         """
@@ -177,7 +196,7 @@ class LanguageParser(object):
         """
         value = kwargs.pop("value")
         lang = kwargs.pop("lang")
-        annot, annot_created = models.Annotation.objects.get_or_create(
+        annot, annot_created = Annotation.objects.get_or_create(
             value=value, lang=self.lang
         )
         if annot_created:
@@ -208,9 +227,9 @@ class LanguageParser(object):
         #  count, as opposed to computing the whole corpus word count
         progress: Bar = Bar(
             f"Computing counts of {self.lang.name} words",
-            max=models.Word.objects.count(),
+            max=Word.objects.count(),
         )
-        for w in models.Word.objects.filter(lang__lid=self.lid):
+        for w in Word.objects.filter(lang__lid=self.lid):
             # FIXME: This query is wrong. It does not account for a word appearing in a
             #  phrase multiple times, and therefore undercounts significantly
             w.corpus_occurences += w.phrase_set.filter(pair_from__source="SD").count()
