@@ -12,6 +12,8 @@ import re
 import spacy
 from lekt import models
 from lekt.models import Word, Phrase, Language, Annotation, PhraseWord
+from string import Template
+import importlib
 
 ValidationData = namedtuple("ValidationData", ["length", "propriety"])
 logger = logging.getLogger(__name__)
@@ -25,12 +27,34 @@ class LanguageParser(object):
     NLP model, django model, etc.
     Created django models of the class `Word` and `Annotation` are cached
     for faster parsing.
+
+    Example usage:
+    # fails if es_core_news_lg is absent
+    SpanishParser(size='lg')
+    # uses es_core_news_lg/md/sm in that order of preference, fails if absent
+    SpanishParser()
+    # uses 'mymodel', fails if absent
+    SpanishParser(model='mymodel')
     """
 
-    def __init__(self):
-        if not hasattr(self, "lid"):
-            self.lid = lid
+    lid: str
+    modelname: str
+    modelname_template: Template
 
+    def __init__(self, size=None, modelname=None, **kwargs):
+        if modelname is not None:
+            self.modelname = modelname
+        elif size is not None:
+            self.modelname = self.modelname_template.substitute(size=size)
+        else:
+            for size in ["lg", "md", "sm"]:
+                candidate_modelname = self.modelname_template.substitute(
+                    lid=self.lid, size=size
+                )
+                if importlib.util.find_spec(candidate_modelname):
+                    self.modelname = candidate_modelname
+                    break
+        logger.debug(f"Selected model {self.modelname}")
         logger.debug("Obtaining Language")
         try:
             self.lang = models.Language.objects.get(lid=self.lid)
@@ -39,11 +63,11 @@ class LanguageParser(object):
             raise
 
         try:
-            logger.info(f"Loading {self.lid} language model '{self.nlp_modelname}'.")
-            self.nlp = spacy.load(self.nlp_modelname)
+            logger.info(f"Loading {self.lid} language model '{self.modelname}'.")
+            self.nlp = spacy.load(self.modelname)
         except OSError as e:
-            logger.error(f"Unable to read NLP model {self.nlp_modelname}.")
-            raise NLPModelLoadError(f"Unable to read NLP model {self.nlp_modelname}.")
+            logger.error(f"Unable to read NLP model {self.modelname}.")
+            raise NLPModelLoadError(f"Unable to read NLP model {self.modelname}.")
 
     def process_phrase(self, text: str) -> Tuple[Model, ValidationData]:
         with transaction.atomic():
@@ -81,7 +105,6 @@ class LanguageParser(object):
                         ent_type=ent_type,
                         is_oov=is_oov,
                         is_stop=is_stop,
-                        lang=self.lang,
                     )
                 except MultipleObjectsReturned as e:
                     logger.error(
@@ -123,14 +146,16 @@ class LanguageParser(object):
 
     # this is perhaps the maximum permissible
     @functools.lru_cache(maxsize=2 ** 17)
-    def get_word(self, **kwargs):
-        lemma = kwargs.pop("lemma")
-        norm = kwargs.pop("norm")
-        pos = kwargs.pop("pos")
-        tag = kwargs.pop("tag")
-        ent_type = kwargs.pop("ent_type")
-        is_oov = kwargs.pop("is_oov")
-        is_stop = kwargs.pop("is_stop")
+    def get_word(
+        self,
+        lemma=None,
+        norm=None,
+        pos=None,
+        tag=None,
+        ent_type=None,
+        is_oov=None,
+        is_stop=None,
+    ):
         cur_word, word_created = models.Word.objects.get_or_create(
             lemma=lemma,
             norm=norm,
@@ -205,17 +230,17 @@ class LanguageParser(object):
 class SpanishParser(LanguageParser):
     """Subclass for parsing with the family of models es-core-news-XX."""
 
+    modelname_template = Template("${lid}_core_news_${size}")
     lid = "es"
-    nlp_modelname = "es_core_news_md"
 
     def parse_annotations(self, tag: str):
         """
-        "VERB__Mood=Sub|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin" -> 
+        "VERB__Mood=Sub|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin" ->
         [Mood=Sub, Number=Sing, Person=3, Tense=Pres, VerbForm=Fin]
         """
         # TODO : deal with '_SP'
         annots = re.split(r"__", tag)
-        if len(annots) == 2  and len(annots[1]) > 0:
+        if len(annots) == 2 and len(annots[1]) > 0:
             return annots[1].split("|")
         else:
             return []
@@ -228,11 +253,11 @@ class SpanishParser(LanguageParser):
 class EnglishParser(LanguageParser):
     """Subclass for parsing with the family of models en-core-web-XX."""
 
+    modelname_template = Template("${lid}_core_web_${size}")
     lid = "en"
-    nlp_modelname = "en_core_web_md"
 
     def parse_annotations(self, tag: str):
-        """ 
+        """
         For `en_core_web_md` , the Token.tag_ attribute contains the morphological data,
         so we return it
         """
@@ -241,5 +266,6 @@ class EnglishParser(LanguageParser):
     def explain_annotation(self, tag: str):
         return spacy.explain(tag)
 
-class  NLPModelLoadError(Exception): 
+
+class NLPModelLoadError(Exception):
     pass
