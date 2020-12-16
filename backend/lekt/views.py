@@ -362,32 +362,34 @@ class GimpedView(generics.ListAPIView):
     serializer_class = serializers.PhrasePairSerializer
 
     def get_queryset(self):
+        query_params = self.request.query_params
         try:
-            base_lid = self.request.query_params["base"]
+            base_lid = query_params["base"]
         except Exception as e:
             raise ValidationError(
                 detail="View didn't receive required query param base"
             )
 
         try:
-            target_lid = self.request.query_params["target"]
+            target_lid = query_params["target"]
         except Exception as e:
             raise ValidationError(
                 detail="View didn't receive required query param target"
             )
 
-        try:
-            word = self.request.query_params["word"]
-        except Exception as e:
-            raise ValidationError(
-                detail="View didn't receive required query param word"
-            )
-
-        return PhrasePair.objects.filter(
-            base__lang__lid=base_lid,
-            target__lang__lid=target_lid,
-            target__words__norm=word,
+        queryset = PhrasePair.objects.filter(
+            base__lang__lid=base_lid, target__lang__lid=target_lid
         )
+
+        if "lexeme" in query_params:
+            lexeme = self.request.query_params["lexeme"]
+            queryset = queryset.filter(target__words__lexeme=lexeme)
+
+        if "annot" in query_params:
+            annotation = int(self.request.query_params["annot"])
+            queryset = queryset.filter(target__words__annotations=annotation)
+
+        return queryset
 
 
 class PhrasePairSuggestionView(generics.ListAPIView):
