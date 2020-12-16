@@ -191,6 +191,36 @@ class Annotation(TimestampedModel):
         return f"{self.value}"
 
 
+class Lexeme(TimestampedModel):
+    """
+    This model represents lexemes in the linguistic sense. It's an approximation though:
+    these Lexemes only include the lemmatized form of the word and the part of speech.
+
+    These objects exist in one-to-many relationship with :model:`lekt.Word`
+    and :model:`lekt.Annotation` objects.
+    """
+
+    id = models.AutoField(primary_key=True, db_column="lexeme_id")
+    lemma = models.CharField(
+        max_length=50,
+        verbose_name="Token lemma",
+        help_text="""the "base" form of the word, computed as Token.lemma_.lower(), 
+        e.g. "hablar" """,
+    )
+    pos = models.CharField(
+        max_length=50, verbose_name="Part of speech", help_text="computed as Token.pos_"
+    )
+
+    class Meta:
+        unique_together = ["lemma", "pos"]
+
+    def __repr__(self):
+        return f"<Lexeme lemma={self.lemma} pos={self.pos}>"
+
+    def __str__(self):
+        return f"<{self.lemma} {self.pos}>"
+
+
 class Word(TimestampedModel):
     """
     This model stores the word as parsed by Spacy, including all NLP annotations.
@@ -204,19 +234,13 @@ class Word(TimestampedModel):
     """
 
     id = models.AutoField(primary_key=True, db_column="word_id")
+    lexeme = models.ForeignKey(
+        Lexeme, on_delete=models.PROTECT, verbose_name="Lexeme Id"
+    )
     norm = models.CharField(
         max_length=50,
         verbose_name="Normal form",
         help_text='the raw text of the token, computed as Token.norm_, e.g. "hablara"',
-    )
-    lemma = models.CharField(
-        max_length=50,
-        verbose_name="Token lemma",
-        help_text="""the "base" form of the word, computed as Token.lemma_.lower(), 
-        e.g. "hablar" """,
-    )
-    pos = models.CharField(
-        max_length=50, verbose_name="Part of speech", help_text="computed as Token.pos_"
     )
     tag = models.CharField(
         max_length=200,
@@ -263,8 +287,7 @@ class Word(TimestampedModel):
         # there remain question about what a 'word' is in our modelling
         unique_together = (
             "norm",
-            "lemma",
-            "pos",
+            "lexeme",
             "tag",
             "ent_type",
             "is_oov",
@@ -276,7 +299,9 @@ class Word(TimestampedModel):
         #  ordering = ['lemma']
 
     def __repr__(self):
-        return f"<Word text={self.norm},{self.lemma},{self.pos},{self.tag}>"
+        return (
+            f"<Word text={self.norm},{self.lexeme.lemma},{self.lexeme.pos},{self.tag}>"
+        )
 
     def __str__(self):
         return self.norm
