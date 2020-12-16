@@ -19,12 +19,14 @@ from drf_yasg import openapi
 
 from . import serializers
 from .models import (
+    Annotation,
     Word,
     Phrase,
     TrackedItem,
     TrackedWord,
     TrackedAnnotation,
     Language,
+    Lexeme,
     Voice,
     Subscription,
     PhrasePair,
@@ -101,6 +103,46 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
         return user.userprofile.subscription_set.all()
 
 
+class LexemeCompletionView(generics.ListAPIView):
+    serializer_class = serializers.LexemeSerializer
+
+    def get_queryset(self):
+        query_params = self.request.query_params
+        logger.debug(f"In {self.__class__.__name__} with params {query_params}")
+        try:
+            prompt: str = query_params["prompt"]
+        except MultiValueDictKeyError as e:
+            logger.error(f"Bad request in {self.__class__.__name__}")
+            raise ParseError
+
+        return_queryset = Lexeme.objects.filter(lemma__startswith=prompt)
+        if "lid" in query_params:
+            lid: str = query_params["lid"]
+            logger.debug(f"'lid' query_param observed: {lid}")
+            return_queryset = return_queryset.filter(lang__lid=lid)
+        return return_queryset
+
+
+class AnnotationCompletionView(generics.ListAPIView):
+    serializer_class = serializers.AnnotationSerializer
+
+    def get_queryset(self):
+        query_params = self.request.query_params
+        logger.debug(f"In {self.__class__.__name__} with params {query_params}")
+        try:
+            prompt: str = query_params["prompt"]
+        except MultiValueDictKeyError as e:
+            logger.error(f"Bad request in {self.__class__.__name__}")
+            raise ParseError
+
+        return_queryset = Annotation.objects.filter(value__startswith=prompt)
+        if "lid" in query_params:
+            lid: str = query_params["lid"]
+            logger.debug(f"'lid' query_param observed: {lid}")
+            return_queryset = return_queryset.filter(lang__lid=lid)
+        return return_queryset
+
+
 class WordCompletionView(generics.ListAPIView):
     """
     API view for querying words in some language on the basis of substring containment.
@@ -146,7 +188,7 @@ class PhraseCompletionView(generics.ListAPIView):
         if "lid" in query_params:
             lid: str = query_params.get("lid")
             return_queryset = Phrase.objects.filter(
-                text__contains=prompt, lang__lid=lid
+                text__contains=prompt, lexeme__lang__lid=lid
             )
         else:
             return_queryset = Phrase.objects.filter(text__contains=prompt)

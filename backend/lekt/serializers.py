@@ -13,6 +13,7 @@ from .models import (
     TrackedWord,
     UserProfile,
     Voice,
+    Lexeme,
     Word,
 )
 
@@ -39,8 +40,15 @@ class AnnotationSerializer(serializers.ModelSerializer):
         exclude = ["created_at", "updated_at"]
 
 
+class LexemeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lexeme
+        exclude = ["created_at", "updated_at"]
+
+
 class WordSerializer(serializers.ModelSerializer):
     annotations = AnnotationSerializer(many=True)
+    lexeme = LexemeSerializer()
 
     class Meta:
         model = Word

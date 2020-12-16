@@ -17,11 +17,17 @@ urlpatterns += [
     path(r"profile/", views.UserProfileView.as_view(), name="profile"),
     path(r"select/", views.PhrasePairSuggestionView.as_view(), name="select"),
     path(r"words/", views.WordCompletionView.as_view(), name="word-completion"),
+    path(r"lexemes/", views.LexemeCompletionView.as_view(), name="lexeme-completion"),
+    path(
+        r"annots/",
+        views.AnnotationCompletionView.as_view(),
+        name="annotation-completion",
+    ),
     path(r"phrases/", views.PhraseCompletionView.as_view(), name="phrase-completion"),
     path(r"suggestion/", views.GimpedView.as_view(), name="suggestion"),
 ]
 
 if settings.DEBUG:
     urlpatterns.append(
-        path(r"docs/", views.docs_schema_view.with_ui("redoc"), name="schema-redoc")
+        path(r"docs/", views.docs_schema_view.with_ui("redoc"), name="docs")
     )
