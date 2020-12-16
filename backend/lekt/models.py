@@ -211,8 +211,12 @@ class Lexeme(TimestampedModel):
         max_length=50, verbose_name="Part of speech", help_text="computed as Token.pos_"
     )
 
+    lang = models.ForeignKey(
+        Language, on_delete=models.PROTECT, verbose_name="Language Id"
+    )
+
     class Meta:
-        unique_together = ["lemma", "pos"]
+        unique_together = ["lemma", "pos", "lang"]
 
     def __repr__(self):
         return f"<Lexeme lemma={self.lemma} pos={self.pos}>"
@@ -272,10 +276,6 @@ class Word(TimestampedModel):
     # TODO: test also Hstore for this field, perform benchmark
     # i.e.annotations = models.HStoreField
 
-    lang = models.ForeignKey(
-        Language, on_delete=models.PROTECT, verbose_name="Language Id"
-    )
-
     # here we track metadata pertaining to distributional semantics on the level of words
     # TODO: develop this
     corpus_occurences = models.IntegerField(default=0)
@@ -292,7 +292,6 @@ class Word(TimestampedModel):
             "ent_type",
             "is_oov",
             "is_stop",
-            "lang",
         )
         #  TODO: this fixes the stderr pagination messages from DRF, but at the cost of
         #  expensible queries. Find an alternative

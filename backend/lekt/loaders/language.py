@@ -154,6 +154,20 @@ class LanguageParser(object):
 
     # this is perhaps the maximum permissible
     @functools.lru_cache(maxsize=2 ** 17)
+    def get_lexeme(
+        self,
+        lemma=None,
+        pos=None,
+    ):
+        cur_lexeme, lexeme_created = Lexeme.objects.get_or_create(
+            lemma=lemma,
+            pos=pos,
+            lang=self.lang,
+        )
+        cur_lexeme.lexeme_created = lexeme_created
+        return cur_lexeme
+
+    @functools.lru_cache(maxsize=2 ** 17)
     def get_word(
         self,
         lexeme=None,
@@ -170,23 +184,9 @@ class LanguageParser(object):
             ent_type=ent_type,
             is_oov=is_oov,
             is_stop=is_stop,
-            lang=self.lang,
         )
         cur_word.word_created = word_created
         return cur_word
-
-    @functools.lru_cache(maxsize=2 ** 17)
-    def get_lexeme(
-        self,
-        lemma=None,
-        pos=None,
-    ):
-        cur_lexeme, lexeme_created = Lexeme.objects.get_or_create(
-            lemma=lemma,
-            pos=pos,
-        )
-        cur_lexeme.lexeme_created = lexeme_created
-        return cur_lexeme
 
     @functools.lru_cache()
     def get_annotation(self, **kwargs):
