@@ -148,7 +148,7 @@ This is most basic and fundamental mode of the application.
 
 #### Data Tracked
 
-Repetition mode treat grammatical features and words asymmetrically. At any given point, a certain set of words in the target language are being **tracked**. The set of tracked words is referred to as the **active vocabulary**. For each word, it will track a number representing its belief about how well the user knows the word is stored. We call this the **knowledge coefficient** These coefficients decay with time in the manner forseen by the spaced repetition learning methodology. Words can be manually selected for tracking, individually (or perhaps in topical packages?). Additionally, as part of onboarding, the user declares their degree of competence in the target language. Depending on that, a certain number of the most common words are added to the active vocabulary.
+Repetition mode treat grammatical features and words asymmetrically. At any given point, a certain set of words in the target language are being **tracked**. The set of tracked words is referred to as the **active vocabulary**. For each word, it will track a number representing its belief about how well the user knows the word is stored. We call this the **knowledge coefficient** These coefficients decay with time in the manner foreseen by the spaced repetition learning methodology. Words can be manually selected for tracking, individually (or perhaps in topical packages?). Additionally, as part of onboarding, the user declares their degree of competence in the target language. Depending on that, a certain number of the most common words are added to the active vocabulary.
 
 Repetition mode has two submodes: normal and focus training.
 
