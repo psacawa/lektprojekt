@@ -70,69 +70,6 @@ class PhrasePairSerializer(serializers.ModelSerializer):
         exclude = ["created_at", "updated_at"]
 
 
-class PhrasePairSuggestionSerializer(PhrasePairSerializer):
-    score = serializers.IntegerField(read_only=True)
-
-
-class TrackedItemSerializer(serializers.ModelSerializer):
-    """ Serialize the data for a tracked word."""
-
-    class Meta:
-        model = TrackedItem
-        exclude = ["created_at", "updated_at", "polymorphic_ctype"]
-
-
-class TrackedAnnotationGetSerializer(serializers.ModelSerializer):
-    """ Serialize the data for a tracked word."""
-
-    annotation = AnnotationSerializer()
-
-    class Meta:
-        model = TrackedAnnotation
-        exclude = ["created_at", "updated_at", "polymorphic_ctype"]
-
-
-class TrackedAnnotationPostSerializer(serializers.ModelSerializer):
-    """ Serialize the data for a tracked word."""
-
-    class Meta:
-        model = TrackedAnnotation
-        exclude = ["created_at", "updated_at", "polymorphic_ctype"]
-
-
-class TrackedWordGetSerializer(serializers.ModelSerializer):
-    """ Serialize the data for a tracked word."""
-
-    word = WordSerializer()
-
-    class Meta:
-        model = TrackedWord
-        exclude = ["created_at", "updated_at", "polymorphic_ctype"]
-
-
-class TrackedWordPostSerializer(serializers.ModelSerializer):
-    """ Serialize the data for a tracked word."""
-
-    class Meta:
-        model = TrackedWord
-        exclude = [
-            "created_at",
-            "updated_at",
-            "polymorphic_ctype",
-            "trackeditem_ptr",
-        ]
-
-
-class TrackedItemPolySerializer(PolymorphicSerializer):
-    """ Serialize the data for a tracked word."""
-
-    model_serializer_mapping = {
-        TrackedItem: TrackedItemSerializer,
-        TrackedWord: TrackedWordGetSerializer,
-        TrackedAnnotation: TrackedAnnotationGetSerializer,
-    }
-
-
 class SubscriptionGetSerializer(serializers.ModelSerializer):
     """ Serialize the data for a language subscription."""
 
@@ -140,8 +77,6 @@ class SubscriptionGetSerializer(serializers.ModelSerializer):
     target_lang = LanguageSerializer()
     base_voice = VoiceSerializer()
     target_voice = VoiceSerializer()
-    # NOTE : This somehow fails without "many=True". Investigate
-    trackeditem_set = TrackedItemPolySerializer(many=True)
 
     class Meta:
         model = Subscription

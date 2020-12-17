@@ -7,15 +7,11 @@ from . import views
 
 router = routers.SimpleRouter()
 router.register(r"subs", views.SubscriptionViewSet, basename="sub")
-router.register(r"titems", views.TrackedItemViewSet, basename="titem")
-router.register(r"twords", views.TrackedWordViewSet, basename="tword")
-router.register(r"tannots", views.TrackedAnnotationViewSet, basename="tannot")
 urlpatterns = router.urls
 
 urlpatterns += [
     path(r"language/", views.LanguageListView.as_view(), name="lang-list"),
     path(r"profile/", views.UserProfileView.as_view(), name="profile"),
-    path(r"select/", views.PhrasePairSuggestionView.as_view(), name="select"),
     path(r"words/", views.WordCompletionView.as_view(), name="word-completion"),
     path(r"lexemes/", views.LexemeCompletionView.as_view(), name="lexeme-completion"),
     path(
@@ -24,10 +20,12 @@ urlpatterns += [
         name="annotation-completion",
     ),
     path(r"phrases/", views.PhraseCompletionView.as_view(), name="phrase-completion"),
-    path(r"suggestion/", views.GimpedView.as_view(), name="suggestion"),
+    # the viewset returning phrase pairs matching one lexeme + one annotation
+    path(r"gimped/", views.GimpedView.as_view(), name="gimped"),
 ]
 
 if settings.DEBUG:
-    urlpatterns.append(
-        path(r"docs/", views.docs_schema_view.with_ui("redoc"), name="docs")
-    )
+    urlpatterns += [
+        path(r"docs/redoc/", views.docs_schema_view.with_ui("redoc"), name="docs"),
+        path(r"docs/", views.docs_schema_view.with_ui("swagger"), name="docs"),
+    ]
