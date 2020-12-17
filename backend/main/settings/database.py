@@ -14,7 +14,14 @@ DATABASES = {
 }
 
 # caching in development makes tests flaky
-if not DEVELOPMENT:
+if DEVELOPMENT:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+            "LOCATION": "localhost",
+        }
+    }
+else:
     CACHES = {
         "default": {
             "BACKEND": "django_redis.cache.RedisCache",
