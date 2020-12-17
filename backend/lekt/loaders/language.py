@@ -252,6 +252,58 @@ class SpanishParser(LanguageParser):
 
     modelname_template = Template("${lid}_core_news_${size}")
     lid = "es"
+    value_explanation_dict = {
+        "Case=Acc": "accusative case",
+        "Case=Com": "conjunctive case",
+        "Case=Dat": "dative case",
+        "Case=Nom": "nominative case",
+        "Gender=Fem": "femininine gender",
+        "Gender=Masc": "masculine gender",
+        "Mood=Cnd": "conditional mood",
+        "Mood=Imp": "imperative mood",
+        "Mood=Ind": "indicative mood",
+        "Mood=Sub": "subjunctive mood",
+        "Person=1": "first person",
+        "Person=2": "second person",
+        "Person=3": "third person",
+        "PronType=Art": "article",
+        "PronType=Dem": "demonstrative pronoun",
+        "PronType=Ind": "indicative pronoun",
+        "PronType=Int": "interrogative pronoun",
+        "PronType=Neg": "negative pronoun",
+        "PronType=Prs": "personal pronoun",
+        "PronType=Tot": "universal pronoun",
+        "Number=Plur": "plural",
+        "Number=Sing": "singular",
+        "Poss=Yes": "possesive",
+        "VerbForm=Fin": "finite verb form",
+        "VerbForm=Ger": "present particle",
+        "VerbForm=Inf": "infinitive verb form",
+        "VerbForm=Part": "past particle",
+        "Tense=Fut": "future tense",
+        "Tense=Imp": "imperfect tense",
+        "Tense=Past": "preterite tense",
+        "Tense=Pres": "present tense",
+    }
+    #  AdpType=Prep
+    #  AdpType=Preppron
+    #  AdvType=Tim
+    #  Definite=Def
+    #  Definite=Ind
+    #  Degree=Abs
+    #  Degree=Cmp
+    #  Degree=Sup
+    #  Number[psor]=Plur
+    #  Number[psor]=Sing
+    #  NumForm=Digit
+    #  NumType=Card
+    #  NumType=Frac
+    #  NumType=Ord
+    #  Polarity=Neg
+    #  Polite=Form
+    #  PrepCase=Npr
+    #  PrepCase=Pre
+    #  Reflex=Yes
 
     @staticmethod
     @lru_cache()
@@ -280,9 +332,13 @@ class SpanishParser(LanguageParser):
         else:
             return []
 
-    def explain_annotation(self, tag: str):
+    def explain_annotation(self, value: str):
         """ spacy does not explain es_core_news_md annotations"""
-        return tag
+        return (
+            self.value_explanation_dict[value]
+            if value in self.value_explanation_dict
+            else value
+        )
 
 
 class EnglishParser(LanguageParser):
