@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.functions import Length
 
 
 class LektManager(models.Manager):
@@ -55,14 +56,29 @@ class PhrasePairQuerySet(LektManager):
 class AnnotationManager(LektManager):
     """ Manager for :model:`lekt.Annotation` """
 
-    def describe(self, lid=None):
+    def describe_lang(self, lid=None):
         """
         Pretty print a table of annotations for a given language along with their
         explanation.
         """
+
         from tabulate import tabulate
 
+        # this must be here to avoid a circular import
+        from .models import Annotation, Phrase
+
+        def get_example(annotation: Annotation):
+            for limit in range(40, 80, 10):
+                phrase = (
+                    Phrase.objects.filter(words__annotations=annotation)
+                    .annotate(length=Length("text"))
+                    .filter(length__lt=60)
+                    .first()
+                )
+                if phrase is not None:
+                    return phrase
+
         results = self.filter(lang__lid=lid).order_by("value")
-        data = [[a.value, a.explanation] for a in results]
-        table = tabulate(data, headers=["value", "explanation"])
+        data = [[a.value, a.explanation, get_example(a)] for a in results]
+        table = tabulate(data, headers=["value", "explanation", "example"])
         print(table)
