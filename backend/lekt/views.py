@@ -12,12 +12,12 @@ from rest_framework import generics, viewsets
 from rest_framework.request import Request
 from rest_framework import permissions
 from rest_framework.exceptions import ParseError, ValidationError
-from rest_framework import filters
+from rest_framework.filters import OrderingFilter
 from rest_framework.exceptions import ParseError, ValidationError
-from django_filters import rest_framework as filters
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+from . import filters
 from . import serializers
 from .models import (
     Annotation,
@@ -38,43 +38,22 @@ logger.setLevel(logging.DEBUG)
 
 
 class LanguageListView(generics.ListAPIView):
-    """View to represent (multiple) language and all it's voices."""
+    """API View to represent (multiple) language and all it's voices."""
 
     filterset_fields = ["lid"]
     serializer_class = serializers.LanguageVoiceSerializer
 
 
-class LexemeFilterSet(filters.FilterSet):
-    prompt = filters.CharFilter(
-        field_name="lemma", lookup_expr="istartswith", required=True
-    )
-    lid = filters.CharFilter(field_name="lang__lid", required=True)
-
-
 class LexemeCompletionView(generics.ListAPIView):
     queryset = Lexeme.objects.all()
     serializer_class = serializers.LexemeSerializer
-    filterset_class = LexemeFilterSet
-
-
-class AnnotationFilterSet(filters.FilterSet):
-    prompt = filters.CharFilter(
-        field_name="value", lookup_expr="istartswith", required=True
-    )
-    lid = filters.CharFilter(field_name="lang__lid", required=True)
+    filterset_class = filters.LexemeFilterSet
 
 
 class AnnotationCompletionView(generics.ListAPIView):
     queryset = Annotation.objects.all()
     serializer_class = serializers.AnnotationSerializer
-    filterset_class = AnnotationFilterSet
-
-
-class WordFilterSet(filters.FilterSet):
-    prompt = filters.CharFilter(
-        field_name="norm", lookup_expr="startswith", required=True
-    )
-    lid = filters.CharFilter(field_name="lexeme__lang__lid", required=True)
+    filterset_class = filters.AnnotationFilterSet
 
 
 class WordCompletionView(generics.ListAPIView):
@@ -85,14 +64,7 @@ class WordCompletionView(generics.ListAPIView):
     page_size = 25
     serializer_class = serializers.WordSerializer
     queryset = Word.objects.all()
-    filterset_class = WordFilterSet
-
-
-class PhraseFilterSet(filters.FilterSet):
-    prompt = filters.CharFilter(
-        field_name="text", lookup_expr="contains", required=True
-    )
-    lid = filters.CharFilter(field_name="lang__lid", required=True)
+    filterset_class = filters.WordFilterSet
 
 
 class PhraseCompletionView(generics.ListAPIView):
@@ -100,14 +72,7 @@ class PhraseCompletionView(generics.ListAPIView):
 
     queryset = Phrase.objects.all()
     serializer_class = serializers.PhraseSerializer
-    filterset_class = PhraseFilterSet
-
-
-class GimpedFilterSet(filters.FilterSet):
-    base = filters.CharFilter(field_name="base_lid", required=True)
-    target = filters.CharFilter(field_name="target_lid", required=True)
-    lexeme = filters.NumberFilter(field_name="target__words__lexeme")
-    annot = filters.NumberFilter(field_name="target__words__annot")
+    filterset_class = filters.PhraseFilterSet
 
 
 @method_decorator(cache_page(60 * 60), name="dispatch")
@@ -119,7 +84,7 @@ class GimpedView(generics.ListAPIView):
     """
 
     serializer_class = serializers.PhrasePairSerializer
-    filterset_class = GimpedFilterSet
+    filterset_class = filters.GimpedFilterSet
 
 
 class UserProfileView(generics.RetrieveAPIView):
@@ -138,7 +103,7 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
     """ Subscription model."""
 
     permission_classes = [permissions.IsAuthenticated]
-    filter_backends = [filters.OrderingFilter]
+    filter_backends = [OrderingFilter]
     ordering = ["id"]
 
     def create(self, request: Request, *args, **kwargs):
