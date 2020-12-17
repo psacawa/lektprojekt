@@ -172,17 +172,7 @@ class Annotation(TimestampedModel):
         Language, on_delete=models.PROTECT, verbose_name="Language Id"
     )
 
-    objects = managers.LektManager()
-
-    def describe(self, lid=None):
-        """
-        Pretty print a table of annotations for a given language along with their
-        explanation.
-        """
-        # nie działa - trzeba przenieść na menedżer
-        results = self.objects.filter(lang__lid=lid).order_by("value")
-        data = [[a.value, a.explanation] for a in results]
-        table = tabulate(data, headers=["value", "explanation"])
+    objects = managers.AnnotationManager()
 
     def __repr__(self):
         return f"<Annotation {self.value} {self.explanation}>"
@@ -338,17 +328,25 @@ class Phrase(TimestampedModel):
         Brief description of phrase. `attrs` refers additional attributes to print, e.g.:
         `phrase.describe(["ent_type"])`
         """
+
+        def nested_getattr(x, s: str):
+            """getattr admitting dot syntax for atribute access"""
+            attrs = s.split(".")
+            for attr in attrs:
+                x = getattr(x, attr)
+            return x
+
         print(self.text)
         base_attrs = [
             "norm",
-            "lemma",
-            "pos",
+            "lexeme.lemma",
+            "lexeme.pos",
             "tag",
         ]
         if add_attrs:
             attrs = base_attrs + attrs
         word_query = self.words.all().order_by("phraseword__number")
-        table = [[getattr(w, at) for at in attrs] for w in word_query]
+        table = [[nested_getattr(w, at) for at in attrs] for w in word_query]
         print(tabulate(table, headers=attrs))
 
     def __repr__(self):

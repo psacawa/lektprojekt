@@ -9,8 +9,6 @@ class LektManager(models.Manager):
 
 
 class LektQuerySet(models.QuerySet):
-    """ Provides some generally better query methods."""
-
     def describe_plan(self, style="vs"):
         """Print the Postgres query plan."""
         from utils.pg_explain_lexer import PgExplainLexer
@@ -52,3 +50,19 @@ class PhrasePairQuerySet(LektManager):
         if self._target_lid:
             queryset = queryset.filter(target__lang__lid=self._target_lid)
         return queryset
+
+
+class AnnotationManager(LektManager):
+    """ Manager for :model:`lekt.Annotation` """
+
+    def describe(self, lid=None):
+        """
+        Pretty print a table of annotations for a given language along with their
+        explanation.
+        """
+        from tabulate import tabulate
+
+        results = self.filter(lang__lid=lid).order_by("value")
+        data = [[a.value, a.explanation] for a in results]
+        table = tabulate(data, headers=["value", "explanation"])
+        print(table)
