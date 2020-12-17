@@ -13,6 +13,7 @@ import spacy
 from lekt.models import Lexeme, Word, Phrase, Language, Annotation, PhraseWord, Language
 from string import Template
 import importlib
+from functools import lru_cache
 
 ValidationData = namedtuple("ValidationData", ["length", "propriety"])
 logger = logging.getLogger(__name__)
@@ -252,15 +253,30 @@ class SpanishParser(LanguageParser):
     modelname_template = Template("${lid}_core_news_${size}")
     lid = "es"
 
-    def parse_annotations(self, tag: str):
+    @staticmethod
+    @lru_cache()
+    def parse_annotations(tag: str):
         """
         "VERB__Mood=Sub|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin" ->
         [Mood=Sub, Number=Sing, Person=3, Tense=Pres, VerbForm=Fin]
         """
-        # TODO : deal with '_SP'
-        annots = re.split(r"__", tag)
-        if len(annots) == 2 and len(annots[1]) > 0:
-            return annots[1].split("|")
+        tag_parts = re.split(r"__", tag)
+        if len(tag_parts) == 2 and len(tag_parts[1]) > 0:
+            annots = tag_parts[1].split("|")
+            ret = []
+            for annot in annots:
+                # handle the PronType=Int,Rel case
+                match = re.fullmatch("(\w+)=(\w+),(\w+)", annot)
+                if match:
+                    k, v1, v2 = match.groups()
+                    if k == "Case":
+                        ret.append(f"{k}={v1}")
+                        ret.append(f"{k}={v2}")
+                    else:
+                        ret.append(f"{k}={v1}")
+                else:
+                    ret.append(annot)
+            return ret
         else:
             return []
 
