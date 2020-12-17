@@ -14,6 +14,7 @@ from rest_framework import permissions
 from rest_framework.exceptions import ParseError, ValidationError
 from rest_framework import filters
 from rest_framework.exceptions import ParseError, ValidationError
+from django_filters import rest_framework as filters
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
@@ -39,18 +40,86 @@ logger.setLevel(logging.DEBUG)
 class LanguageListView(generics.ListAPIView):
     """View to represent (multiple) language and all it's voices."""
 
-    #  filterset_fields = ['lid' ]
+    filterset_fields = ["lid"]
     serializer_class = serializers.LanguageVoiceSerializer
-    ordering = ["id"]
 
-    def get_queryset(self):
-        query_params = self.request.query_params
-        lids = query_params.get("lid", None)
-        if not lids:
-            logger.error(f"Bad request in {self.__class__.__name__}: No lids")
-            raise ParseError
-        lids = lids.split(",")
-        return Language.objects.filter(lid__in=lids)
+
+class LexemeFilterSet(filters.FilterSet):
+    prompt = filters.CharFilter(
+        field_name="lemma", lookup_expr="istartswith", required=True
+    )
+    lid = filters.CharFilter(field_name="lang__lid", required=True)
+
+
+class LexemeCompletionView(generics.ListAPIView):
+    queryset = Lexeme.objects.all()
+    serializer_class = serializers.LexemeSerializer
+    filterset_class = LexemeFilterSet
+
+
+class AnnotationFilterSet(filters.FilterSet):
+    prompt = filters.CharFilter(
+        field_name="value", lookup_expr="istartswith", required=True
+    )
+    lid = filters.CharFilter(field_name="lang__lid", required=True)
+
+
+class AnnotationCompletionView(generics.ListAPIView):
+    queryset = Annotation.objects.all()
+    serializer_class = serializers.AnnotationSerializer
+    filterset_class = AnnotationFilterSet
+
+
+class WordFilterSet(filters.FilterSet):
+    prompt = filters.CharFilter(
+        field_name="norm", lookup_expr="startswith", required=True
+    )
+    lid = filters.CharFilter(field_name="lexeme__lang__lid", required=True)
+
+
+class WordCompletionView(generics.ListAPIView):
+    """
+    API view for querying words in some language on the basis of substring containment.
+    """
+
+    page_size = 25
+    serializer_class = serializers.WordSerializer
+    queryset = Word.objects.all()
+    filterset_class = WordFilterSet
+
+
+class PhraseFilterSet(filters.FilterSet):
+    prompt = filters.CharFilter(
+        field_name="text", lookup_expr="contains", required=True
+    )
+    lid = filters.CharFilter(field_name="lang__lid", required=True)
+
+
+class PhraseCompletionView(generics.ListAPIView):
+    """API View to list phrases containing a given substring."""
+
+    queryset = Phrase.objects.all()
+    serializer_class = serializers.PhraseSerializer
+    filterset_class = PhraseFilterSet
+
+
+class GimpedFilterSet(filters.FilterSet):
+    base = filters.CharFilter(field_name="base_lid", required=True)
+    target = filters.CharFilter(field_name="target_lid", required=True)
+    lexeme = filters.NumberFilter(field_name="target__words__lexeme")
+    annot = filters.NumberFilter(field_name="target__words__annot")
+
+
+@method_decorator(cache_page(60 * 60), name="dispatch")
+class GimpedView(generics.ListAPIView):
+    """
+    This endpoint just shows phrase pairs for a give language pair such
+    that the target language phrase contains a particular word.
+    E.g. /api/suggestion?base=en&target=es&lexeme=perro
+    """
+
+    serializer_class = serializers.PhrasePairSerializer
+    filterset_class = GimpedFilterSet
 
 
 class UserProfileView(generics.RetrieveAPIView):
@@ -100,139 +169,6 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         return user.userprofile.subscription_set.all()
-
-
-class LexemeCompletionView(generics.ListAPIView):
-    serializer_class = serializers.LexemeSerializer
-
-    def get_queryset(self):
-        query_params = self.request.query_params
-        logger.debug(f"In {self.__class__.__name__} with params {query_params}")
-        try:
-            prompt: str = query_params["prompt"]
-        except MultiValueDictKeyError as e:
-            logger.error(f"Bad request in {self.__class__.__name__}")
-            raise ParseError
-
-        return_queryset = Lexeme.objects.filter(lemma__startswith=prompt)
-        if "lid" in query_params:
-            lid: str = query_params["lid"]
-            logger.debug(f"'lid' query_param observed: {lid}")
-            return_queryset = return_queryset.filter(lang__lid=lid)
-        return return_queryset
-
-
-class AnnotationCompletionView(generics.ListAPIView):
-    serializer_class = serializers.AnnotationSerializer
-
-    def get_queryset(self):
-        query_params = self.request.query_params
-        logger.debug(f"In {self.__class__.__name__} with params {query_params}")
-        try:
-            prompt: str = query_params["prompt"]
-        except MultiValueDictKeyError as e:
-            logger.error(f"Bad request in {self.__class__.__name__}")
-            raise ParseError
-
-        return_queryset = Annotation.objects.filter(value__startswith=prompt)
-        if "lid" in query_params:
-            lid: str = query_params["lid"]
-            logger.debug(f"'lid' query_param observed: {lid}")
-            return_queryset = return_queryset.filter(lang__lid=lid)
-        return return_queryset
-
-
-class WordCompletionView(generics.ListAPIView):
-    """
-    API view for querying words in some language on the basis of substring containment.
-    """
-
-    serializer_class = serializers.WordSerializer
-    page_size = 25
-
-    def get_queryset(self):
-        query_params = self.request.query_params
-        logger.debug(f"In {self.__class__.__name__} with params {query_params}")
-        try:
-            prompt: str = query_params["prompt"]
-        except MultiValueDictKeyError as e:
-            logger.error(f"Bad request in {self.__class__.__name__}")
-            raise ParseError
-
-        return_queryset = Word.objects.filter(norm__startswith=prompt).prefetch_related(
-            "annotations"
-        )
-        if "lid" in query_params:
-            lid: str = query_params["lid"]
-            logger.debug(f"'lid' query_param observed: {lid}")
-            return_queryset = return_queryset.filter(lang__lid=lid)
-        return return_queryset
-
-
-class PhraseCompletionView(generics.ListAPIView):
-    """API View to list phrases"""
-
-    serializer_class = serializers.PhraseSerializer
-    # FIXME: this ordering doesn't accomplish anything
-    ordering = ["id"]
-
-    def get_queryset(self):
-        query_params = self.request.query_params
-        try:
-            prompt: str = query_params["prompt"]
-        except Exception as e:
-            logger.error(f"Bad request in {self.__class__.__name__}")
-            raise ParseError
-
-        if "lid" in query_params:
-            lid: str = query_params.get("lid")
-            return_queryset = Phrase.objects.filter(
-                text__contains=prompt, lexeme__lang__lid=lid
-            )
-        else:
-            return_queryset = Phrase.objects.filter(text__contains=prompt)
-        return return_queryset
-
-
-@method_decorator(cache_page(60 * 60), name="dispatch")
-class GimpedView(generics.ListAPIView):
-    """
-    This endpoint just shows phrase pairs for a give language pair such
-    that the target language phrase contains a particular word.
-    E.g. /api/suggestion?base=en&target=es&lexeme=perro
-    """
-
-    serializer_class = serializers.PhrasePairSerializer
-
-    def get_queryset(self):
-        query_params = self.request.query_params
-        try:
-            base_lid = query_params["base"]
-        except Exception as e:
-            raise ValidationError(
-                detail="View didn't receive required query param base"
-            )
-
-        try:
-            target_lid = query_params["target"]
-        except Exception as e:
-            raise ValidationError(
-                detail="View didn't receive required query param target"
-            )
-
-        queryset = PhrasePair.objects.filter(
-            base__lang__lid=base_lid, target__lang__lid=target_lid
-        )
-
-        if "lexeme" in query_params:
-            lexeme = self.request.query_params["lexeme"]
-            queryset = queryset.filter(target__words__lexeme=lexeme)
-
-        if "annot" in query_params:
-            annotation = int(self.request.query_params["annot"])
-            queryset = queryset.filter(target__words__annotations=annotation)
-
-        return queryset
 
 
 docs_schema_view = get_schema_view(

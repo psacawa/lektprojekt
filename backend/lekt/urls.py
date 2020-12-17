@@ -26,6 +26,5 @@ urlpatterns += [
 
 if settings.DEBUG:
     urlpatterns += [
-        path(r"docs/redoc/", views.docs_schema_view.with_ui("redoc"), name="docs"),
         path(r"docs/", views.docs_schema_view.with_ui("swagger"), name="docs"),
     ]
