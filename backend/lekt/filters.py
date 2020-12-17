@@ -30,7 +30,7 @@ class PhraseFilterSet(filters.FilterSet):
 
 
 class GimpedFilterSet(filters.FilterSet):
-    base = filters.CharFilter(field_name="base_lid", required=True)
-    target = filters.CharFilter(field_name="target_lid", required=True)
+    base = filters.CharFilter(field_name="base__lang__lid", required=True)
+    target = filters.CharFilter(field_name="target__lang__lid", required=True)
     lexeme = filters.NumberFilter(field_name="target__words__lexeme")
     annot = filters.NumberFilter(field_name="target__words__annot")

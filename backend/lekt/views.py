@@ -40,6 +40,7 @@ logger.setLevel(logging.DEBUG)
 class LanguageListView(generics.ListAPIView):
     """API View to represent (multiple) language and all it's voices."""
 
+    queryset = Language.objects.all()
     filterset_fields = ["lid"]
     serializer_class = serializers.LanguageVoiceSerializer
 
@@ -83,6 +84,7 @@ class GimpedView(generics.ListAPIView):
     E.g. /api/suggestion?base=en&target=es&lexeme=perro
     """
 
+    queryset = PhrasePair.objects.all()
     serializer_class = serializers.PhrasePairSerializer
     filterset_class = filters.GimpedFilterSet
 
