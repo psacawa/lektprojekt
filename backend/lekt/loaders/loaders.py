@@ -1,5 +1,4 @@
 from collections import namedtuple
-import pandas as pd
 import json
 import logging
 from math import sqrt
