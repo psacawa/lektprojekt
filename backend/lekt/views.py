@@ -44,6 +44,7 @@ class LanguageViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Language.objects.prefetch_related("voice_set")
     filterset_class = filters.LanguageFilterSet
     serializer_class = serializers.LanguageVoiceSerializer
+    ordering = ["id"]
 
 
 class LexemeCompletionView(generics.ListAPIView):
@@ -56,6 +57,7 @@ class LexemeCompletionView(generics.ListAPIView):
     queryset = Lexeme.objects.all()
     serializer_class = serializers.LexemeSerializer
     filterset_class = filters.LexemeFilterSet
+    ordering = ["id"]
 
 
 class AnnotationCompletionView(generics.ListAPIView):
@@ -68,6 +70,7 @@ class AnnotationCompletionView(generics.ListAPIView):
     queryset = Annotation.objects.all()
     serializer_class = serializers.AnnotationSerializer
     filterset_class = filters.AnnotationFilterSet
+    ordering = ["id"]
 
 
 class WordCompletionView(generics.ListAPIView):
@@ -81,6 +84,7 @@ class WordCompletionView(generics.ListAPIView):
     page_size = 25
     serializer_class = serializers.WordSerializer
     filterset_class = filters.WordFilterSet
+    ordering = ["id"]
 
 
 class PhraseCompletionView(generics.ListAPIView):
@@ -89,6 +93,7 @@ class PhraseCompletionView(generics.ListAPIView):
     queryset = Phrase.objects.all()
     serializer_class = serializers.PhraseSerializer
     filterset_class = filters.PhraseFilterSet
+    ordering = ["id"]
 
 
 @method_decorator(cache_page(60 * 60), name="dispatch")
@@ -103,6 +108,7 @@ class GimpedView(generics.ListAPIView):
     queryset = PhrasePair.objects.select_related("base", "target")
     serializer_class = serializers.PhrasePairSerializer
     filterset_class = filters.GimpedFilterSet
+    ordering = ["id"]
 
 
 class UserProfileView(generics.RetrieveAPIView):
