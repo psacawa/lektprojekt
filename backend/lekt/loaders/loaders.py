@@ -1,19 +1,19 @@
-from collections import namedtuple
 import json
 import logging
-from math import sqrt
-from os.path import join
 import sqlite3
 import sys
+from collections import namedtuple
+from math import sqrt
+from os.path import join
 from typing import List
 
 from django.conf import settings
 from django.db import IntegrityError, connection, transaction
+from progress.bar import Bar
 
 from lekt import models
-from lekt.models import Corpus, Language, Phrase, Word, PhrasePair
-from progress.bar import Bar
-from lekt.loaders.language import EnglishParser, SpanishParser, LanguageParser
+from lekt.loaders.language import EnglishParser, LanguageParser, SpanishParser
+from lekt.models import Corpus, Language, Phrase, PhrasePair, Word
 
 logger: logging.Logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))

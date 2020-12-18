@@ -1,14 +1,13 @@
-from django.db import models
-from django.contrib.auth.models import User
+import logging
 
+from django.contrib.auth.models import User
+from django.db import models
 from model_utils.managers import InheritanceManager
-from polymorphic.models import PolymorphicModel
 from polymorphic.managers import PolymorphicManager
+from polymorphic.models import PolymorphicModel
 from tabulate import tabulate
 
 from lekt import managers
-
-import logging
 
 logger = logging.getLogger(__name__)
 

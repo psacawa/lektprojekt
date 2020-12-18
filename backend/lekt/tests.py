@@ -1,18 +1,19 @@
-from test_plus.test import TestCase
-from django.db.models import Model
-from django.contrib.auth.models import User
-from django.contrib import auth
-from factory.django import DjangoModelFactory
-from factory import Faker
-from .models import Word, Phrase, UserProfile
-from django.http.response import HttpResponse
-from rest_framework.test import APIClient
-from django.test import tag
-
-import sys
 import json
-from jq import jq
 import logging
+import sys
+
+from django.contrib import auth
+from django.contrib.auth.models import User
+from django.db.models import Model
+from django.http.response import HttpResponse
+from django.test import tag
+from factory import Faker
+from factory.django import DjangoModelFactory
+from jq import jq
+from rest_framework.test import APIClient
+from test_plus.test import TestCase
+
+from .models import Phrase, UserProfile, Word
 
 logger = logging.getLogger(__name__)
 

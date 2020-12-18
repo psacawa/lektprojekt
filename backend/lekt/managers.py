@@ -12,10 +12,11 @@ class LektManager(models.Manager):
 class LektQuerySet(models.QuerySet):
     def describe_plan(self, style="vs"):
         """Print the Postgres query plan."""
-        from utils.pg_explain_lexer import PgExplainLexer
         from pygments import highlight
         from pygments.formatters import TerminalTrueColorFormatter
-        from pygments.styles import get_style_by_name, get_all_styles
+        from pygments.styles import get_all_styles, get_style_by_name
+
+        from utils.pg_explain_lexer import PgExplainLexer
 
         query_plan = self.explain()
         style = get_style_by_name(style)

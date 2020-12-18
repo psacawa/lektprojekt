@@ -1,13 +1,14 @@
+import logging
+import sys
+from argparse import ArgumentParser
+from os.path import isfile, join
+
+from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from argparse import ArgumentParser
-from os.path import join, isfile
-from django.conf import settings
-from lekt.loaders import EnglishParser, SpanishParser, CorpusManager
-from lekt.models import Corpus, Phrase, PhrasePair
-import sys
 
-import logging
+from lekt.loaders import CorpusManager, EnglishParser, SpanishParser
+from lekt.models import Corpus, Phrase, PhrasePair
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

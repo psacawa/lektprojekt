@@ -4,6 +4,7 @@ from rest_framework import serializers
 from .models import (
     Annotation,
     Language,
+    Lexeme,
     Phrase,
     PhrasePair,
     Subscription,
@@ -12,7 +13,6 @@ from .models import (
     TrackedWord,
     UserProfile,
     Voice,
-    Lexeme,
     Word,
 )
 

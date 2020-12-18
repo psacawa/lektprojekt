@@ -1,5 +1,6 @@
-from split_settings.tools import include
 from os import environ
+
+from split_settings.tools import include
 
 ENVIRONMENT = environ.get("DJANGO_ENVIRONMENT", "development")
 assert ENVIRONMENT in ("development", "staging", "production",), (

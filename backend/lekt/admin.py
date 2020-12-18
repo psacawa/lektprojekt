@@ -1,13 +1,6 @@
 from django.contrib import admin
-from .models import (
-    UserProfile,
-    Language,
-    Voice,
-    Subscription,
-    Annotation,
-    Phrase,
-    Word,
-)
+
+from .models import Annotation, Language, Phrase, Subscription, UserProfile, Voice, Word
 
 admin.site.register(UserProfile)
 admin.site.register(Language)

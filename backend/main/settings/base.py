@@ -9,8 +9,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-from os.path import join, abspath, dirname, isdir
 from os import environ, mkdir
+from os.path import abspath, dirname, isdir, join
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = "/".join(abspath(__file__).split("/")[:-3])

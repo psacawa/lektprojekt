@@ -1,36 +1,33 @@
 import logging
-from operator import __or__
 from functools import reduce
+from operator import __or__
 
-from django.utils.datastructures import MultiValueDictKeyError
-from django.core.exceptions import PermissionDenied
 from django.contrib.auth.models import User
-from django.db.models import Q, Count
+from django.core.exceptions import PermissionDenied
+from django.db.models import Count, Q
+from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from rest_framework import generics, viewsets
-from rest_framework.request import Request
-from rest_framework import permissions
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
+from rest_framework import generics, permissions, viewsets
 from rest_framework.exceptions import ParseError, ValidationError
 from rest_framework.filters import OrderingFilter
-from rest_framework.exceptions import ParseError, ValidationError
-from drf_yasg.views import get_schema_view
-from drf_yasg import openapi
+from rest_framework.request import Request
 
-from . import filters
-from . import serializers
+from . import filters, serializers
 from .models import (
     Annotation,
-    Word,
-    Phrase,
-    TrackedItem,
-    TrackedWord,
-    TrackedAnnotation,
     Language,
     Lexeme,
-    Voice,
-    Subscription,
+    Phrase,
     PhrasePair,
+    Subscription,
+    TrackedAnnotation,
+    TrackedItem,
+    TrackedWord,
+    Voice,
+    Word,
 )
 
 logger = logging.getLogger(__name__)

@@ -1,19 +1,20 @@
-from collections import namedtuple
 import functools
-from django.db import IntegrityError, transaction
-from django.db import transaction
-from django.db.models import Model
-from django.core.exceptions import MultipleObjectsReturned
-from progress.bar import Bar
-from spacy.tokens import Doc
-from typing import Tuple
+import importlib
 import logging
 import re
-import spacy
-from lekt.models import Lexeme, Word, Phrase, Language, Annotation, PhraseWord, Language
-from string import Template
-import importlib
+from collections import namedtuple
 from functools import lru_cache
+from string import Template
+from typing import Tuple
+
+import spacy
+from django.core.exceptions import MultipleObjectsReturned
+from django.db import IntegrityError, transaction
+from django.db.models import Model
+from progress.bar import Bar
+from spacy.tokens import Doc
+
+from lekt.models import Annotation, Language, Lexeme, Phrase, PhraseWord, Word
 
 ValidationData = namedtuple("ValidationData", ["length", "propriety"])
 logger = logging.getLogger(__name__)

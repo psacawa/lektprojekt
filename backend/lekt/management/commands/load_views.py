@@ -1,10 +1,11 @@
-from django.core.management.base import BaseCommand
-from os.path import join
-import psycopg2
-from psycopg2.extensions import connection
-from django.conf import settings
-from django.apps import apps
 import logging
+from os.path import join
+
+import psycopg2
+from django.apps import apps
+from django.conf import settings
+from django.core.management.base import BaseCommand
+from psycopg2.extensions import connection
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

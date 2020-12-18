@@ -1,7 +1,7 @@
 # vendored in from:
 # https://github.com/maahl/pg_explain_lexer/raw/master/pg_explain_lexer.py
 
-from pygments.lexer import RegexLexer, words, bygroups
+from pygments.lexer import RegexLexer, bygroups, words
 from pygments.token import *
 
 
