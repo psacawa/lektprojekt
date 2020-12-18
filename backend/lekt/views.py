@@ -50,12 +50,24 @@ class LanguageViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class LexemeCompletionView(generics.ListAPIView):
+    """
+    API view for querying `Lexeme` models based on their associated `Language` and an
+    initial `prompt` of the `lemma` of the `Lexeme`.
+
+    """
+
     queryset = Lexeme.objects.all()
     serializer_class = serializers.LexemeSerializer
     filterset_class = filters.LexemeFilterSet
 
 
 class AnnotationCompletionView(generics.ListAPIView):
+    """
+    API view for querying `Annotation` models based on their associated `Language` and an
+    initial `prompt`.
+
+    """
+
     queryset = Annotation.objects.all()
     serializer_class = serializers.AnnotationSerializer
     filterset_class = filters.AnnotationFilterSet
@@ -63,7 +75,9 @@ class AnnotationCompletionView(generics.ListAPIView):
 
 class WordCompletionView(generics.ListAPIView):
     """
-    API view for querying words in some language on the basis of substring containment.
+    API view for querying `Word` models based on the associated `Language` and a initial
+    `prompt` of the word. The models are returned with associated `Lexeme` and
+    `Annotation` models.
     """
 
     queryset = Word.objects.prefetch_related("annotations", "lexeme")
@@ -83,9 +97,10 @@ class PhraseCompletionView(generics.ListAPIView):
 @method_decorator(cache_page(60 * 60), name="dispatch")
 class GimpedView(generics.ListAPIView):
     """
-    This endpoint just shows phrase pairs for a give language pair such
-    that the target language phrase contains a particular word.
-    E.g. /api/suggestion?base=en&target=es&lexeme=perro
+    This endpoint just shows `PhrasePair` models for a give `Language` pair such
+    that the `target` language phrase contains a particular word.
+
+    E.g. `/api/suggestion?base=en&target=es&lexeme=2985&annot=65`
     """
 
     queryset = PhrasePair.objects.select_related("base", "target")
@@ -94,7 +109,7 @@ class GimpedView(generics.ListAPIView):
 
 
 class UserProfileView(generics.RetrieveAPIView):
-    """ View for retrieving a logged in user's subscriptions."""
+    """ API view for retrieving a logged in user's list of `Subscription`s."""
 
     serializer_class = serializers.UserProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -106,7 +121,11 @@ class UserProfileView(generics.RetrieveAPIView):
 
 
 class SubscriptionViewSet(viewsets.ModelViewSet):
-    """ Subscription model."""
+    """
+    API view set for performing create, read, update, delete and list operations on the
+    `Subscription` models attachsed to the `UserProfile` of the currently logged in
+    `User`.
+    """
 
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [OrderingFilter]
