@@ -21,6 +21,17 @@ export interface Language {
   default_voice: Voice;
 }
 
+export interface Phrase {
+  id: number;
+  text: string;
+  lang: number;
+}
+
+export interface PhrasePair {
+  base: Phrase;
+  target: Phrase;
+}
+
 export interface ListApiOutput<T> {
   count: number;
   next: string;
