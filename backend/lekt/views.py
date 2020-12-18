@@ -40,7 +40,7 @@ logger.setLevel(logging.DEBUG)
 class LanguageListView(generics.ListAPIView):
     """API View to represent (multiple) language and all it's voices."""
 
-    queryset = Language.objects.all()
+    queryset = Language.objects.prefetch_related("voice_set")
     filterset_fields = ["lid"]
     serializer_class = serializers.LanguageVoiceSerializer
 
@@ -62,9 +62,9 @@ class WordCompletionView(generics.ListAPIView):
     API view for querying words in some language on the basis of substring containment.
     """
 
+    queryset = Word.objects.prefetch_related("annotations", "lexeme")
     page_size = 25
     serializer_class = serializers.WordSerializer
-    queryset = Word.objects.all()
     filterset_class = filters.WordFilterSet
 
 
@@ -84,7 +84,7 @@ class GimpedView(generics.ListAPIView):
     E.g. /api/suggestion?base=en&target=es&lexeme=perro
     """
 
-    queryset = PhrasePair.objects.all()
+    queryset = PhrasePair.objects.select_related("base", "target")
     serializer_class = serializers.PhrasePairSerializer
     filterset_class = filters.GimpedFilterSet
 
@@ -135,7 +135,9 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return user.userprofile.subscription_set.all()
+        return user.userprofile.subscription_set.select_related(
+            "base_lang", "target_lang", "base_voice", "target_voice"
+        )
 
 
 docs_schema_view = get_schema_view(
