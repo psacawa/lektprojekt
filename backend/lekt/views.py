@@ -37,11 +37,15 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 
-class LanguageListView(generics.ListAPIView):
-    """API View to represent (multiple) language and all it's voices."""
+#  class LanguageViewSet(generics.ListAPIView):
+class LanguageViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    API view set to for listing `Language` models and their associated `Voice` models.
+    It's possible to possible to pass multiple `lid` parameter.
+    """
 
     queryset = Language.objects.prefetch_related("voice_set")
-    filterset_fields = ["lid"]
+    filterset_class = filters.LanguageFilterSet
     serializer_class = serializers.LanguageVoiceSerializer
 
 

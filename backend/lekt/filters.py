@@ -1,6 +1,10 @@
 from django_filters import rest_framework as filters
 
 
+class LanguageFilterSet(filters.FilterSet):
+    lid = filters.BaseInFilter(field_name="lid", lookup_expr="in")
+
+
 class LexemeFilterSet(filters.FilterSet):
     prompt = filters.CharFilter(
         field_name="lemma", lookup_expr="istartswith", required=True

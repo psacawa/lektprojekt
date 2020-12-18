@@ -7,10 +7,10 @@ from . import views
 
 router = routers.SimpleRouter()
 router.register(r"subs", views.SubscriptionViewSet, basename="sub")
+router.register(r"languages", views.LanguageViewSet, basename="language")
 urlpatterns = router.urls
 
 urlpatterns += [
-    path(r"language/", views.LanguageListView.as_view(), name="lang-list"),
     path(r"profile/", views.UserProfileView.as_view(), name="profile"),
     path(r"words/", views.WordCompletionView.as_view(), name="word-completion"),
     path(r"lexemes/", views.LexemeCompletionView.as_view(), name="lexeme-completion"),
