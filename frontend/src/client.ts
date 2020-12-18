@@ -12,23 +12,29 @@ export const listLanguages = () => {
     );
 };
 
-export const completeLexeme = (lid: string, prompt: string) => {
+export const completeLexemes = (lid: string, prompt: string, page?: number) => {
   return axios
     .get(`${apiRoot}lexemes`, {
       params: {
         prompt,
         lid,
+        page,
       },
     })
     .then((response: AxiosResponse<ListApiOutput<Lexeme>>) => response.data);
 };
 
-export const completeAnnotation = (lid: string, prompt: string) => {
+export const completeAnnotations = (
+  lid: string,
+  prompt: string,
+  page?: number
+) => {
   return axios
     .get(`${apiRoot}annots`, {
       params: {
         prompt,
         lid,
+        page,
       },
     })
     .then((response: AxiosResponse<ListApiOutput<Lexeme>>) => response.data);

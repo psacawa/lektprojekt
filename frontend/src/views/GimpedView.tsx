@@ -1,17 +1,11 @@
-import {
-  FormControl,
-  Grid,
-  makeStyles,
-  TextField,
-  Typography,
-} from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import { Grid, makeStyles, TextField, Typography } from "@material-ui/core";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { CircularProgress, InputLabel } from "@material-ui/core";
 import * as client from "../client";
 import { Language } from "../types";
-import { Formik } from "formik";
 import { Autocomplete } from "@material-ui/lab";
+import AsyncWordSelect from "../components/AsyncWordSelect";
 
 const useStyles = makeStyles(() => ({
   item: {
@@ -63,7 +57,10 @@ const GimpedView = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <InputLabel>Search term</InputLabel>
+            <AsyncWordSelect
+              targetLanguage={targetLanguage}
+              disabled={!targetLanguage}
+            />
           </Grid>
         </Grid>
       )}
