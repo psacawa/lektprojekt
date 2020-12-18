@@ -33,4 +33,4 @@ class GimpedFilterSet(filters.FilterSet):
     base = filters.CharFilter(field_name="base__lang__lid", required=True)
     target = filters.CharFilter(field_name="target__lang__lid", required=True)
     lexeme = filters.NumberFilter(field_name="target__words__lexeme")
-    annot = filters.NumberFilter(field_name="target__words__annot")
+    annot = filters.NumberFilter(field_name="target__words__annotations")
