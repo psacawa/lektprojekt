@@ -251,6 +251,7 @@ class LanguageParser(object):
 class SpanishParser(LanguageParser):
     """Subclass for parsing with the family of models es-core-news-XX."""
 
+    modelname = "es_core_news_md"
     modelname_template = Template("${lid}_core_news_${size}")
     lid = "es"
     value_explanation_dict = {
@@ -345,6 +346,7 @@ class SpanishParser(LanguageParser):
 class EnglishParser(LanguageParser):
     """Subclass for parsing with the family of models en-core-web-XX."""
 
+    modelname = "en_core_web_md"
     modelname_template = Template("${lid}_core_web_${size}")
     lid = "en"
 
