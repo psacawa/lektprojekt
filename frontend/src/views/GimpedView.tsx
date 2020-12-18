@@ -1,20 +1,13 @@
-import { Grid, makeStyles, TextField, Typography } from "@material-ui/core";
+import { Grid, TextField, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
-import { CircularProgress, InputLabel } from "@material-ui/core";
+import { CircularProgress } from "@material-ui/core";
 import * as client from "../client";
 import { Language } from "../types";
 import { Autocomplete } from "@material-ui/lab";
 import AsyncWordSelect from "../components/AsyncWordSelect";
 
-const useStyles = makeStyles(() => ({
-  item: {
-    margin: 1,
-  },
-}));
-
 const GimpedView = () => {
-  const classes = useStyles();
   const [baseLanguage, setBaseLanguage] = useState<Language | undefined>(
     undefined
   );
@@ -29,30 +22,38 @@ const GimpedView = () => {
   });
   return (
     <>
-      <Typography variant="h5">Welcome to Gimped Mode</Typography>
+      <Typography variant="h5" style={{ margin: 30 }}>
+        Welcome to Gimped Mode
+      </Typography>
       {languagesQuery.isFetching ? (
         <CircularProgress />
       ) : (
         <Grid container spacing={4}>
           <Grid item xs={12} md={6}>
-            <InputLabel>Base language</InputLabel>
             <Autocomplete
               value={baseLanguage}
               options={languagesQuery!.data!}
               getOptionLabel={(lang) => lang.name}
               renderInput={(params) => (
-                <TextField {...params}>{params.id}</TextField>
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  label="Base Language"
+                ></TextField>
               )}
             />
           </Grid>
           <Grid item xs={12} md={6}>
-            <InputLabel>Target language</InputLabel>
             <Autocomplete
               value={targetLanguage}
               options={languagesQuery!.data!}
               getOptionLabel={(lang) => lang.name}
               renderInput={(params) => (
-                <TextField {...params}>{params.id}</TextField>
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  label="Target language"
+                ></TextField>
               )}
             />
           </Grid>

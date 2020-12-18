@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { Language, Voice, Lexeme, ListApiOutput } from "./types";
+import { Language, Lexeme, ListApiOutput } from "./types";
 
 const apiRoot = "/api/";
 

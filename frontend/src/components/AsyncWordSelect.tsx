@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Language, Lexeme } from "../types";
 import { useQuery } from "react-query";
+import { debounce } from "lodash";
 import * as client from "../client";
 
 interface Props {
@@ -13,14 +14,15 @@ interface Props {
 
 const AsyncWordSelect = ({ targetLanguage, disabled }: Props) => {
   const [open, setOpen] = useState(false);
-  const value: string = "";
+  const [inputValue, setInputValue] = useState("");
   const [options, setOptions] = useState<Lexeme[]>([]);
 
   const lexemeQuery = useQuery(
-    ["lexemes", { lid: targetLanguage?.lid, prompt: value }],
+    ["lexemes", { lid: targetLanguage?.lid, prompt: inputValue }],
     ({ queryKey }) => {
-      if (value.length > 2 && targetLanguage) {
-        return client.completeLexemes(queryKey.lid, queryKey.prompt);
+      const [_key, { lid, prompt }] = queryKey;
+      if (inputValue.length > 2 && targetLanguage) {
+        return client.completeLexemes(lid, prompt);
       } else {
         return Promise.reject();
       }
@@ -32,6 +34,10 @@ const AsyncWordSelect = ({ targetLanguage, disabled }: Props) => {
       },
     }
   );
+  const handleInputChange = debounce(
+    (event, newInputValue) => setInputValue(newInputValue),
+    300
+  );
 
   return (
     <Autocomplete
@@ -42,9 +48,11 @@ const AsyncWordSelect = ({ targetLanguage, disabled }: Props) => {
       onClose={() => {
         setOpen(false);
       }}
-      getOptionLabel={(option) => option.lemma}
+      getOptionLabel={(option) => `${option.lemma} ${option.pos}`}
       options={options}
       loading={lexemeQuery.isFetching}
+      disabled={disabled}
+      onInputChange={handleInputChange}
       renderInput={(params) => (
         <TextField
           {...params}

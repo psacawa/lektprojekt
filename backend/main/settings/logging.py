@@ -18,6 +18,7 @@ LOGGING = {
         "lekt.signals": {"handlers": ["console"], "level": "DEBUG"},
         "lekt.views": {"handlers": ["console"], "level": "DEBUG"},
         "django.db.backends": {"handlers": ["db_file"], "level": "DEBUG"},
+        "django.request": {"handlers": ["request_file"], "level": "DEBUG"},
     },
     "handlers": {
         "console": {
@@ -30,6 +31,12 @@ LOGGING = {
             "class": "logging.FileHandler",
             "formatter": "verbose",
             "filename": join(LOGS_DIR, "db.log"),
+        },
+        "request_file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": join(LOGS_DIR, "request.log"),
         },
     },
 }
