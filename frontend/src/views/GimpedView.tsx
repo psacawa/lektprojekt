@@ -6,6 +6,7 @@ import * as client from "../client";
 import { Language } from "../types";
 import { Autocomplete } from "@material-ui/lab";
 import AsyncWordSelect from "../components/AsyncWordSelect";
+import LanguageSelect from "../components/LanguageSelect";
 
 const GimpedView = () => {
   const [baseLanguage, setBaseLanguage] = useState<Language | undefined>(
@@ -28,42 +29,19 @@ const GimpedView = () => {
       {languagesQuery.isFetching ? (
         <CircularProgress />
       ) : (
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={6}>
-            <Autocomplete
-              value={baseLanguage}
-              options={languagesQuery!.data!}
-              getOptionLabel={(lang) => lang.name}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  variant="outlined"
-                  label="Base Language"
-                ></TextField>
-              )}
+        <>
+          <Grid container spacing={4}>
+            <LanguageSelect
+              baseLanguage={baseLanguage}
+              targetLanguage={targetLanguage}
+              languageOptions={languagesQuery!.data!}
             />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Autocomplete
-              value={targetLanguage}
-              options={languagesQuery!.data!}
-              getOptionLabel={(lang) => lang.name}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  variant="outlined"
-                  label="Target language"
-                ></TextField>
-              )}
-            />
-          </Grid>
-          <Grid item xs={12}>
             <AsyncWordSelect
               targetLanguage={targetLanguage}
               disabled={!targetLanguage}
             />
           </Grid>
-        </Grid>
+        </>
       )}
     </>
   );

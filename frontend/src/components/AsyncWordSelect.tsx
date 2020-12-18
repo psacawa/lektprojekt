@@ -2,6 +2,7 @@ import { useState } from "react";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { Grid } from "@material-ui/core";
 import { Language, Lexeme } from "../types";
 import { useQuery } from "react-query";
 import { debounce } from "lodash";
@@ -40,38 +41,40 @@ const AsyncWordSelect = ({ targetLanguage, disabled }: Props) => {
   );
 
   return (
-    <Autocomplete
-      open={open}
-      onOpen={() => {
-        setOpen(true);
-      }}
-      onClose={() => {
-        setOpen(false);
-      }}
-      getOptionLabel={(option) => `${option.lemma} ${option.pos}`}
-      options={options}
-      loading={lexemeQuery.isFetching}
-      disabled={disabled}
-      onInputChange={handleInputChange}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label="Search term"
-          variant="outlined"
-          InputProps={{
-            ...params.InputProps,
-            endAdornment: (
-              <>
-                {lexemeQuery.isFetching ? (
-                  <CircularProgress color="inherit" size={20} />
-                ) : null}
-                {params.InputProps.endAdornment}
-              </>
-            ),
-          }}
-        />
-      )}
-    />
+    <Grid item xs={12}>
+      <Autocomplete
+        open={open}
+        onOpen={() => {
+          setOpen(true);
+        }}
+        onClose={() => {
+          setOpen(false);
+        }}
+        getOptionLabel={(option) => `${option.lemma} ${option.pos}`}
+        options={options}
+        loading={lexemeQuery.isFetching}
+        disabled={disabled}
+        onInputChange={handleInputChange}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Search term"
+            variant="outlined"
+            InputProps={{
+              ...params.InputProps,
+              endAdornment: (
+                <>
+                  {lexemeQuery.isFetching ? (
+                    <CircularProgress color="inherit" size={20} />
+                  ) : null}
+                  {params.InputProps.endAdornment}
+                </>
+              ),
+            }}
+          />
+        )}
+      />
+    </Grid>
   );
 };
 
