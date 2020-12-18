@@ -4,14 +4,18 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Router } from "react-router-dom";
 import { createBrowserHistory } from "history";
+import {QueryClient, QueryClientProvider} from "react-query";
 
 const history = createBrowserHistory();
+const queryClient = new QueryClient()
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router history={history}>
-      <App />
-    </Router>
+    <QueryClientProvider client={queryClient}>
+      <Router history={history}>
+        <App />
+      </Router>
+    </QueryClientProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

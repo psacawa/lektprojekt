@@ -6,7 +6,8 @@ import LektDrawer from "./components/Drawer";
 
 const useStyles = makeStyles(() => ({
   main: {
-    marginLeft: "220px",
+    marginLeft: 220,
+    marginRight: 20
   },
 }));
 

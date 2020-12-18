@@ -1,11 +1,11 @@
 import axios, { AxiosResponse } from "axios";
 import { Language, Voice, Lexeme, ListApiOutput } from "./types";
 
-const apiRoot = "https://localhost:3000/api/";
+const apiRoot = "/api/";
 
 export const listLanguages = () => {
   return axios
-    .get(`${apiRoot}language/`)
+    .get(`${apiRoot}languages/`)
     .then(
       (response: AxiosResponse<ListApiOutput<Language>>) =>
         response.data.results
