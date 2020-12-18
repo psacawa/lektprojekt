@@ -5,6 +5,7 @@ import reportWebVitals from "./reportWebVitals";
 import { Router } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 const history = createBrowserHistory();
 const queryClient = new QueryClient();
@@ -15,6 +16,7 @@ ReactDOM.render(
       <Router history={history}>
         <App />
       </Router>
+      <ReactQueryDevtools initialIsOpen />
     </QueryClientProvider>
   </React.StrictMode>,
   document.getElementById("root")
