@@ -11,24 +11,27 @@ import * as client from "../client";
 interface Props {
   targetLanguage: Language | undefined;
   disabled: boolean;
+  options: Lexeme[];
+  setOptions: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
-const AsyncWordSelect = ({ targetLanguage, disabled }: Props) => {
+const AsyncWordSelect = ({
+  targetLanguage,
+  disabled,
+  options,
+  setOptions,
+}: Props) => {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const [options, setOptions] = useState<Lexeme[]>([]);
 
   const lexemeQuery = useQuery(
     ["lexemes", { lid: targetLanguage?.lid, prompt: inputValue }],
     ({ queryKey }) => {
       const [_key, { lid, prompt }] = queryKey;
-      if (inputValue.length > 2 && targetLanguage) {
-        return client.completeLexemes(lid, prompt);
-      } else {
-        return Promise.reject();
-      }
+      return client.completeLexemes(lid, prompt);
     },
     {
+      enabled: inputValue.length >= 3,
       onSuccess: (data) => {
         const newOptions = [...options, ...data.results];
         setOptions(newOptions);

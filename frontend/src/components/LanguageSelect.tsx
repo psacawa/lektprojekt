@@ -1,3 +1,4 @@
+import React from "react";
 import { Grid, TextField } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import { Language } from "../types";
@@ -6,11 +7,15 @@ interface Props {
   baseLanguage: Language | undefined;
   targetLanguage: Language | undefined;
   languageOptions: Language[];
+  handleBaseLanguageChange: (...args: any[]) => any;
+  handleTargetLanguageChange: (...args: any[]) => any;
 }
 
 const LanguageSelect = ({
   baseLanguage,
   targetLanguage,
+  handleBaseLanguageChange,
+  handleTargetLanguageChange,
   languageOptions,
 }: Props) => {
   return (
@@ -18,6 +23,7 @@ const LanguageSelect = ({
       <Grid item xs={12} md={6}>
         <Autocomplete
           value={baseLanguage}
+          onChange={handleBaseLanguageChange}
           options={languageOptions}
           getOptionLabel={(lang) => lang.name}
           renderInput={(params) => (
@@ -32,6 +38,7 @@ const LanguageSelect = ({
       <Grid item xs={12} md={6}>
         <Autocomplete
           value={targetLanguage}
+          onChange={handleTargetLanguageChange}
           options={languageOptions}
           getOptionLabel={(lang) => lang.name}
           renderInput={(params) => (
