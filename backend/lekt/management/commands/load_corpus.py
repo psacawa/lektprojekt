@@ -47,16 +47,52 @@ class Command(BaseCommand):
             action="store_true",
             help="""Delete an active corpus instead of loading it.""",
         )
+        model_selection_group = parser.add_argument_group(
+            "model selection arguments", "Parameter controlling model selection"
+        )
+        model_selection_group.add_argument(
+            "--size",
+            "-s",
+            choices=["lg", "md", "sm"],
+            help="Size of models to work with",
+        )
+        for lang in ["lang1", "lang2"]:
+            model_selection_group.add_argument(
+                f"--{lang}-size",
+                choices=["lg", "md", "sm"],
+                help=f"Size of {lang} model to work with",
+            )
+            model_selection_group.add_argument(
+                f"--{lang}-model",
+                help=f"Model of {lang} to work with",
+            )
 
     def handle(
-        self, corpus: str, limit=None, delete=False, reload=False, *args, **kwargs
+        self,
+        corpus: str,
+        limit=None,
+        delete=False,
+        reload=False,
+        size=None,
+        lang1_size=None,
+        lang1_model=None,
+        lang2_size=None,
+        lang2_model=None,
+        **kwargs,
     ):
         logger.debug(corpus)
         if delete:
             self.remove(corpus)
         else:
             corpus_file = Command.resolve_corpus_file(corpus)
-            corpus_manager = CorpusManager(corpus=corpus)
+            corpus_manager = CorpusManager(
+                corpus,
+                size=size,
+                lang1_size=lang1_size,
+                lang1_model=lang1_model,
+                lang2_size=lang2_size,
+                lang2_model=lang2_model,
+            )
             corpus_manager.load(limit=limit, reload=reload)
 
     @staticmethod

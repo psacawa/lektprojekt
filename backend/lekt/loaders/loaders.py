@@ -12,7 +12,12 @@ from django.db import IntegrityError, connection, transaction
 from progress.bar import Bar
 
 from lekt import models
-from lekt.loaders.language import EnglishParser, LanguageParser, SpanishParser
+from lekt.loaders.language import (
+    EnglishParser,
+    LanguageParser,
+    NLPModelLoadError,
+    SpanishParser,
+)
 from lekt.models import Corpus, Language, Phrase, PhrasePair, Word
 
 logger: logging.Logger = logging.getLogger(__name__)
@@ -28,9 +33,14 @@ default_parsers = {
 
 class CorpusManager(object):
 
-    parsers: List[LanguageParser]
+    parsers: List[LanguageParser] = []
 
-    def __init__(self, corpus, *args, **kwargs):
+    def __init__(
+        self,
+        corpus,
+        **kwargs,
+    ):
+        logger.debug(f"{self.__class__.__name__} kwargs={kwargs}")
         self.corpus = corpus
         self.connection = sqlite3.connect(f"file:{corpus}?mode=ro", uri=True)
         self.lids = self.connection.execute("select lang1, lang2 from meta").fetchone()
@@ -38,7 +48,7 @@ class CorpusManager(object):
         self.name = self.connection.execute("select name from meta").fetchone()[0]
         self.domain = self.connection.execute("select domain from meta").fetchone()[0]
         self.init_corpus()
-        self.init_parsers()
+        self.init_parsers(**kwargs)
 
     def init_corpus(self):
         self.corpus, self.created = Corpus.objects.get_or_create(
@@ -47,9 +57,32 @@ class CorpusManager(object):
         if self.created:
             self.corpus.languages.add(*self.langs)
 
-    def init_parsers(self):
+    def init_parsers(self, **kwargs):
         """Set the parsers(pipelines) involved"""
-        self.parsers = [default_parsers.get(lid, LanguageParser)() for lid in self.lids]
+
+        # mark whether the first of the two models was absent
+        model_was_absent = False
+        for i, lid in enumerate(self.lids):
+            #  divide kwargs like lang1_size="md" between parser[0]/parser[1]
+            parser_kwargs = {
+                k.split("_")[1]: v for k, v in kwargs.items() if str(i + 1) in k
+            }
+
+            if kwargs.get("size", None):
+                parser_kwargs["size"] = kwargs["size"]
+
+            #  if a model was already not found, don't bofther actually loading the other
+            if model_was_absent:
+                kwargs["test_only"] = True
+            try:
+                self.parsers.append(
+                    default_parsers.get(lid, LanguageParser)(**parser_kwargs)
+                )
+            except NLPModelLoadError as e:
+                model_was_absent = True
+
+        if model_was_absent:
+            sys.exit()
 
     def remove(self):
         """Delete existing PhrasePairs/Phrases asssociated with the corpus"""

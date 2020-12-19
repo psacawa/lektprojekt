@@ -2,6 +2,7 @@ import functools
 import importlib
 import logging
 import re
+import sys
 from collections import namedtuple
 from functools import lru_cache
 from string import Template
@@ -36,39 +37,54 @@ class LanguageParser(object):
     SpanishParser()
     # uses 'mymodel', fails if absent
     SpanishParser(model='mymodel')
+
+    The optional parameter test_only prevents model loading,
     """
 
-    lid: str
-    modelname: str
-    modelname_template: Template
+    lid: str = None
+    modelname: str = None
+    modelname_template: Template = None
 
-    def __init__(self, size=None, modelname=None, **kwargs):
+    def __init__(self, size=None, modelname=None, test_only=False, **kwargs):
+
+        assert isinstance(self.lid, str) and isinstance(self.modelname, str), (
+            " LanguageParser subclasses must define 'lid' and 'modelname_template'"
+            "attributes as strings."
+        )
+        # select a model prioritizing kwargs passed in precedence of their specificity
         if modelname is not None:
             self.modelname = modelname
         elif size is not None:
-            self.modelname = self.modelname_template.substitute(size=size)
+            self.modelname = self.modelname_template.substitute(lid=self.lid, size=size)
         else:
-            for size in ["lg", "md", "sm"]:
-                candidate_modelname = self.modelname_template.substitute(
-                    lid=self.lid, size=size
-                )
-                if importlib.util.find_spec(candidate_modelname):
-                    self.modelname = candidate_modelname
+            candidate_modelnames = [
+                self.modelname_template.substitute(lid=self.lid, size=size)
+                for size in ["lg", "md", "sm"]
+            ]
+            # attempt to find each of the candidate models
+            for modelname in candidate_modelnames:
+                if importlib.util.find_spec(modelname):
+                    self.modelname = modelname
                     break
-        logger.debug(f"Selected model {self.modelname}")
-        logger.debug("Obtaining Language")
+            if self.modelname is None:
+                print(
+                    f"None of the spacy models {','.join(candidate_modelnames)} detected"
+                )
+                raise NLPModelLoadError()
+        print(f"Selected model {self.modelname}")
+        print("Obtaining model...")
         try:
             self.lang = Language.objects.get(lid=self.lid)
         except IntegrityError as e:
             logger.error("Languages {self.lid} not created yet.")
             raise
 
-        try:
-            logger.info(f"Loading {self.lid} language model '{self.modelname}'.")
-            self.nlp = spacy.load(self.modelname)
-        except OSError as e:
-            logger.error(f"Unable to read NLP model {self.modelname}.")
-            raise NLPModelLoadError(f"Unable to read NLP model {self.modelname}.")
+        if importlib.util.find_spec(self.modelname):
+            if not test_only:
+                self.nlp = spacy.load(self.modelname)
+        else:
+            print(f"Unable to find Spacy model {self.modelname}.")
+            raise NLPModelLoadError()
 
     def process_phrase(self, text: str) -> Tuple[Model, ValidationData]:
         with transaction.atomic():
