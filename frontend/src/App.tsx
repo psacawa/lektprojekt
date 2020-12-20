@@ -8,6 +8,7 @@ const useStyles = makeStyles(() => ({
   main: {
     marginLeft: 220,
     marginRight: 20,
+    maxWidth: 800,
   },
 }));
 

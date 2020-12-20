@@ -12,7 +12,11 @@ interface Props {
   targetLanguage: Language | undefined;
   disabled: boolean;
   options: Lexeme[];
-  setOptions: React.Dispatch<React.SetStateAction<any[]>>;
+  setOptions: React.Dispatch<React.SetStateAction<Lexeme[]>>;
+  value?: Lexeme;
+  setValue: React.Dispatch<React.SetStateAction<Lexeme | undefined>>;
+  inputValue: string;
+  onInputChange: any;
 }
 
 const AsyncWordSelect = ({
@@ -20,9 +24,12 @@ const AsyncWordSelect = ({
   disabled,
   options,
   setOptions,
+  value,
+  setValue,
+  inputValue,
+  onInputChange,
 }: Props) => {
   const [open, setOpen] = useState(false);
-  const [inputValue, setInputValue] = useState("");
 
   const lexemeQuery = useQuery(
     ["lexemes", { lid: targetLanguage?.lid, prompt: inputValue }],
@@ -32,15 +39,11 @@ const AsyncWordSelect = ({
     },
     {
       enabled: inputValue.length >= 3,
-      onSuccess: (data) => {
-        const newOptions = [...options, ...data.results];
+      onSuccess: (results) => {
+        const newOptions = [...options, ...results];
         setOptions(newOptions);
       },
     }
-  );
-  const handleInputChange = debounce(
-    (event, newInputValue) => setInputValue(newInputValue),
-    300
   );
 
   return (
@@ -50,14 +53,18 @@ const AsyncWordSelect = ({
         onOpen={() => {
           setOpen(true);
         }}
+        value={value}
         onClose={() => {
           setOpen(false);
         }}
-        getOptionLabel={(option) => `${option.lemma} ${option.pos}`}
+        getOptionLabel={(option) => option.lemma}
         options={options}
         loading={lexemeQuery.isFetching}
         disabled={disabled}
-        onInputChange={handleInputChange}
+        onInputChange={onInputChange}
+        onChange={(ev, newValue, reason) => {
+          newValue && setValue(newValue);
+        }}
         renderInput={(params) => (
           <TextField
             {...params}
@@ -76,6 +83,7 @@ const AsyncWordSelect = ({
             }}
           />
         )}
+        renderOption={(option) => `${option.lemma} ${option.pos}`}
       />
     </Grid>
   );

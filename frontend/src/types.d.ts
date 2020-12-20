@@ -28,6 +28,7 @@ export interface Phrase {
 }
 
 export interface PhrasePair {
+  id: number;
   base: Phrase;
   target: Phrase;
 }
