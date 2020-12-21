@@ -91,7 +91,8 @@ class LanguageParser(object):
     def process_phrase(self, text: str) -> Tuple[Model, ValidationData]:
         with transaction.atomic():
             phrase = Phrase.objects.create(text=text, lang=self.lang)
-            doc = self.nlp(text)
+            doc: Doc = self.nlp(text)
+            tokens_json = doc.to_json()["tokens"]
             validation_data = self.get_validation_data(doc)
             cur_phrase_words = []
             for i, token in enumerate(doc):
@@ -159,13 +160,14 @@ class LanguageParser(object):
                     cur_word.annotations.add(*annots)
 
                 cur_phrase_words.append(
-                    PhraseWord(word=cur_word, phrase=phrase, number=i)
+                    PhraseWord(
+                        word=cur_word,
+                        phrase=phrase,
+                        number=i,
+                        start=tokens_json[i]["start"],
+                        end=tokens_json[i]["end"],
+                    )
                 )
-                #  try:
-                #      phrase.words.add(cur_word, through_defaults={"number": i})
-                #  except ValueError as e:
-                #      logger.critical(f"Failed to add {cur_word} to phrase")
-                #      raise e
             PhraseWord.objects.bulk_create(cur_phrase_words)
 
         #  just return the validation data directly as an attribute of the Phrase

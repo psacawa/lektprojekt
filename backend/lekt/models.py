@@ -588,15 +588,17 @@ class PhraseWord(models.Model):
     phrase = models.ForeignKey(Phrase, on_delete=models.CASCADE)
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
     number = models.IntegerField()
+    start = models.IntegerField()
+    end = models.IntegerField()
 
     objects = managers.LektManager()
 
     def __str__(self):
-        return f"<PhraseWord norm={self.word.norm} #{self.number}>"
+        return self.word.norm
 
     def __repr__(self):
-        return "<PhraseWord text={}, norm={} #{}>".format(
-            self.phrase.text, self.word.norm, self.number
+        return "<PhraseWord text={}, norm={} #{} start={} end={}>".format(
+            self.phrase.text, self.word.norm, self.number, self.start, self.end
         )
 
 
