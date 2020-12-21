@@ -39,7 +39,9 @@ urlpatterns = [
 
 if settings.DEBUG:
     import debug_toolbar
+    from django.views.generic import RedirectView
 
-    urlpatterns = [
+    urlpatterns = urlpatterns + [
         path("__debug__", include(debug_toolbar.urls)),
-    ] + urlpatterns
+        path(r"", RedirectView.as_view(url="/docs"), name="redirect-to-dox"),
+    ]
