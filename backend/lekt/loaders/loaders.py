@@ -16,6 +16,7 @@ from lekt.loaders.language import (
     EnglishParser,
     LanguageParser,
     NLPModelLoadError,
+    PolishParser,
     SpanishParser,
 )
 from lekt.models import Corpus, Language, Phrase, PhrasePair, Word
@@ -25,10 +26,7 @@ logger.addHandler(logging.StreamHandler(sys.stdout))
 
 ValidationData = namedtuple("ValidationData", ["length", "propriety"])
 
-default_parsers = {
-    "en": EnglishParser,
-    "es": SpanishParser,
-}
+default_parsers = {"en": EnglishParser, "es": SpanishParser, "pl": PolishParser}
 
 
 class CorpusManager(object):

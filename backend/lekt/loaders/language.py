@@ -47,9 +47,11 @@ class LanguageParser(object):
 
     def __init__(self, size=None, modelname=None, test_only=False, **kwargs):
 
-        assert isinstance(self.lid, str) and isinstance(self.modelname, str), (
+        assert isinstance(self.lid, str) and isinstance(
+            self.modelname_template, Template
+        ), (
             " LanguageParser subclasses must define 'lid' and 'modelname_template'"
-            "attributes as strings."
+            "attributes."
         )
         # select a model prioritizing kwargs passed in precedence of their specificity
         if modelname is not None:
@@ -256,18 +258,21 @@ class LanguageParser(object):
         progress.finish()
 
     def parse_annotations(self, tag: str):
-        """ Implement in subclass"""
-        raise NotImplementedError
+        """
+        For models en_core_web_* and other language models, the Token.tag_ attribute
+        contains the morphological data, so we return it in a list. This is treated a
+        default behaviour.
+        """
+        return [tag]
 
     def explain_annotation(self, tag: str):
-        """ Implement in subclass"""
-        raise NotImplementedError
+        """For some labelling schemes, spacy.explain has data"""
+        return spacy.explain(tag)
 
 
 class SpanishParser(LanguageParser):
     """Subclass for parsing with the family of models es-core-news-XX."""
 
-    modelname = "es_core_news_md"
     modelname_template = Template("${lid}_core_news_${size}")
     lid = "es"
     value_explanation_dict = {
@@ -362,19 +367,15 @@ class SpanishParser(LanguageParser):
 class EnglishParser(LanguageParser):
     """Subclass for parsing with the family of models en-core-web-XX."""
 
-    modelname = "en_core_web_md"
     modelname_template = Template("${lid}_core_web_${size}")
     lid = "en"
 
-    def parse_annotations(self, tag: str):
-        """
-        For `en_core_web_md` , the Token.tag_ attribute contains the morphological data,
-        so we return it
-        """
-        return [tag]
 
-    def explain_annotation(self, tag: str):
-        return spacy.explain(tag)
+class PolishParser(LanguageParser):
+    """Subclass for parsing with the family of models pl-core-news-*."""
+
+    modelname_template = Template("${lid}_core_news_${size}")
+    lid = "pl"
 
 
 class NLPModelLoadError(Exception):
