@@ -6,7 +6,7 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import { routes } from "../routes";
+import { drawerRoutes } from "../routes";
 
 const useStyles = makeStyles(() => ({
   list: {
@@ -18,7 +18,7 @@ const LektDrawer = () => {
   return (
     <Drawer variant="permanent">
       <List className={classes.list}>
-        {routes.map((route, idx) => (
+        {drawerRoutes.map((route, idx) => (
           <ListItem key={idx}>
             <Link to={route.path}>
               <ListItemText>{route.name}</ListItemText>

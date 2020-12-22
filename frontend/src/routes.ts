@@ -1,15 +1,17 @@
 import React from "react";
 import Home from "./views/Home";
 import GimpedView from "./views/GimpedView";
+import { concat } from "lodash";
+import PhrasePairDetailView from "./views/PhrasePairDetailView";
 
 interface Route {
   path: string;
   name: string;
-  component: React.FunctionComponent;
   exact: boolean;
+  component: React.FunctionComponent<any>;
 }
 
-export const routes: Route[] = [
+export const drawerRoutes: Route[] = [
   {
     path: "/",
     name: "Home",
@@ -23,3 +25,12 @@ export const routes: Route[] = [
     component: GimpedView,
   },
 ];
+
+export const routes: Route[] = concat(drawerRoutes, [
+  {
+    path: "/phrasepair/:pk",
+    name: "PhrasePair Detail View",
+    exact: false,
+    component: PhrasePairDetailView as any,
+  },
+]);
