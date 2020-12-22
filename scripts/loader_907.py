@@ -19,7 +19,13 @@ def main():
     parser.add_argument(
         "target", help="TSV file containing phrases or folder with such phrases"
     )
-    parser.add_argument("-r", "--reload", help="Reload all SQLite files", default=False)
+    parser.add_argument(
+        "-r",
+        "--reload",
+        help="Reload all SQLite files",
+        default=False,
+        action="store_true",
+    )
     args = parser.parse_args()
     target = args.target
     if isfile(target):
@@ -45,18 +51,19 @@ def get_voices():
     # preprocess language name
     language_map = {k.split(" ")[-1].lower(): v for [k, v] in tuples}
     language_map["lithuanian"] = "lt"
+    language_map["mandarin"] = "zh"
     language_map["finnish"] = "fi"
     return language_map
 
 
 def transform_tsv(tsv_file, reload=False):
     print(tsv_file)
-    data = [row.split("\t")[1:3] for row in open(tsv_file).readlines()]
+    data = [row.strip().split("\t")[1:3] for row in open(tsv_file).readlines()]
 
     # find out the language by manual inspection (ask the user)
     print(f"Target: {data[0][1]}")
     try:
-        lang = input("Identify target language:")
+        lang = input("Identify target language: ")
     except KeyboardInterrupt as e:
         print("Skipping...")
         return
@@ -65,6 +72,7 @@ def transform_tsv(tsv_file, reload=False):
         if reload:
             subprocess.run(["rm", sqlite_file])
         else:
+            print("SQLite already present.")
             return
     conn = sqlite3.connect(f"file:{sqlite_file}", uri=True)
     conn.execute(
