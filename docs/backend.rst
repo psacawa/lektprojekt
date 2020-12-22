@@ -69,6 +69,15 @@ implement it via ``describe_plan``:
     .order_by("-cnt")
     .describe_plan()
 
+There is a curstom *lookup* implementing the SQL clause  ``LIKE``. This is somehow absent
+from vanilla Django.
+
+.. code-block:: python
+
+  PhrasePair.objects.filter(base__text__like='%tip%', target__lang__lid ='fr')
+
+
+
 
 Backend Logging Config
 ----------------------
