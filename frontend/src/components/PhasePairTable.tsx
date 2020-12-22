@@ -1,4 +1,5 @@
 import {
+  Button,
   Grid,
   Table,
   TableCell,
@@ -8,6 +9,7 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 import { Language, PhrasePair } from "../types";
+import { useHistory, Link } from "react-router-dom";
 
 interface Props {
   baseLanguage: Language | undefined;
@@ -22,6 +24,7 @@ const PhrasePairTable = ({
   targetLanguage,
   phrasePairs,
 }: Props) => {
+  const history = useHistory();
   return (
     <Grid item xs={12} justify="center">
       {phrasePairs.length > 0 ? (
@@ -38,7 +41,9 @@ const PhrasePairTable = ({
               </TableRow>
             </TableHead>
             {phrasePairs?.map((phrasePair) => (
-              <TableRow>
+              <TableRow
+                onClick={() => history.push(`/phrasepair/${phrasePair.id}`)}
+              >
                 <TableCell key={0}>{phrasePair.base.text}</TableCell>
                 <TableCell key={1}>{phrasePair.target.text}</TableCell>
               </TableRow>
