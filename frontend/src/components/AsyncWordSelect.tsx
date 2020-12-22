@@ -1,7 +1,6 @@
 import { useState } from "react";
-import TextField from "@material-ui/core/TextField";
-import Autocomplete from "@material-ui/lab/Autocomplete";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import { Typography, TextField, CircularProgress } from "@material-ui/core";
+import { Autocomplete } from "@material-ui/lab";
 import { Grid } from "@material-ui/core";
 import { Language, Lexeme } from "../types";
 import { useQuery } from "react-query";
@@ -83,7 +82,17 @@ const AsyncWordSelect = ({
             }}
           />
         )}
-        renderOption={(option) => `${option.lemma} ${option.pos}`}
+        renderOption={(option) => (
+          // `${option.lemma} ${option.pos}`
+          <Grid container>
+            <Grid item xs={6}>
+              <Typography>{option.lemma}</Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <Typography>{option.pos}</Typography>
+            </Grid>
+          </Grid>
+        )}
       />
     </Grid>
   );

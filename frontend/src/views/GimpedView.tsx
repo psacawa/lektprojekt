@@ -1,23 +1,12 @@
-import {
-  Button,
-  debounce,
-  Grid,
-  Table,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TextField,
-  Typography,
-} from "@material-ui/core";
+import { Button, debounce, Grid, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { CircularProgress } from "@material-ui/core";
 import * as client from "../client";
 import { Language, Lexeme, PhrasePair } from "../types";
-import { Autocomplete } from "@material-ui/lab";
 import AsyncWordSelect from "../components/AsyncWordSelect";
 import LanguageSelect from "../components/LanguageSelect";
+import PhasePairTable from "../components/PhasePairTable";
 
 const GimpedView = () => {
   const [baseLanguage, setBaseLanguage] = useState<Language | undefined>(
@@ -28,25 +17,28 @@ const GimpedView = () => {
   );
   const [options, setOptions] = useState<Lexeme[]>([]);
   const [phrasePairs, setPhrasePairs] = useState<PhrasePair[]>([]);
+  const [resultsShown, setResultsShown] = useState(false);
   const [promptValue, setPromptValue] = useState<Lexeme>();
   const [promptInputValue, setPromptInputValue] = useState<string>("");
-  const [phrasePairsEnabled, setPhrasePairsEnabled] = useState(false);
 
   const languagesQuery = useQuery("languages", client.listLanguages, {
-    onSuccess: (data) => {
-      setBaseLanguage(data.find((lang) => lang.lid === "en"));
-      setTargetLanguage(data.find((lang) => lang.lid === "es"));
+    onSuccess: (languages) => {
+      setBaseLanguage(languages.find((lang) => lang.lid === "en"));
+      setTargetLanguage(languages.find((lang) => lang.lid === "es"));
     },
     refetchOnWindowFocus: false,
   });
-  const handleInputChange: any = debounce(
-    (event: any, newInputValue: string) => setPromptInputValue(newInputValue),
+  const handleInputChange = debounce(
+    (event: React.ChangeEvent, newInputValue: string) =>
+      setPromptInputValue(newInputValue),
     300
   );
-  const handleClick = (ev: React.MouseEvent) =>
+  const handleClick = (ev: React.MouseEvent) => {
     client
       .getSuggestions(baseLanguage!.lid, targetLanguage!.lid, promptValue!.id)
       .then((phrasePairs) => setPhrasePairs(phrasePairs));
+    setResultsShown(true);
+  };
   return (
     <>
       <Typography variant="h5" style={{ margin: 30 }}>
@@ -89,26 +81,12 @@ const GimpedView = () => {
                 Search
               </Button>
             </Grid>
-            <TableContainer>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell key={0} align="left">
-                      {baseLanguage?.name}
-                    </TableCell>
-                    <TableCell key={1} align="left">
-                      {targetLanguage?.name}
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                {phrasePairs?.map((phrasePair, idx) => (
-                  <TableRow>
-                    <TableCell key={0}>{phrasePair.base.text}</TableCell>
-                    <TableCell key={1}>{phrasePair.target.text}</TableCell>
-                  </TableRow>
-                ))}
-              </Table>
-            </TableContainer>
+            {resultsShown ? (
+              <PhasePairTable
+                enabled={phrasePairs.length > 0}
+                {...{ baseLanguage, targetLanguage, phrasePairs }}
+              />
+            ) : null}
           </Grid>
         </>
       )}
