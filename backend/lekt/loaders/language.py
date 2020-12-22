@@ -5,6 +5,7 @@ import re
 import sys
 from collections import namedtuple
 from functools import lru_cache
+from inspect import isclass
 from string import Template
 from typing import Tuple
 
@@ -272,7 +273,36 @@ class LanguageParser(object):
         return spacy.explain(tag)
 
 
-class SpanishParser(LanguageParser):
+class PipeSeparatedAnnotationsMixin(object):
+    @staticmethod
+    @lru_cache()
+    def parse_annotations(tag: str):
+        """
+        "VERB__Mood=Sub|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin" ->
+        [Mood=Sub, Number=Sing, Person=3, Tense=Pres, VerbForm=Fin]
+        """
+        tag_parts = re.split(r"__", tag)
+        if len(tag_parts) == 2 and len(tag_parts[1]) > 0:
+            annots = tag_parts[1].split("|")
+            ret = []
+            for annot in annots:
+                # handle the PronType=Int,Rel case
+                match = re.fullmatch("(\w+)=(\w+),(\w+)", annot)
+                if match:
+                    k, v1, v2 = match.groups()
+                    if k == "Case":
+                        ret.append(f"{k}={v1}")
+                        ret.append(f"{k}={v2}")
+                    else:
+                        ret.append(f"{k}={v1}")
+                else:
+                    ret.append(annot)
+            return ret
+        else:
+            return []
+
+
+class SpanishParser(PipeSeparatedAnnotationsMixin, LanguageParser):
     """Subclass for parsing with the family of models es-core-news-XX."""
 
     modelname_template = Template("${lid}_core_news_${size}")
@@ -330,33 +360,6 @@ class SpanishParser(LanguageParser):
     #  PrepCase=Pre
     #  Reflex=Yes
 
-    @staticmethod
-    @lru_cache()
-    def parse_annotations(tag: str):
-        """
-        "VERB__Mood=Sub|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin" ->
-        [Mood=Sub, Number=Sing, Person=3, Tense=Pres, VerbForm=Fin]
-        """
-        tag_parts = re.split(r"__", tag)
-        if len(tag_parts) == 2 and len(tag_parts[1]) > 0:
-            annots = tag_parts[1].split("|")
-            ret = []
-            for annot in annots:
-                # handle the PronType=Int,Rel case
-                match = re.fullmatch("(\w+)=(\w+),(\w+)", annot)
-                if match:
-                    k, v1, v2 = match.groups()
-                    if k == "Case":
-                        ret.append(f"{k}={v1}")
-                        ret.append(f"{k}={v2}")
-                    else:
-                        ret.append(f"{k}={v1}")
-                else:
-                    ret.append(annot)
-            return ret
-        else:
-            return []
-
     def explain_annotation(self, value: str):
         """ spacy does not explain es_core_news_md annotations"""
         return (
@@ -378,6 +381,101 @@ class PolishParser(LanguageParser):
 
     modelname_template = Template("${lid}_core_news_${size}")
     lid = "pl"
+
+
+class FrenchParser(PipeSeparatedAnnotationsMixin, LanguageParser):
+    """Subclass for parsing with the family of models fr-core-news-*."""
+
+    modelname_template = Template("${lid}_core_news_${size}")
+    lid = "fr"
+
+
+class GermanParser(LanguageParser):
+    """Subclass for parsing with the family of models de-core-news-*."""
+
+    modelname_template = Template("${lid}_core_news_${size}")
+    lid = "de"
+
+
+class ItalianParser(PipeSeparatedAnnotationsMixin, LanguageParser):
+    """Subclass for parsing with the family of models it-core-news-*."""
+
+    modelname_template = Template("${lid}_core_news_${size}")
+    lid = "it"
+
+
+class JapaneseParser(LanguageParser):
+    """Subclass for parsing with the family of models ja-core-news-*."""
+
+    modelname_template = Template("${lid}_core_news_${size}")
+    lid = "ja"
+
+
+class PortugueseParser(PipeSeparatedAnnotationsMixin, LanguageParser):
+    """Subclass for parsing with the family of models pt-core-news-*."""
+
+    modelname_template = Template("${lid}_core_news_${size}")
+    lid = "pt"
+
+
+class DutchParser(PipeSeparatedAnnotationsMixin, LanguageParser):
+    """Subclass for parsing with the family of models nl-core-news-*."""
+
+    modelname_template = Template("${lid}_core_news_${size}")
+    lid = "nl"
+
+
+class RomanianParser(LanguageParser):
+    """Subclass for parsing with the family of models ro-core-news-*."""
+
+    modelname_template = Template("${lid}_core_news_${size}")
+    lid = "ro"
+
+
+class DanishParser(PipeSeparatedAnnotationsMixin, LanguageParser):
+    """Subclass for parsing with the family of models da-core-news-*."""
+
+    modelname_template = Template("${lid}_core_news_${size}")
+    lid = "da"
+
+
+class GreekParser(PipeSeparatedAnnotationsMixin, LanguageParser):
+    """Subclass for parsing with the family of models el-core-news-*."""
+
+    modelname_template = Template("${lid}_core_news_${size}")
+    lid = "el"
+
+
+class LithuanianParser(PipeSeparatedAnnotationsMixin, LanguageParser):
+    """Subclass for parsing with the family of models lt-core-news-*."""
+
+    modelname_template = Template("${lid}_core_news_${size}")
+    lid = "lt"
+
+
+class NorwegianParser(PipeSeparatedAnnotationsMixin, LanguageParser):
+    """Subclass for parsing with the family of models nb-core-news-*."""
+
+    modelname_template = Template("${lid}_core_news_${size}")
+    lid = "nb"
+
+
+class ChineseParser(LanguageParser):
+    """Subclass for parsing with the family of models zh-core-news-*."""
+
+    modelname_template = Template("${lid}_core_news_${size}")
+    lid = "zh"
+
+
+#  we find all LanguageParser classes in the local scope, and create a dict mapping their
+#  lid attributes to them, for the purpose of initializing the CorpusManager's parsers
+module_globals = globals()
+parsers = [
+    obj
+    for obj in globals().values()
+    if isclass(obj) and issubclass(obj, LanguageParser) and obj != LanguageParser
+]
+parser_dict = {parser.lid: parser for parser in parsers}
 
 
 class NLPModelLoadError(Exception):

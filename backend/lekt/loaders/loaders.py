@@ -12,21 +12,13 @@ from django.db import IntegrityError, connection, transaction
 from progress.bar import Bar
 
 from lekt import models
-from lekt.loaders.language import (
-    EnglishParser,
-    LanguageParser,
-    NLPModelLoadError,
-    PolishParser,
-    SpanishParser,
-)
+from lekt.loaders.language import LanguageParser, NLPModelLoadError, parser_dict
 from lekt.models import Corpus, Language, Phrase, PhrasePair, Word
 
 logger: logging.Logger = logging.getLogger(__name__)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
 ValidationData = namedtuple("ValidationData", ["length", "propriety"])
-
-default_parsers = {"en": EnglishParser, "es": SpanishParser, "pl": PolishParser}
 
 
 class CorpusManager(object):
@@ -74,7 +66,7 @@ class CorpusManager(object):
                 kwargs["test_only"] = True
             try:
                 self.parsers.append(
-                    default_parsers.get(lid, LanguageParser)(**parser_kwargs)
+                    parser_dict.get(lid, LanguageParser)(**parser_kwargs)
                 )
             except NLPModelLoadError as e:
                 model_was_absent = True
