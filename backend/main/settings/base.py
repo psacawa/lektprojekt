@@ -32,7 +32,7 @@ SECRET_KEY = "dzif4vpy6wc-y3nmon9eexcgz39-*wq1ew)csp7*u18s8g)m#5"
 DEBUG = ENVIRONMENT == "development"
 DEVELOPMENT = DEBUG
 
-ALLOWED_HOSTS = ["lektprojekt.com", "127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["lektprojekt.com", "127.0.0.1", "localhost", "l"]
 # next line necessary for django-debug-toolbar
 INTERNAL_IPS = ALLOWED_HOSTS
 
