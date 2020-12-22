@@ -36,6 +36,12 @@ ALLOWED_HOSTS = ["lektprojekt.com", "127.0.0.1", "localhost"]
 # next line necessary for django-debug-toolbar
 INTERNAL_IPS = ALLOWED_HOSTS
 
+LEKTPROJEKT_APPS = [
+    # first party applications
+    "lekt",
+    "main",
+]
+
 # Application definition
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -57,10 +63,7 @@ INSTALLED_APPS = [
     "dj_rest_auth",
     "dj_rest_auth.registration",
     "drf_yasg",
-    # applications
-    "lekt",
-    "main",
-]
+] + LEKTPROJEKT_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

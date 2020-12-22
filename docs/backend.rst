@@ -73,7 +73,7 @@ implement it via ``describe_plan``:
 Backend Logging Config
 ----------------------
 
-The logging configuration is contained in ``main/settings/logging.py``. This file is 
-committed but git-ignored, so you can modify it for your own debugging purposes without 
-accidentally committing it with ``git add -u``. Logs with a ``FileHandler`` are output in
-``logs``.
+The logging configuration is contained in ``main/settings/logging.py``. All app modules 
+have ``FileHandler`` s attached to them with level ``DEBUG`` as well as ``StreamHandler`` s 
+outputting to ``stderr`` with level ``ERROR``. Logs with a ``FileHandler`` are output 
+in ``logs``.

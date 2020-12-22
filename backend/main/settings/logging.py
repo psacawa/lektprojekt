@@ -1,42 +1,52 @@
-#  <TODO 03/12/20 psacawa: conf. logging base on ENVIRONMENT>
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "verbose": {
-            "format": "[{asctime}] {levelname} {name} {lineno} {funcName} {message}",
-            "style": "{",
-        },
-        "simple": {"format": "{levelname} {name} {message}", "style": "{"},
-    },
-    "loggers": {
-        "main": {
-            "handlers": ["console"],
+# default loggers in production
+if DEBUG:
+    # for every module listed here, there will be a logger made with a file handler with level
+    # DEBUG and verbose format, and a stderr handler with level ERROR and simple format
+    # for both, there will be no propagation
+    LEKTPROJEKT_LOGGED_MODULES = [
+        "lekt.views",
+        "lekt.models",
+        "lekt.signals",
+        "lekt.loaders",
+        "main.views",
+        "main.models",
+        "main.signals",
+        "django.db.backends",
+    ]
+    HANDLERS = {
+        f"file/{module}": {
             "level": "DEBUG",
-            "propagate": True,
-        },
-        "lekt.signals": {"handlers": ["console"], "level": "DEBUG"},
-        "lekt.views": {"handlers": ["console"], "level": "DEBUG"},
-        "django.db.backends": {"handlers": ["db_file"], "level": "DEBUG"},
-        "django.request": {"handlers": ["request_file"], "level": "DEBUG"},
-    },
-    "handlers": {
+            "class": "logging.FileHandler",
+            "formatter": "verbose",
+            "filename": join(LOGS_DIR, f"{module}.log"),
+        }
+        for module in LEKTPROJEKT_LOGGED_MODULES
+    }
+    HANDLERS |= {
         "console": {
-            "level": "DEBUG",
+            "level": "ERROR",
             "class": "logging.StreamHandler",
             "formatter": "verbose",
+        }
+    }
+
+    LOGGING = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "verbose": {
+                "format": "[{asctime}] {levelname} {name} {lineno} {funcName} {message}",
+                "style": "{",
+            },
+            "simple": {"format": "{levelname} {name} {message}", "style": "{"},
         },
-        "db_file": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "formatter": "verbose",
-            "filename": join(LOGS_DIR, "db.log"),
+        "loggers": {
+            module: {
+                "handlers": ["console", f"file/{module}"],
+                "level": "DEBUG",
+                "propagate": False,
+            }
+            for module in LEKTPROJEKT_LOGGED_MODULES
         },
-        "request_file": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "formatter": "verbose",
-            "filename": join(LOGS_DIR, "request.log"),
-        },
-    },
-}
+        "handlers": HANDLERS,
+    }
