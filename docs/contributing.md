@@ -17,7 +17,7 @@ We use the tags listed below when writing commit comments. The commit header sho
 
 # Technologies Used
 
-Here we list *most* technologies/libraries used, with an emphasis on the clarifying the role of the smaller ones, so various `import` statements don't look mysterious
+Here we list _most_ technologies/libraries used, with an emphasis on the clarifying the role of the smaller ones, so various `import` statements don't look mysterious
 
 ## Backend
 
@@ -47,6 +47,7 @@ Here we list *most* technologies/libraries used, with an emphasis on the clarify
 - **pre-commit** - manage pre-commit hooks: `pre-commit install` to install
 - **black** - opinionated code formatter
 - **pip** - package management
+- **sphinx** - generates fancy documenation with search from restructured text and markdown
 
 ## Frontend
 

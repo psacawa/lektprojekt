@@ -20,3 +20,8 @@ tags
 .python-version
 
 *.sqlite*
+
+# documentation build catalogue
+build
+_build
+

@@ -2,6 +2,24 @@
 
 This is the monorepo for _LektProjekt_. See `docs/` for general documentation.
 
+## General Docs
+
+After installing `sphinx`, run:
+
+```
+cd docs
+sphinx-build . _build
+```
+
+This creates the documentation in the `_build` catalogue. You can serve the docs by entering it and running a static file web server, e.g. with
+
+```
+cd _build
+python3 -m http.server 8001
+```
+
+I will try to get django to serve it.
+
 ## Backend
 
 To get it running on `localhost` no Ubuntu (adjust according to necessity):
@@ -39,3 +57,11 @@ python3 manage.py runserver
 ```
 
 I know this is a pain in the butt. I'm going to try and make a `docker-compose.yml` file so we run all the services that way.
+
+## Frontend
+
+```
+cd frontend
+npm install
+npm start
+```
