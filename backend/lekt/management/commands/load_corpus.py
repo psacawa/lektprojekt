@@ -11,7 +11,6 @@ from lekt.loaders import CorpusManager, EnglishParser, SpanishParser
 from lekt.models import Corpus, Phrase, PhrasePair
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
 
 class Command(BaseCommand):

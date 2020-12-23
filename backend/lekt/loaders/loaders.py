@@ -15,8 +15,7 @@ from lekt import models
 from lekt.loaders.language import LanguageParser, NLPModelLoadError, parser_dict
 from lekt.models import Corpus, Language, Phrase, PhrasePair, Word
 
-logger: logging.Logger = logging.getLogger(__name__)
-logger.addHandler(logging.StreamHandler(sys.stdout))
+logger = logging.getLogger(__name__)
 
 ValidationData = namedtuple("ValidationData", ["length", "propriety"])
 
@@ -115,7 +114,6 @@ class CorpusManager(object):
 
     def process_phrasepair(self, *phrase_texts):
         assert len(phrase_texts) == 2, "Phrase pair must have two elements"
-        logger.debug(phrase_texts)
         phrases = []
         for i, text in enumerate(phrase_texts):
             phrases.append(self.parsers[i].process_phrase(text=text))

@@ -25,7 +25,6 @@ if not isdir(LOGS_DIR):
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "dzif4vpy6wc-y3nmon9eexcgz39-*wq1ew)csp7*u18s8g)m#5"
 
-
 # the DEBUG variable is interpreted by django to turn on the server in development mode
 # DEVELOPMENT is an alias with a friendly name for the config
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -33,8 +32,6 @@ DEBUG = ENVIRONMENT == "development"
 DEVELOPMENT = DEBUG
 
 ALLOWED_HOSTS = ["lektprojekt.com", "127.0.0.1", "localhost", "l"]
-# next line necessary for django-debug-toolbar
-INTERNAL_IPS = ALLOWED_HOSTS
 
 LEKTPROJEKT_APPS = [
     # first party applications
@@ -62,7 +59,6 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "dj_rest_auth",
     "dj_rest_auth.registration",
-    "drf_yasg",
 ] + LEKTPROJEKT_APPS
 
 MIDDLEWARE = [

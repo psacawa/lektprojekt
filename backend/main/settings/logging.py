@@ -16,9 +16,11 @@ if DEBUG:
     HANDLERS = {
         f"file/{module}": {
             "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "formatter": "verbose",
+            "class": "logging.handlers.RotatingFileHandler",
             "filename": join(LOGS_DIR, f"{module}.log"),
+            "maxBytes": 2 ** 20,
+            "backupCount": 1,
+            "formatter": "verbose",
         }
         for module in LEKTPROJEKT_LOGGED_MODULES
     }

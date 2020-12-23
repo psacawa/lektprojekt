@@ -20,7 +20,6 @@ from lekt.models import Annotation, Language, Lexeme, Phrase, PhraseWord, Word
 
 ValidationData = namedtuple("ValidationData", ["length", "propriety"])
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
 
 
 class LanguageParser(object):
@@ -227,7 +226,6 @@ class LanguageParser(object):
             if isinstance(explanation, str) and len(explanation) > 0:
                 annot.explanation = explanation
                 annot.save()
-            logger.debug(f"")
         return annot
 
     @staticmethod
