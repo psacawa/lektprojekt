@@ -63,21 +63,35 @@ class AnnotationManager(LektManager):
         explanation.
         """
 
+        from colorama import Fore, init
+        from django.db.models import Count
         from tabulate import tabulate
 
         # this must be here to avoid a circular import
         from .models import Annotation, Phrase
 
         def get_example(annotation: Annotation):
-            for limit in range(40, 80, 10):
-                phrase = (
-                    Phrase.objects.filter(words__annotations=annotation)
-                    .annotate(length=Length("text"))
-                    .filter(length__lt=60)
-                    .first()
-                )
-                if phrase is not None:
-                    return phrase
+            """ Return example phrase with annotation in text highlighted."""
+            phrase: Phrase = (
+                Phrase.objects.filter(words__annotations=annotation)
+                .annotate(count=Count("words"))
+                .order_by("-count")
+                .first()
+            )
+            if phrase is not None:
+                increment = 0
+                text = list(phrase.text)
+                words_with_annot_pk = [
+                    w.pk for w in phrase.words.filter(annotations=annotation)
+                ]
+                #  automatically ordered by increasing order in sentence
+                for pw in phrase.phraseword_set.all():
+                    if pw.word_id in words_with_annot_pk:
+                        text.insert(pw.start + increment, Fore.RED)
+                        increment += 1
+                        text.insert(pw.end + increment, Fore.RESET)
+                        increment += 1
+                return "".join(text)
 
         results = self.filter(lang__lid=lid).order_by("value")
         data = [[a.value, a.explanation, get_example(a)] for a in results]
