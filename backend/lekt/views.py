@@ -4,7 +4,7 @@ from operator import __or__
 
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
-from django.db.models import Count, Q
+from django.db.models import Count, Prefetch, Q
 from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -22,6 +22,7 @@ from .models import (
     Lexeme,
     Phrase,
     PhrasePair,
+    PhraseWord,
     Subscription,
     TrackedAnnotation,
     TrackedItem,
@@ -34,7 +35,6 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
 
-#  class LanguageViewSet(generics.ListAPIView):
 class LanguageViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API view set to for listing `Language` models and their associated `Voice` models.
@@ -97,18 +97,44 @@ class PhraseCompletionView(generics.ListAPIView):
 
 
 @method_decorator(cache_page(60 * 60), name="dispatch")
-class GimpedView(generics.ListAPIView):
+class PhrasePairViewSet(viewsets.ReadOnlyModelViewSet):
     """
     This endpoint just shows `PhrasePair` models for a give `Language` pair such
     that the `target` language phrase contains a particular word.
 
-    E.g. `/api/suggestion?base=en&target=es&lexeme=2985&annot=65`
+    E.g. `/api/pairs/?base=en&target=es&lexeme=2985&annot=65`
     """
 
-    queryset = PhrasePair.objects.select_related("base", "target")
-    serializer_class = serializers.PhrasePairSerializer
-    filterset_class = filters.GimpedFilterSet
+    def get_queryset(self):
+        queryset = (
+            PhrasePair.objects.filter(active=True)
+            .select_related("base", "target")
+            .order_by("id")
+        )
+        if "lexeme" in self.request.query_params:
+            lexeme = self.request.query_params["lexeme"]
+            queryset = queryset.prefetch_related(
+                Prefetch(
+                    "target__phraseword_set",
+                    queryset=PhraseWord.objects.filter(word__lexeme=lexeme),
+                    to_attr="lexeme_matches",
+                )
+            )
+        elif "annot" in self.request.query_params:
+            annot = self.request.query_params["annot"]
+            queryset = queryset.prefetch_related(
+                Prefetch(
+                    "target__phraseword_set",
+                    queryset=PhraseWord.objects.filter(word__annotations=annot),
+                    to_attr="annot_matches",
+                )
+            )
+        return queryset
+
+    filterset_class = filters.PhrasePairFilterSet
+
     ordering = ["id"]
+    serializer_class = serializers.PhrasePairSerializer
 
 
 class UserProfileView(generics.RetrieveAPIView):

@@ -1,5 +1,8 @@
+import logging
+
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from rest_framework.request import Request
 
 from .models import (
     Annotation,
@@ -7,6 +10,7 @@ from .models import (
     Lexeme,
     Phrase,
     PhrasePair,
+    PhraseWord,
     Subscription,
     TrackedAnnotation,
     TrackedItem,
@@ -15,6 +19,8 @@ from .models import (
     Voice,
     Word,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class VoiceSerializer(serializers.ModelSerializer):
@@ -54,19 +60,42 @@ class WordSerializer(serializers.ModelSerializer):
         exclude = ["created_at", "updated_at"]
 
 
-class PhraseSerializer(serializers.ModelSerializer):
+class PhraseWordSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Phrase
-        exclude = ["created_at", "updated_at", "words"]
+        model = PhraseWord
+        fields = ["id", "number", "start", "end"]
+
+
+class PhraseSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    text = serializers.CharField()
+
+    def __init__(self, expand=None, *args, **kwargs):
+        super().__init__(
+            *args,
+            **kwargs,
+        )
+        if expand == "lexeme":
+            self.fields["lexeme_matches"] = PhraseWordSerializer(many=True)
+        if expand == "annot":
+            self.fields["annot_matches"] = PhraseWordSerializer(many=True)
 
 
 class PhrasePairSerializer(serializers.ModelSerializer):
     base = PhraseSerializer()
     target = PhraseSerializer()
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        request: Request = self.context["request"]
+        if "lexeme" in request.query_params:
+            self.fields["target"] = PhraseSerializer(expand="lexeme")
+        elif "annot" in request.query_params:
+            self.fields["target"] = PhraseSerializer(expand="annot")
+
     class Meta:
         model = PhrasePair
-        exclude = ["created_at", "updated_at"]
+        fields = ["base", "target"]
 
 
 class SubscriptionGetSerializer(serializers.ModelSerializer):

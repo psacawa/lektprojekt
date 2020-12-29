@@ -8,6 +8,7 @@ from . import views
 router = routers.SimpleRouter()
 router.register(r"subs", views.SubscriptionViewSet, basename="sub")
 router.register(r"languages", views.LanguageViewSet, basename="language")
+router.register(r"pairs", views.PhrasePairViewSet, basename="pair")
 urlpatterns = router.urls
 
 urlpatterns += [
@@ -21,7 +22,6 @@ urlpatterns += [
     ),
     path(r"phrases/", views.PhraseCompletionView.as_view(), name="phrase-completion"),
     # the viewset returning phrase pairs matching one lexeme + one annotation
-    path(r"gimped/", views.GimpedView.as_view(), name="gimped"),
 ]
 
 if settings.DEBUG:
