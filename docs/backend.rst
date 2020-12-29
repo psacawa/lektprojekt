@@ -86,3 +86,28 @@ The logging configuration is contained in ``main/settings/logging.py``. All app 
 have ``FileHandler`` s attached to them with level ``DEBUG`` as well as ``StreamHandler`` s 
 outputting to ``stderr`` with level ``ERROR``. Logs with a ``FileHandler`` are output 
 in ``logs``.
+
+Test Suite
+----------
+
+The test suite can run with ``pytest-watch``. This runs it in "watch mode", just like ``jest``. The test database ``test_lektprojekt_db`` will need to be seeded with data first. The database state relative to which the tests are written is the attained by migrating and running
+
+.. code-block:: shell
+
+  python3 manage.py load_corpus assets/spanishdict.sqlite --limit 100
+
+You can run this command and then run in ``psql``:
+
+.. code-block:: sql
+
+  ALTER DATABASE lektprojekt_db RENAME TO test_lektprojekt_db;
+
+This will set ``test_lektprojekt_db`` in the required state. You can request django use the test database(for the purpose of examining it to write new tests) by means of an environmental variable:
+
+.. code-block:: shell
+
+  DJANGO_DATABASE=test ./manage.py runserverDJANGO_DATABASE=test ./manage.py runserver
+  DJANGO_DATABASE=test ./manage.py runserverDJANGO_DATABASE=test ./manage.py shell_plus
+
+
+
