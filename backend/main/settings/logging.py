@@ -5,6 +5,8 @@ if DEBUG:
     # for both, there will be no propagation
     LEKTPROJEKT_LOGGED_MODULES = [
         "lekt.views",
+        "lekt.serializers",
+        "lekt.filters",
         "lekt.models",
         "lekt.signals",
         "lekt.loaders",

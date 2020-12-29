@@ -29,7 +29,7 @@ To get it running on `localhost` no Ubuntu (adjust according to necessity):
 sudo apt install postgresql-12 libpq-dev redis
 
 # create database/user
-createdb lektprojekt-db
+createdb lektprojekt_db
 createuser -sP lektprojekt_pg_admin
 # enter 'django-pass' at the password prompt
 # I am aware this is not isolated from the Internet,
