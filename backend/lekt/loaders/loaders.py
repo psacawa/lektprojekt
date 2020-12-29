@@ -99,9 +99,38 @@ class CorpusManager(object):
                 0
             ]
 
+        # this is an instance of dependency injection, spacy if allowed to manage the raw
+        # data because it can batch more efficiently
+        records = self.connection.execute(select_cmd).fetchall()
+        nlp_pipes = [
+            self.parsers[i].get_pipe([record[i + 1] for record in records])
+            for i in range(2)
+        ]
+        pipe = zip(*nlp_pipes)
+
         progress: Bar = Bar(f"Processing parallel corpus", max=limit)
-        for record in self.connection.execute(select_cmd):
-            self.process_phrasepair(record[1], record[2])
+        for doc_pair in pipe:
+            phrases = []
+            for i, doc in enumerate(doc_pair):
+                phrases.append(self.parsers[i].process_phrase(doc))
+
+            active = self.valid_phrase_pair(*phrases)
+            PhrasePair.objects.bulk_create(
+                [
+                    PhrasePair(
+                        base=phrases[0],
+                        target=phrases[1],
+                        source=self.corpus,
+                        active=active,
+                    ),
+                    PhrasePair(
+                        base=phrases[1],
+                        target=phrases[0],
+                        source=self.corpus,
+                        active=active,
+                    ),
+                ]
+            )
             progress.next()
 
         progress.finish()

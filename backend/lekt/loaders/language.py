@@ -14,6 +14,7 @@ from django.core.exceptions import MultipleObjectsReturned
 from django.db import IntegrityError, transaction
 from django.db.models import Model
 from progress.bar import Bar
+from spacy.language import Language as SpacyLanguage
 from spacy.tokens import Doc
 
 from lekt.models import Annotation, Language, Lexeme, Phrase, PhraseWord, Word
@@ -44,6 +45,7 @@ class LanguageParser(object):
     lid: str = None
     modelname: str = None
     modelname_template: Template = None
+    nlp: SpacyLanguage
 
     def __init__(self, size=None, modelname=None, test_only=False, **kwargs):
 
@@ -88,10 +90,12 @@ class LanguageParser(object):
             print(f"Unable to find Spacy model {self.modelname}.")
             raise NLPModelLoadError()
 
-    def process_phrase(self, text: str) -> Tuple[Model, ValidationData]:
+    def get_pipe(self, phrases):
+        return self.nlp.pipe(phrases)
+
+    def process_phrase(self, doc: Doc) -> Tuple[Model, ValidationData]:
         with transaction.atomic():
-            phrase = Phrase.objects.create(text=text, lang=self.lang)
-            doc: Doc = self.nlp(text)
+            phrase = Phrase.objects.create(text=doc.text, lang=self.lang)
             tokens_json = doc.to_json()["tokens"]
             validation_data = self.get_validation_data(doc)
             cur_phrase_words = []
