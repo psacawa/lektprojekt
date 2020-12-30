@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("lekt", "0002_initialize_aws_languages"),
+        ("lekt", "0001_initial"),
     ]
 
     operations = [

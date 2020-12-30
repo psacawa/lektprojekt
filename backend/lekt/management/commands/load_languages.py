@@ -4,6 +4,9 @@ from os.path import join
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
+from lekt.loaders import PollyLanguageLoader
+from lekt.models import Language, Voice
+
 
 class Command(BaseCommand):
     help = """
@@ -15,11 +18,18 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser: ArgumentParser):
         parser.add_argument(
-            "file",
+            "--file",
             default=join(settings.ASSET_DIR, "voices.json"),
             help="json file with language/voice data",
         )
 
-    def handle(self):
-        pass
-        #  TODO 03/12/20 psacawa: refactor to put loading voices here
+    def handle(self, **kwargs):
+        if Language.objects.count() != 0 or Voice.objects.count() != 0:
+            print(
+                "There is already data for the Language and Voice models in the database."
+                "This command doesn't gracefully reloading. To reset the whole database,"
+                "use the reset_db command."
+            )
+            return
+        polly_loader = PollyLanguageLoader()
+        polly_loader()

@@ -4,11 +4,12 @@ from argparse import ArgumentParser
 from os.path import isfile, join
 
 from django.conf import settings
+from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
 from lekt.loaders import CorpusManager, EnglishParser, SpanishParser
-from lekt.models import Corpus, Phrase, PhrasePair
+from lekt.models import Corpus, Language, Phrase, PhrasePair, Voice
 
 logger = logging.getLogger(__name__)
 
@@ -79,6 +80,11 @@ class Command(BaseCommand):
         lang2_model=None,
         **kwargs,
     ):
+
+        if Language.objects.count() == 0 or Voice.objects.count() == 0:
+            print("Language, Voice data not detected...Automatically loading")
+            call_command("load_languages")
+
         logger.debug(corpus)
         if delete:
             self.remove(corpus)
