@@ -12,6 +12,7 @@ import {
 import { Language, PhrasePair } from "../types";
 import { useHistory, Link } from "react-router-dom";
 import { QueryObserverResult } from "react-query";
+import HighlightedPhrase from "./HighlightedPhrase";
 
 interface Props {
   baseLanguage: Language | null;
@@ -45,7 +46,9 @@ const PhrasePairTable = ({
               {phrasePairs?.map((phrasePair, idx) => (
                 <TableRow key={idx}>
                   <TableCell key={0}>{phrasePair.base.text}</TableCell>
-                  <TableCell key={1}>{phrasePair.target.text}</TableCell>
+                  <TableCell key={1}>
+                    <HighlightedPhrase phrase={phrasePair.target} />
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

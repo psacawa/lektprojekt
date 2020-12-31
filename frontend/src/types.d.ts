@@ -21,10 +21,18 @@ export interface Language {
   default_voice: Voice;
 }
 
+export interface TokenSpan {
+  number: number;
+  start: number;
+  end: number;
+}
+
 export interface Phrase {
   id: number;
   text: string;
   lang: number;
+  lexeme_matches?: TokenSpan[];
+  annot_matches?: TokenSpan[];
 }
 
 export interface PhrasePair {
