@@ -4,8 +4,8 @@ import { Autocomplete } from "@material-ui/lab";
 import { Language } from "../types";
 
 interface Props {
-  baseLanguage: Language | undefined;
-  targetLanguage: Language | undefined;
+  baseLanguage: Language | null;
+  targetLanguage: Language | null;
   languageOptions: Language[];
   handleBaseLanguageChange: (...args: any[]) => any;
   handleTargetLanguageChange: (...args: any[]) => any;

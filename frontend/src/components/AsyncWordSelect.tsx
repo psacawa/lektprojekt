@@ -8,12 +8,12 @@ import { debounce } from "lodash";
 import * as client from "../client";
 
 interface Props {
-  targetLanguage: Language | undefined;
+  targetLanguage: Language | null;
   disabled: boolean;
   options: Lexeme[];
   setOptions: React.Dispatch<React.SetStateAction<Lexeme[]>>;
-  value?: Lexeme;
-  setValue: React.Dispatch<React.SetStateAction<Lexeme | undefined>>;
+  value: Lexeme | null;
+  onChange: any;
   inputValue: string;
   onInputChange: any;
 }
@@ -24,7 +24,7 @@ const AsyncWordSelect = ({
   options,
   setOptions,
   value,
-  setValue,
+  onChange,
   inputValue,
   onInputChange,
 }: Props) => {
@@ -38,6 +38,7 @@ const AsyncWordSelect = ({
     },
     {
       enabled: inputValue.length >= 3,
+      staleTime: 60 * 1000,
       onSuccess: (results) => {
         const newOptions = [...options, ...results];
         setOptions(newOptions);
@@ -52,6 +53,7 @@ const AsyncWordSelect = ({
         onOpen={() => {
           setOpen(true);
         }}
+        // inputValue={inputValue}
         value={value}
         onClose={() => {
           setOpen(false);
@@ -61,9 +63,7 @@ const AsyncWordSelect = ({
         loading={lexemeQuery.isFetching}
         disabled={disabled}
         onInputChange={onInputChange}
-        onChange={(ev, newValue, reason) => {
-          newValue && setValue(newValue);
-        }}
+        onChange={onChange}
         renderInput={(params) => (
           <TextField
             {...params}

@@ -2,6 +2,7 @@ import {
   Button,
   Grid,
   Table,
+  TableBody,
   TableCell,
   TableContainer,
   TableHead,
@@ -10,24 +11,24 @@ import {
 } from "@material-ui/core";
 import { Language, PhrasePair } from "../types";
 import { useHistory, Link } from "react-router-dom";
+import { QueryObserverResult } from "react-query";
 
 interface Props {
-  baseLanguage: Language | undefined;
-  targetLanguage: Language | undefined;
-  phrasePairs: PhrasePair[];
-  enabled: boolean;
+  baseLanguage: Language | null;
+  targetLanguage: Language | null;
+  phrasePairQuery: QueryObserverResult<PhrasePair[]>;
 }
 
 const PhrasePairTable = ({
-  enabled,
+  phrasePairQuery,
   baseLanguage,
   targetLanguage,
-  phrasePairs,
 }: Props) => {
   const history = useHistory();
+  const { data: phrasePairs, isSuccess } = phrasePairQuery;
   return (
-    <Grid item xs={12} justify="center">
-      {phrasePairs.length > 0 ? (
+    <Grid item xs={12}>
+      {isSuccess ? (
         <TableContainer>
           <Table>
             <TableHead>
@@ -40,14 +41,14 @@ const PhrasePairTable = ({
                 </TableCell>
               </TableRow>
             </TableHead>
-            {phrasePairs?.map((phrasePair) => (
-              <TableRow
-                onClick={() => history.push(`/phrasepair/${phrasePair.id}`)}
-              >
-                <TableCell key={0}>{phrasePair.base.text}</TableCell>
-                <TableCell key={1}>{phrasePair.target.text}</TableCell>
-              </TableRow>
-            ))}
+            <TableBody>
+              {phrasePairs?.map((phrasePair, idx) => (
+                <TableRow key={idx}>
+                  <TableCell key={0}>{phrasePair.base.text}</TableCell>
+                  <TableCell key={1}>{phrasePair.target.text}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
           </Table>
         </TableContainer>
       ) : (

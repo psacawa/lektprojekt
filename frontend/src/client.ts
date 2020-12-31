@@ -44,7 +44,7 @@ export const completeAnnotations = (
     );
 };
 
-export const getSuggestions = (
+export const getPairs = (
   base: string,
   target: string,
   lexeme?: number,
@@ -52,7 +52,7 @@ export const getSuggestions = (
   page?: number
 ) => {
   return axios
-    .get(`${apiRoot}gimped/`, { params: { base, target, lexeme, annot, page } })
+    .get(`${apiRoot}pairs/`, { params: { base, target, lexeme, annot, page } })
     .then(
       (response: AxiosResponse<ListApiOutput<PhrasePair>>) =>
         response.data.results
