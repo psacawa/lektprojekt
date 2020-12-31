@@ -28,13 +28,6 @@ To get it running on `localhost` no Ubuntu (adjust according to necessity):
 # install postgres, redis
 sudo apt install postgresql-12 libpq-dev redis
 
-# create database/user
-createdb lektprojekt_db
-createuser -sP lektprojekt_pg_admin
-# enter 'django-pass' at the password prompt
-# I am aware this is not isolated from the Internet,
-# but it'll suffice for now
-
 # create and enter virtualenv (you can also use pyenv)
 pip install virtualenv
 virtualenv venv
@@ -47,7 +40,16 @@ poetry install
 spacy download es_core_news_md
 spacy download en_core_web_md
 
-# load data
+# create database/user
+python3 manage.py sqlcreate | psql
+# if the above doesn't work, you can manually create the db/user:
+createdb lekt_db
+createuser -sP lekt_admin
+# enter 'django-pass' at the password prompt
+# I am aware this is not isolated from the Internet,
+# but it'll suffice for now
+
+# load data (from S3 or Google Disc)
 aws s3 cp lektprojekt-assets/corpora/spanishdict.sqlite asssets/
 python3 manage.py migrate
 python3 manage.py load_corpus assets/spanishdict.sqlite --limit 1000
