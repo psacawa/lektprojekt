@@ -8,6 +8,7 @@ from django.db.models import Count, Prefetch, Q
 from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from django_filters.rest_framework import FilterSet
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import generics, permissions, viewsets
@@ -32,7 +33,6 @@ from .models import (
 )
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
 
 
 class LanguageViewSet(viewsets.ReadOnlyModelViewSet):
@@ -96,14 +96,30 @@ class PhraseCompletionView(generics.ListAPIView):
     ordering = ["id"]
 
 
+class PhrasePairDetailView(generics.RetrieveAPIView):
+
+    queryset = (
+        PhrasePair.objects.filter(active=True)
+        .select_related("base", "target")
+        .prefetch_related(
+            "target__words", "target__words__lexeme", "target__words__annotations"
+        )
+    )
+    serializer_class = serializers.PhrasePairDetailSerializer
+
+
 @method_decorator(cache_page(60 * 60), name="dispatch")
-class PhrasePairViewSet(viewsets.ReadOnlyModelViewSet):
+class PhrasePairListView(generics.ListAPIView):
     """
     This endpoint just shows `PhrasePair` models for a give `Language` pair such
     that the `target` language phrase contains a particular word.
 
     E.g. `/api/pairs/?base=en&target=es&lexeme=2985&annot=65`
     """
+
+    filterset_class = filters.PhrasePairFilterSet
+    ordering = ["id"]
+    serializer_class = serializers.PhrasePairSerializer
 
     def get_queryset(self):
         queryset = (
@@ -130,11 +146,6 @@ class PhrasePairViewSet(viewsets.ReadOnlyModelViewSet):
                 )
             )
         return queryset
-
-    filterset_class = filters.PhrasePairFilterSet
-
-    ordering = ["id"]
-    serializer_class = serializers.PhrasePairSerializer
 
 
 class UserProfileView(generics.RetrieveAPIView):

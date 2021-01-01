@@ -3,6 +3,7 @@ import logging
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.request import Request
+from rest_framework.views import APIView
 
 from .models import (
     Annotation,
@@ -81,6 +82,14 @@ class PhraseSerializer(serializers.Serializer):
             self.fields["annot_matches"] = PhraseWordSerializer(many=True)
 
 
+class PhraseDetailSerializer(serializers.ModelSerializer):
+    words = WordSerializer(many=True)
+
+    class Meta:
+        model = Phrase
+        fields = ["words", "text", "lang", "id"]
+
+
 class PhrasePairSerializer(serializers.ModelSerializer):
     base = PhraseSerializer()
     target = PhraseSerializer()
@@ -88,6 +97,7 @@ class PhrasePairSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         request: Request = self.context["request"]
+        view: APIView = self.context["view"]
         if "lexeme" in request.query_params:
             self.fields["target"] = PhraseSerializer(expand="lexeme")
         elif "annot" in request.query_params:
@@ -95,7 +105,16 @@ class PhrasePairSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PhrasePair
-        fields = ["base", "target"]
+        fields = ["id", "base", "target"]
+
+
+class PhrasePairDetailSerializer(serializers.ModelSerializer):
+    base = PhraseSerializer()
+    target = PhraseDetailSerializer()
+
+    class Meta:
+        model = PhrasePair
+        fields = ["id", "base", "target"]
 
 
 class SubscriptionGetSerializer(serializers.ModelSerializer):
