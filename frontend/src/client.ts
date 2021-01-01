@@ -3,17 +3,16 @@ import { Language, Lexeme, ListApiOutput, PhrasePair } from "./types";
 
 const apiRoot = "/api/";
 
-export const listLanguages = () => {
-  return axios
+export const listLanguages = () =>
+  axios
     .get(`${apiRoot}languages/`)
     .then(
       (response: AxiosResponse<ListApiOutput<Language>>) =>
         response.data.results
     );
-};
 
-export const completeLexemes = (lid: string, prompt: string, page?: number) => {
-  return axios
+export const completeLexemes = (lid: string, prompt: string, page?: number) =>
+  axios
     .get(`${apiRoot}lexemes/`, {
       params: {
         prompt,
@@ -24,14 +23,13 @@ export const completeLexemes = (lid: string, prompt: string, page?: number) => {
     .then(
       (response: AxiosResponse<ListApiOutput<Lexeme>>) => response.data.results
     );
-};
 
 export const completeAnnotations = (
   lid: string,
   prompt: string,
   page?: number
-) => {
-  return axios
+) =>
+  axios
     .get(`${apiRoot}annots/`, {
       params: {
         prompt,
@@ -42,7 +40,6 @@ export const completeAnnotations = (
     .then(
       (response: AxiosResponse<ListApiOutput<Lexeme>>) => response.data.results
     );
-};
 
 export const getPairs = (
   base: string,
@@ -50,11 +47,15 @@ export const getPairs = (
   lexeme?: number,
   annot?: number,
   page?: number
-) => {
-  return axios
+) =>
+  axios
     .get(`${apiRoot}pairs/`, { params: { base, target, lexeme, annot, page } })
     .then(
       (response: AxiosResponse<ListApiOutput<PhrasePair>>) =>
         response.data.results
     );
-};
+
+export const getPair = (id: number) =>
+  axios
+    .get(`${apiRoot}pairs/${id}/`)
+    .then((response: AxiosResponse<PhrasePair>) => response.data);

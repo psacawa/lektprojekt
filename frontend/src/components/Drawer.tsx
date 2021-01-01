@@ -20,10 +20,8 @@ const LektDrawer = () => {
     <Drawer variant="permanent">
       <List className={classes.list}>
         {drawerRoutes.map((route, idx) => (
-          <ListItem key={idx}>
-            <Link to={route.path}>
-              <ListItemText>{route.name}</ListItemText>
-            </Link>
+          <ListItem key={idx} component={Link} to={route.path}>
+            <ListItemText>{route.name}</ListItemText>
           </ListItem>
         ))}
       </List>

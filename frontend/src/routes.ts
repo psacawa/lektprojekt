@@ -28,7 +28,7 @@ export const drawerRoutes: Route[] = [
 
 export const routes: Route[] = concat(drawerRoutes, [
   {
-    path: "/phrasepair/:pk",
+    path: "/pairs/:pk",
     name: "PhrasePair Detail View",
     exact: false,
     component: PhrasePairDetailView as any,

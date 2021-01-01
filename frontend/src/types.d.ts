@@ -27,12 +27,25 @@ export interface TokenSpan {
   end: number;
 }
 
+interface Annotation {
+  value: string;
+  explanation: string;
+}
+
+interface Word {
+  id: number;
+  lexeme: Lexeme;
+  norm: string;
+  annotations: Annotation[];
+}
+
 export interface Phrase {
   id: number;
   text: string;
   lang: number;
   lexeme_matches?: TokenSpan[];
   annot_matches?: TokenSpan[];
+  words?: Word[];
 }
 
 export interface PhrasePair {
