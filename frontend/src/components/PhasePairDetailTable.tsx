@@ -8,36 +8,36 @@ import {
   TableRow,
 } from "@material-ui/core";
 import { useQuery } from "react-query";
+import * as client from "../client";
 
 interface Props {
   pk: number;
 }
-import * as client from "../client";
 
 const PhrasePairDetailTable = ({ pk }: Props) => {
   const phrasePairQuery = useQuery(["pair", pk], () => client.getPair(pk), {});
   return (
     <>
       {phrasePairQuery.isSuccess ? (
-        <TableContainer>
+        <TableContainer key={0}>
           <Table size="small">
             <TableHead>
               <TableRow>
-                <TableCell> Text </TableCell>
-                <TableCell> Base Form </TableCell>
-                <TableCell> Part of Speech </TableCell>
-                <TableCell> Grammar </TableCell>
+                <TableCell key={0}> Text </TableCell>
+                <TableCell key={1}> Base Form </TableCell>
+                <TableCell key={2}> Part of Speech </TableCell>
+                <TableCell key={3}> Grammar </TableCell>
               </TableRow>
             </TableHead>
             {phrasePairQuery.data.target.words?.map((word, idx) => (
-              <TableRow>
-                <TableCell>{word.norm}</TableCell>
-                <TableCell>{word.lexeme.lemma}</TableCell>
-                <TableCell>{word.lexeme.pos}</TableCell>
-                <TableCell>
+              <TableRow key={idx}>
+                <TableCell key={0}>{word.norm}</TableCell>
+                <TableCell key={1}>{word.lexeme.lemma}</TableCell>
+                <TableCell key={2}>{word.lexeme.pos}</TableCell>
+                <TableCell key={3}>
                   {word.annotations.map((annot, idx) => (
                     <>
-                      <Link>{annot.explanation}</Link>{" "}
+                      <Link key={idx}>{annot.explanation}</Link>{" "}
                     </>
                   ))}
                 </TableCell>

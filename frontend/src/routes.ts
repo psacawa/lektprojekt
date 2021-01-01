@@ -1,6 +1,6 @@
 import React from "react";
 import Home from "./views/Home";
-import GimpedView from "./views/GimpedView";
+import PhrasePairListView from "./views/PhrasePairListView";
 import { concat } from "lodash";
 import PhrasePairDetailView from "./views/PhrasePairDetailView";
 
@@ -22,7 +22,7 @@ export const drawerRoutes: Route[] = [
     path: "/gimped",
     name: "Search Phrases",
     exact: false,
-    component: GimpedView,
+    component: PhrasePairListView,
   },
 ];
 

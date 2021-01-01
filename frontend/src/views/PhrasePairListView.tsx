@@ -6,9 +6,9 @@ import * as client from "../client";
 import { Language, Lexeme, PhrasePair } from "../types";
 import AsyncWordSelect from "../components/AsyncWordSelect";
 import LanguageSelect from "../components/LanguageSelect";
-import PhasePairTable from "../components/PhasePairTable";
+import PhrasePairListTable from "../components/PhrasePairListTable";
 
-const GimpedView = () => {
+const PhrasePairListView = () => {
   const [baseLanguage, setBaseLanguage] = useState<Language | null>(null);
   const [targetLanguage, setTargetLanguage] = useState<Language | null>(null);
   const [options, setOptions] = useState<Lexeme[]>([]);
@@ -18,8 +18,11 @@ const GimpedView = () => {
 
   const languageQuery = useQuery("languages", client.listLanguages, {
     onSuccess: (languages) => {
-      setBaseLanguage(languages.find((lang) => lang.lid === "en") ?? null);
-      setTargetLanguage(languages.find((lang) => lang.lid === "es") ?? null);
+      let newBaseLanguage = languages.find((lang) => lang.lid === "en") ?? null;
+      let newTargetLanguage =
+        languages.find((lang) => lang.lid === "es") ?? null;
+      setBaseLanguage(newBaseLanguage);
+      setTargetLanguage(newTargetLanguage);
     },
     refetchOnWindowFocus: false,
   });
@@ -76,7 +79,7 @@ const GimpedView = () => {
             />
             <Grid item></Grid>
             {enabled ? (
-              <PhasePairTable
+              <PhrasePairListTable
                 {...{ baseLanguage, targetLanguage, phrasePairQuery }}
               />
             ) : null}
@@ -87,4 +90,4 @@ const GimpedView = () => {
   );
 };
 
-export default GimpedView;
+export default PhrasePairListView;

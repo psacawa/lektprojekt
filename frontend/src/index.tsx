@@ -11,14 +11,12 @@ const history = createBrowserHistory();
 const queryClient = new QueryClient();
 
 ReactDOM.render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <Router history={history}>
-        <App />
-      </Router>
-      <ReactQueryDevtools initialIsOpen />
-    </QueryClientProvider>
-  </React.StrictMode>,
+  <QueryClientProvider client={queryClient}>
+    <Router history={history}>
+      <App />
+    </Router>
+    <ReactQueryDevtools initialIsOpen />
+  </QueryClientProvider>,
   document.getElementById("root")
 );
 

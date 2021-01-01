@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Typography, TextField, CircularProgress } from "@material-ui/core";
-import { Autocomplete } from "@material-ui/lab";
+import { Autocomplete, AutocompleteProps } from "@material-ui/lab";
 import { Grid } from "@material-ui/core";
 import { Language, Lexeme } from "../types";
 import { useQuery } from "react-query";
-import { debounce } from "lodash";
+import { uniqWith, isEqual } from "lodash";
 import * as client from "../client";
 
 interface Props {
@@ -16,6 +16,7 @@ interface Props {
   onChange: any;
   inputValue: string;
   onInputChange: any;
+  optionsLimit?: number;
 }
 
 const AsyncWordSelect = ({
@@ -27,6 +28,7 @@ const AsyncWordSelect = ({
   onChange,
   inputValue,
   onInputChange,
+  optionsLimit = 50,
 }: Props) => {
   const [open, setOpen] = useState(false);
 
@@ -40,7 +42,11 @@ const AsyncWordSelect = ({
       enabled: inputValue.length >= 3,
       staleTime: 60 * 1000,
       onSuccess: (results) => {
-        const newOptions = [...options, ...results];
+        const newOptions = uniqWith(
+          [...results, ...options],
+          // (lexeme1: Lexeme, lexeme2: Lexeme) => lexeme1.id === lexeme2.id
+          isEqual
+        );
         setOptions(newOptions);
       },
     }
