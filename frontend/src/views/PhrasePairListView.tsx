@@ -1,12 +1,13 @@
 import { debounce, Grid, Typography } from "@material-ui/core";
+import { CircularProgress } from "@material-ui/core";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
-import { CircularProgress } from "@material-ui/core";
+
 import * as client from "../client";
-import { Language, Lexeme, PhrasePair } from "../types";
 import AsyncWordSelect from "../components/AsyncWordSelect";
 import LanguageSelect from "../components/LanguageSelect";
 import PhrasePairListTable from "../components/PhrasePairListTable";
+import { Language, Lexeme, PhrasePair } from "../types";
 
 const PhrasePairListView = () => {
   const [baseLanguage, setBaseLanguage] = useState<Language | null>(null);

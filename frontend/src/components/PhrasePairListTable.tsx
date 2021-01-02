@@ -1,26 +1,25 @@
 import {
-  Button,
+  Box,
+  CircularProgress,
+  Collapse,
   Grid,
   IconButton,
+  makeStyles,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  CircularProgress,
-  Collapse,
-  Box,
-  makeStyles,
 } from "@material-ui/core";
-import PhrasePairDetailTable from "./PhasePairDetailTable";
-import { Language, PhrasePair } from "../types";
-import { useHistory, Link } from "react-router-dom";
-import { QueryObserverResult } from "react-query";
-import HighlightedPhrase from "./HighlightedPhrase";
-
-import { KeyboardArrowUp, KeyboardArrowDown } from "@material-ui/icons";
+import { KeyboardArrowDown, KeyboardArrowUp } from "@material-ui/icons";
 import { useState } from "react";
+import { QueryObserverResult } from "react-query";
+import { useHistory } from "react-router-dom";
+
+import { Language, PhrasePair } from "../types";
+import HighlightedPhrase from "./HighlightedPhrase";
+import PhrasePairDetailTable from "./PhasePairDetailTable";
 
 const useRowStyles = makeStyles({
   root: {

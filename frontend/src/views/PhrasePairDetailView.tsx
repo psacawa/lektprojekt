@@ -1,9 +1,10 @@
-import { useParams } from "react-router-dom";
-import React from "react";
-import PhasePairDetailTable from "../components/PhasePairDetailTable";
 import { CircularProgress, Typography } from "@material-ui/core";
+import React from "react";
 import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
+
 import * as client from "../client";
+import PhasePairDetailTable from "../components/PhasePairDetailTable";
 
 interface Props {
   pk: number;

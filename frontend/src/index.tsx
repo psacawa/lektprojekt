@@ -1,11 +1,12 @@
+import { createBrowserHistory } from "history";
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App";
-import reportWebVitals from "./reportWebVitals";
-import { Router } from "react-router-dom";
-import { createBrowserHistory } from "history";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { Router } from "react-router-dom";
+
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
 
 const history = createBrowserHistory();
 const queryClient = new QueryClient();

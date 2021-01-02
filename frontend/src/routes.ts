@@ -1,8 +1,9 @@
-import React from "react";
-import Home from "./views/Home";
-import PhrasePairListView from "./views/PhrasePairListView";
 import { concat } from "lodash";
+import React from "react";
+
+import Home from "./views/Home";
 import PhrasePairDetailView from "./views/PhrasePairDetailView";
+import PhrasePairListView from "./views/PhrasePairListView";
 
 interface Route {
   path: string;

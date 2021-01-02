@@ -1,11 +1,12 @@
-import { useState } from "react";
-import { Typography, TextField, CircularProgress } from "@material-ui/core";
-import { Autocomplete, AutocompleteProps } from "@material-ui/lab";
+import { CircularProgress, TextField, Typography } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
-import { Language, Lexeme } from "../types";
+import { Autocomplete, AutocompleteProps } from "@material-ui/lab";
+import { isEqual, uniqWith } from "lodash";
+import { useState } from "react";
 import { useQuery } from "react-query";
-import { uniqWith, isEqual } from "lodash";
+
 import * as client from "../client";
+import { Language, Lexeme } from "../types";
 
 interface Props {
   targetLanguage: Language | null;

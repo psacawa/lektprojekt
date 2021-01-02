@@ -1,4 +1,3 @@
-import React, { Component } from "react";
 import {
   Drawer,
   List,
@@ -6,7 +5,9 @@ import {
   ListItemText,
   makeStyles,
 } from "@material-ui/core";
+import React from "react";
 import { Link } from "react-router-dom";
+
 import { drawerRoutes } from "../routes";
 
 const useStyles = makeStyles(() => ({

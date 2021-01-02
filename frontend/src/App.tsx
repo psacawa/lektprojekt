@@ -1,8 +1,9 @@
-import { routes } from "./routes";
-import { Route, Switch } from "react-router";
 import { makeStyles } from "@material-ui/core";
 import React from "react";
+import { Route, Switch } from "react-router";
+
 import LektDrawer from "./components/Drawer";
+import { routes } from "./routes";
 
 const useStyles = makeStyles(() => ({
   main: {
