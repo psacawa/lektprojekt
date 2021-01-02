@@ -13,15 +13,13 @@ class IdiomSpider(scrapy.Spider):
 
     # Retries
     retries = {}
-    max_retries = 5
+    max_retries = 10
     retry_delay = 10.0
 
     # key attributes
     # download_delay = 0.1
     # start_urls = ['https://idioms.thefreedictionary.com/%22I+see%2c%22+said+the+blind+man']
-    start_urls = [
-        "https://idioms.thefreedictionary.com/babysit+with+(someone+or+something)"
-    ]
+    start_urls = ["https://idioms.thefreedictionary.com/You+beauty!"]
 
     def __init__(self, *args, **kwargs):
 
@@ -42,8 +40,8 @@ class IdiomSpider(scrapy.Spider):
                 self.retries[response.url] += 1
                 self.log("----- 403 HIT; DELAYING -----")
 
-                if self.retries[response.url] > 3:
-                    time.sleep(self.retry_delay * 10)
+                if self.retries[response.url] >= 3:
+                    time.sleep(self.retry_delay * 10 * self.retries[response.url])
                 else:
                     time.sleep(self.retry_delay)
                 yield response.request.replace(dont_filter=True)
