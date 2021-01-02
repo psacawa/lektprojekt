@@ -34,10 +34,10 @@ const AsyncWordSelect = ({
   const [open, setOpen] = useState(false);
 
   const lexemeQuery = useQuery(
-    ["lexemes", { lid: targetLanguage?.lid, prompt: inputValue }],
+    ["lexemes", { id: targetLanguage?.id, prompt: inputValue }],
     ({ queryKey }) => {
-      const [_key, { lid, prompt }] = queryKey;
-      return client.completeLexemes(lid, prompt);
+      const [_key, { id, prompt }] = queryKey;
+      return client.completeLexemes(id, prompt);
     },
     {
       enabled: inputValue.length >= 3,

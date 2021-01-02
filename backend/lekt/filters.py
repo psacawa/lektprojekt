@@ -26,7 +26,7 @@ class PhraseFilterSet(filters.FilterSet):
 
 
 class PhrasePairFilterSet(filters.FilterSet):
-    base = filters.CharFilter(field_name="base__lang__lid", required=True)
-    target = filters.CharFilter(field_name="target__lang__lid", required=True)
+    base = filters.CharFilter(field_name="base__lang", required=True)
+    target = filters.CharFilter(field_name="target__lang", required=True)
     lexeme = filters.NumberFilter(field_name="target__words__lexeme")
     annot = filters.NumberFilter(field_name="target__words__annotations")

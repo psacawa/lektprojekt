@@ -28,9 +28,9 @@ const PhrasePairListView = () => {
     refetchOnWindowFocus: false,
   });
   const phrasePairQuery = useQuery(
-    ["pairs", [baseLanguage?.lid, targetLanguage?.lid, promptValue?.id]],
+    ["pairs", [baseLanguage?.id, targetLanguage?.id, promptValue?.id]],
     () =>
-      client.getPairs(baseLanguage!.lid, targetLanguage!.lid, promptValue!.id),
+      client.getPairs(baseLanguage!.id, targetLanguage!.id, promptValue!.id),
     {
       enabled,
     }

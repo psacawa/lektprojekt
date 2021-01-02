@@ -12,12 +12,12 @@ export const listLanguages = () =>
         response.data.results
     );
 
-export const completeLexemes = (lid: string, prompt: string, page?: number) =>
+export const completeLexemes = (id: number, prompt: string, page?: number) =>
   axios
     .get(`${apiRoot}lexemes/`, {
       params: {
         prompt,
-        lid,
+        id,
         page,
       },
     })
@@ -26,7 +26,7 @@ export const completeLexemes = (lid: string, prompt: string, page?: number) =>
     );
 
 export const completeAnnotations = (
-  lid: string,
+  id: number,
   prompt: string,
   page?: number
 ) =>
@@ -34,7 +34,7 @@ export const completeAnnotations = (
     .get(`${apiRoot}annots/`, {
       params: {
         prompt,
-        lid,
+        id,
         page,
       },
     })
@@ -43,14 +43,16 @@ export const completeAnnotations = (
     );
 
 export const getPairs = (
-  base: string,
-  target: string,
+  baseId: number,
+  targetId: number,
   lexeme?: number,
   annot?: number,
   page?: number
 ) =>
   axios
-    .get(`${apiRoot}pairs/`, { params: { base, target, lexeme, annot, page } })
+    .get(`${apiRoot}pairs/`, {
+      params: { base: baseId, target: targetId, lexeme, annot, page },
+    })
     .then(
       (response: AxiosResponse<ListApiOutput<PhrasePair>>) =>
         response.data.results
