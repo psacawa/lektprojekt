@@ -2,16 +2,22 @@ import sys
 
 import pytest
 from assertpy import assert_that
+from pytest_django.asserts import assertNumQueries
 from rest_framework.response import Response
 from rest_framework.test import APIClient
 
+from conftest import jq
+
 from .models import Language, Phrase
+
+client = APIClient()
 
 
 @pytest.mark.django_db
 class LexemeViewTest:
-    def search_test(self, client: APIClient):
-        response: Response = client.get("/api/lexemes/?lang=es&prompt=per")
+    def search_test(self):
+        with assertNumQueries(2):
+            response: Response = client.get("/api/lexemes/?lang=es&prompt=per")
         assert response.status_code == 200
         results = response.data["results"]
         assert_that(results).extracting("lemma").contains("pero", "personal")
@@ -19,8 +25,9 @@ class LexemeViewTest:
 
 @pytest.mark.django_db
 class AnnotationViewTest:
-    def list_test(self, client: APIClient):
-        response: Response = client.get("/api/annots/?lid=es")
+    def list_test(self):
+        with assertNumQueries(2):
+            response: Response = client.get("/api/annots/?lid=es")
         assert response.status_code == 200
         results = response.data["results"]
         assert_that(results).is_length(46).extracting("explanation").contains(
@@ -28,8 +35,9 @@ class AnnotationViewTest:
             "present tense",
         )
 
-    def complete_test(self, client: APIClient):
-        response: Response = client.get("/api/annots/?lid=es&prompt=Tense")
+    def complete_test(self):
+        with assertNumQueries(2):
+            response: Response = client.get("/api/annots/?lid=es&prompt=Tense")
         assert response.status_code == 200
         results = response.data["results"]
         assert_that(results).is_length(4).extracting("explanation").is_equal_to(
@@ -44,8 +52,9 @@ class AnnotationViewTest:
 
 @pytest.mark.django_db
 class LanguageViewTest:
-    def list_test(self, client: APIClient):
-        response: Response = client.get("/api/languages/")
+    def list_test(self):
+        with assertNumQueries(3):
+            response: Response = client.get("/api/languages/")
         assert response.status_code == 200
         assert "results" in response.data
         results = response.data["results"]
@@ -54,13 +63,22 @@ class LanguageViewTest:
 
 @pytest.mark.django_db
 class PhrasePairViewTest:
-    def lexeme_search_test(self, client: APIClient):
+    def phrasepair_detail_view_test(self, django_assert_num_queries):
+        with assertNumQueries(4):
+            response: Response = client.get("/api/pairs/100/")
+
+        assert response.status_code == 200
+        assert_that(response.data)
+
+    def lexeme_search_test(self):
         #  <Lexeme lemma=ser pos=AUX> pk=67
-        response: Response = client.get("/api/pairs/?base=en&target=es&lexeme=67")
+        with assertNumQueries(3):
+            response: Response = client.get("/api/pairs/?base=en&target=es&lexeme=67")
         assert response.status_code == 200
         results = response.data["results"]
         assert_that(results).contains(
             {
+                "id": 7,
                 "base": {
                     "id": 7,
                     "text": "It remains to be seen whether the candidate can weather "
@@ -75,13 +93,15 @@ class PhrasePairViewTest:
             }
         )
 
-    def annot_search_test(self, client: APIClient):
+    def annot_search_test(self):
         #  <Annotation VerbForm=Ger present particle> pk=71
-        response: Response = client.get("/api/pairs/?base=en&target=es&annot=71")
+        with assertNumQueries(3):
+            response: Response = client.get("/api/pairs/?base=en&target=es&annot=71")
         assert response.status_code == 200
         results = response.data["results"]
         assert_that(results).contains(
             {
+                "id": 109,
                 "base": {
                     "id": 109,
                     "text": "What's that song called? - Do you mean the one playing "
@@ -98,7 +118,7 @@ class PhrasePairViewTest:
             },
         )
 
-    def no_language_search_test(self, client: APIClient):
+    def no_language_search_test(self):
         response: Response = client.get("/api/pairs/?base=es&lexeme=67")
         print(response.data)
         assert response.status_code == 400
