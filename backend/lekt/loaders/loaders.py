@@ -110,28 +110,29 @@ class CorpusManager(object):
 
         progress: Bar = Bar(f"Processing parallel corpus", max=limit)
         for doc_pair in pipe:
-            phrases = []
-            for i, doc in enumerate(doc_pair):
-                phrases.append(self.parsers[i].process_phrase(doc))
+            with transaction.atomic():
+                phrases = []
+                for i, doc in enumerate(doc_pair):
+                    phrases.append(self.parsers[i].process_phrase(doc))
 
-            active = self.valid_phrase_pair(*phrases)
-            PhrasePair.objects.bulk_create(
-                [
-                    PhrasePair(
-                        base=phrases[0],
-                        target=phrases[1],
-                        source=self.corpus,
-                        active=active,
-                    ),
-                    PhrasePair(
-                        base=phrases[1],
-                        target=phrases[0],
-                        source=self.corpus,
-                        active=active,
-                    ),
-                ]
-            )
-            progress.next()
+                active = self.valid_phrase_pair(*phrases)
+                PhrasePair.objects.bulk_create(
+                    [
+                        PhrasePair(
+                            base=phrases[0],
+                            target=phrases[1],
+                            source=self.corpus,
+                            active=active,
+                        ),
+                        PhrasePair(
+                            base=phrases[1],
+                            target=phrases[0],
+                            source=self.corpus,
+                            active=active,
+                        ),
+                    ]
+                )
+                progress.next()
 
         progress.finish()
 
@@ -140,30 +141,6 @@ class CorpusManager(object):
         corpus: Corpus = Corpus.objects.create(name=self.name, domain=self.domain)
         corpus.languages.add(Language.objects.filter(lid__in=self.langs))
         return corpus
-
-    def process_phrasepair(self, *phrase_texts):
-        assert len(phrase_texts) == 2, "Phrase pair must have two elements"
-        phrases = []
-        for i, text in enumerate(phrase_texts):
-            phrases.append(self.parsers[i].process_phrase(text=text))
-
-        active = self.valid_phrase_pair(*phrases)
-        PhrasePair.objects.bulk_create(
-            [
-                PhrasePair(
-                    base=phrases[0],
-                    target=phrases[1],
-                    source=self.corpus,
-                    active=active,
-                ),
-                PhrasePair(
-                    base=phrases[1],
-                    target=phrases[0],
-                    source=self.corpus,
-                    active=active,
-                ),
-            ]
-        )
 
     def valid_phrase_pair(self, *phrases) -> bool:
         """

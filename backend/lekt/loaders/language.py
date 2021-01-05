@@ -94,85 +94,83 @@ class LanguageParser(object):
         return self.nlp.pipe(phrases)
 
     def process_phrase(self, doc: Doc) -> Tuple[Model, ValidationData]:
-        with transaction.atomic():
-            phrase = Phrase.objects.create(text=doc.text, lang=self.lang)
-            tokens_json = doc.to_json()["tokens"]
-            validation_data = self.get_validation_data(doc)
-            cur_phrase_words = []
-            for i, token in enumerate(doc):
+        phrase = Phrase.objects.create(text=doc.text, lang=self.lang)
+        validation_data = self.get_validation_data(doc)
+        cur_phrase_words = []
+        for i, token in enumerate(doc):
 
-                text = token.orth_
-                lemma = token.lemma_
-                norm = token.norm_
-                pos = token.pos_
-                tag: str = token.tag_
-                ent_type = token.ent_type_
-                is_oov = token.is_oov
-                is_stop = token.is_stop
-                prob = token.prob
+            text = token.orth_
+            lemma = token.lemma_
+            norm = token.norm_
+            pos = token.pos_
+            tag: str = token.tag_
+            ent_type = token.ent_type_
+            is_oov = token.is_oov
+            is_stop = token.is_stop
+            prob = token.prob
 
-                # TODO: ad hoc filtration logic, should be refactored
-                if pos == "PUNCT":
-                    continue
-                # this is here to deal with the "-PRON-" issue
-                if lemma == "-PRON-":
-                    lemma = norm
-                # this is still necessary; lemmtziation does nothing normalize capitalization
-                lemma = lemma.lower()
+            # TODO: ad hoc filtration logic, should be refactored
+            if pos == "PUNCT":
+                continue
+            # this is here to deal with the "-PRON-" issue
+            if lemma == "-PRON-":
+                lemma = norm
+            # this is still necessary; lemmtziation does nothing normalize capitalization
+            lemma = lemma.lower()
 
-                try:
-                    cur_lexeme = self.get_lexeme(
-                        lemma=lemma,
-                        pos=pos,
-                    )
-                except MultipleObjectsReturned as e:
-                    logger.error(
-                        "Lexeme get_or create returned multiple objects on {lemma}, {pos}"
-                    )
-
-                try:
-                    cur_word = self.get_word(
-                        lexeme=cur_lexeme,
-                        norm=norm,
-                        tag=tag,
-                        ent_type=ent_type,
-                        is_oov=is_oov,
-                        is_stop=is_stop,
-                    )
-                except MultipleObjectsReturned as e:
-                    logger.error(
-                        "Word get_or create returned multiple objects "
-                        f"on {lemma},{norm},{pos}, {tag} "
-                    )
-
-                # this is an ad hoc means to determine if the word hase been processed before
-                if cur_word.word_created:
-
-                    # to remove the newly created flag
-                    cur_word.word_created = False
-                    cur_word.save()
-
-                    logger.debug(f"New word for {self.lid}: {text}")
-
-                    cur_word.prob = prob
-                    annot_values = self.parse_annotations(tag)
-
-                    annots = {
-                        self.get_annotation(value=value, lang=self.lang)
-                        for value in annot_values
-                    }
-                    cur_word.annotations.add(*annots)
-
-                cur_phrase_words.append(
-                    PhraseWord(
-                        word=cur_word,
-                        phrase=phrase,
-                        number=i,
-                        start=tokens_json[i]["start"],
-                        end=tokens_json[i]["end"],
-                    )
+            try:
+                cur_lexeme = self.get_lexeme(
+                    lemma=lemma,
+                    pos=pos,
                 )
-            PhraseWord.objects.bulk_create(cur_phrase_words)
+            except MultipleObjectsReturned as e:
+                logger.error(
+                    "Lexeme get_or create returned multiple objects on {lemma}, {pos}"
+                )
+
+            try:
+                cur_word = self.get_word(
+                    lexeme=cur_lexeme,
+                    norm=norm,
+                    tag=tag,
+                    ent_type=ent_type,
+                    is_oov=is_oov,
+                    is_stop=is_stop,
+                )
+            except MultipleObjectsReturned as e:
+                logger.error(
+                    "Word get_or create returned multiple objects "
+                    f"on {lemma},{norm},{pos}, {tag} "
+                )
+
+            # this is an ad hoc means to determine if the word hase been processed before
+            if cur_word.word_created:
+
+                # to remove the newly created flag
+                cur_word.word_created = False
+                cur_word.save()
+
+                logger.debug(f"New word for {self.lid}: {text}")
+
+                cur_word.prob = prob
+                annot_values = self.parse_annotations(tag)
+
+                annots = {
+                    self.get_annotation(value=value, lang=self.lang)
+                    for value in annot_values
+                }
+                cur_word.annotations.add(*annots)
+
+            cur_phrase_words.append(
+                PhraseWord(
+                    word=cur_word,
+                    phrase=phrase,
+                    number=i,
+                    start=token.idx,
+                    end=token.idx + len(token),
+                )
+            )
+        PhraseWord.objects.bulk_create(cur_phrase_words)
 
         #  just return the validation data directly as an attribute of the Phrase
         phrase.validation_data = validation_data
