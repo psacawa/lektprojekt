@@ -25,3 +25,4 @@ tags
 build
 _build
 
+.sqllsrc.json
