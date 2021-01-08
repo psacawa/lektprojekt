@@ -100,6 +100,9 @@ class Command(BaseCommand):
             )
             corpus_manager.load(limit=limit, reload=reload)
 
+        print("Recomputing search scores...")
+        call_command("compute_search_scores")
+
     @staticmethod
     def resolve_corpus_file(filename):
         """

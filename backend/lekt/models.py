@@ -637,7 +637,7 @@ class LexemeWeight(models.Model):
     )
     lexeme = models.ForeignKey("Lexeme", on_delete=models.RESTRICT)
     phrasepair = models.ForeignKey(
-        "PhrasePair", on_delete=models.RESTRICT, related_name="lexeme_weights"
+        "PhrasePair", on_delete=models.CASCADE, related_name="lexeme_weights"
     )
     weight = models.FloatField(default=0.0)
     objects = managers.LektManager()

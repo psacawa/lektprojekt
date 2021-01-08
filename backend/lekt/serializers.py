@@ -61,10 +61,13 @@ class WordSerializer(serializers.ModelSerializer):
         exclude = ["created_at", "updated_at"]
 
 
-class PhraseWordSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PhraseWord
-        fields = ["id", "number", "start", "end"]
+class PhraseWordSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    number = serializers.IntegerField()
+    start = serializers.IntegerField()
+    end = serializers.IntegerField()
+    # added as attribute by queryset Prefetch expression
+    lexeme = serializers.IntegerField()
 
 
 class PhraseSerializer(serializers.Serializer):

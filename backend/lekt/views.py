@@ -135,7 +135,9 @@ class PhrasePairListView(generics.ListAPIView):
             queryset = queryset.prefetch_related(
                 Prefetch(
                     "target__phraseword_set",
-                    queryset=PhraseWord.objects.filter(word__lexeme=lexeme),
+                    queryset=PhraseWord.objects.filter(word__lexeme=lexeme).annotate(
+                        lexeme=F("word__lexeme")
+                    ),
                     to_attr="lexeme_matches",
                 )
             )
@@ -154,14 +156,20 @@ class PhrasePairListView(generics.ListAPIView):
 class PhrasePairSearchView(generics.ListAPIView):
 
     serializer_class = serializers.PhrasePairSerializer
+    #  filterset_class = filters.PhrasePairSearchFilterSet
 
     def get_queryset(self):
         request: Request = self.request
         base_lang = request.query_params.get("base", None)
         target_lang = request.query_params.get("target", None)
-        lexeme_ids = list(
-            map(int, request.query_params.get("lexemes", None).split(","))
-        )
+        lexemes = request.query_params.get("lexemes", None)
+        for param in [base_lang, target_lang, lexemes]:
+            if param is None:
+                raise ParseError(detail="Parameter required")
+        try:
+            lexeme_ids = list(map(int, lexemes.split(",")))
+        except Exception as e:
+            raise ParseError("Lexeme IDs malformed")
         logger.debug(f"{lexeme_ids=}")
         queryset = (
             PhrasePair.objects.filter(
