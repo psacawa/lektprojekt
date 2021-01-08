@@ -4,7 +4,9 @@ from operator import __or__
 
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
-from django.db.models import Count, Prefetch, Q
+from django.db.models import Count, F, Prefetch, Q, Subquery
+from django.db.models.aggregates import Sum
+from django.db.models.expressions import RawSQL
 from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -21,6 +23,7 @@ from .models import (
     Annotation,
     Language,
     Lexeme,
+    LexemeWeight,
     Phrase,
     PhrasePair,
     PhraseWord,
@@ -137,6 +140,50 @@ class PhrasePairListView(generics.ListAPIView):
                 )
             )
         elif "annot" in self.request.query_params:
+            annot = self.request.query_params["annot"]
+            queryset = queryset.prefetch_related(
+                Prefetch(
+                    "target__phraseword_set",
+                    queryset=PhraseWord.objects.filter(word__annotations=annot),
+                    to_attr="annot_matches",
+                )
+            )
+        return queryset
+
+
+class PhrasePairSearchView(generics.ListAPIView):
+
+    serializer_class = serializers.PhrasePairSerializer
+
+    def get_queryset(self):
+        request: Request = self.request
+        base_lang = request.query_params.get("base", None)
+        target_lang = request.query_params.get("target", None)
+        lexeme_ids = list(
+            map(int, request.query_params.get("lexemes", None).split(","))
+        )
+        logger.debug(f"{lexeme_ids=}")
+        queryset = (
+            PhrasePair.objects.filter(
+                lexeme_weights__base_lang=base_lang,
+                lexeme_weights__target_lang=target_lang,
+                lexeme_weights__lexeme__in=lexeme_ids,
+            )
+            .annotate(score=Sum("lexeme_weights__weight"))
+            .order_by("-score")
+            .select_related("base", "target")
+        )
+        if "lexemes" in self.request.query_params:
+            queryset = queryset.prefetch_related(
+                Prefetch(
+                    "target__phraseword_set",
+                    queryset=PhraseWord.objects.filter(
+                        word__lexeme__in=lexeme_ids
+                    ).annotate(lexeme=F("word__lexeme")),
+                    to_attr="lexeme_matches",
+                )
+            )
+        elif "annots" in self.request.query_params:
             annot = self.request.query_params["annot"]
             queryset = queryset.prefetch_related(
                 Prefetch(

@@ -127,7 +127,7 @@ WHERE
     AND lekt_lexeme_weight.target_lang_id = l2_doc_norms.target_lang_id
     AND lekt_lexeme_weight.phrasepair_id = l2_doc_norms.phrasepair_id;
 
-CREATE INDEX lekt_idf_multi_ix ON lekt_lexeme_weight (base_lang_id, target_lang_id, lexeme_id);
+CREATE INDEX lekt_lexeme_weight_multi_ix ON lekt_lexeme_weight (base_lang_id, target_lang_id, lexeme_id);
 
 --
 --  function to search for top scoring matches

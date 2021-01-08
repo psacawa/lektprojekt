@@ -98,7 +98,7 @@ class PhrasePairSerializer(serializers.ModelSerializer):
         super().__init__(*args, **kwargs)
         request: Request = self.context["request"]
         view: APIView = self.context["view"]
-        if "lexeme" in request.query_params:
+        if "lexeme" in request.query_params or "lexemes" in request.query_params:
             self.fields["target"] = PhraseSerializer(expand="lexeme")
         elif "annot" in request.query_params:
             self.fields["target"] = PhraseSerializer(expand="annot")

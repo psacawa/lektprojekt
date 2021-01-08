@@ -623,6 +623,30 @@ class WordAnnotation(models.Model):
         return f"<WordAnnotation norm={self.word.norm} annot={self.annot.value}>"
 
 
+class LexemeWeight(models.Model):
+    """
+    This table represents
+    """
+
+    id = models.AutoField(primary_key=True, db_column="id")
+    base_lang = models.ForeignKey(
+        "Language", on_delete=models.RESTRICT, related_name="+"
+    )
+    target_lang = models.ForeignKey(
+        "Language", on_delete=models.RESTRICT, related_name="+"
+    )
+    lexeme = models.ForeignKey("Lexeme", on_delete=models.RESTRICT)
+    phrasepair = models.ForeignKey(
+        "PhrasePair", on_delete=models.RESTRICT, related_name="lexeme_weights"
+    )
+    weight = models.FloatField(default=0.0)
+    objects = managers.LektManager()
+
+    class Meta:
+        managed = False
+        db_table = "lekt_lexeme_weight"
+
+
 # custom lookup to implement SQL's LIKE clause
 @Field.register_lookup
 class Like(Lookup):

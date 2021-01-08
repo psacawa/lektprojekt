@@ -23,6 +23,7 @@ urlpatterns += [
     # the views returning phrase pairs matching one lexeme + one annotation
     path(r"pairs/<int:pk>/", views.PhrasePairDetailView.as_view(), name="pair-detail"),
     path(r"pairs/", views.PhrasePairListView.as_view(), name="pair-list"),
+    path(r"search/", views.PhrasePairSearchView().as_view(), name="pair-search"),
 ]
 
 if settings.DEBUG:

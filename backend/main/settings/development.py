@@ -18,3 +18,6 @@ SHELL_PLUS = "ipython"
 DEBUG_TOOLBAR_CONFIG = {
     "RESULTS_STORE_SIZE": 100,
 }
+
+# for ORM nastiness
+#  SHELL_PLUS_PRINT_SQL_TRUNCATE = None
