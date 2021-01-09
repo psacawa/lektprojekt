@@ -643,7 +643,7 @@ class LexemeWeight(models.Model):
     objects = managers.LektManager()
 
     class Meta:
-        managed = False
+        managed = True
         db_table = "lekt_lexeme_weight"
 
 
