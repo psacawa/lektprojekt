@@ -66,6 +66,12 @@ class Command(BaseCommand):
                 f"--{lang}-model",
                 help=f"Model of {lang} to work with",
             )
+        parser.add_argument(
+            "--compute-weights",
+            type=bool,
+            default=True,
+            help="wether to run SQL script to refresh search weights",
+        )
 
     def handle(
         self,
@@ -78,6 +84,7 @@ class Command(BaseCommand):
         lang1_model=None,
         lang2_size=None,
         lang2_model=None,
+        compute_weights=None,
         **kwargs,
     ):
 
@@ -100,8 +107,9 @@ class Command(BaseCommand):
             )
             corpus_manager.load(limit=limit, reload=reload)
 
-        print("Recomputing search scores...")
-        call_command("compute_search_scores")
+        if compute_weights:
+            print("Recomputing search weights...")
+            call_command("compute_search_weights")
 
     @staticmethod
     def resolve_corpus_file(filename):

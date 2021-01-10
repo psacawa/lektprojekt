@@ -2,7 +2,7 @@
 --  lekt_feature_weight which contain tf-idf weights for lexemes, annotations, and all
 --  linguistic features respectively. It does so separately for each language pair, and
 --  also creates an index that allows these tables to be searched quickly.
---  It's run from  compute_search_scores, which itself is run after a 
+--  It's run from  compute_search_weights, which itself is run after a 
 --  load_corpus operation.
 --
 --  The script operates as follows:
@@ -99,7 +99,7 @@ BEGIN
                     tl.lexeme_id,
                     dc.n
                 );
-        --  l2 normalized tf-idf scores
+        --  l2 normalized tf-idf weights
         TRUNCATE lekt_lexeme_weight;
         DROP INDEX IF EXISTS lekt_lexeme_weight_multi_ix;
     INSERT INTO lekt_lexeme_weight (base_lang_id, target_lang_id, lexeme_id, phrasepair_id, weight)
@@ -219,7 +219,7 @@ BEGIN
                     ta.annot_id,
                     dc.n
                 );
-        --  l2 normalized tf-idf scores
+        --  l2 normalized tf-idf weights
         TRUNCATE lekt_annotation_weight;
         DROP INDEX IF EXISTS lekt_annotation_weight_multi_ix;
     INSERT INTO lekt_annotation_weight (base_lang_id, target_lang_id, annot_id, phrasepair_id, weight)
@@ -384,7 +384,7 @@ BEGIN
                         ppf.feature_id,
                         dc.n
                     );
-        --  l2 normalized tf-idf scores
+        --  l2 normalized tf-idf weights
         TRUNCATE lekt_feature_weight;
         DROP INDEX IF EXISTS lekt_feature_weight_multi_ix;
     INSERT INTO lekt_feature_weight (base_lang_id, target_lang_id, feature_id, phrasepair_id, weight)
