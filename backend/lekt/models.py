@@ -152,9 +152,10 @@ class LinguisticFeature(PolymorphicModel, TimestampedModel):
     #  TODO 09/01/20 psacawa: manually implementing the DB manifestation of inheritance
     #  without using python level inheritance might get around this. Inverstiage
     feature_id = models.AutoField(primary_key=True, db_column="feature_id")
+    objects = PolymorphicManager()
 
 
-class LinguisticFeatureWeight(models.Model):
+class FeatureWeight(models.Model):
     """
     This table contains tf-idf weights normalized for all searchable linguistic features.
 
@@ -171,6 +172,12 @@ class LinguisticFeatureWeight(models.Model):
     )
     weight = models.FloatField(default=0.0)
     objects = managers.LektManager()
+
+    def __repr__(self):
+        return (
+            f"<FeatureWeight feature={str(self.feature.get_real_instance())} "
+            f"text={self.phrasepair.target.text} weight={self.weight}>"
+        )
 
     class Meta:
         managed = True
@@ -193,6 +200,12 @@ class Annotation(LinguisticFeature):
     """
 
     id = models.AutoField(primary_key=True, db_column="annot_id")
+    feature_ptr = models.OneToOneField(
+        LinguisticFeature,
+        on_delete=models.CASCADE,
+        parent_link=True,
+        db_column="feature_id",
+    )
     value = models.CharField(
         max_length=20,
         verbose_name="Annotation value",
@@ -238,7 +251,10 @@ class AnnotationWeight(models.Model):
     objects = managers.LektManager()
 
     def __repr__(self):
-        return f"<AnnotationWeight lemma={self.annotation.value} weight={self.weight}>"
+        return (
+            f"<AnnotationWeight annot={self.annotation.value} "
+            f"text={self.phrasepair.target.text} weight={self.weight}>"
+        )
 
     def __str__(self):
         return repr(self)
@@ -258,6 +274,12 @@ class Lexeme(LinguisticFeature):
     """
 
     id = models.AutoField(primary_key=True, db_column="lexeme_id")
+    feature_ptr = models.OneToOneField(
+        LinguisticFeature,
+        on_delete=models.CASCADE,
+        parent_link=True,
+        db_column="feature_id",
+    )
     lemma = models.CharField(
         max_length=50,
         verbose_name="Token lemma",
@@ -279,7 +301,7 @@ class Lexeme(LinguisticFeature):
         return f"<Lexeme lemma={self.lemma} pos={self.pos}>"
 
     def __str__(self):
-        return f"<{self.lemma} {self.pos}>"
+        return self.lemma
 
 
 class LexemeWeight(models.Model):
@@ -306,8 +328,8 @@ class LexemeWeight(models.Model):
     def __repr__(self):
         return (
             f"<LexemeWeight lemma={self.lexeme.lemma} "
-            "pos={self.lexeme.pos} "
-            "weight={self.weight}>"
+            f"phrase={self.phrasepair.target.text} "
+            f"weight={self.weight}>"
         )
 
     def __str__(self):

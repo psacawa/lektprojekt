@@ -20,3 +20,5 @@ class Command(BaseCommand):
             cursor.execute("CALL compute_lexeme_weights ();")
             print("Computing annotation weights...")
             cursor.execute("CALL compute_annotation_weights ();")
+            print("Computing feature weights...")
+            cursor.execute("CALL compute_feature_weights ();")
