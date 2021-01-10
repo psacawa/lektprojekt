@@ -28,9 +28,6 @@ from .models import (
     PhrasePair,
     PhraseWord,
     Subscription,
-    TrackedAnnotation,
-    TrackedItem,
-    TrackedWord,
     Voice,
     Word,
 )

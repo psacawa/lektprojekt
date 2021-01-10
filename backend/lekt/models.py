@@ -140,7 +140,44 @@ class Corpus(TimestampedModel):
         return self.name
 
 
-class Annotation(TimestampedModel):
+class LinguisticFeature(PolymorphicModel, TimestampedModel):
+    """
+    Base class for features that can be tracked/search for. This model is present just to
+    give a base relation to join on when creating the FeatureWeight relation which holds
+    weights for ranking PhrasePair by tf-idf relevancy.
+    """
+
+    # this break with the naming comvention is necessary to avoid attribute name collision
+    # with subclasses Lexeme, Annotation
+    #  TODO 09/01/20 psacawa: manually implementing the DB manifestation of inheritance
+    #  without using python level inheritance might get around this. Inverstiage
+    feature_id = models.AutoField(primary_key=True, db_column="feature_id")
+
+
+class LinguisticFeatureWeight(models.Model):
+    """
+    This table contains tf-idf weights normalized for all searchable linguistic features.
+
+    This table is populated via
+    """
+
+    base_lang = models.ForeignKey(Language, on_delete=models.RESTRICT, related_name="+")
+    target_lang = models.ForeignKey(
+        Language, on_delete=models.RESTRICT, related_name="+"
+    )
+    feature = models.ForeignKey(LinguisticFeature, on_delete=models.RESTRICT)
+    phrasepair = models.ForeignKey(
+        "PhrasePair", on_delete=models.CASCADE, related_name="feature_weights"
+    )
+    weight = models.FloatField(default=0.0)
+    objects = managers.LektManager()
+
+    class Meta:
+        managed = True
+        db_table = "lekt_feature_weight"
+
+
+class Annotation(LinguisticFeature):
     """
     Model representing **annotation** indicating grammatical data determined by NLP engine.
 
@@ -182,7 +219,36 @@ class Annotation(TimestampedModel):
         return f"{self.value}"
 
 
-class Lexeme(TimestampedModel):
+class AnnotationWeight(models.Model):
+    """
+    This table contains tf-idf weights for annotations.
+    """
+
+    base_lang = models.ForeignKey(Language, on_delete=models.RESTRICT, related_name="+")
+    target_lang = models.ForeignKey(
+        Language, on_delete=models.RESTRICT, related_name="+"
+    )
+    annotation = models.ForeignKey(
+        Annotation, on_delete=models.RESTRICT, db_column="annot_id"
+    )
+    phrasepair = models.ForeignKey(
+        "PhrasePair", on_delete=models.CASCADE, related_name="annot_weights"
+    )
+    weight = models.FloatField(default=0.0)
+    objects = managers.LektManager()
+
+    def __repr__(self):
+        return f"<AnnotationWeight lemma={self.annotation.value} weight={self.weight}>"
+
+    def __str__(self):
+        return repr(self)
+
+    class Meta:
+        managed = True
+        db_table = "lekt_annotation_weight"
+
+
+class Lexeme(LinguisticFeature):
     """
     This model represents lexemes in the linguistic sense. It's an approximation though:
     these Lexemes only include the lemmatized form of the word and the part of speech.
@@ -214,6 +280,38 @@ class Lexeme(TimestampedModel):
 
     def __str__(self):
         return f"<{self.lemma} {self.pos}>"
+
+
+class LexemeWeight(models.Model):
+    """
+    This table contains tf-idf weights for lexemes.
+    """
+
+    id = models.AutoField(primary_key=True, db_column="id")
+    base_lang = models.ForeignKey(Language, on_delete=models.RESTRICT, related_name="+")
+    target_lang = models.ForeignKey(
+        Language, on_delete=models.RESTRICT, related_name="+"
+    )
+    lexeme = models.ForeignKey("Lexeme", on_delete=models.RESTRICT)
+    phrasepair = models.ForeignKey(
+        "PhrasePair", on_delete=models.CASCADE, related_name="lexeme_weights"
+    )
+    weight = models.FloatField(default=0.0)
+    objects = managers.LektManager()
+
+    class Meta:
+        managed = True
+        db_table = "lekt_lexeme_weight"
+
+    def __repr__(self):
+        return (
+            f"<LexemeWeight lemma={self.lexeme.lemma} "
+            "pos={self.lexeme.pos} "
+            "weight={self.weight}>"
+        )
+
+    def __str__(self):
+        return repr(self)
 
 
 class Word(TimestampedModel):
@@ -517,65 +615,6 @@ class Subscription(TimestampedModel):
         return f"({self.owner}: {self.base_lang.lid}, {self.target_lang.lid})"
 
 
-class TrackedItem(PolymorphicModel, TimestampedModel):
-    """
-    Base class for items that a user may be presently tracking.
-    Derived classes include TrackedAnnotation and TrackedWord.
-
-    """
-
-    base_id = models.AutoField(primary_key=True, db_column="titem_id")
-    subscription = models.ForeignKey(
-        Subscription, on_delete=models.CASCADE, db_column="sub_id"
-    )
-    active = models.BooleanField(default=True)
-
-    objects = PolymorphicManager()
-    #  <TODO 03/12/20: PolyManager has issues with integrity. investigate>
-    #  objects = InheritanceManager()
-
-
-class TrackedAnnotation(TrackedItem):
-    """
-    In v0.1 encompasses all tracked data pertaining to filtering
-    Most of the application logic dpeends on this data
-    """
-
-    id = models.AutoField(primary_key=True, db_column="tannot_id")
-    # linguistic/auxiliary data
-    annotation = models.ForeignKey(
-        Annotation, on_delete=models.PROTECT, db_column="annot_id"
-    )
-
-    def __repr__(self):
-        return "<TrackedAnnotation user={} annot={}>".format(
-            self.subscription.owner.user.username, self.annotation.value
-        )
-
-    def __str__(self):
-        return self.annotation.value
-
-    # TODO: this does not work in django on account of the polymorphicity. Fix this
-    #  class Meta:
-    #      unique_together = ['subscription', 'annotation']
-
-
-class TrackedWord(TrackedItem):
-    """ Represents that user's Subscription is tracking a word It's just a stub. """
-
-    id = models.AutoField(primary_key=True, db_column="tword_id")
-    # linguistic/auxiliary data
-    word = models.ForeignKey(Word, on_delete=models.PROTECT)
-
-    def __repr__(self):
-        return "<TrackedWord user={} word={}>".format(
-            self.subscription.owner.user.username, self.word.norm
-        )
-
-    def __str__(self):
-        return self.word.norm
-
-
 class PhraseWord(models.Model):
     """
     Phrase to Word many-to-many bridge with the additional data of the ordering in which
@@ -621,30 +660,6 @@ class WordAnnotation(models.Model):
 
     def __repr__(self):
         return f"<WordAnnotation norm={self.word.norm} annot={self.annot.value}>"
-
-
-class LexemeWeight(models.Model):
-    """
-    This table represents
-    """
-
-    id = models.AutoField(primary_key=True, db_column="id")
-    base_lang = models.ForeignKey(
-        "Language", on_delete=models.RESTRICT, related_name="+"
-    )
-    target_lang = models.ForeignKey(
-        "Language", on_delete=models.RESTRICT, related_name="+"
-    )
-    lexeme = models.ForeignKey("Lexeme", on_delete=models.RESTRICT)
-    phrasepair = models.ForeignKey(
-        "PhrasePair", on_delete=models.CASCADE, related_name="lexeme_weights"
-    )
-    weight = models.FloatField(default=0.0)
-    objects = managers.LektManager()
-
-    class Meta:
-        managed = True
-        db_table = "lekt_lexeme_weight"
 
 
 # custom lookup to implement SQL's LIKE clause

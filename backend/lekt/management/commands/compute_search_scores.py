@@ -16,3 +16,7 @@ class Command(BaseCommand):
         script = open(script_file).read()
         with connection.cursor() as cursor:
             cursor.execute(script)
+            print("Computing lexeme weights...")
+            cursor.execute("CALL compute_lexeme_weights ();")
+            print("Computing annotation weights...")
+            cursor.execute("CALL compute_annotation_weights ();")

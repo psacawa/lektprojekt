@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models.functions import Length
+from polymorphic.managers import PolymorphicManager
 
 
 class LektManager(models.Manager):
@@ -54,7 +55,7 @@ class PhrasePairQuerySet(LektManager):
         return queryset
 
 
-class AnnotationManager(LektManager):
+class AnnotationManager(PolymorphicManager, LektManager):
     """ Manager for :model:`lekt.Annotation` """
 
     def describe_lang(self, lid=None):
