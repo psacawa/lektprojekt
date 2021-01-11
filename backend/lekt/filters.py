@@ -7,22 +7,22 @@ class LanguageFilterSet(FilterSet):
 
 class LexemeFilterSet(FilterSet):
     prompt = CharFilter(field_name="lemma", lookup_expr="istartswith")
-    lid = CharFilter(field_name="lang__lid")
+    lang = NumberFilter(field_name="lang")
 
 
 class AnnotationFilterSet(FilterSet):
     prompt = CharFilter(field_name="value", lookup_expr="istartswith")
-    lid = CharFilter(field_name="lang__lid")
+    lang = NumberFilter(field_name="lang")
 
 
 class WordFilterSet(FilterSet):
     prompt = CharFilter(field_name="norm", lookup_expr="startswith")
-    lid = CharFilter(field_name="lexeme__lang__lid")
+    lang = NumberFilter(field_name="lexeme__lang")
 
 
 class PhraseFilterSet(FilterSet):
     prompt = CharFilter(field_name="text", lookup_expr="contains")
-    lid = CharFilter(field_name="lang__lid")
+    lang = NumberFilter(field_name="lang")
 
 
 class PhrasePairFilterSet(FilterSet):

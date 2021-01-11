@@ -17,8 +17,8 @@ client = APIClient()
 class LexemeViewTest:
     def search_test(self):
         with assertNumQueries(2):
-            response: Response = client.get("/api/lexemes/?lang=es&prompt=per")
-        assert response.status_code == 200
+            response: Response = client.get("/api/lexemes/?lang=4&prompt=per")
+            assert response.status_code == 200
         results = response.data["results"]
         assert_that(results).extracting("lemma").contains("pero", "personal")
 
@@ -27,8 +27,8 @@ class LexemeViewTest:
 class AnnotationViewTest:
     def list_test(self):
         with assertNumQueries(2):
-            response: Response = client.get("/api/annots/?lid=es")
-        assert response.status_code == 200
+            response: Response = client.get("/api/annots/?lang=4")
+            assert response.status_code == 200
         results = response.data["results"]
         assert_that(results).is_length(46).extracting("explanation").contains(
             "dative case",
@@ -37,8 +37,8 @@ class AnnotationViewTest:
 
     def complete_test(self):
         with assertNumQueries(2):
-            response: Response = client.get("/api/annots/?lid=es&prompt=Tense")
-        assert response.status_code == 200
+            response: Response = client.get("/api/annots/?lang=4&prompt=Tense")
+            assert response.status_code == 200
         results = response.data["results"]
         assert_that(results).is_length(4).extracting("explanation").is_equal_to(
             [
@@ -55,26 +55,28 @@ class LanguageViewTest:
     def list_test(self):
         with assertNumQueries(3):
             response: Response = client.get("/api/languages/")
-        assert response.status_code == 200
+            assert response.status_code == 200
         assert "results" in response.data
         results = response.data["results"]
         assert_that(results).is_length(20)
 
 
 @pytest.mark.django_db
-class PhrasePairViewTest:
+class PhrasePairViewsTest:
     def phrasepair_detail_view_test(self, django_assert_num_queries):
         with assertNumQueries(4):
             response: Response = client.get("/api/pairs/100/")
+            assert response.status_code == 200
 
-        assert response.status_code == 200
         assert_that(response.data)
 
     def lexeme_search_test(self):
         #  <Lexeme lemma=ser pos=AUX> pk=67
         with assertNumQueries(3):
-            response: Response = client.get("/api/pairs/?base=en&target=es&lexeme=67")
-        assert response.status_code == 200
+            response: Response = client.get(
+                "/api/pairs/lexeme-search/?base=3&target=4&lexemes=67"
+            )
+            assert response.status_code == 200
         results = response.data["results"]
         assert_that(results).contains(
             {
@@ -96,8 +98,10 @@ class PhrasePairViewTest:
     def annot_search_test(self):
         #  <Annotation VerbForm=Ger present particle> pk=71
         with assertNumQueries(3):
-            response: Response = client.get("/api/pairs/?base=en&target=es&annot=71")
-        assert response.status_code == 200
+            response: Response = client.get(
+                "/api/pairs/annot-search/?base=3&target=4&annots=71"
+            )
+            assert response.status_code == 200
         results = response.data["results"]
         assert_that(results).contains(
             {
@@ -124,9 +128,11 @@ class PhrasePairViewTest:
         assert response.status_code == 400
         assert "target" in response.data
         assert_that(response.data["target"]).is_equal_to(["This field is required."])
+        assert_that(response.data["base"]).is_equal_to(["Enter a number."])
 
         response: Response = client.get("/api/pairs/?target=es&lexeme=67")
         print(response.data)
         assert response.status_code == 400
         assert "base" in response.data
         assert_that(response.data["base"]).is_equal_to(["This field is required."])
+        assert_that(response.data["target"]).is_equal_to(["Enter a number."])

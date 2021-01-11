@@ -109,7 +109,7 @@ class PhrasePairSerializer(serializers.ModelSerializer):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        expand_matches = self.context["expand_matches"]
+        expand_matches = self.context.get("expand_matches", [])
         self.fields["target"] = PhraseSerializer(expand_matches=expand_matches)
 
     class Meta:
