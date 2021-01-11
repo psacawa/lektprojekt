@@ -14,10 +14,14 @@ if DEVELOPMENT:
 
 # Django Extensions settings
 SHELL_PLUS = "ipython"
+SHELL_PLUS_IMPORTS = [
+    "from django.db.models import Window",
+    "from django.db.models.functions import Length, Rank",
+    "from django.db.models.expressions import RawSQL",
+]
+# for ORM nastiness
+#  SHELL_PLUS_PRINT_SQL_TRUNCATE = None
 
 DEBUG_TOOLBAR_CONFIG = {
     "RESULTS_STORE_SIZE": 100,
 }
-
-# for ORM nastiness
-#  SHELL_PLUS_PRINT_SQL_TRUNCATE = None
