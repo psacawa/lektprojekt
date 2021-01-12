@@ -16,6 +16,6 @@ class Command(BaseCommand):
         )
 
     def handle(self, app, **options):
-        models = apps.get_app_config(app).get_models()
-        data = ([m._meta.object_name, m.objects.count()] for m in models)
+        models = list(apps.get_app_config(app).get_models())
+        data = list([m._meta.object_name, m.objects.count()] for m in models)
         print(tabulate(data, headers=["model name", "count"]))

@@ -7,18 +7,11 @@ This is the monorepo for _LektProjekt_. See `docs/` for general documentation.
 After installing `sphinx`, run:
 
 ```
-cd docs
-sphinx-build . _build
+cd backend
+./manage.py build_docs
 ```
 
-This creates the documentation in the `_build` catalogue. You can serve the docs by entering it and running a static file web server, e.g. with
-
-```
-cd _build
-python3 -m http.server 8001
-```
-
-I will try to get django to serve it.
+This creates the documentation in the `docs/build` catalogue.
 
 ## Backend
 
