@@ -1,6 +1,6 @@
 import logging
 from functools import reduce
-from operator import __or__
+from operator import __or__, itemgetter
 
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
@@ -150,36 +150,66 @@ class PhrasePairListView(generics.ListAPIView):
         return queryset
 
 
-class PhrasePairLexemeSearchView(generics.ListAPIView):
+class ValidateFilterListMixin:
+    """
+    Mixing that is identical to ListModelMixin but doesn't run filter_queryset on the
+    result of get_queryset. It should be manually applied, for example inside get_queryset
+    on a prequeryset attribute.
+    This allows the application of filtering to controlled somewhat.
+    """
+
+    query_params_filterset = None
+
+    def get_filterset_kwargs(self):
+        return {
+            "data": self.request.query_params,
+            "request": self.request,
+        }
+
+    def get_query_params(self):
+        assert (
+            self.query_params_filterset is not None
+        ), "to use ValidateFilterListMixin, define query_params_filterset"
+        kwargs = self.get_filterset_kwargs()
+        filterset = self.query_params_filterset(**kwargs)
+        return filterset.get_query_params()
+
+    def list(self, request, *args, **kwargs):
+        #  only difference: no filter_queryset
+        queryset = self.get_queryset()
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class PhrasePairLexemeSearchView(ValidateFilterListMixin, generics.ListAPIView):
     """
     View for relevance search of PhrasePair objects where only related `Lexeme` objects
     can be searched on.
     """
 
     serializer_class = serializers.PhrasePairSerializer
-    #  filterset_class = filters.PhrasePairSearchFilterSet
+    query_params_filterset = filters.PhrasePairLexemeSearchFilterSet
+    prequeryset = PhrasePair.objects.all()
 
     def get_serializer_context(self):
         return {"expand_matches": ["lexeme"]}
 
     def get_queryset(self):
-        request: Request = self.request
-        base_lang = request.query_params.get("base", None)
-        target_lang = request.query_params.get("target", None)
-        lexemes = request.query_params.get("lexemes", None)
-        for param in [base_lang, target_lang, lexemes]:
-            if param is None:
-                raise ParseError(detail="Parameter required")
-        try:
-            lexeme_ids = list(map(int, lexemes.split(",")))
-        except Exception as e:
-            raise ParseError("Lexeme IDs malformed")
-        logger.debug(f"{lexeme_ids=}")
+        params = self.get_query_params()
+        base_lang, target_lang, lexemes = itemgetter("base", "target", "lexemes")(
+            params
+        )
         queryset = (
             PhrasePair.objects.filter(
                 lexeme_weights__base_lang=base_lang,
                 lexeme_weights__target_lang=target_lang,
-                lexeme_weights__lexeme__in=lexeme_ids,
+                lexeme_weights__lexeme__in=lexemes,
             )
             .annotate(score=Sum("lexeme_weights__weight"))
             .order_by("-score")
@@ -188,7 +218,7 @@ class PhrasePairLexemeSearchView(generics.ListAPIView):
                 Prefetch(
                     "target__phraseword_set",
                     queryset=PhraseWord.objects.filter(
-                        word__lexeme__in=lexeme_ids
+                        word__lexeme__in=lexemes
                     ).annotate(lexeme=F("word__lexeme")),
                     to_attr="lexeme_matches",
                 )
@@ -197,36 +227,29 @@ class PhrasePairLexemeSearchView(generics.ListAPIView):
         return queryset
 
 
-class PhrasePairAnnotationSearchView(generics.ListAPIView):
+class PhrasePairAnnotationSearchView(ValidateFilterListMixin, generics.ListAPIView):
     """
     View for relevance search of PhrasePair objects where only related `Annotation`
     objects can be searched on.
     """
 
     serializer_class = serializers.PhrasePairSerializer
-    #  filterset_class = filters.PhrasePairSearchFilterSet
+    query_params_filterset = filters.PhrasePairAnnotationSearchFilterSet
 
     def get_serializer_context(self):
         return {"expand_matches": ["annot"]}
 
     def get_queryset(self):
-        request: Request = self.request
-        base_lang = request.query_params.get("base", None)
-        target_lang = request.query_params.get("target", None)
-        annots = request.query_params.get("annots", None)
+        params = self.get_query_params()
+        base_lang, target_lang, annots = itemgetter("base", "target", "annots")(params)
         for param in [base_lang, target_lang, annots]:
             if param is None:
                 raise ParseError(detail="Parameter required")
-        try:
-            annot_ids = list(map(int, annots.split(",")))
-        except Exception as e:
-            raise ParseError("Annotation IDs malformed")
-        logger.debug(f"{annot_ids=}")
         queryset = (
             PhrasePair.objects.filter(
                 annot_weights__base_lang=base_lang,
                 annot_weights__target_lang=target_lang,
-                annot_weights__annotation__in=annot_ids,
+                annot_weights__annotation__in=annots,
             )
             .annotate(score=Sum("annot_weights__weight"))
             .order_by("-score")
@@ -235,7 +258,7 @@ class PhrasePairAnnotationSearchView(generics.ListAPIView):
                 Prefetch(
                     "target__phraseword_set",
                     queryset=PhraseWord.objects.filter(
-                        word__annotations__in=annot_ids
+                        word__annotations__in=annots
                     ).annotate(annotation=F("word__annotations")),
                     to_attr="annot_matches",
                 )
@@ -244,78 +267,64 @@ class PhrasePairAnnotationSearchView(generics.ListAPIView):
         return queryset
 
 
-class PhrasePairFeatureSearchView(generics.ListAPIView):
+class PhrasePairFeatureSearchView(ValidateFilterListMixin, generics.ListAPIView):
     """
     View for relevance search of PhrasePair objects where `Lexeme` and `Annotation`
     objects can be searched on.
     """
 
     serializer_class = serializers.PhrasePairSerializer
-    #  filterset_class = filters.PhrasePairSearchFilterSet
+    query_params_filterset = filters.PhrasePairFeatureSearchFilterSet
 
     def get_serializer_context(self):
         return {"expand_matches": ["lexeme", "annot"]}
 
     def get_queryset(self):
-        request: Request = self.request
-        base_lang = request.query_params.get("base", None)
-        target_lang = request.query_params.get("target", None)
-        lexemes = request.query_params.get("lexemes", None)
-        annots = request.query_params.get("annots", None)
-        for param in [base_lang, target_lang]:
-            if param is None:
-                raise ParseError(detail="Parameter required")
-        feature_ids = []
-        if lexemes:
-            try:
-                lexeme_ids = list(map(int, lexemes.split(",")))
-            except Exception as e:
-                raise
-                raise ParseError("Lexeme IDs malformed")
-            logger.debug(f"{lexeme_ids=}")
-            feature_ids += list(
-                Lexeme.objects.filter(id__in=lexeme_ids).values_list("feature_id")
-            )
-        if annots:
-            try:
-                annot_ids = list(map(int, annots.split(",")))
-            except Exception as e:
-                raise
-                raise ParseError("Annotation IDs malformed")
-            logger.debug(f"{annot_ids=}")
-            feature_ids += list(
-                Annotation.objects.filter(id__in=annot_ids).values_list("feature_id")
-            )
+        params = self.get_query_params()
+        base_lang, target_lang, lexemes, annots = itemgetter(
+            "base", "target", "lexemes", "annots"
+        )(params)
+        if lexemes is None:
+            lexemes = []
+        if annots is None:
+            annots = []
+        features = []
+        features += list(
+            Lexeme.objects.filter(id__in=lexemes).values_list("feature_id")
+        )
+        features += list(
+            Annotation.objects.filter(id__in=annots).values_list("feature_id")
+        )
+        if len(features) == 0:
+            raise ParseError("At least one search term is needed.")
         queryset = (
             PhrasePair.objects.filter(
                 feature_weights__base_lang=base_lang,
                 feature_weights__target_lang=target_lang,
-                feature_weights__feature__in=feature_ids,
+                feature_weights__feature__in=features,
             )
             .annotate(score=Sum("feature_weights__weight"))
             .order_by("-score")
             .select_related("base", "target")
         )
-        if lexemes:
-            queryset = queryset.prefetch_related(
-                Prefetch(
-                    "target__phraseword_set",
-                    queryset=PhraseWord.objects.filter(
-                        word__lexeme__in=lexeme_ids
-                    ).annotate(lexeme=F("word__lexeme")),
-                    to_attr="lexeme_matches",
-                )
+        queryset = queryset.prefetch_related(
+            Prefetch(
+                "target__phraseword_set",
+                queryset=PhraseWord.objects.filter(word__lexeme__in=lexemes).annotate(
+                    lexeme=F("word__lexeme")
+                ),
+                to_attr="lexeme_matches",
             )
-        if annots:
-            queryset = queryset.prefetch_related(
-                Prefetch(
-                    "target__phraseword_set",
-                    queryset=PhraseWord.objects.filter(
-                        word__annotations__in=annot_ids
-                    ).annotate(annotation=F("word__annotations")),
-                    to_attr="annot_matches",
-                )
+        )
+        queryset = queryset.prefetch_related(
+            Prefetch(
+                "target__phraseword_set",
+                queryset=PhraseWord.objects.filter(
+                    word__annotations__in=annots
+                ).annotate(annotation=F("word__annotations")),
+                to_attr="annot_matches",
             )
+        )
         return queryset
 
 
