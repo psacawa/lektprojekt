@@ -18,6 +18,8 @@ from rest_framework.exceptions import ParseError, ValidationError
 from rest_framework.filters import OrderingFilter
 from rest_framework.request import Request
 
+from lekt.pagination import LargePageNumberPagination
+
 from . import filters, serializers
 from .models import (
     Annotation,
@@ -35,6 +37,7 @@ from .models import (
 logger = logging.getLogger(__name__)
 
 
+@method_decorator(cache_page(60 * 60), name="dispatch")
 class LanguageViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API view set to for listing `Language` models and their associated `Voice` models.
@@ -45,8 +48,10 @@ class LanguageViewSet(viewsets.ReadOnlyModelViewSet):
     filterset_class = filters.LanguageFilterSet
     serializer_class = serializers.LanguageVoiceSerializer
     ordering = ["id"]
+    pagination_class = LargePageNumberPagination
 
 
+@method_decorator(cache_page(60 * 60), name="dispatch")
 class LexemeCompletionView(generics.ListAPIView):
     """
     API view for querying `Lexeme` models based on their associated `Language` and an
@@ -58,8 +63,10 @@ class LexemeCompletionView(generics.ListAPIView):
     serializer_class = serializers.LexemeSerializer
     filterset_class = filters.LexemeFilterSet
     ordering = ["id"]
+    pagination_class = LargePageNumberPagination
 
 
+@method_decorator(cache_page(60 * 60), name="dispatch")
 class AnnotationCompletionView(generics.ListAPIView):
     """
     API view for querying `Annotation` models based on their associated `Language` and an
@@ -71,8 +78,10 @@ class AnnotationCompletionView(generics.ListAPIView):
     serializer_class = serializers.AnnotationSerializer
     filterset_class = filters.AnnotationFilterSet
     ordering = ["id"]
+    pagination_class = LargePageNumberPagination
 
 
+@method_decorator(cache_page(60 * 60), name="dispatch")
 class WordCompletionView(generics.ListAPIView):
     """
     API view for querying `Word` models based on the associated `Language` and a initial
@@ -87,6 +96,7 @@ class WordCompletionView(generics.ListAPIView):
     ordering = ["id"]
 
 
+@method_decorator(cache_page(60 * 60), name="dispatch")
 class PhraseCompletionView(generics.ListAPIView):
     """API View to list phrases containing a given substring."""
 
@@ -96,6 +106,7 @@ class PhraseCompletionView(generics.ListAPIView):
     ordering = ["id"]
 
 
+@method_decorator(cache_page(60 * 60), name="dispatch")
 class PhrasePairDetailView(generics.RetrieveAPIView):
 
     queryset = (
@@ -187,6 +198,7 @@ class ValidateFilterListMixin:
         return Response(serializer.data)
 
 
+@method_decorator(cache_page(60 * 60), name="dispatch")
 class PhrasePairLexemeSearchView(ValidateFilterListMixin, generics.ListAPIView):
     """
     View for relevance search of PhrasePair objects where only related `Lexeme` objects
@@ -227,6 +239,7 @@ class PhrasePairLexemeSearchView(ValidateFilterListMixin, generics.ListAPIView):
         return queryset
 
 
+@method_decorator(cache_page(60 * 60), name="dispatch")
 class PhrasePairAnnotationSearchView(ValidateFilterListMixin, generics.ListAPIView):
     """
     View for relevance search of PhrasePair objects where only related `Annotation`
@@ -267,6 +280,7 @@ class PhrasePairAnnotationSearchView(ValidateFilterListMixin, generics.ListAPIVi
         return queryset
 
 
+@method_decorator(cache_page(60 * 60), name="dispatch")
 class PhrasePairFeatureSearchView(ValidateFilterListMixin, generics.ListAPIView):
     """
     View for relevance search of PhrasePair objects where `Lexeme` and `Annotation`
