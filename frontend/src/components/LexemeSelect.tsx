@@ -1,81 +1,85 @@
-import { CircularProgress, TextField, Typography } from "@material-ui/core";
+import {
+  Chip,
+  CircularProgress,
+  debounce,
+  IconButton,
+  List,
+  ListItem,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import { Grid } from "@material-ui/core";
+import { Clear } from "@material-ui/icons";
 import { Autocomplete, AutocompleteProps } from "@material-ui/lab";
 import { isEqual, uniqWith } from "lodash";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
 
 import * as client from "../client";
-import { Language, Lexeme } from "../types";
+import { Coloured, Language, Lexeme } from "../types";
 
 interface Props {
-  targetLanguage: Language | null;
+  language: Language | null;
   disabled: boolean;
-  options: Lexeme[];
-  setOptions: React.Dispatch<React.SetStateAction<Lexeme[]>>;
-  value: Lexeme | null;
-  onChange: any;
-  inputValue: string;
-  onInputChange: any;
+  value: Coloured<Lexeme>[];
+  setValue: React.Dispatch<Lexeme[]>;
+  onChange: (
+    ev: React.ChangeEvent<{}>,
+    value: Coloured<Lexeme>[],
+    reason: any
+  ) => any;
   optionsLimit?: number;
 }
 
-const AsyncWordSelect = ({
-  targetLanguage,
+const LexemeSelect = ({
+  language,
   disabled,
-  options,
-  setOptions,
   value,
+  setValue,
   onChange,
-  inputValue,
-  onInputChange,
   optionsLimit = 50,
 }: Props) => {
-  const [open, setOpen] = useState(false);
+  const [options, setOptions] = useState<Lexeme[]>([]);
+  const [inputValue, setInputValue] = useState<string>("");
 
   const lexemeQuery = useQuery(
-    ["lexemes", { id: targetLanguage?.id, prompt: inputValue }],
+    ["lexemes", { lang: language?.id, prompt: inputValue }],
     ({ queryKey }) => {
-      const [_key, { id, prompt }] = queryKey;
-      return client.completeLexemes(id, prompt);
+      const [_key, { lang, prompt }] = queryKey;
+      return client.completeLexemes(lang, prompt);
     },
     {
       enabled: inputValue.length >= 3,
       staleTime: 60 * 1000,
       onSuccess: (results) => {
-        const newOptions = uniqWith(
-          [...results, ...options],
-          // (lexeme1: Lexeme, lexeme2: Lexeme) => lexeme1.id === lexeme2.id
-          isEqual
-        );
+        const newOptions = uniqWith([...results, ...options], isEqual);
         setOptions(newOptions);
       },
     }
   );
+  const handleInputChange: any = debounce(
+    (event: React.ChangeEvent, newInputValue: string) =>
+      setInputValue(newInputValue),
+    300
+  );
 
   return (
-    <Grid item xs={12}>
+    <Grid item xs={6}>
       <Autocomplete
-        open={open}
-        onOpen={() => {
-          setOpen(true);
-        }}
+        multiple
+        renderTags={() => null}
         // inputValue={inputValue}
         value={value}
-        onClose={() => {
-          setOpen(false);
-        }}
         getOptionLabel={(option) => option.lemma}
         options={options}
         loading={lexemeQuery.isFetching}
         disabled={disabled}
-        onInputChange={onInputChange}
+        onInputChange={handleInputChange}
         onChange={onChange}
         renderInput={(params) => (
           <TextField
             {...params}
-            label="Search term"
-            variant="outlined"
+            variant="standard"
             InputProps={{
               ...params.InputProps,
               endAdornment: (
@@ -90,7 +94,6 @@ const AsyncWordSelect = ({
           />
         )}
         renderOption={(option) => (
-          // `${option.lemma} ${option.pos}`
           <Grid container>
             <Grid item xs={6}>
               <Typography>{option.lemma}</Typography>
@@ -101,8 +104,32 @@ const AsyncWordSelect = ({
           </Grid>
         )}
       />
+      <List>
+        {value.map((lexeme, idx) => (
+          <ListItem style={{ backgroundColor: lexeme.colour! }}>
+            <Grid item xs={4}>
+              {lexeme.lemma}
+            </Grid>
+            <Grid item xs={4}>
+              {lexeme.pos}
+            </Grid>
+            <Grid item xs={4}>
+              <IconButton
+                onClick={(event: React.MouseEvent<{}>) => {
+                  let newValue = value.filter(
+                    (value, valueIdx) => idx !== valueIdx
+                  );
+                  setValue(newValue);
+                }}
+              >
+                <Clear />
+              </IconButton>
+            </Grid>
+          </ListItem>
+        ))}
+      </List>
     </Grid>
   );
 };
 
-export default AsyncWordSelect;
+export default LexemeSelect;

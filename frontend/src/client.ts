@@ -1,6 +1,12 @@
 import axios, { AxiosResponse } from "axios";
 
-import { Language, Lexeme, ListApiOutput, PhrasePair } from "./types";
+import {
+  Annotation,
+  Language,
+  Lexeme,
+  ListApiOutput,
+  PhrasePair,
+} from "./types";
 
 const apiRoot = "/api/";
 
@@ -12,12 +18,12 @@ export const listLanguages = () =>
         response.data.results
     );
 
-export const completeLexemes = (id: number, prompt: string, page?: number) =>
+export const completeLexemes = (lang: number, prompt: string, page?: number) =>
   axios
     .get(`${apiRoot}lexemes/`, {
       params: {
+        lang,
         prompt,
-        id,
         page,
       },
     })
@@ -26,32 +32,79 @@ export const completeLexemes = (id: number, prompt: string, page?: number) =>
     );
 
 export const completeAnnotations = (
-  id: number,
+  lang: number,
   prompt: string,
   page?: number
 ) =>
   axios
     .get(`${apiRoot}annots/`, {
       params: {
+        lang,
         prompt,
-        id,
         page,
       },
     })
     .then(
-      (response: AxiosResponse<ListApiOutput<Lexeme>>) => response.data.results
+      (response: AxiosResponse<ListApiOutput<Annotation>>) =>
+        response.data.results
     );
 
-export const getPairs = (
-  baseId: number,
-  targetId: number,
-  lexeme?: number,
-  annot?: number,
+export const searchPairsByLexemes = (
+  baseLang: number,
+  targetLang: number,
+  lexemes?: number[],
   page?: number
 ) =>
   axios
-    .get(`${apiRoot}pairs/`, {
-      params: { base: baseId, target: targetId, lexeme, annot, page },
+    .get(`${apiRoot}pairs/lexeme-search/`, {
+      params: {
+        base: baseLang,
+        target: targetLang,
+        lexemes: lexemes?.join(","),
+        page,
+      },
+    })
+    .then(
+      (response: AxiosResponse<ListApiOutput<PhrasePair>>) =>
+        response.data.results
+    );
+
+export const searchPairsByAnnotations = (
+  baseLang: number,
+  targetLang: number,
+  annotations?: number[],
+  page?: number
+) =>
+  axios
+    .get(`${apiRoot}pairs/search/`, {
+      params: {
+        base: baseLang,
+        target: targetLang,
+        annots: annotations?.join(","),
+        page,
+      },
+    })
+    .then(
+      (response: AxiosResponse<ListApiOutput<PhrasePair>>) =>
+        response.data.results
+    );
+
+export const searchPairsByFeatures = (
+  baseLang: number,
+  targetLang: number,
+  lexemes?: number[],
+  annotations?: number[],
+  page?: number
+) =>
+  axios
+    .get(`${apiRoot}pairs/search/`, {
+      params: {
+        base: baseLang,
+        target: targetLang,
+        lexemes: lexemes?.join(","),
+        annots: annotations?.join(","),
+        page,
+      },
     })
     .then(
       (response: AxiosResponse<ListApiOutput<PhrasePair>>) =>

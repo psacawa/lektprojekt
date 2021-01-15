@@ -1,21 +1,20 @@
-import { debounce, Grid, Typography } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import { CircularProgress } from "@material-ui/core";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
 
 import * as client from "../client";
-import AsyncWordSelect from "../components/AsyncWordSelect";
+import MultiSelect from "../components/MultiSelect";
 import LanguageSelect from "../components/LanguageSelect";
 import PhrasePairListTable from "../components/PhrasePairListTable";
-import { Language, Lexeme, PhrasePair } from "../types";
+import { Annotation, Language, Lexeme, Coloured, PhrasePair } from "../types";
 
 const PhrasePairListView = () => {
   const [baseLanguage, setBaseLanguage] = useState<Language | null>(null);
   const [targetLanguage, setTargetLanguage] = useState<Language | null>(null);
-  const [options, setOptions] = useState<Lexeme[]>([]);
-  const [enabled, setEnabled] = useState(false);
-  const [promptValue, setPromptValue] = useState<Lexeme | null>(null);
-  const [promptInputValue, setPromptInputValue] = useState<string>("");
+  const [queryEnabled, setQueryEnabled] = useState(false);
+  const [lexemes, setLexemes] = useState<Coloured<Lexeme>[]>([]);
+  const [annotations, setAnnotations] = useState<Coloured<Annotation>[]>([]);
 
   const languageQuery = useQuery("languages", client.listLanguages, {
     onSuccess: (languages) => {
@@ -27,25 +26,28 @@ const PhrasePairListView = () => {
     },
     refetchOnWindowFocus: false,
   });
+
   const phrasePairQuery = useQuery(
-    ["pairs", [baseLanguage?.id, targetLanguage?.id, promptValue?.id]],
+    [
+      "pairs",
+      [
+        baseLanguage?.id,
+        targetLanguage?.id,
+        lexemes.map((lexeme) => lexeme.id),
+        annotations.map((annotation) => annotation.id),
+      ],
+    ],
     () =>
-      client.getPairs(baseLanguage!.id, targetLanguage!.id, promptValue!.id),
+      client.searchPairsByFeatures(
+        baseLanguage!.id,
+        targetLanguage!.id,
+        lexemes.map((lexeme) => lexeme.id),
+        annotations.map((annotation) => annotation.id)
+      ),
     {
-      enabled,
+      enabled: lexemes.length + annotations.length > 0,
     }
   );
-  const handleInputChange = debounce(
-    (event: React.ChangeEvent, newInputValue: string) =>
-      setPromptInputValue(newInputValue),
-    300
-  );
-  const handleChange = (ev: React.ChangeEvent<{}>, newValue: Lexeme | null) => {
-    if (newValue) {
-      newValue && setPromptValue(newValue);
-      !enabled && setEnabled(true);
-    }
-  };
   return (
     <>
       <Typography variant="h5" style={{ margin: 30 }}>
@@ -64,26 +66,26 @@ const PhrasePairListView = () => {
               targetLanguage={targetLanguage}
               handleTargetLanguageChange={(ev, newLang) => {
                 setTargetLanguage(newLang);
-                setOptions([]);
               }}
               languageOptions={languageQuery!.data!}
             />
-            <AsyncWordSelect
-              onInputChange={handleInputChange}
-              targetLanguage={targetLanguage}
-              options={options}
-              setOptions={setOptions}
-              disabled={!targetLanguage}
-              value={promptValue}
-              inputValue={promptInputValue}
-              onChange={handleChange}
+            <MultiSelect
+              lexemes={lexemes}
+              setLexemes={setLexemes}
+              annotations={annotations}
+              setAnnotations={setAnnotations}
+              language={targetLanguage}
             />
             <Grid item></Grid>
-            {enabled ? (
-              <PhrasePairListTable
-                {...{ baseLanguage, targetLanguage, phrasePairQuery }}
-              />
-            ) : null}
+            <PhrasePairListTable
+              {...{
+                baseLanguage,
+                targetLanguage,
+                phrasePairQuery,
+                lexemes,
+                annotations,
+              }}
+            />
           </Grid>
         </>
       )}

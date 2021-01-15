@@ -16,8 +16,9 @@ import { KeyboardArrowDown, KeyboardArrowUp } from "@material-ui/icons";
 import { useState } from "react";
 import { QueryObserverResult } from "react-query";
 import { useHistory } from "react-router-dom";
+import _ from "lodash";
 
-import { Language, PhrasePair } from "../types";
+import { Coloured, Language, Lexeme, PhrasePair, Annotation } from "../types";
 import HighlightedPhrase from "./HighlightedPhrase";
 import PhrasePairDetailTable from "./PhasePairDetailTable";
 
@@ -31,9 +32,10 @@ const useRowStyles = makeStyles({
 
 interface RowProps {
   phrasePair: PhrasePair;
+  lexemeColourMap: Record<number, string | undefined>;
 }
 
-const PhrasePairTableRow = ({ phrasePair }: RowProps) => {
+const PhrasePairTableRow = ({ phrasePair, lexemeColourMap }: RowProps) => {
   const [open, setOpen] = useState(false);
   const classes = useRowStyles();
   return (
@@ -41,7 +43,10 @@ const PhrasePairTableRow = ({ phrasePair }: RowProps) => {
       <TableRow className={classes.root} hover={true}>
         <TableCell key={0}>{phrasePair.base.text}</TableCell>
         <TableCell key={1}>
-          <HighlightedPhrase phrase={phrasePair.target} />
+          <HighlightedPhrase
+            phrase={phrasePair.target}
+            lexemeColourMap={lexemeColourMap}
+          />
         </TableCell>
         <TableCell key={2}>
           <IconButton onClick={() => setOpen(!open)}>
@@ -66,15 +71,22 @@ interface Props {
   baseLanguage: Language | null;
   targetLanguage: Language | null;
   phrasePairQuery: QueryObserverResult<PhrasePair[]>;
+  lexemes: Coloured<Lexeme>[];
+  annotations: Coloured<Annotation>[];
 }
 
 const PhrasePairTable = ({
   phrasePairQuery,
   baseLanguage,
   targetLanguage,
+  lexemes,
+  annotations,
 }: Props) => {
-  const history = useHistory();
-  const { data: phrasePairs, isSuccess } = phrasePairQuery;
+  const lexemeColourMap: Record<number, string | undefined> = _(lexemes)
+    .keyBy("id")
+    .mapValues("colour")
+    .value();
+  const { data: phrasePairs, isSuccess, isFetching } = phrasePairQuery;
   return (
     <Grid item xs={12}>
       {isSuccess ? (
@@ -93,14 +105,18 @@ const PhrasePairTable = ({
             </TableHead>
             <TableBody>
               {phrasePairs?.map((phrasePair, idx) => (
-                <PhrasePairTableRow key={idx} phrasePair={phrasePair} />
+                <PhrasePairTableRow
+                  key={idx}
+                  lexemeColourMap={lexemeColourMap}
+                  phrasePair={phrasePair}
+                />
               ))}
             </TableBody>
           </Table>
         </TableContainer>
-      ) : (
+      ) : isFetching ? (
         <CircularProgress />
-      )}
+      ) : null}
     </Grid>
   );
 };

@@ -25,9 +25,12 @@ export interface TokenSpan {
   number: number;
   start: number;
   end: number;
+  lexeme?: number;
+  annotation?: number;
 }
 
 interface Annotation {
+  id: number;
   value: string;
   explanation: string;
 }
@@ -60,3 +63,5 @@ export interface ListApiOutput<T> {
   previous: string;
   results: T[];
 }
+
+type Coloured<T> = T & { colour?: string };

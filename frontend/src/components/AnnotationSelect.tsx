@@ -1,48 +1,52 @@
 import {
+  Chip,
   CircularProgress,
   debounce,
+  IconButton,
+  List,
+  ListItem,
   TextField,
   Typography,
 } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
+import { Clear } from "@material-ui/icons";
 import { Autocomplete, AutocompleteProps } from "@material-ui/lab";
 import { isEqual, uniqWith } from "lodash";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useQuery } from "react-query";
 
 import * as client from "../client";
-import { Language, Lexeme } from "../types";
+import { Language, Annotation } from "../types";
 
 interface Props {
   language: Language | null;
   disabled: boolean;
-  value: Lexeme | null;
-  onChange: any;
+  value: Annotation[];
+  setValue: React.Dispatch<Annotation[]>;
+  onChange: (
+    ev: React.ChangeEvent<{}>,
+    value: Annotation[],
+    reason: any
+  ) => any;
   optionsLimit?: number;
-  key: number;
-  number?: number;
-  label?: string;
 }
 
-const LexemeSelect = ({
+const AnnotationSelect = ({
   language,
   disabled,
   value,
+  setValue,
   onChange,
-  key,
-  number,
-  label,
   optionsLimit = 50,
 }: Props) => {
-  const [open, setOpen] = useState(false);
-  const [options, setOptions] = useState<Lexeme[]>([]);
+  const [options, setOptions] = useState<Annotation[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
 
-  const lexemeQuery = useQuery(
-    ["lexemes", { lang: language?.id, prompt: inputValue }],
+  const annotationQuery = useQuery(
+    ["annotations", { lang: language?.id, prompt: inputValue }],
     ({ queryKey }) => {
       const [_key, { lang, prompt }] = queryKey;
-      return client.completeLexemes(lang, prompt);
+      return client.completeAnnotations(lang, prompt);
     },
     {
       enabled: inputValue.length >= 3,
@@ -60,33 +64,27 @@ const LexemeSelect = ({
   );
 
   return (
-    <Grid item xs={12}>
+    <Grid item xs={6}>
       <Autocomplete
-        open={open}
-        onOpen={() => {
-          setOpen(true);
-        }}
+        multiple
+        renderTags={() => null}
         // inputValue={inputValue}
         value={value}
-        onClose={() => {
-          setOpen(false);
-        }}
-        getOptionLabel={(option) => option.lemma}
+        getOptionLabel={(option) => option.explanation}
         options={options}
-        loading={lexemeQuery.isFetching}
+        loading={annotationQuery.isFetching}
         disabled={disabled}
         onInputChange={handleInputChange}
         onChange={onChange}
         renderInput={(params) => (
           <TextField
             {...params}
-            label={label ?? `Lexeme ${number!+1}`}
             variant="standard"
             InputProps={{
               ...params.InputProps,
               endAdornment: (
                 <>
-                  {lexemeQuery.isFetching ? (
+                  {annotationQuery.isFetching ? (
                     <CircularProgress color="inherit" size={20} />
                   ) : null}
                   {params.InputProps.endAdornment}
@@ -96,19 +94,36 @@ const LexemeSelect = ({
           />
         )}
         renderOption={(option) => (
-          // `${option.lemma} ${option.pos}`
           <Grid container>
             <Grid item xs={6}>
-              <Typography>{option.lemma}</Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography>{option.pos}</Typography>
+              <Typography>{option.explanation}</Typography>
             </Grid>
           </Grid>
         )}
       />
+      <List>
+        {value.map((annotation, idx) => (
+          <ListItem>
+            <Grid item xs={6}>
+              {annotation.explanation}
+            </Grid>
+            <Grid xs={6}>
+              <IconButton
+                onClick={(event: React.MouseEvent<{}>) => {
+                  let newValue = value.filter(
+                    (value, valueIdx) => idx !== valueIdx
+                  );
+                  setValue(newValue);
+                }}
+              >
+                <Clear />
+              </IconButton>
+            </Grid>
+          </ListItem>
+        ))}
+      </List>
     </Grid>
   );
 };
 
-export default LexemeSelect;
+export default AnnotationSelect;
