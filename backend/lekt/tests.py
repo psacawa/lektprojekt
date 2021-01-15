@@ -31,7 +31,7 @@ class AnnotationViewTest:
             response: Response = client.get("/api/annots/?lang=4")
             assert response.status_code == 200
         results = response.data["results"]
-        assert_that(results).is_length(46).extracting("explanation").contains(
+        assert_that(results).is_length(46).extracting("description").contains(
             "dative case",
             "present tense",
         )
@@ -41,7 +41,7 @@ class AnnotationViewTest:
             response: Response = client.get("/api/annots/?lang=4&prompt=Tense")
             assert response.status_code == 200
         results = response.data["results"]
-        assert_that(results).is_length(4).extracting("explanation").contains(
+        assert_that(results).is_length(4).extracting("description").contains(
             "future tense",
             "imperfect tense",
             "preterite tense",

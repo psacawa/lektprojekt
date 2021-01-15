@@ -38,7 +38,7 @@ const PhrasePairDetailTable = ({ pk }: Props) => {
                 <TableCell key={3}>
                   {word.annotations.map((annot, idx) => (
                     <>
-                      <Link key={idx}>{annot.explanation}</Link>{" "}
+                      <Link key={idx}>{annot.description}</Link>{" "}
                     </>
                   ))}
                 </TableCell>

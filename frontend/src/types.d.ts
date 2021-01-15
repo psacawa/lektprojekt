@@ -32,7 +32,7 @@ export interface TokenSpan {
 interface Annotation {
   id: number;
   value: string;
-  explanation: string;
+  description: string;
 }
 
 interface Word {

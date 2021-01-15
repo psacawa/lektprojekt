@@ -76,7 +76,7 @@ const AnnotationSelect = ({
         multiple
         renderTags={() => null}
         value={value}
-        getOptionLabel={(option) => option.explanation}
+        getOptionLabel={(option) => option.description}
         options={options}
         loading={annotationQuery.isFetching}
         disabled={disabled}
@@ -85,6 +85,7 @@ const AnnotationSelect = ({
         renderInput={(params) => (
           <TextField
             {...params}
+            label="Select grammatical features"
             variant="standard"
             InputProps={{
               ...params.InputProps,
@@ -102,7 +103,7 @@ const AnnotationSelect = ({
         renderOption={(option) => (
           <Grid container>
             <Grid item xs={6}>
-              <Typography>{option.explanation}</Typography>
+              <Typography>{option.description}</Typography>
             </Grid>
           </Grid>
         )}
@@ -115,7 +116,7 @@ const AnnotationSelect = ({
             style={{ backgroundColor: annotation.colour! }}
           >
             <ListItemText>
-              <Typography>{annotation.explanation}</Typography>
+              <Typography>{annotation.description}</Typography>
             </ListItemText>
             <ListItemSecondaryAction>
               <IconButton

@@ -212,7 +212,7 @@ class Annotation(LinguisticFeature):
         help_text="""value of POS/tag as attached by Spacy to the processed token, 
         e.g. Mood=Sub""",
     )
-    explanation = models.CharField(
+    description = models.CharField(
         max_length=100,
         null=True,
         verbose_name="Human readable description",
@@ -226,7 +226,7 @@ class Annotation(LinguisticFeature):
     objects = managers.AnnotationManager()
 
     def __repr__(self):
-        return f"<Annotation {self.value} {self.explanation}>"
+        return f"<Annotation {self.value} {self.description}>"
 
     def __str__(self):
         return f"{self.value}"

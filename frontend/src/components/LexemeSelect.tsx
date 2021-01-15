@@ -86,6 +86,7 @@ const LexemeSelect = ({
         renderInput={(params) => (
           <TextField
             {...params}
+            label="Select words"
             variant="standard"
             InputProps={{
               ...params.InputProps,

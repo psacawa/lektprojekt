@@ -224,9 +224,9 @@ class LanguageParser(object):
             value=value, lang=self.lang
         )
         if annot_created:
-            explanation = self.explain_annotation(value)
-            if isinstance(explanation, str) and len(explanation) > 0:
-                annot.explanation = explanation
+            description = self.describe_annotation(value)
+            if isinstance(description, str) and len(description) > 0:
+                annot.description = description
                 annot.save()
         return annot
 
@@ -268,7 +268,7 @@ class LanguageParser(object):
         """
         return [tag]
 
-    def explain_annotation(self, tag: str):
+    def describe_annotation(self, tag: str):
         """For some labelling schemes, spacy.explain has data"""
         return spacy.explain(tag)
 
@@ -307,7 +307,7 @@ class SpanishParser(PipeSeparatedAnnotationsMixin, LanguageParser):
 
     modelname_template = Template("${lid}_core_news_${size}")
     lid = "es"
-    value_explanation_dict = {
+    annotation_description_dict = {
         "Case=Acc": "accusative case",
         "Case=Com": "conjunctive case",
         "Case=Dat": "dative case",
@@ -360,11 +360,11 @@ class SpanishParser(PipeSeparatedAnnotationsMixin, LanguageParser):
     #  PrepCase=Pre
     #  Reflex=Yes
 
-    def explain_annotation(self, value: str):
+    def describe_annotation(self, value: str):
         """ spacy does not explain es_core_news_md annotations"""
         return (
-            self.value_explanation_dict[value]
-            if value in self.value_explanation_dict
+            self.annotation_description_dict[value]
+            if value in self.annotation_description_dict
             else value
         )
 

@@ -95,6 +95,6 @@ class AnnotationManager(PolymorphicManager, LektManager):
                 return "".join(text)
 
         results = self.filter(lang__lid=lid).order_by("value")
-        data = [[a.value, a.explanation, get_example(a)] for a in results]
-        table = tabulate(data, headers=["value", "explanation", "example"])
+        data = [[a.value, a.description, get_example(a)] for a in results]
+        table = tabulate(data, headers=["value", "description", "example"])
         print(table)

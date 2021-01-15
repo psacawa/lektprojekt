@@ -40,7 +40,7 @@ class LanguageVoiceSerializer(LanguageSerializer):
 class AnnotationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Annotation
-        fields = ["id", "value", "explanation"]
+        fields = ["id", "value", "description"]
 
 
 class LexemeSerializer(serializers.ModelSerializer):
