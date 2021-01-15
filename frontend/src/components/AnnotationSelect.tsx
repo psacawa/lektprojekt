@@ -1,10 +1,12 @@
 import {
-  Chip,
   CircularProgress,
   debounce,
   IconButton,
   List,
   ListItem,
+  ListItemSecondaryAction,
+  ListItemText,
+  makeStyles,
   TextField,
   Typography,
 } from "@material-ui/core";
@@ -16,20 +18,25 @@ import React, { useState } from "react";
 import { useQuery } from "react-query";
 
 import * as client from "../client";
-import { Annotation, Language } from "../types";
+import { Annotation, Coloured, Language } from "../types";
 
 interface Props {
   language: Language | null;
   disabled: boolean;
-  value: Annotation[];
+  value: Coloured<Annotation>[];
   setValue: React.Dispatch<Annotation[]>;
   onChange: (
     ev: React.ChangeEvent<{}>,
-    value: Annotation[],
+    value: Coloured<Annotation>[],
     reason: any
   ) => any;
-  optionsLimit?: number;
 }
+
+const useStyles = makeStyles((theme) => ({
+  listItem: {
+    borderRadius: "10px",
+  },
+}));
 
 const AnnotationSelect = ({
   language,
@@ -37,10 +44,10 @@ const AnnotationSelect = ({
   value,
   setValue,
   onChange,
-  optionsLimit = 50,
 }: Props) => {
   const [options, setOptions] = useState<Annotation[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
+  const classes = useStyles();
 
   const annotationQuery = useQuery(
     ["annotations", { lang: language?.id, prompt: inputValue }],
@@ -68,7 +75,6 @@ const AnnotationSelect = ({
       <Autocomplete
         multiple
         renderTags={() => null}
-        // inputValue={inputValue}
         value={value}
         getOptionLabel={(option) => option.explanation}
         options={options}
@@ -101,13 +107,17 @@ const AnnotationSelect = ({
           </Grid>
         )}
       />
-      <List>
+      <List dense>
         {value.map((annotation, idx) => (
-          <ListItem>
-            <Grid item xs={6}>
-              {annotation.explanation}
-            </Grid>
-            <Grid xs={6}>
+          <ListItem
+            key={idx}
+            className={classes.listItem}
+            style={{ backgroundColor: annotation.colour! }}
+          >
+            <ListItemText>
+              <Typography>{annotation.explanation}</Typography>
+            </ListItemText>
+            <ListItemSecondaryAction>
               <IconButton
                 onClick={(event: React.MouseEvent<{}>) => {
                   let newValue = value.filter(
@@ -118,7 +128,7 @@ const AnnotationSelect = ({
               >
                 <Clear />
               </IconButton>
-            </Grid>
+            </ListItemSecondaryAction>
           </ListItem>
         ))}
       </List>

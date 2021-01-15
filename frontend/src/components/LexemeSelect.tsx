@@ -5,6 +5,9 @@ import {
   IconButton,
   List,
   ListItem,
+  ListItemSecondaryAction,
+  ListItemText,
+  makeStyles,
   TextField,
   Typography,
 } from "@material-ui/core";
@@ -28,8 +31,13 @@ interface Props {
     value: Coloured<Lexeme>[],
     reason: any
   ) => any;
-  optionsLimit?: number;
 }
+
+const useStyles = makeStyles((theme) => ({
+  listItem: {
+    borderRadius: "10px",
+  },
+}));
 
 const LexemeSelect = ({
   language,
@@ -37,8 +45,8 @@ const LexemeSelect = ({
   value,
   setValue,
   onChange,
-  optionsLimit = 50,
 }: Props) => {
+  const classes = useStyles();
   const [options, setOptions] = useState<Lexeme[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
 
@@ -68,7 +76,6 @@ const LexemeSelect = ({
       <Autocomplete
         multiple
         renderTags={() => null}
-        // inputValue={inputValue}
         value={value}
         getOptionLabel={(option) => option.lemma}
         options={options}
@@ -104,16 +111,20 @@ const LexemeSelect = ({
           </Grid>
         )}
       />
-      <List>
+      <List dense>
         {value.map((lexeme, idx) => (
-          <ListItem style={{ backgroundColor: lexeme.colour! }}>
-            <Grid item xs={4}>
-              {lexeme.lemma}
-            </Grid>
-            <Grid item xs={4}>
-              {lexeme.pos}
-            </Grid>
-            <Grid item xs={4}>
+          <ListItem
+            key={idx}
+            className={classes.listItem}
+            style={{ backgroundColor: lexeme.colour! }}
+          >
+            <ListItemText>
+              <Typography>{lexeme.lemma}</Typography>
+            </ListItemText>
+            <ListItemText>
+              <Typography>{lexeme.pos}</Typography>
+            </ListItemText>
+            <ListItemSecondaryAction>
               <IconButton
                 onClick={(event: React.MouseEvent<{}>) => {
                   let newValue = value.filter(
@@ -124,7 +135,7 @@ const LexemeSelect = ({
               >
                 <Clear />
               </IconButton>
-            </Grid>
+            </ListItemSecondaryAction>
           </ListItem>
         ))}
       </List>

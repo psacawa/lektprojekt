@@ -5,12 +5,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django_filters.utils import translate_validation
 
 
-class DjangoFilterPreBackend(DjangoFilterBackend):
-    """
-    This filter backend
-    """
-
-
 class LanguageFilterSet(FilterSet):
     lid = BaseInFilter(field_name="lid", lookup_expr="in")
 

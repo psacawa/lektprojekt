@@ -1,33 +1,57 @@
 import { sortBy } from "lodash";
 import React, { Fragment } from "react";
 
-import { Phrase } from "../types";
+import { Phrase, TokenSpan } from "../types";
 
 interface Props {
   phrase: Phrase;
-  lexemeColourMap: Record<number, string | undefined>;
+  colourMap: Record<number, string | undefined>;
 }
 
-const HighlightedPhrase = ({ phrase, lexemeColourMap }: Props) => {
-  const lexeme_matches = phrase.lexeme_matches!;
-  const matches = sortBy(lexeme_matches, (match) => match.start);
+const HighlightedPhrase = ({ phrase, colourMap }: Props) => {
+  const lexemeMatches = sortBy(phrase.lexeme_matches!, (match) => match.start);
+  const annotationMatches = sortBy(
+    phrase.annot_matches!,
+    (match) => match.start
+  );
   const text = phrase.text;
+
+  // merge match lists
+  let matches: TokenSpan[] = [];
+  let [i, j] = [0, 0];
+  while (i !== lexemeMatches.length && j !== annotationMatches.length) {
+    if (lexemeMatches[i].start < annotationMatches[j].start) {
+      matches.push(lexemeMatches[i++]);
+    } else if (lexemeMatches[i].start > annotationMatches[j].start) {
+      matches.push(annotationMatches[j++]);
+    } else {
+      // in this case, both types of matches occur, and we highlight only the lexeme
+      matches.push(lexemeMatches[i++]);
+      j++;
+    }
+  }
+  // add unused matches
+  matches = [
+    ...matches,
+    ...lexemeMatches.slice(i),
+    ...annotationMatches.slice(j),
+  ];
+
   return (
     <>
-      {lexeme_matches.length > 0 ? (
+      {matches.length > 0 ? (
         <>
-          {text.slice(0, lexeme_matches[0].start)}
-          {lexeme_matches.map((span, idx) => {
-            let colour = lexemeColourMap[span.lexeme!];
+          {text.slice(0, matches[0].start)}
+          {matches.map((span, idx) => {
+            let colour = colourMap[(span.lexeme ?? span.annotation) as number];
             return (
               <Fragment key={idx}>
-                <span style={{ backgroundColor: colour }}>
+                <span style={{ backgroundColor: colour, borderRadius: "3px" }}>
                   {text.slice(span.start, span.end)}
                 </span>
                 {text.slice(
                   span.end,
-                  (idx !== lexeme_matches.length - 1 &&
-                    lexeme_matches[idx + 1].start) ||
+                  (idx !== matches.length - 1 && matches[idx + 1].start) ||
                     undefined
                 )}
               </Fragment>

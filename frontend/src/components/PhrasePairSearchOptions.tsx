@@ -15,7 +15,7 @@ interface Props {
   setAnnotations: React.Dispatch<Annotation[]>;
 }
 
-const chipColors = [
+const lightColours = [
   "#ffe082",
   "#b0bec5",
   "#bcaaa4",
@@ -24,7 +24,6 @@ const chipColors = [
   "#90caf9",
   "#b39ddb",
   "#a5d6a7",
-  "#eeeeee",
   "#9fa8da",
   "#81d4fa",
   "#c5e1a5",
@@ -43,7 +42,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const MultiSelect = ({
+const PhrasePairSearchOptions = ({
   lexemes,
   setLexemes,
   annotations,
@@ -52,11 +51,11 @@ const MultiSelect = ({
 }: Props) => {
   const classes = useStyles();
 
-  const getRandomColour = () => {
+  const getRandomUnusedColour = () => {
     let currentColours = (lexemes as Coloured<Lexeme | Annotation>[])
       .concat(annotations)
       .map((feature) => feature.colour);
-    let availableColours = difference(chipColors, currentColours);
+    let availableColours = difference(lightColours, currentColours);
     return availableColours[random(availableColours.length)];
   };
 
@@ -70,24 +69,26 @@ const MultiSelect = ({
         onChange={(event, newLexemes, reason) => {
           if (newLexemes.length > lexemes.length) {
             let idx = newLexemes.length - 1;
-            newLexemes[idx].colour = getRandomColour();
+            newLexemes[idx].colour = getRandomUnusedColour();
             setLexemes(newLexemes);
           }
         }}
       />
-      {/*
-       * <AnnotationSelect
-       *   disabled={false}
-       *   language={language}
-       *   value={annotations}
-       *   setValue={setAnnotations}
-       *   onChange={(event, value, reason) => {
-       *     setAnnotations(value);
-       *   }}
-       * />
-       */}
+      <AnnotationSelect
+        disabled={false}
+        language={language}
+        value={annotations}
+        setValue={setAnnotations}
+        onChange={(event, newAnnotations, reason) => {
+          if (newAnnotations.length > annotations.length) {
+            let idx = newAnnotations.length - 1;
+            newAnnotations[idx].colour = getRandomUnusedColour();
+            setAnnotations(newAnnotations);
+          }
+        }}
+      />
     </>
   );
 };
 
-export default MultiSelect;
+export default PhrasePairSearchOptions;

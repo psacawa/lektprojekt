@@ -32,10 +32,10 @@ const useRowStyles = makeStyles({
 
 interface RowProps {
   phrasePair: PhrasePair;
-  lexemeColourMap: Record<number, string | undefined>;
+  colourMap: Record<number, string | undefined>;
 }
 
-const PhrasePairTableRow = ({ phrasePair, lexemeColourMap }: RowProps) => {
+const PhrasePairTableRow = ({ phrasePair, colourMap }: RowProps) => {
   const [open, setOpen] = useState(false);
   const classes = useRowStyles();
   return (
@@ -43,10 +43,7 @@ const PhrasePairTableRow = ({ phrasePair, lexemeColourMap }: RowProps) => {
       <TableRow className={classes.root} hover={true}>
         <TableCell key={0}>{phrasePair.base.text}</TableCell>
         <TableCell key={1}>
-          <HighlightedPhrase
-            phrase={phrasePair.target}
-            lexemeColourMap={lexemeColourMap}
-          />
+          <HighlightedPhrase phrase={phrasePair.target} colourMap={colourMap} />
         </TableCell>
         <TableCell key={2}>
           <IconButton onClick={() => setOpen(!open)}>
@@ -82,10 +79,15 @@ const PhrasePairTable = ({
   lexemes,
   annotations,
 }: Props) => {
+  const annotationColourMap: Record<number, string | undefined> = _(annotations)
+    .keyBy("id")
+    .mapValues("colour")
+    .value();
   const lexemeColourMap: Record<number, string | undefined> = _(lexemes)
     .keyBy("id")
     .mapValues("colour")
     .value();
+  const colourMap = { ...annotationColourMap, ...lexemeColourMap };
   const { data: phrasePairs, isSuccess, isFetching } = phrasePairQuery;
   return (
     <Grid item xs={12}>
@@ -107,7 +109,7 @@ const PhrasePairTable = ({
               {phrasePairs?.map((phrasePair, idx) => (
                 <PhrasePairTableRow
                   key={idx}
-                  lexemeColourMap={lexemeColourMap}
+                  colourMap={colourMap}
                   phrasePair={phrasePair}
                 />
               ))}

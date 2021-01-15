@@ -5,8 +5,8 @@ import { useQuery } from "react-query";
 
 import * as client from "../client";
 import LanguageSelect from "../components/LanguageSelect";
-import MultiSelect from "../components/MultiSelect";
 import PhrasePairListTable from "../components/PhrasePairListTable";
+import PhrasePairSearchOptions from "../components/PhrasePairSearchOptions";
 import { Annotation, Coloured, Language, Lexeme, PhrasePair } from "../types";
 
 const PhrasePairListView = () => {
@@ -51,7 +51,8 @@ const PhrasePairListView = () => {
   return (
     <>
       <Typography variant="h5" style={{ margin: 30 }}>
-        Welcome to Gimped Mode
+        Welcome to <span style={{ color: "blue" }}>Less Gimped Search</span>{" "}
+        Mode
       </Typography>
       {languageQuery.isFetching ? (
         <CircularProgress />
@@ -69,7 +70,7 @@ const PhrasePairListView = () => {
               }}
               languageOptions={languageQuery!.data!}
             />
-            <MultiSelect
+            <PhrasePairSearchOptions
               lexemes={lexemes}
               setLexemes={setLexemes}
               annotations={annotations}
