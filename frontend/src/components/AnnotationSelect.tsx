@@ -16,7 +16,7 @@ import React, { useState } from "react";
 import { useQuery } from "react-query";
 
 import * as client from "../client";
-import { Language, Annotation } from "../types";
+import { Annotation, Language } from "../types";
 
 interface Props {
   language: Language | null;

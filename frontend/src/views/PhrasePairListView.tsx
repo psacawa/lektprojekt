@@ -4,10 +4,10 @@ import React, { useState } from "react";
 import { useQuery } from "react-query";
 
 import * as client from "../client";
-import MultiSelect from "../components/MultiSelect";
 import LanguageSelect from "../components/LanguageSelect";
+import MultiSelect from "../components/MultiSelect";
 import PhrasePairListTable from "../components/PhrasePairListTable";
-import { Annotation, Language, Lexeme, Coloured, PhrasePair } from "../types";
+import { Annotation, Coloured, Language, Lexeme, PhrasePair } from "../types";
 
 const PhrasePairListView = () => {
   const [baseLanguage, setBaseLanguage] = useState<Language | null>(null);

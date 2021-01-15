@@ -13,12 +13,12 @@ import {
   TableRow,
 } from "@material-ui/core";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@material-ui/icons";
+import _ from "lodash";
 import { useState } from "react";
 import { QueryObserverResult } from "react-query";
 import { useHistory } from "react-router-dom";
-import _ from "lodash";
 
-import { Coloured, Language, Lexeme, PhrasePair, Annotation } from "../types";
+import { Annotation, Coloured, Language, Lexeme, PhrasePair } from "../types";
 import HighlightedPhrase from "./HighlightedPhrase";
 import PhrasePairDetailTable from "./PhasePairDetailTable";
 

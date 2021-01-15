@@ -1,7 +1,7 @@
+import { sortBy } from "lodash";
 import React, { Fragment } from "react";
 
 import { Phrase } from "../types";
-import { sortBy } from "lodash";
 
 interface Props {
   phrase: Phrase;
