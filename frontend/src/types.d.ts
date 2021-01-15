@@ -57,7 +57,7 @@ export interface PhrasePair {
   target: Phrase;
 }
 
-export interface ListApiOutput<T> {
+export interface PaginatedApiOutput<T> {
   count: number;
   next: string;
   previous: string;

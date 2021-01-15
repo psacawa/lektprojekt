@@ -78,7 +78,7 @@ class AnnotationCompletionView(generics.ListAPIView):
     serializer_class = serializers.AnnotationSerializer
     filterset_class = filters.AnnotationFilterSet
     ordering = ["id"]
-    pagination_class = LargePageNumberPagination
+    pagination_class = None
 
 
 @method_decorator(cache_page(60 * 60), name="dispatch")

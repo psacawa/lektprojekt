@@ -1,5 +1,4 @@
 import {
-  Chip,
   CircularProgress,
   debounce,
   IconButton,
@@ -13,12 +12,11 @@ import {
 } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
 import { Clear } from "@material-ui/icons";
-import { Autocomplete, AutocompleteProps } from "@material-ui/lab";
+import { Autocomplete } from "@material-ui/lab";
 import { isEqual, uniqWith } from "lodash";
 import React, { useState } from "react";
-import { useQuery } from "react-query";
 
-import * as client from "../client";
+import { useLexemes } from "../clientHooks";
 import { Coloured, Language, Lexeme } from "../types";
 
 interface Props {
@@ -50,12 +48,8 @@ const LexemeSelect = ({
   const [options, setOptions] = useState<Lexeme[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
 
-  const lexemeQuery = useQuery(
-    ["lexemes", { lang: language?.id, prompt: inputValue }],
-    ({ queryKey }) => {
-      const [_key, { lang, prompt }] = queryKey;
-      return client.completeLexemes(lang, prompt);
-    },
+  const lexemeQuery = useLexemes(
+    { lang: language?.id, prompt: inputValue },
     {
       enabled: inputValue.length >= 3,
       staleTime: 60 * 1000,

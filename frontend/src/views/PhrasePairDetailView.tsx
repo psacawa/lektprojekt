@@ -1,18 +1,13 @@
 import { CircularProgress, Typography } from "@material-ui/core";
 import React from "react";
-import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
 
-import * as client from "../client";
+import { usePair } from "../clientHooks";
 import PhasePairDetailTable from "../components/PhasePairDetailTable";
 
-interface Props {
-  pk: number;
-}
-
 const PhrasePairDetailView = () => {
-  const { pk } = useParams<any>();
-  const phrasePairQuery = useQuery(["pair", pk], () => client.getPair(pk), {});
+  const { id } = useParams<any>();
+  const phrasePairQuery = usePair({ id });
   return (
     <>
       <>
@@ -24,7 +19,7 @@ const PhrasePairDetailView = () => {
             <Typography variant="caption">
               {phrasePairQuery.data.base!.text}
             </Typography>
-            <PhasePairDetailTable pk={pk} />
+            <PhasePairDetailTable id={id} />
           </>
         ) : (
           <CircularProgress />

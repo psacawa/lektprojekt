@@ -15,7 +15,6 @@ class LexemeFilterSet(FilterSet):
 
 
 class AnnotationFilterSet(FilterSet):
-    prompt = CharFilter(field_name="description", lookup_expr="icontains")
     lang = NumberFilter(field_name="lang")
 
 

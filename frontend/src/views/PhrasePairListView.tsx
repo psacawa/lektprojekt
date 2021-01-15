@@ -1,51 +1,44 @@
 import { Grid, Typography } from "@material-ui/core";
 import { CircularProgress } from "@material-ui/core";
 import React, { useState } from "react";
-import { useQuery } from "react-query";
 
-import * as client from "../client";
+import { useLanguages, usePairFeatureSearch } from "../clientHooks";
 import LanguageSelect from "../components/LanguageSelect";
 import PhrasePairListTable from "../components/PhrasePairListTable";
 import PhrasePairSearchOptions from "../components/PhrasePairSearchOptions";
-import { Annotation, Coloured, Language, Lexeme, PhrasePair } from "../types";
+import { Annotation, Coloured, Language, Lexeme } from "../types";
 
 const PhrasePairListView = () => {
   const [baseLanguage, setBaseLanguage] = useState<Language | null>(null);
   const [targetLanguage, setTargetLanguage] = useState<Language | null>(null);
-  const [queryEnabled, setQueryEnabled] = useState(false);
   const [lexemes, setLexemes] = useState<Coloured<Lexeme>[]>([]);
   const [annotations, setAnnotations] = useState<Coloured<Annotation>[]>([]);
 
-  const languageQuery = useQuery("languages", client.listLanguages, {
-    onSuccess: (languages) => {
-      let newBaseLanguage = languages.find((lang) => lang.lid === "en") ?? null;
-      let newTargetLanguage =
-        languages.find((lang) => lang.lid === "es") ?? null;
-      setBaseLanguage(newBaseLanguage);
-      setTargetLanguage(newTargetLanguage);
-    },
+  const languageQuery = useLanguages({
     refetchOnWindowFocus: false,
   });
+  if (!baseLanguage && !targetLanguage && languageQuery.data) {
+    // on page load, english and spanish are the selected languages
+    setBaseLanguage(
+      languageQuery.data.find((lang) => lang.lid === "en") ?? null
+    );
+    setTargetLanguage(
+      languageQuery.data.find((lang) => lang.lid === "es") ?? null
+    );
+  }
 
-  const phrasePairQuery = useQuery(
-    [
-      "pairs",
-      [
-        baseLanguage?.id,
-        targetLanguage?.id,
-        lexemes.map((lexeme) => lexeme.id),
-        annotations.map((annotation) => annotation.id),
-      ],
-    ],
-    () =>
-      client.searchPairsByFeatures(
-        baseLanguage!.id,
-        targetLanguage!.id,
-        lexemes.map((lexeme) => lexeme.id),
-        annotations.map((annotation) => annotation.id)
-      ),
+  const phrasePairQuery = usePairFeatureSearch(
     {
-      enabled: lexemes.length + annotations.length > 0,
+      baseLang: baseLanguage?.id,
+      targetLang: targetLanguage?.id,
+      lexemes: lexemes.map((lexeme) => lexeme.id),
+      annotations: annotations.map((annotation) => annotation.id),
+    },
+    {
+      enabled:
+        !!baseLanguage &&
+        !!targetLanguage &&
+        lexemes.length + annotations.length > 0,
     }
   );
   return (

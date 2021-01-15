@@ -1,5 +1,4 @@
-import { Grid, IconButton, makeStyles, Paper } from "@material-ui/core";
-import { Clear } from "@material-ui/icons";
+import { makeStyles } from "@material-ui/core";
 import { difference, random } from "lodash";
 import React from "react";
 

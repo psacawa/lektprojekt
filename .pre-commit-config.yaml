@@ -17,4 +17,5 @@ repos:
       - id: eslint
         name: eslint
         entry: scripts/eslint-hook.sh
+        files: frontend
         language: system

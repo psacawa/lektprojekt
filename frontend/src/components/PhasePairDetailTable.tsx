@@ -7,16 +7,15 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
-import { useQuery } from "react-query";
 
-import * as client from "../client";
+import { usePair } from "../clientHooks";
 
 interface Props {
-  pk: number;
+  id: number;
 }
 
-const PhrasePairDetailTable = ({ pk }: Props) => {
-  const phrasePairQuery = useQuery(["pair", pk], () => client.getPair(pk), {});
+const PhrasePairDetailTable = ({ id }: Props) => {
+  const phrasePairQuery = usePair({ id });
   return (
     <>
       {phrasePairQuery.isSuccess ? (

@@ -1,28 +1,37 @@
 import axios, { AxiosResponse } from "axios";
-import { useQuery } from "react-query";
+import { useQuery, UseQueryOptions } from "react-query";
 
-import { Language, Lexeme, ListApiOutput, PhrasePair } from "./types";
+import {
+  Annotation,
+  Language,
+  Lexeme,
+  PaginatedApiOutput,
+  PhrasePair,
+} from "./types";
 
 const apiRoot = "/api/";
 
-export const useLanguages = () =>
+export const useLanguages = (options?: UseQueryOptions<Language[]>) =>
   useQuery(
     "languages",
     () =>
       axios
         .get(`${apiRoot}languages/`)
         .then(
-          (response: AxiosResponse<ListApiOutput<Language>>) =>
+          (response: AxiosResponse<PaginatedApiOutput<Language>>) =>
             response.data.results
         ),
-    {}
+    { ...options }
   );
 
-export const useLexemes = (params: {
-  id: number;
-  prompt: string;
-  page?: number;
-}) =>
+export const useLexemes = (
+  params: {
+    prompt: string;
+    lang?: number;
+    page?: number;
+  },
+  options?: UseQueryOptions<Lexeme[]>
+) =>
   useQuery(
     ["lexemes", { ...params }],
     () =>
@@ -31,93 +40,120 @@ export const useLexemes = (params: {
           params,
         })
         .then(
-          (response: AxiosResponse<ListApiOutput<Lexeme>>) =>
+          (response: AxiosResponse<PaginatedApiOutput<Lexeme>>) =>
             response.data.results
         ),
-    {}
+    { ...options }
   );
 
-export const useAnnotations = (params: {
-  id: number;
-  prompt: string;
-  page?: number;
-}) =>
-  useQuery(["annotations", { ...params }], () =>
-    axios
-      .get(`${apiRoot}annots/`, {
-        params,
-      })
-      .then(
-        (response: AxiosResponse<ListApiOutput<Lexeme>>) =>
-          response.data.results
-      )
+export const useAnnotations = (
+  params: {
+    lang?: number;
+  },
+  options?: UseQueryOptions<Annotation[]>
+) =>
+  useQuery(
+    ["annotations", { ...params }],
+    () =>
+      axios
+        .get(`${apiRoot}annots/`, {
+          params,
+        })
+        .then((response: AxiosResponse<Annotation[]>) => response.data),
+    { ...options }
   );
 
-export const usePairFeatureSearch = (params: {
-  baseId: number;
-  targetId: number;
-  lexemes?: number[];
-  annotations?: number[];
-  page?: number;
-}) =>
-  useQuery(["pairs-feature-search", { ...params }], () =>
-    axios
-      .get(`${apiRoot}pairs/`, {
-        params: {
-          ...params,
-          lexemes: params.lexemes?.join(","),
-          annots: params.annotations?.join(","),
-        },
-      })
-      .then(
-        (response: AxiosResponse<ListApiOutput<PhrasePair>>) =>
-          response.data.results
-      )
+export const usePairFeatureSearch = (
+  params: {
+    baseLang?: number;
+    targetLang?: number;
+    lexemes?: number[];
+    annotations?: number[];
+    page?: number;
+  },
+  options?: UseQueryOptions<PhrasePair[]>
+) =>
+  useQuery(
+    ["pairs-feature-search", { ...params }],
+    () =>
+      axios
+        .get(`${apiRoot}pairs/search/`, {
+          params: {
+            base: params.baseLang,
+            target: params.targetLang,
+            lexemes: params.lexemes?.join(","),
+            annots: params.annotations?.join(","),
+            page: params.page,
+          },
+        })
+        .then(
+          (response: AxiosResponse<PaginatedApiOutput<PhrasePair>>) =>
+            response.data.results
+        ),
+    { ...options }
   );
 
-export const usePairLexemeSearch = (params: {
-  baseId: number;
-  targetId: number;
-  lexemes?: number[];
-  page?: number;
-}) =>
-  useQuery(["pairs-feature-search", { ...params }], () =>
-    axios
-      .get(`${apiRoot}pairs/`, {
-        params: {
-          ...params,
-          lexemes: params.lexemes?.join(","),
-        },
-      })
-      .then(
-        (response: AxiosResponse<ListApiOutput<PhrasePair>>) =>
-          response.data.results
-      )
+export const usePairLexemeSearch = (
+  params: {
+    baseLang?: number;
+    targetLang?: number;
+    lexemes?: number[];
+    page?: number;
+  },
+  options?: UseQueryOptions<PhrasePair[]>
+) =>
+  useQuery(
+    ["pairs-feature-search", { ...params }],
+    () =>
+      axios
+        .get(`${apiRoot}pairs/lexeme-search`, {
+          params: {
+            ...params,
+            lexemes: params.lexemes?.join(","),
+          },
+        })
+        .then(
+          (response: AxiosResponse<PaginatedApiOutput<PhrasePair>>) =>
+            response.data.results
+        ),
+    { ...options }
   );
 
-export const usePairAnnotationSearch = (params: {
-  baseId: number;
-  targetId: number;
-  annotations?: number[];
-  page?: number;
-}) =>
-  useQuery(["pairs-annotation-search", { ...params }], () =>
-    axios
-      .get(`${apiRoot}pairs/`, {
-        params: {
-          ...params,
-          annots: params.annotations?.join(","),
-        },
-      })
-      .then(
-        (response: AxiosResponse<ListApiOutput<PhrasePair>>) =>
-          response.data.results
-      )
+export const usePairAnnotationSearch = (
+  params: {
+    baseLang?: number;
+    targetLang?: number;
+    annotations?: number[];
+    page?: number;
+  },
+  options?: UseQueryOptions<PhrasePair[]>
+) =>
+  useQuery(
+    ["pairs-annotation-search", { ...params }],
+    () =>
+      axios
+        .get(`${apiRoot}pairs/annot-search`, {
+          params: {
+            ...params,
+            annots: params.annotations?.join(","),
+          },
+        })
+        .then(
+          (response: AxiosResponse<PaginatedApiOutput<PhrasePair>>) =>
+            response.data.results
+        ),
+    { ...options }
   );
 
-export const usePair = (id: number) =>
-  useQuery(["pair", id], () =>
-    axios
-      .get(`${apiRoot}pairs/${id}/`)
-      .then((response: AxiosResponse<PhrasePair>) => response.data)
+export const usePair = (
+  params: { id: number },
+  options?: UseQueryOptions<PhrasePair>
+) =>
+  useQuery(
+    ["pair", { ...params }],
+    () =>
+      axios
+        .get(`${apiRoot}pairs/${params.id}/`)
+        .then((response: AxiosResponse<PhrasePair>) => response.data),
+    { ...options }
   );

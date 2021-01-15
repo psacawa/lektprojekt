@@ -16,7 +16,6 @@ import { KeyboardArrowDown, KeyboardArrowUp } from "@material-ui/icons";
 import _ from "lodash";
 import { useState } from "react";
 import { QueryObserverResult } from "react-query";
-import { useHistory } from "react-router-dom";
 
 import { Annotation, Coloured, Language, Lexeme, PhrasePair } from "../types";
 import HighlightedPhrase from "./HighlightedPhrase";
@@ -55,7 +54,7 @@ const PhrasePairTableRow = ({ phrasePair, colourMap }: RowProps) => {
         <TableCell colSpan={12}>
           <Collapse in={open} timeout="auto" unmountOnExit={true}>
             <Box>
-              <PhrasePairDetailTable pk={phrasePair.id} />
+              <PhrasePairDetailTable id={phrasePair.id} />
             </Box>
           </Collapse>
         </TableCell>

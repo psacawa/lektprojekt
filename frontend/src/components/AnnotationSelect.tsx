@@ -12,12 +12,10 @@ import {
 } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
 import { Clear } from "@material-ui/icons";
-import { Autocomplete, AutocompleteProps } from "@material-ui/lab";
-import { isEqual, uniqWith } from "lodash";
+import { Autocomplete } from "@material-ui/lab";
 import React, { useState } from "react";
-import { useQuery } from "react-query";
 
-import * as client from "../client";
+import { useAnnotations } from "../clientHooks";
 import { Annotation, Coloured, Language } from "../types";
 
 interface Props {
@@ -49,19 +47,10 @@ const AnnotationSelect = ({
   const [inputValue, setInputValue] = useState<string>("");
   const classes = useStyles();
 
-  const annotationQuery = useQuery(
-    ["annotations", { lang: language?.id, prompt: inputValue }],
-    ({ queryKey }) => {
-      const [_key, { lang, prompt }] = queryKey;
-      return client.completeAnnotations(lang, prompt);
-    },
+  const annotationQuery = useAnnotations(
+    { lang: language?.id },
     {
-      enabled: inputValue.length >= 3,
       staleTime: 60 * 1000,
-      onSuccess: (results) => {
-        const newOptions = uniqWith([...results, ...options], isEqual);
-        setOptions(newOptions);
-      },
     }
   );
   const handleInputChange: any = debounce(
@@ -77,7 +66,7 @@ const AnnotationSelect = ({
         renderTags={() => null}
         value={value}
         getOptionLabel={(option) => option.description}
-        options={options}
+        options={annotationQuery.data ?? []}
         loading={annotationQuery.isFetching}
         disabled={disabled}
         onInputChange={handleInputChange}
