@@ -1,12 +1,12 @@
 import {
   CircularProgress,
-  Link,
   Table,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
 } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
 import { usePair } from "../clientHooks";
 
@@ -32,12 +32,18 @@ const PhrasePairDetailTable = ({ id }: Props) => {
             {phrasePairQuery.data.target.words?.map((word, idx) => (
               <TableRow key={idx}>
                 <TableCell key={0}>{word.norm}</TableCell>
-                <TableCell key={1}>{word.lexeme.lemma}</TableCell>
+                <TableCell key={1}>
+                  <Link to={`/lexemes/${word.lexeme.id}/`}>
+                    {word.lexeme.lemma}
+                  </Link>
+                </TableCell>
                 <TableCell key={2}>{word.lexeme.pos}</TableCell>
                 <TableCell key={3}>
                   {word.annotations.map((annot, idx) => (
                     <>
-                      <Link key={idx}>{annot.description}</Link>{" "}
+                      <Link key={idx} to={`/annots/${annot.id}/`}>
+                        {annot.description}
+                      </Link>{" "}
                     </>
                   ))}
                 </TableCell>

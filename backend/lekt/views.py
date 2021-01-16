@@ -10,7 +10,7 @@ from django.db.models.expressions import RawSQL
 from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from django_filters.rest_framework import FilterSet
+from django_filters.rest_framework import DjangoFilterBackend, FilterSet
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import generics, permissions, viewsets
@@ -52,7 +52,7 @@ class LanguageViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 @method_decorator(cache_page(60 * 60), name="dispatch")
-class LexemeCompletionView(generics.ListAPIView):
+class LexemeViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API view for querying `Lexeme` models based on their associated `Language` and an
     initial `prompt` of the `lemma` of the `Lexeme`.
@@ -61,13 +61,13 @@ class LexemeCompletionView(generics.ListAPIView):
 
     queryset = Lexeme.objects.all()
     serializer_class = serializers.LexemeSerializer
-    filterset_class = filters.LexemeFilterSet
+    filter_backends = [filters.LexemeFilterBackend]
     ordering = ["id"]
     pagination_class = LargePageNumberPagination
 
 
 @method_decorator(cache_page(60 * 60), name="dispatch")
-class AnnotationCompletionView(generics.ListAPIView):
+class AnnotationViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API view for querying `Annotation` models based on their associated `Language` and an
     initial `prompt`.
@@ -76,7 +76,7 @@ class AnnotationCompletionView(generics.ListAPIView):
 
     queryset = Annotation.objects.all()
     serializer_class = serializers.AnnotationSerializer
-    filterset_class = filters.AnnotationFilterSet
+    filter_backends = [filters.AnnotationFilterBackend]
     ordering = ["id"]
     pagination_class = None
 

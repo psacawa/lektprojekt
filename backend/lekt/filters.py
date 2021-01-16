@@ -9,13 +9,23 @@ class LanguageFilterSet(FilterSet):
     lid = BaseInFilter(field_name="lid", lookup_expr="in")
 
 
+class LexemeFilterBackend(DjangoFilterBackend):
+    def get_filterset_class(self, view, queryset=None):
+        return LexemeFilterSet if view.action == "list" else None
+
+
 class LexemeFilterSet(FilterSet):
     prompt = CharFilter(field_name="lemma", lookup_expr="istartswith")
-    lang = NumberFilter(field_name="lang")
+    lang = NumberFilter(field_name="lang", required=True)
+
+
+class AnnotationFilterBackend(DjangoFilterBackend):
+    def get_filterset_class(self, view, queryset=None):
+        return AnnotationFilterSet if view.action == "list" else None
 
 
 class AnnotationFilterSet(FilterSet):
-    lang = NumberFilter(field_name="lang")
+    lang = NumberFilter(field_name="lang", required=True)
 
 
 class WordFilterSet(FilterSet):

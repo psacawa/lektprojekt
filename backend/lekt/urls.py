@@ -8,17 +8,13 @@ from . import views
 router = routers.SimpleRouter()
 router.register(r"subs", views.SubscriptionViewSet, basename="sub")
 router.register(r"languages", views.LanguageViewSet, basename="language")
+router.register(r"lexemes", views.LexemeViewSet, basename="lexeme")
+router.register(r"annots", views.AnnotationViewSet, basename="annotations")
 urlpatterns = router.urls
 
 urlpatterns += [
     path(r"profile/", views.UserProfileView.as_view(), name="profile"),
     path(r"words/", views.WordCompletionView.as_view(), name="word-completion"),
-    path(r"lexemes/", views.LexemeCompletionView.as_view(), name="lexeme-completion"),
-    path(
-        r"annots/",
-        views.AnnotationCompletionView.as_view(),
-        name="annotation-completion",
-    ),
     path(r"phrases/", views.PhraseCompletionView.as_view(), name="phrase-completion"),
     # the views returning phrase pairs matching one lexeme + one annotation
     path(r"pairs/<int:pk>/", views.PhrasePairDetailView.as_view(), name="pair-detail"),

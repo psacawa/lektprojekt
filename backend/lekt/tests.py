@@ -27,21 +27,21 @@ class LexemeViewTest:
 @pytest.mark.django_db
 class AnnotationViewTest:
     def list_test(self):
-        with assertNumQueries(2):
+        with assertNumQueries(1):
             response: Response = client.get("/api/annots/?lang=4")
             assert response.status_code == 200
-        results = response.data["results"]
+        results = response.data
         assert_that(results).is_length(46).extracting("description").contains(
             "dative case",
             "present tense",
         )
 
     def complete_test(self):
-        with assertNumQueries(2):
-            response: Response = client.get("/api/annots/?lang=4&prompt=Tense")
+        with assertNumQueries(1):
+            response: Response = client.get("/api/annots/?lang=4")
             assert response.status_code == 200
-        results = response.data["results"]
-        assert_that(results).is_length(4).extracting("description").contains(
+        results = response.data
+        assert_that(results).is_length(46).extracting("description").contains(
             "future tense",
             "imperfect tense",
             "preterite tense",

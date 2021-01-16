@@ -24,6 +24,21 @@ export const useLanguages = (options?: UseQueryOptions<Language[]>) =>
     { ...options }
   );
 
+export const useLexeme = (
+  params: {
+    id: number;
+  },
+  options?: UseQueryOptions<Lexeme>
+) =>
+  useQuery(
+    ["lexeme", { ...params }],
+    () =>
+      axios
+        .get(`${apiRoot}lexemes/${params.id}/`)
+        .then((response: AxiosResponse<Lexeme>) => response.data),
+    { ...options }
+  );
+
 export const useLexemes = (
   params: {
     prompt: string;
@@ -43,6 +58,21 @@ export const useLexemes = (
           (response: AxiosResponse<PaginatedApiOutput<Lexeme>>) =>
             response.data.results
         ),
+    { ...options }
+  );
+
+export const useAnnotation = (
+  params: {
+    id: number;
+  },
+  options?: UseQueryOptions<Annotation>
+) =>
+  useQuery(
+    ["annotation", { ...params }],
+    () =>
+      axios
+        .get(`${apiRoot}annotations/${params.id}/`)
+        .then((response: AxiosResponse<Annotation>) => response.data),
     { ...options }
   );
 

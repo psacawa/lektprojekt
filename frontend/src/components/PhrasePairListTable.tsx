@@ -89,34 +89,38 @@ const PhrasePairTable = ({
   const colourMap = { ...annotationColourMap, ...lexemeColourMap };
   const { data: phrasePairs, isSuccess, isFetching } = phrasePairQuery;
   return (
-    <Grid item xs={12}>
+    <Grid container justify="center">
       {isSuccess ? (
-        <TableContainer>
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell key={0} align="left">
-                  {baseLanguage?.name}
-                </TableCell>
-                <TableCell key={1} align="left">
-                  {targetLanguage?.name}
-                </TableCell>
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {phrasePairs?.map((phrasePair, idx) => (
-                <PhrasePairTableRow
-                  key={idx}
-                  colourMap={colourMap}
-                  phrasePair={phrasePair}
-                />
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <Grid item xs={12}>
+          <TableContainer>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell key={0} align="left">
+                    {baseLanguage?.name}
+                  </TableCell>
+                  <TableCell key={1} align="left">
+                    {targetLanguage?.name}
+                  </TableCell>
+                  <TableCell />
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {phrasePairs?.map((phrasePair, idx) => (
+                  <PhrasePairTableRow
+                    key={idx}
+                    colourMap={colourMap}
+                    phrasePair={phrasePair}
+                  />
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
       ) : isFetching ? (
-        <CircularProgress />
+        <Grid item>
+          <CircularProgress />
+        </Grid>
       ) : null}
     </Grid>
   );

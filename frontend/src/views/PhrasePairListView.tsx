@@ -1,4 +1,4 @@
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, makeStyles, Typography } from "@material-ui/core";
 import { CircularProgress } from "@material-ui/core";
 import React, { useState } from "react";
 
@@ -47,11 +47,13 @@ const PhrasePairListView = () => {
         Welcome to <span style={{ color: "blue" }}>Less Gimped Search</span>{" "}
         Mode
       </Typography>
-      {languageQuery.isFetching ? (
-        <CircularProgress />
-      ) : (
-        <>
-          <Grid justify="center" container spacing={4}>
+      <Grid container justify="center" spacing={4}>
+        {languageQuery.isFetching ? (
+          <Grid item>
+            <CircularProgress />
+          </Grid>
+        ) : (
+          <>
             <LanguageSelect
               baseLanguage={baseLanguage}
               handleBaseLanguageChange={(ev, newLang) => {
@@ -70,7 +72,6 @@ const PhrasePairListView = () => {
               setAnnotations={setAnnotations}
               language={targetLanguage}
             />
-            <Grid item></Grid>
             <PhrasePairListTable
               {...{
                 baseLanguage,
@@ -80,9 +81,9 @@ const PhrasePairListView = () => {
                 annotations,
               }}
             />
-          </Grid>
-        </>
-      )}
+          </>
+        )}
+      </Grid>
     </>
   );
 };

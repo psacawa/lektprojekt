@@ -31,7 +31,7 @@ interface Props {
   ) => any;
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   listItem: {
     borderRadius: "10px",
   },

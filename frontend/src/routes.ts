@@ -2,6 +2,7 @@ import { concat } from "lodash";
 import React from "react";
 
 import Home from "./views/Home";
+import LexemeDetailView from "./views/LexemeDetailView";
 import PhrasePairDetailView from "./views/PhrasePairDetailView";
 import PhrasePairListView from "./views/PhrasePairListView";
 
@@ -32,6 +33,12 @@ export const routes: Route[] = concat(drawerRoutes, [
     path: "/pairs/:id",
     name: "PhrasePair Detail View",
     exact: false,
-    component: PhrasePairDetailView as any,
+    component: PhrasePairDetailView,
+  },
+  {
+    path: "/lexemes/:id",
+    name: "Lexeme Detail View",
+    exact: false,
+    component: LexemeDetailView,
   },
 ]);
