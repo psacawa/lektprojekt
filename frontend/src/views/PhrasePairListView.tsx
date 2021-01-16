@@ -1,4 +1,9 @@
-import { Grid, makeStyles, Typography } from "@material-ui/core";
+import {
+  Grid,
+  makeStyles,
+  TablePagination,
+  Typography,
+} from "@material-ui/core";
 import { CircularProgress } from "@material-ui/core";
 import React, { useState } from "react";
 
@@ -13,6 +18,8 @@ const PhrasePairListView = () => {
   const [targetLanguage, setTargetLanguage] = useState<Language | null>(null);
   const [lexemes, setLexemes] = useState<Coloured<Lexeme>[]>([]);
   const [annotations, setAnnotations] = useState<Coloured<Annotation>[]>([]);
+  const [pageNumber, setPageNumber] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
 
   const languageQuery = useLanguages({
     refetchOnWindowFocus: false,
@@ -33,6 +40,8 @@ const PhrasePairListView = () => {
       targetLang: targetLanguage?.id,
       lexemes: lexemes.map((lexeme) => lexeme.id),
       annotations: annotations.map((annotation) => annotation.id),
+      page: pageNumber + 1,
+      pageSize: rowsPerPage,
     },
     {
       enabled:
@@ -41,6 +50,12 @@ const PhrasePairListView = () => {
         lexemes.length + annotations.length > 0,
     }
   );
+  const handleChangePage = (event: React.ChangeEvent<{}>, page: number) => {
+    setPageNumber(page);
+  };
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => setRowsPerPage(parseInt(event.target.value));
   return (
     <>
       <Typography variant="h5" style={{ margin: 30 }}>
@@ -76,9 +91,13 @@ const PhrasePairListView = () => {
               {...{
                 baseLanguage,
                 targetLanguage,
+                pageNumber,
+                rowsPerPage,
                 phrasePairQuery,
                 lexemes,
                 annotations,
+                onChangeRowsPerPage: handleChangeRowsPerPage,
+                onChangePage: handleChangePage,
               }}
             />
           </>

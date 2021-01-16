@@ -100,8 +100,9 @@ export const usePairFeatureSearch = (
     lexemes?: number[];
     annotations?: number[];
     page?: number;
+    pageSize?: number;
   },
-  options?: UseQueryOptions<PhrasePair[]>
+  options?: UseQueryOptions<PaginatedApiOutput<PhrasePair>>
 ) =>
   useQuery(
     ["pairs-feature-search", { ...params }],
@@ -114,11 +115,12 @@ export const usePairFeatureSearch = (
             lexemes: params.lexemes?.join(","),
             annots: params.annotations?.join(","),
             page: params.page,
+            page_size: params.pageSize,
           },
         })
         .then(
           (response: AxiosResponse<PaginatedApiOutput<PhrasePair>>) =>
-            response.data.results
+            response.data
         ),
     { ...options }
   );

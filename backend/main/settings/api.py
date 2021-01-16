@@ -3,7 +3,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ],
-    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "DEFAULT_PAGINATION_CLASS": "lekt.pagination.NormalPageNumberPagination",
     "PAGE_SIZE": 25,
     "DEFAULT_THROTTLE_CLASSES": [
         #  'rest_framework.throttling.UserRateThrottle',

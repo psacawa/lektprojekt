@@ -10,16 +10,24 @@ import {
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
 } from "@material-ui/core";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@material-ui/icons";
 import _ from "lodash";
-import { useState } from "react";
+import React, { useState } from "react";
 import { QueryObserverResult } from "react-query";
 
-import { Annotation, Coloured, Language, Lexeme, PhrasePair } from "../types";
+import {
+  Annotation,
+  Coloured,
+  Language,
+  Lexeme,
+  PaginatedApiOutput,
+  PhrasePair,
+} from "../types";
 import HighlightedPhrase from "./HighlightedPhrase";
-import PhrasePairDetailTable from "./PhasePairDetailTable";
+import PhrasePairDetailTable from "./PhrasePairDetailTable";
 
 const useRowStyles = makeStyles({
   root: {
@@ -66,9 +74,13 @@ const PhrasePairTableRow = ({ phrasePair, colourMap }: RowProps) => {
 interface Props {
   baseLanguage: Language | null;
   targetLanguage: Language | null;
-  phrasePairQuery: QueryObserverResult<PhrasePair[]>;
+  phrasePairQuery: QueryObserverResult<PaginatedApiOutput<PhrasePair>>;
   lexemes: Coloured<Lexeme>[];
   annotations: Coloured<Annotation>[];
+  onChangePage: (event: any, page: number) => void;
+  pageNumber: number;
+  rowsPerPage: number;
+  onChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const PhrasePairTable = ({
@@ -77,6 +89,10 @@ const PhrasePairTable = ({
   targetLanguage,
   lexemes,
   annotations,
+  onChangePage,
+  pageNumber,
+  rowsPerPage,
+  onChangeRowsPerPage,
 }: Props) => {
   const annotationColourMap: Record<number, string | undefined> = _(annotations)
     .keyBy("id")
@@ -87,7 +103,7 @@ const PhrasePairTable = ({
     .mapValues("colour")
     .value();
   const colourMap = { ...annotationColourMap, ...lexemeColourMap };
-  const { data: phrasePairs, isSuccess, isFetching } = phrasePairQuery;
+  const { data, isSuccess, isFetching } = phrasePairQuery;
   return (
     <Grid container justify="center">
       {isSuccess ? (
@@ -106,7 +122,7 @@ const PhrasePairTable = ({
                 </TableRow>
               </TableHead>
               <TableBody>
-                {phrasePairs?.map((phrasePair, idx) => (
+                {data?.results.map((phrasePair, idx) => (
                   <PhrasePairTableRow
                     key={idx}
                     colourMap={colourMap}
@@ -116,6 +132,15 @@ const PhrasePairTable = ({
               </TableBody>
             </Table>
           </TableContainer>
+          <TablePagination
+            rowsPerPage={rowsPerPage}
+            rowsPerPageOptions={[10, 20, 30, 40, 50]}
+            component="div"
+            count={data!.count}
+            page={pageNumber}
+            onChangePage={onChangePage}
+            onChangeRowsPerPage={onChangeRowsPerPage}
+          />
         </Grid>
       ) : isFetching ? (
         <Grid item>

@@ -3,7 +3,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 
 import { usePair } from "../clientHooks";
-import PhasePairDetailTable from "../components/PhasePairDetailTable";
+import PhrasePairDetailTable from "../components/PhrasePairDetailTable";
 
 const PhrasePairDetailView = () => {
   const { id } = useParams<any>();
@@ -19,7 +19,7 @@ const PhrasePairDetailView = () => {
             <Typography variant="caption">
               {phrasePairQuery.data.base!.text}
             </Typography>
-            <PhasePairDetailTable id={id} />
+            <PhrasePairDetailTable id={id} />
           </>
         ) : (
           <CircularProgress />
