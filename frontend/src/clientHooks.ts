@@ -1,12 +1,21 @@
 import axios, { AxiosResponse } from "axios";
-import { useQuery, UseQueryOptions } from "react-query";
+import {
+  MutateFunction,
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+  UseQueryOptions,
+} from "react-query";
 
 import {
   Annotation,
+  CreateAccountData,
   Language,
   Lexeme,
+  LoginSuccessPayload,
   PaginatedApiOutput,
   PhrasePair,
+  User,
 } from "./types";
 
 const apiRoot = "/api/";
@@ -188,4 +197,51 @@ export const usePair = (
         .get(`${apiRoot}pairs/${params.id}/`)
         .then((response: AxiosResponse<PhrasePair>) => response.data),
     { ...options }
+  );
+
+export const useUser = (options?: UseQueryOptions<User>) =>
+  useQuery(
+    ["user"],
+    () =>
+      axios
+        .get("/auth/user/")
+        .then((response: AxiosResponse<User>) => response.data),
+    { refetchOnWindowFocus: false, ...options }
+  );
+
+type LoginParams = { email: string; password: string };
+
+export const useLogin = (
+  options?: UseMutationOptions<LoginSuccessPayload, any, LoginParams>
+) =>
+  useMutation((params: LoginParams) => {
+    return axios
+      .post("/auth/login/", { ...params })
+      .then((response: AxiosResponse<any>) => response.data);
+  }, options);
+
+export const useLogout = (options?: UseMutationOptions) =>
+  useMutation(() => {
+    return axios
+      .post("/auth/logout/")
+      .then((response: AxiosResponse<any>) => response.data);
+  }, options);
+
+export const useCreateAccount = (
+  options?: UseMutationOptions<any, any, CreateAccountData>
+) =>
+  useMutation((params: CreateAccountData) => {
+    return axios
+      .post("/auth/registration/", { ...params })
+      .then((response: AxiosResponse<CreateAccountData>) => response.data);
+  }, options);
+
+export const useCsrfToken = (options?: UseQueryOptions) =>
+  useQuery(
+    ["csrf"],
+    () =>
+      axios.get("/csrf-token/").then((response: AxiosResponse<unknown>) => {
+        console.log(response.headers["csrf_token"]);
+      }),
+    options
   );

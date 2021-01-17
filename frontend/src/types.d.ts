@@ -65,3 +65,38 @@ export interface PaginatedApiOutput<T> {
 }
 
 type Coloured<T> = T & { colour?: string };
+
+interface CreateAccountData {
+  username: string;
+  password1: string;
+  password2: string;
+  email: string;
+}
+
+interface LoginData {
+  email: string;
+  password: string;
+}
+
+interface AuthData {
+  key: string;
+}
+
+interface User {
+  id: number;
+  profile: number;
+  username: string;
+  email: string;
+}
+
+interface LoginSuccessPayload extends AuthData {
+  user: User;
+}
+
+interface UserState {
+  loggedIn: boolean;
+  user?: User;
+  key?: string;
+}
+
+type RootState = ReturnType<typeof import("./store/reducers").default>;
