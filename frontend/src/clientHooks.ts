@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import {
   MutateFunction,
   useMutation,
@@ -9,10 +9,13 @@ import {
 
 import {
   Annotation,
-  CreateAccountData,
+  CreateAccountServerErrors,
+  CreateAccountValues,
   Language,
   Lexeme,
+  LoginServerErrors,
   LoginSuccessPayload,
+  LoginValues,
   PaginatedApiOutput,
   PhrasePair,
   User,
@@ -209,15 +212,18 @@ export const useUser = (options?: UseQueryOptions<User>) =>
     { refetchOnWindowFocus: false, ...options }
   );
 
-type LoginParams = { email: string; password: string };
-
 export const useLogin = (
-  options?: UseMutationOptions<LoginSuccessPayload, any, LoginParams>
+  options?: UseMutationOptions<
+    LoginSuccessPayload,
+    LoginServerErrors,
+    LoginValues
+  >
 ) =>
-  useMutation((params: LoginParams) => {
+  useMutation((params: LoginValues) => {
     return axios
       .post("/auth/login/", { ...params })
-      .then((response: AxiosResponse<any>) => response.data);
+      .then((response: AxiosResponse<any>) => response.data)
+      .catch((error: AxiosError<any>) => Promise.reject(error.response?.data));
   }, options);
 
 export const useLogout = (options?: UseMutationOptions) =>
@@ -228,12 +234,21 @@ export const useLogout = (options?: UseMutationOptions) =>
   }, options);
 
 export const useCreateAccount = (
-  options?: UseMutationOptions<any, any, CreateAccountData>
+  options?: UseMutationOptions<
+    { detail: string },
+    CreateAccountServerErrors,
+    CreateAccountValues
+  >
 ) =>
-  useMutation((params: CreateAccountData) => {
+  useMutation<
+    { detail: string },
+    CreateAccountServerErrors,
+    CreateAccountValues
+  >((params: CreateAccountValues) => {
     return axios
       .post("/auth/registration/", { ...params })
-      .then((response: AxiosResponse<CreateAccountData>) => response.data);
+      .then((response: AxiosResponse<{ detail: string }>) => response.data)
+      .catch((error: AxiosError<any>) => Promise.reject(error.response?.data));
   }, options);
 
 export const useCsrfToken = (options?: UseQueryOptions) =>

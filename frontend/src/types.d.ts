@@ -66,13 +66,6 @@ export interface PaginatedApiOutput<T> {
 
 type Coloured<T> = T & { colour?: string };
 
-interface CreateAccountData {
-  username: string;
-  password1: string;
-  password2: string;
-  email: string;
-}
-
 interface LoginData {
   email: string;
   password: string;
@@ -98,5 +91,24 @@ interface UserState {
   user?: User;
   key?: string;
 }
+
+export interface CreateAccountValues {
+  username: string;
+  email: string;
+  password1: string;
+  password2: string;
+}
+
+export interface LoginValues {
+  email: string;
+  password: string;
+}
+
+export type ServerErrors<T> = Partial<
+  Record<keyof T | "non_field_errors", string[]>
+>;
+
+export type CreateAccountServerErrors = ServerErrors<CreateAccountValues>;
+export type LoginServerErrors = ServerErrors<LoginValues>;
 
 type RootState = ReturnType<typeof import("./store/reducers").default>;

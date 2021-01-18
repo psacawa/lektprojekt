@@ -3,37 +3,87 @@ import {
   Button,
   Container,
   CssBaseline,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormHelperText,
   Grid,
-  Link,
+  Link as MuiLink,
   makeStyles,
   Typography,
 } from "@material-ui/core";
 import { LockOutlined } from "@material-ui/icons";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
-import React from "react";
+import React, { useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 import * as yup from "yup";
 
 import { useCreateAccount } from "../clientHooks";
+import ClientErrorHelper from "../components/ClientErrorHelper";
+import { CreateAccountServerErrors, CreateAccountValues } from "../types";
 
-const validationSchema = yup.object().shape({
+const validationSchema: yup.SchemaOf<CreateAccountValues> = yup.object().shape({
   username: yup
     .string()
+    .label("Username")
     .required()
     .matches(
       /[\w-]{4,20}/,
       "Username must consist of letters, numbers, - or _ and have length between 4 and 20."
     ),
+  email: yup
+    .string()
+    .label("Email")
+    .required()
+    .email("Enter a valid email address."),
   password1: yup
     .string()
+    .label("Password")
     .required()
     .min(8, "The minimum password length is 8."),
   password2: yup
     .string()
+    .label("Password Repeat")
     .required()
     .oneOf([yup.ref("password1")], "Passwords don't match."),
-  email: yup.string().required().email("Enter a valid email address."),
 });
+
+const SuccessDialog = ({ open }: { open: boolean }) => {
+  const history = useHistory();
+  return (
+    <Dialog open={open}>
+      <DialogContent>
+        <DialogTitle>Confirmation Email Sent</DialogTitle>
+        <DialogContentText>
+          A confirmation email has been sent and should arrive within five
+          minutes. It contains a link to confirm your email address.{" "}
+        </DialogContentText>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              history.push("/login");
+            }}
+            color="primary"
+          >
+            Goto Login Page
+          </Button>
+          <Button
+            onClick={(event) => {
+              history.push("/");
+            }}
+            autoFocus
+            color="primary"
+          >
+            Continue
+          </Button>
+        </DialogActions>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -57,9 +107,16 @@ const useStyles = makeStyles((theme) => ({
 
 const CreateAccountView = () => {
   const classes = useStyles();
+  const [successDialogOpen, setSuccessDialogOpen] = useState(false);
+  const [clientErrors, setClientErrors] = useState<CreateAccountServerErrors>(
+    {}
+  );
   const createAccountMutation = useCreateAccount({
     onSuccess: (data, variables, context) => {
-      console.log(data, variables);
+      setSuccessDialogOpen(true);
+    },
+    onError: (data, variables) => {
+      setClientErrors(data);
     },
   });
   return (
@@ -97,9 +154,10 @@ const CreateAccountView = () => {
                   required
                   fullWidth
                   id="username"
-                  label="username"
+                  label="Username"
                   autoFocus
                 />
+                <ClientErrorHelper errors={clientErrors.username} />
               </Grid>
               <Grid item xs={12}>
                 <Field
@@ -112,6 +170,7 @@ const CreateAccountView = () => {
                   name="email"
                   autoComplete="email"
                 />
+                <ClientErrorHelper errors={clientErrors.email} />
               </Grid>
               <Grid item xs={12}>
                 <Field
@@ -125,6 +184,7 @@ const CreateAccountView = () => {
                   id="password1"
                   autoComplete="current-password"
                 />
+                <ClientErrorHelper errors={clientErrors.password1} />
               </Grid>
               <Grid item xs={12}>
                 <Field
@@ -138,7 +198,9 @@ const CreateAccountView = () => {
                   id="password2"
                   autoComplete="current-password"
                 />
+                <ClientErrorHelper errors={clientErrors.password2} />
               </Grid>
+              <ClientErrorHelper errors={clientErrors.non_field_errors} />
               <Grid item xs={12}></Grid>
             </Grid>
             <Button
@@ -151,14 +213,15 @@ const CreateAccountView = () => {
             </Button>
             <Grid container justify="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <MuiLink component={Link} to="/login" variant="body2">
                   Already have an account? Sign in
-                </Link>
+                </MuiLink>
               </Grid>
             </Grid>
           </Form>
         </Formik>
       </div>
+      <SuccessDialog open={successDialogOpen} />
     </Container>
   );
 };

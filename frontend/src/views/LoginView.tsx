@@ -5,7 +5,7 @@ import {
   Container,
   CssBaseline,
   Grid,
-  Link,
+  Link as MuiLink,
   makeStyles,
   Typography,
 } from "@material-ui/core";
@@ -13,17 +13,24 @@ import { LockOutlined } from "@material-ui/icons";
 import axios from "axios";
 import { Field, Form, Formik } from "formik";
 import { CheckboxWithLabel, TextField } from "formik-material-ui";
-import React from "react";
+import { flatten } from "lodash";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import * as yup from "yup";
 
 import { useLogin } from "../clientHooks";
+import ClientErrorHelper from "../components/ClientErrorHelper";
 import { login } from "../store/actions";
 import { useLoggedIn } from "../store/selectors";
+import { LoginServerErrors, LoginValues } from "../types";
 
-const validationSchema = yup.object().shape({
-  email: yup.string().required().label("Email"),
+const validationSchema: yup.SchemaOf<LoginValues> = yup.object().shape({
+  email: yup
+    .string()
+    .label("Email")
+    .required()
+    .email("Enter a valid email address."),
   password: yup.string().required().label("Password"),
 });
 
@@ -47,22 +54,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        LektProjekt
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
 const LoginView = () => {
   const classes = useStyles();
   const loggedIn = useLoggedIn();
+  const [clientErrors, setClientErrors] = useState<LoginServerErrors>({});
   const dispatch = useDispatch();
   const loginMutation = useLogin({
     onSuccess: (loginSuccessPayload) => {
@@ -71,6 +66,7 @@ const LoginView = () => {
       ] = `Token ${loginSuccessPayload.key}`;
       dispatch(login(loginSuccessPayload));
     },
+    onError: (data, variables) => setClientErrors(data),
   });
 
   return (
@@ -110,6 +106,7 @@ const LoginView = () => {
                   autoComplete="email"
                   autoFocus
                 />
+                <ClientErrorHelper errors={clientErrors.email} />
                 <Field
                   component={TextField}
                   variant="outlined"
@@ -122,6 +119,7 @@ const LoginView = () => {
                   id="password"
                   autoComplete="current-password"
                 />
+                <ClientErrorHelper errors={clientErrors.password} />
                 {/*
                  * <Field
                  *   component{CheckboxWithLabel}
@@ -129,6 +127,7 @@ const LoginView = () => {
                  *   label="Remember me"
                  * />
                  */}
+                <ClientErrorHelper errors={clientErrors.non_field_errors} />
                 <Button
                   type="submit"
                   fullWidth
@@ -139,22 +138,27 @@ const LoginView = () => {
                 </Button>
                 <Grid container>
                   <Grid item xs>
-                    <Link href="#" variant="body2">
+                    <MuiLink
+                      component={Link}
+                      to="/recover-password"
+                      variant="body2"
+                    >
                       Forgot password?
-                    </Link>
+                    </MuiLink>
                   </Grid>
                   <Grid item>
-                    <Link href="#" variant="body2">
+                    <MuiLink
+                      component={Link}
+                      to="/create-account"
+                      variant="body2"
+                    >
                       {"Don't have an account? Sign Up"}
-                    </Link>
+                    </MuiLink>
                   </Grid>
                 </Grid>
               </Form>
             </Formik>
           </div>
-          <Box mt={8}>
-            <Copyright />
-          </Box>
         </Container>
       ) : (
         <Redirect to="/" />
