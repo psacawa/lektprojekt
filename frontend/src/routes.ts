@@ -8,6 +8,7 @@ import LoginView from "./views/LoginView";
 import LogoutView from "./views/LogoutView";
 import PhrasePairDetailView from "./views/PhrasePairDetailView";
 import PhrasePairListView from "./views/PhrasePairListView";
+import ResetPasswordView from "./views/ResetPasswordView";
 
 export interface Route {
   path: string;
@@ -43,6 +44,12 @@ export const baseRoutes: Route[] = [
     name: "Lexeme Detail View",
     exact: false,
     component: LexemeDetailView,
+  },
+  {
+    path: "/reset-password",
+    name: "Reset Password",
+    exact: false,
+    component: ResetPasswordView,
   },
 ];
 

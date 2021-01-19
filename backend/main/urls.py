@@ -18,6 +18,7 @@ from allauth.account.views import ConfirmEmailView, EmailVerificationSentView
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path, re_path
+from django.views.generic.base import RedirectView
 
 from .views import csrf_view
 
@@ -27,6 +28,11 @@ urlpatterns = [
     path(r"api/", include("lekt.urls")),
     path(r"auth/", include("dj_rest_auth.urls")),
     path(r"auth/registration/", include("dj_rest_auth.registration.urls")),
+    re_path(
+        r"^auth/password-reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,32})/$",
+        RedirectView.as_view(url="/"),
+        name="password_reset_confirm",
+    ),
     re_path(
         r"^auth/confirm-email/(?P<key>[-:\w]+)/$",
         ConfirmEmailView.as_view(),

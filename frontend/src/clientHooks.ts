@@ -260,3 +260,12 @@ export const useCsrfToken = (options?: UseQueryOptions) =>
       }),
     options
   );
+
+export const useResetPassword = (options?: UseMutationOptions<{}, any, any>) =>
+  useMutation(
+    (params: { email: string }) =>
+      axios
+        .post("/auth/password/reset/", { ...params })
+        .then((response: AxiosResponse<any>) => response.data),
+    options
+  );

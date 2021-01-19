@@ -140,7 +140,7 @@ const LoginView = () => {
                   <Grid item xs>
                     <MuiLink
                       component={Link}
-                      to="/recover-password"
+                      to="/reset-password"
                       variant="body2"
                     >
                       Forgot password?
