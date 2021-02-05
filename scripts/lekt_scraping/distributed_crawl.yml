@@ -1,0 +1,90 @@
+---
+- hosts: localhost
+  vars:
+    crawler_count: 2
+    redis_count: "{{ 1 if crawler_count|int > 0 else 0 }}"
+  gather_facts: false
+  module_defaults:
+    amazon.aws.ec2:
+      instance_type: t2.micro
+      wait: true
+      region: us-east-2
+      image: ami-0a91cd140a1fc148a
+      key_name: ec2-general
+  tasks:
+    - amazon.aws.ec2:
+        count_tag:
+          Name: crawler
+        instance_tags:
+          Name: crawler
+        exact_count: "{{ crawler_count }}"
+      register: ec2_crawler
+    - add_host:
+        hostname: "{{ item.public_ip }}"
+        group: crawlers
+      loop: "{{ ec2_crawler.tagged_instances }}"
+    - amazon.aws.ec2:
+        count_tag:
+          Name: redis
+        instance_tags:
+          Name: redis
+        exact_count: "{{ redis_count }}"
+        group: redis
+      register: ec2_redis
+    - add_host:
+        hostname: "{{ item.public_ip }}"
+        group: redis
+      loop: "{{ ec2_redis.tagged_instances }}"
+    - wait_for:
+        host: "{{ item.public_ip }}"
+        port: 22
+        state: started
+      loop: "{{ ec2_crawler.tagged_instances }}"
+    - wait_for:
+        host: "{{ item.public_ip }}"
+        port: 22
+        state: started
+      loop: "{{ ec2_redis.tagged_instances }}"
+
+- hosts: redis
+  become: true
+  tasks:
+    - apt: name=redis state=present update_cache=true
+      register: result
+      until: result.cache_updated is defined and result.cache_updated
+    - copy:
+        src: assets/redis.conf
+        dest: /etc/redis/redis.conf
+      register: copy_result
+    - debug: var=copy_result
+    - service: name=redis state=restarted
+
+- hosts: crawlers
+  vars:
+    project_dir: /home/ubuntu/lektprojekt
+    scrapy_dir: "{{ project_dir }}/scripts/lekt_scraping"
+    spider: idioms-thefreedictionary
+  remote_user: ubuntu
+  tasks:
+    - apt: name=python3-pip state=present update_cache=true
+      register: result
+      until: result.cache_updated is defined and result.cache_updated
+      become: true
+    - git:
+        repo: ssh://git@github.com/psacawa/lektprojekt.git
+        depth: 1
+        dest: "{{ project_dir }}"
+        accept_hostkey: true
+      tags: [clone]
+    - pip:
+        requirements: "{{ scrapy_dir }}/requirements.txt"
+      args:
+        chdir: "{{ scrapy_dir }}"
+    - command: "python3 -m scrapy crawl {{ spider }}"
+      args:
+        chdir: "{{ scrapy_dir }}"
+      environment:
+        REDIS_HOST: "{{ groups.redis[0] }}"
+      async: 3600
+      poll: 0
+      tags: [run]
