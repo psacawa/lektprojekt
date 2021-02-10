@@ -17,7 +17,7 @@ from progress.bar import Bar
 from spacy.language import Language as SpacyLanguage
 from spacy.tokens import Doc
 
-from lekt.models import Annotation, Language, Lexeme, Phrase, PhraseWord, Word
+from lekt.models import Feature, Language, Lexeme, Phrase, PhraseWord, Word
 
 ValidationData = namedtuple("ValidationData", ["length", "propriety"])
 logger = logging.getLogger(__name__)
@@ -28,7 +28,7 @@ class LanguageParser(object):
     This class is repsponible for parsing the documents attached to a particular
     language and maintains references to the data pertaining to that language:
     NLP model, django model, etc.
-    Created django models of the class `Word` and `Annotation` are cached
+    Created django models of the class `Word` and `Feature` are cached
     for faster parsing.
 
     Example usage:
@@ -153,13 +153,13 @@ class LanguageParser(object):
                 logger.debug(f"New word for {self.lid}: {text}")
 
                 cur_word.prob = prob
-                annot_values = self.parse_annotations(tag)
+                feature_values = self.parse_features(tag)
 
-                annots = {
-                    self.get_annotation(value=value, lang=self.lang)
-                    for value in annot_values
+                features = {
+                    self.get_feature(value=value, lang=self.lang)
+                    for value in feature_values
                 }
-                cur_word.annotations.add(*annots)
+                cur_word.features.add(*features)
 
             cur_phrase_words.append(
                 PhraseWord(
@@ -213,22 +213,22 @@ class LanguageParser(object):
         return cur_word
 
     @functools.lru_cache()
-    def get_annotation(self, **kwargs):
+    def get_feature(self, **kwargs):
         """
-        Unlimited cache for annotations. Logic for settings human-readable explanataions
+        Unlimited cache for features. Logic for settings human-readable explanataions
         impplemented here.
         """
         value = kwargs.pop("value")
         lang = kwargs.pop("lang")
-        annot, annot_created = Annotation.objects.get_or_create(
+        feature, feature_created = Feature.objects.get_or_create(
             value=value, lang=self.lang
         )
-        if annot_created:
-            description = self.describe_annotation(value)
+        if feature_created:
+            description = self.describe_feature(value)
             if isinstance(description, str) and len(description) > 0:
-                annot.description = description
-                annot.save()
-        return annot
+                feature.description = description
+                feature.save()
+        return feature
 
     @staticmethod
     def get_validation_data(doc: Doc) -> ValidationData:
@@ -260,7 +260,7 @@ class LanguageParser(object):
             progress.next()
         progress.finish()
 
-    def parse_annotations(self, tag: str):
+    def parse_features(self, tag: str):
         """
         For models en_core_web_* and other language models, the Token.tag_ attribute
         contains the morphological data, so we return it in a list. This is treated a
@@ -268,26 +268,26 @@ class LanguageParser(object):
         """
         return [tag]
 
-    def describe_annotation(self, tag: str):
+    def describe_feature(self, tag: str):
         """For some labelling schemes, spacy.explain has data"""
         return spacy.explain(tag)
 
 
-class PipeSeparatedAnnotationsMixin(object):
+class PipeSeparatedFeaturesMixin(object):
     @staticmethod
     @lru_cache()
-    def parse_annotations(tag: str):
+    def parse_features(tag: str):
         """
         "VERB__Mood=Sub|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin" ->
         [Mood=Sub, Number=Sing, Person=3, Tense=Pres, VerbForm=Fin]
         """
         tag_parts = re.split(r"__", tag)
         if len(tag_parts) == 2 and len(tag_parts[1]) > 0:
-            annots = tag_parts[1].split("|")
+            features = tag_parts[1].split("|")
             ret = []
-            for annot in annots:
+            for feature in features:
                 # handle the PronType=Int,Rel case
-                match = re.fullmatch("(\w+)=(\w+),(\w+)", annot)
+                match = re.fullmatch("(\w+)=(\w+),(\w+)", feature)
                 if match:
                     k, v1, v2 = match.groups()
                     if k == "Case":
@@ -296,18 +296,18 @@ class PipeSeparatedAnnotationsMixin(object):
                     else:
                         ret.append(f"{k}={v1}")
                 else:
-                    ret.append(annot)
+                    ret.append(feature)
             return ret
         else:
             return []
 
 
-class SpanishParser(PipeSeparatedAnnotationsMixin, LanguageParser):
+class SpanishParser(PipeSeparatedFeaturesMixin, LanguageParser):
     """Subclass for parsing with the family of models es-core-news-XX."""
 
     modelname_template = Template("${lid}_core_news_${size}")
     lid = "es"
-    annotation_description_dict = {
+    feature_description_dict = {
         "Case=Acc": "accusative case",
         "Case=Com": "conjunctive case",
         "Case=Dat": "dative case",
@@ -360,11 +360,11 @@ class SpanishParser(PipeSeparatedAnnotationsMixin, LanguageParser):
     #  PrepCase=Pre
     #  Reflex=Yes
 
-    def describe_annotation(self, value: str):
-        """ spacy does not explain es_core_news_md annotations"""
+    def describe_feature(self, value: str):
+        """ spacy does not explain es_core_news_md features"""
         return (
-            self.annotation_description_dict[value]
-            if value in self.annotation_description_dict
+            self.feature_description_dict[value]
+            if value in self.feature_description_dict
             else value
         )
 
@@ -383,7 +383,7 @@ class PolishParser(LanguageParser):
     lid = "pl"
 
 
-class FrenchParser(PipeSeparatedAnnotationsMixin, LanguageParser):
+class FrenchParser(PipeSeparatedFeaturesMixin, LanguageParser):
     """Subclass for parsing with the family of models fr-core-news-*."""
 
     modelname_template = Template("${lid}_core_news_${size}")
@@ -397,7 +397,7 @@ class GermanParser(LanguageParser):
     lid = "de"
 
 
-class ItalianParser(PipeSeparatedAnnotationsMixin, LanguageParser):
+class ItalianParser(PipeSeparatedFeaturesMixin, LanguageParser):
     """Subclass for parsing with the family of models it-core-news-*."""
 
     modelname_template = Template("${lid}_core_news_${size}")
@@ -411,14 +411,14 @@ class JapaneseParser(LanguageParser):
     lid = "ja"
 
 
-class PortugueseParser(PipeSeparatedAnnotationsMixin, LanguageParser):
+class PortugueseParser(PipeSeparatedFeaturesMixin, LanguageParser):
     """Subclass for parsing with the family of models pt-core-news-*."""
 
     modelname_template = Template("${lid}_core_news_${size}")
     lid = "pt"
 
 
-class DutchParser(PipeSeparatedAnnotationsMixin, LanguageParser):
+class DutchParser(PipeSeparatedFeaturesMixin, LanguageParser):
     """Subclass for parsing with the family of models nl-core-news-*."""
 
     modelname_template = Template("${lid}_core_news_${size}")
@@ -432,28 +432,28 @@ class RomanianParser(LanguageParser):
     lid = "ro"
 
 
-class DanishParser(PipeSeparatedAnnotationsMixin, LanguageParser):
+class DanishParser(PipeSeparatedFeaturesMixin, LanguageParser):
     """Subclass for parsing with the family of models da-core-news-*."""
 
     modelname_template = Template("${lid}_core_news_${size}")
     lid = "da"
 
 
-class GreekParser(PipeSeparatedAnnotationsMixin, LanguageParser):
+class GreekParser(PipeSeparatedFeaturesMixin, LanguageParser):
     """Subclass for parsing with the family of models el-core-news-*."""
 
     modelname_template = Template("${lid}_core_news_${size}")
     lid = "el"
 
 
-class LithuanianParser(PipeSeparatedAnnotationsMixin, LanguageParser):
+class LithuanianParser(PipeSeparatedFeaturesMixin, LanguageParser):
     """Subclass for parsing with the family of models lt-core-news-*."""
 
     modelname_template = Template("${lid}_core_news_${size}")
     lid = "lt"
 
 
-class NorwegianParser(PipeSeparatedAnnotationsMixin, LanguageParser):
+class NorwegianParser(PipeSeparatedFeaturesMixin, LanguageParser):
     """Subclass for parsing with the family of models nb-core-news-*."""
 
     modelname_template = Template("${lid}_core_news_${size}")

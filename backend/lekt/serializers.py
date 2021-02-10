@@ -6,7 +6,7 @@ from rest_framework.request import Request
 from rest_framework.views import APIView
 
 from .models import (
-    Annotation,
+    Feature,
     Language,
     Lexeme,
     Phrase,
@@ -37,9 +37,9 @@ class LanguageVoiceSerializer(LanguageSerializer):
     voice_set = VoiceSerializer(many=True)
 
 
-class AnnotationSerializer(serializers.ModelSerializer):
+class FeatureSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Annotation
+        model = Feature
         fields = ["id", "value", "description"]
 
 
@@ -50,7 +50,7 @@ class LexemeSerializer(serializers.ModelSerializer):
 
 
 class WordSerializer(serializers.ModelSerializer):
-    annotations = AnnotationSerializer(many=True)
+    features = FeatureSerializer(many=True)
     lexeme = LexemeSerializer()
 
     class Meta:
@@ -69,8 +69,8 @@ class PhraseWordSerializer(serializers.Serializer):
         # related attributes added by Prefetch in queryset
         if show_related == "lexeme":
             self.fields["lexeme"] = serializers.IntegerField()
-        elif show_related == "annot":
-            self.fields["annotation"] = serializers.IntegerField()
+        elif show_related == "feature":
+            self.fields["feature"] = serializers.IntegerField()
 
 
 class PhraseSerializer(serializers.Serializer):
@@ -88,9 +88,9 @@ class PhraseSerializer(serializers.Serializer):
             self.fields["lexeme_matches"] = PhraseWordSerializer(
                 show_related="lexeme", many=True
             )
-        if "annot" in expand_matches:
-            self.fields["annot_matches"] = PhraseWordSerializer(
-                show_related="annot", many=True
+        if "feature" in expand_matches:
+            self.fields["feature_matches"] = PhraseWordSerializer(
+                show_related="feature", many=True
             )
 
 

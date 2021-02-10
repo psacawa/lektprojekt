@@ -55,12 +55,12 @@ class PhrasePairQuerySet(LektManager):
         return queryset
 
 
-class AnnotationManager(PolymorphicManager, LektManager):
-    """ Manager for :model:`lekt.Annotation` """
+class FeatureManager(PolymorphicManager, LektManager):
+    """ Manager for :model:`lekt.Feature` """
 
     def describe_lang(self, lid=None):
         """
-        Pretty print a table of annotations for a given language along with their
+        Pretty print a table of features for a given language along with their
         explanation.
         """
 
@@ -69,12 +69,12 @@ class AnnotationManager(PolymorphicManager, LektManager):
         from tabulate import tabulate
 
         # this must be here to avoid a circular import
-        from .models import Annotation, Phrase
+        from .models import Feature, Phrase
 
-        def get_example(annotation: Annotation):
-            """ Return example phrase with annotation in text highlighted."""
+        def get_example(feature: Feature):
+            """ Return example phrase with feature in text highlighted."""
             phrase: Phrase = (
-                Phrase.objects.filter(words__annotations=annotation)
+                Phrase.objects.filter(words__features=feature)
                 .annotate(count=Count("words"))
                 .order_by("-count")
                 .first()
@@ -82,12 +82,12 @@ class AnnotationManager(PolymorphicManager, LektManager):
             if phrase is not None:
                 increment = 0
                 text = list(phrase.text)
-                words_with_annot_pk = [
-                    w.pk for w in phrase.words.filter(annotations=annotation)
+                words_with_feat_pk = [
+                    w.pk for w in phrase.words.filter(features=feature)
                 ]
                 #  automatically ordered by increasing order in sentence
                 for pw in phrase.phraseword_set.all():
-                    if pw.word_id in words_with_annot_pk:
+                    if pw.word_id in words_with_feat_pk:
                         text.insert(pw.start + increment, Fore.RED)
                         increment += 1
                         text.insert(pw.end + increment, Fore.RESET)

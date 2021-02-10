@@ -25,10 +25,10 @@ class LexemeViewTest:
 
 
 @pytest.mark.django_db
-class AnnotationViewTest:
+class FeatureViewTest:
     def list_test(self):
         with assertNumQueries(1):
-            response: Response = client.get("/api/annots/?lang=4")
+            response: Response = client.get("/api/features/?lang=4")
             assert response.status_code == 200
         results = response.data
         assert_that(results).is_length(46).extracting("description").contains(
@@ -38,7 +38,7 @@ class AnnotationViewTest:
 
     def complete_test(self):
         with assertNumQueries(1):
-            response: Response = client.get("/api/annots/?lang=4")
+            response: Response = client.get("/api/features/?lang=4")
             assert response.status_code == 200
         results = response.data
         assert_that(results).is_length(46).extracting("description").contains(
@@ -124,16 +124,16 @@ class PhrasePairLexemeSearchViewTest:
 
 
 @pytest.mark.django_db
-class PhrasePairAnnotationSearchViewTest:
-    #  <Annotation Mood=Cnd conditional mood> pk=19
-    #  <Annotation VerbForm=Ger present particle> pk=71
-    #  <Annotation Polite=Form Polite=Form> pk=76
+class PhrasePairFeatureSearchViewTest:
+    #  <Feature Mood=Cnd conditional mood> pk=19
+    #  <Feature VerbForm=Ger present particle> pk=71
+    #  <Feature Polite=Form Polite=Form> pk=76
 
-    def annot_search_test(self):
-        #  <Annotation VerbForm=Ger present particle> pk=71
+    def feature_search_test(self):
+        #  <Feature VerbForm=Ger present particle> pk=71
         with assertNumQueries(3):
             response: Response = client.get(
-                "/api/pairs/annot-search/?base=3&target=4&annots=71"
+                "/api/pairs/feature-search/?base=3&target=4&features=71"
             )
             assert response.status_code == 200
         results = response.data["results"]
@@ -141,11 +141,11 @@ class PhrasePairAnnotationSearchViewTest:
     @pytest.mark.parametrize(
         "url",
         [
-            "/api/pairs/annot-search/?base=3&target=4&annots=19,71",
-            "/api/pairs/annot-search/?base=3&target=4&annots=19,71&noise=ASDF",
+            "/api/pairs/feature-search/?base=3&target=4&features=19,71",
+            "/api/pairs/feature-search/?base=3&target=4&features=19,71&noise=ASDF",
         ],
     )
-    def annot_search_success_test(self, url):
+    def feature_search_success_test(self, url):
         response: Response = client.get(url)
         pprint(response.data)
         assert response.status_code == 200, f" Wrong status code at {url}"
@@ -153,29 +153,29 @@ class PhrasePairAnnotationSearchViewTest:
     @pytest.mark.parametrize(
         "url",
         [
-            "/api/pairs/annot-search/?base=3&target=&annots=",
-            "/api/pairs/annot-search/?base=&target=4",
-            "/api/pairs/annot-search/?base=3&target=&lexemes=19",
-            "/api/pairs/annot-search/?base=ASDF&target=4&annots=19",
+            "/api/pairs/feature-search/?base=3&target=&features=",
+            "/api/pairs/feature-search/?base=&target=4",
+            "/api/pairs/feature-search/?base=3&target=&lexemes=19",
+            "/api/pairs/feature-search/?base=ASDF&target=4&features=19",
         ],
     )
-    def annot_search_malformed_test(self, url):
+    def feature_search_malformed_test(self, url):
         response: Response = client.get(url)
         print(response.data)
         assert response.status_code == 400, f" Wrong status code at {url}"
 
 
 @pytest.mark.django_db
-class PhrasePairFeatureSearchViewTest:
-    #  <Lexeme lemma=deber pos=AUX> pk=18 feature_id=36
-    #  <Lexeme lemma=llegar pos=VERB> pk=19 feature_id=38
-    #  <Annotation Mood=Cnd conditional mood> pk=19 feature_id=37
-    #  <Annotation VerbForm=Ger present particle> pk=71, feature_id=702
+class PhrasePairObservableSearchView:
+    #  <Lexeme lemma=deber pos=AUX> pk=18 observable_id=36
+    #  <Lexeme lemma=llegar pos=VERB> pk=19 observable_id=38
+    #  <Feature Mood=Cnd conditional mood> pk=19 observable_id=37
+    #  <Feature VerbForm=Ger present particle> pk=71, observable_id=702
 
-    def feature_search_test(self):
+    def observable_search_test(self):
         with assertNumQueries(6):
             response: Response = client.get(
-                "/api/pairs/search/?base=3&target=4&lexemes=18,19&annots=19,71"
+                "/api/pairs/search/?base=3&target=4&lexemes=18,19&features=19,71"
             )
             assert response.status_code == 200
         results = response.data["results"]
@@ -183,12 +183,12 @@ class PhrasePairFeatureSearchViewTest:
     @pytest.mark.parametrize(
         "url",
         [
-            "/api/pairs/search/?base=3&target=4&annots=19,71",
+            "/api/pairs/search/?base=3&target=4&features=19,71",
             "/api/pairs/search/?base=3&target=4&lexemes=18.19&noise=ASDF",
-            "/api/pairs/search/?base=3&target=4&annots=19,71&lexemes=18,19&noise=ASDF",
+            "/api/pairs/search/?base=3&target=4&features=19,71&lexemes=18,19&noise=ASDF",
         ],
     )
-    def feature_search_success_test(self, url):
+    def observable_search_success_test(self, url):
         response: Response = client.get(url)
         print(response.data)
         assert response.status_code == 200, f" Wrong status code at {url}"
@@ -196,15 +196,15 @@ class PhrasePairFeatureSearchViewTest:
     @pytest.mark.parametrize(
         "url",
         [
-            "/api/pairs/search/?base=3&target=4&annots=",
+            "/api/pairs/search/?base=3&target=4&features=",
             "/api/pairs/search/?base=3&target=4",
             "/api/pairs/search/?base=3&target=4&lexemes=",
-            "/api/pairs/search/?base=3&target=4&annots=18 19",
+            "/api/pairs/search/?base=3&target=4&features=18 19",
             "/api/pairs/search/?base=3&target=4&lexemes=ASDF",
-            "/api/pairs/search/?base=ASDF&target=4&annots=19",
+            "/api/pairs/search/?base=ASDF&target=4&features=19",
         ],
     )
-    def feature_search_malformed_test(self, url):
+    def observable_search_malformed_test(self, url):
         response: Response = client.get(url)
         print(response.data)
         assert response.status_code == 400, f" Wrong status code at {url}"

@@ -19,12 +19,12 @@ class LexemeFilterSet(FilterSet):
     lang = NumberFilter(field_name="lang", required=True)
 
 
-class AnnotationFilterBackend(DjangoFilterBackend):
+class FeatureFilterBackend(DjangoFilterBackend):
     def get_filterset_class(self, view, queryset=None):
-        return AnnotationFilterSet if view.action == "list" else None
+        return FeatureFilterSet if view.action == "list" else None
 
 
-class AnnotationFilterSet(FilterSet):
+class FeatureFilterSet(FilterSet):
     lang = NumberFilter(field_name="lang", required=True)
 
 
@@ -42,7 +42,7 @@ class PhrasePairFilterSet(FilterSet):
     base = NumberFilter(field_name="base__lang", required=True)
     target = NumberFilter(field_name="target__lang", required=True)
     lexeme = NumberFilter(field_name="target__words__lexeme")
-    annot = NumberFilter(field_name="target__words__annotations")
+    annot = NumberFilter(field_name="target__words__features")
 
 
 class NumberInFilter(BaseInFilter, NumberFilter):
@@ -82,16 +82,16 @@ class PhrasePairLexemeSearchFilterSet(ValidateFilterSetMixin, FilterSet):
     )
 
 
-class PhrasePairAnnotationSearchFilterSet(ValidateFilterSetMixin, FilterSet):
-    base = NumberFilter(field_name="annotation_weights__base_lang", required=True)
-    target = NumberFilter(field_name="annotation_weights__target_lang", required=True)
-    annots = NumberInFilter(
-        field_name="target__words__annotations", lookup_expr="in", required=True
-    )
-
-
 class PhrasePairFeatureSearchFilterSet(ValidateFilterSetMixin, FilterSet):
     base = NumberFilter(field_name="feature_weights__base_lang", required=True)
     target = NumberFilter(field_name="feature_weights__target_lang", required=True)
+    features = NumberInFilter(
+        field_name="target__words__features", lookup_expr="in", required=True
+    )
+
+
+class PhrasePairObservableSearchFilterSet(ValidateFilterSetMixin, FilterSet):
+    base = NumberFilter(field_name="observable_weights__base_lang", required=True)
+    target = NumberFilter(field_name="observable_weights__target_lang", required=True)
     lexemes = NumberInFilter(field_name="sadf", lookup_expr="in", required=True)
-    annots = NumberInFilter(field_name="sdf", lookup_expr="in", required=True)
+    features = NumberInFilter(field_name="sdf", lookup_expr="in", required=True)

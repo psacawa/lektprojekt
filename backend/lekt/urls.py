@@ -9,14 +9,13 @@ router = routers.SimpleRouter()
 router.register(r"subs", views.SubscriptionViewSet, basename="sub")
 router.register(r"languages", views.LanguageViewSet, basename="language")
 router.register(r"lexemes", views.LexemeViewSet, basename="lexeme")
-router.register(r"annots", views.AnnotationViewSet, basename="annotations")
+router.register(r"features", views.FeatureViewSet, basename="features")
 urlpatterns = router.urls
 
 urlpatterns += [
     path(r"profile/", views.UserProfileView.as_view(), name="profile"),
     path(r"words/", views.WordCompletionView.as_view(), name="word-completion"),
     path(r"phrases/", views.PhraseCompletionView.as_view(), name="phrase-completion"),
-    # the views returning phrase pairs matching one lexeme + one annotation
     path(r"pairs/<int:pk>/", views.PhrasePairDetailView.as_view(), name="pair-detail"),
     path(
         r"pairs/lexeme-search/",
@@ -24,14 +23,14 @@ urlpatterns += [
         name="pair-lexeme-search",
     ),
     path(
-        r"pairs/annot-search/",
-        views.PhrasePairAnnotationSearchView().as_view(),
-        name="pair-annot-search",
+        r"pairs/feature-search/",
+        views.PhrasePairFeatureSearchView().as_view(),
+        name="pair-feature-search",
     ),
     path(
         r"pairs/search/",
-        views.PhrasePairFeatureSearchView().as_view(),
-        name="pair-feature-search",
+        views.PhrasePairObservableSearchView().as_view(),
+        name="pair-search",
     ),
     path(r"pairs/", views.PhrasePairListView.as_view(), name="pair-list"),
 ]

@@ -140,24 +140,24 @@ class Corpus(TimestampedModel):
         return self.name
 
 
-class LinguisticFeature(PolymorphicModel, TimestampedModel):
+class Observable(PolymorphicModel, TimestampedModel):
     """
-    Base class for features that can be tracked/search for. This model is present just to
-    give a base relation to join on when creating the FeatureWeight relation which holds
+    Base class for things that can be observed/searched for. This model is present just to
+    give a base relation to join on when creating the ObservableWeight relation which holds
     weights for ranking PhrasePair by tf-idf relevancy.
     """
 
     # this break with the naming comvention is necessary to avoid attribute name collision
-    # with subclasses Lexeme, Annotation
+    # with subclasses Lexeme, Feature
     #  TODO 09/01/20 psacawa: manually implementing the DB manifestation of inheritance
     #  without using python level inheritance might get around this. Inverstiage
-    feature_id = models.AutoField(primary_key=True, db_column="feature_id")
+    observable_id = models.AutoField(primary_key=True, db_column="observable_id")
     objects = PolymorphicManager()
 
 
-class FeatureWeight(models.Model):
+class ObservableWeight(models.Model):
     """
-    This table contains tf-idf weights normalized for all searchable linguistic features.
+    This table contains tf-idf weights normalized for all searchable linguistic observables.
 
     This table is populated via
     """
@@ -166,49 +166,52 @@ class FeatureWeight(models.Model):
     target_lang = models.ForeignKey(
         Language, on_delete=models.RESTRICT, related_name="+"
     )
-    feature = models.ForeignKey(LinguisticFeature, on_delete=models.RESTRICT)
+    observable = models.ForeignKey(Observable, on_delete=models.RESTRICT)
     phrasepair = models.ForeignKey(
-        "PhrasePair", on_delete=models.CASCADE, related_name="feature_weights"
+        "PhrasePair", on_delete=models.CASCADE, related_name="observable_weights"
     )
     weight = models.FloatField(default=0.0)
     objects = managers.LektManager()
 
     def __repr__(self):
         return (
-            f"<FeatureWeight feature={str(self.feature.get_real_instance())} "
+            f"<ObservableWeight observable={str(self.observable.get_real_instance())} "
             f"text={self.phrasepair.target.text} weight={self.weight}>"
         )
 
     class Meta:
         managed = True
-        db_table = "lekt_feature_weight"
+        db_table = "lekt_observable_weight"
 
 
-class Annotation(LinguisticFeature):
+class Feature(Observable):
     """
-    Model representing **annotation** indicating grammatical data determined by NLP engine.
+    Model representing **features** in the sense of the Universal Dependencies
+    specification. These are key-value pairs attached to particular words in the CoNLL-u
+    annotation scheme of that specification. They are represented by the `FEAT` field of
+    CoNLL-u. An example value may be `VerbForm=Inf`, which represents an infinitve verb.
 
     Right now these are parts of speech (POS) attached by the Spacy part-of-speech tagger
     and more detailed tags attached be Spacy detailed tagger.
-    These represent grammatical annotations including POS, mood, and tense.
+    These represent grammatical features including POS, mood, and tense.
     The results of the NLP is
     postprocessed in a language-dependent manner during the execution of the
     ``load_corpus`` admin command.
-    The annotation is distinguished by a *value* attribute.
+    The feature is distinguished by a *value* attribute.
 
     These objects exist in many-to-many relationship with :model:`lekt.Word` object.
     """
 
-    id = models.AutoField(primary_key=True, db_column="annot_id")
-    feature_ptr = models.OneToOneField(
-        LinguisticFeature,
+    id = models.AutoField(primary_key=True, db_column="feature_id")
+    observable_ptr = models.OneToOneField(
+        Observable,
         on_delete=models.CASCADE,
         parent_link=True,
-        db_column="feature_id",
+        db_column="observable_id",
     )
     value = models.CharField(
         max_length=20,
-        verbose_name="Annotation value",
+        verbose_name="Feature value",
         help_text="""value of POS/tag as attached by Spacy to the processed token, 
         e.g. Mood=Sub""",
     )
@@ -223,36 +226,36 @@ class Annotation(LinguisticFeature):
         Language, on_delete=models.PROTECT, verbose_name="Language Id"
     )
 
-    objects = managers.AnnotationManager()
+    objects = managers.FeatureManager()
 
     def __repr__(self):
-        return f"<Annotation {self.value} {self.description}>"
+        return f"<Feature {self.value} {self.description}>"
 
     def __str__(self):
         return f"{self.value}"
 
 
-class AnnotationWeight(models.Model):
+class FeatureWeight(models.Model):
     """
-    This table contains tf-idf weights for annotations.
+    This table contains tf-idf weights for features.
     """
 
     base_lang = models.ForeignKey(Language, on_delete=models.RESTRICT, related_name="+")
     target_lang = models.ForeignKey(
         Language, on_delete=models.RESTRICT, related_name="+"
     )
-    annotation = models.ForeignKey(
-        Annotation, on_delete=models.RESTRICT, db_column="annot_id"
+    feature = models.ForeignKey(
+        Feature, on_delete=models.RESTRICT, db_column="feature_id"
     )
     phrasepair = models.ForeignKey(
-        "PhrasePair", on_delete=models.CASCADE, related_name="annot_weights"
+        "PhrasePair", on_delete=models.CASCADE, related_name="feature_weights"
     )
     weight = models.FloatField(default=0.0)
     objects = managers.LektManager()
 
     def __repr__(self):
         return (
-            f"<AnnotationWeight annot={self.annotation.value} "
+            f"<FeatureWeight feature={self.feature.value} "
             f"text={self.phrasepair.target.text} weight={self.weight}>"
         )
 
@@ -261,24 +264,24 @@ class AnnotationWeight(models.Model):
 
     class Meta:
         managed = True
-        db_table = "lekt_annotation_weight"
+        db_table = "lekt_feature_weight"
 
 
-class Lexeme(LinguisticFeature):
+class Lexeme(Observable):
     """
     This model represents lexemes in the linguistic sense. It's an approximation though:
     these Lexemes only include the lemmatized form of the word and the part of speech.
 
     These objects exist in one-to-many relationship with :model:`lekt.Word`
-    and :model:`lekt.Annotation` objects.
+    and :model:`lekt.Feature` objects.
     """
 
     id = models.AutoField(primary_key=True, db_column="lexeme_id")
-    feature_ptr = models.OneToOneField(
-        LinguisticFeature,
+    observable_ptr = models.OneToOneField(
+        Observable,
         on_delete=models.CASCADE,
         parent_link=True,
-        db_column="feature_id",
+        db_column="observable_id",
     )
     lemma = models.CharField(
         max_length=50,
@@ -338,14 +341,14 @@ class LexemeWeight(models.Model):
 
 class Word(TimestampedModel):
     """
-    This model stores the word as parsed by Spacy, including all NLP annotations.
+    This model stores the word as parsed by Spacy, including all NLP features.
 
-    These includes part of speech and other grammatical annotations.
+    These includes part of speech and other grammatical features.
     These are uniquely determined by the set of attributes in the ``Meta.unique_together``
     field. The Token.orth_ attribute is not represented as a field on this model.
 
     These objects exist in many-to-many relationship with :model:`lekt.Phrase`
-    and :model:`lekt.Annotation` objects.
+    and :model:`lekt.Feature` objects.
     """
 
     id = models.AutoField(primary_key=True, db_column="word_id")
@@ -379,13 +382,13 @@ class Word(TimestampedModel):
     #  <TODO 03/12/20: add logic to generate this in data pipeline>
     prob = models.FloatField(default=0.0, help_text="computed from Token.prob")
 
-    annotations = models.ManyToManyField(
-        Annotation,
-        through="WordAnnotation",
-        help_text="grammatical annotations attached to the word",
+    features = models.ManyToManyField(
+        Feature,
+        through="WordFeature",
+        help_text="grammatical features attached to the word",
     )
     # TODO: test also Hstore for this field, perform benchmark
-    # i.e.annotations = models.HStoreField
+    # i.e.features = models.HStoreField
 
     # here we track metadata pertaining to distributional semantics on the level of words
     # TODO: develop this
@@ -665,23 +668,23 @@ class PhraseWord(models.Model):
         )
 
 
-class WordAnnotation(models.Model):
+class WordFeature(models.Model):
     """
-    Word to Annotation many-to-many bridge
+    Word to Feature many-to-many bridge
     """
 
     class Meta:
-        db_table = "lekt_word_annotations"
+        db_table = "lekt_word_features"
 
     id = models.AutoField(primary_key=True, db_column="phraseword_id")
     word = models.ForeignKey(Word, on_delete=models.CASCADE)
-    annot = models.ForeignKey(Annotation, on_delete=models.CASCADE)
+    feature = models.ForeignKey(Feature, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"<WordAnnotation norm={self.word.norm} annot={self.annot.value}>"
+        return f"<WordFeature norm={self.word.norm} feature={self.feature.value}>"
 
     def __repr__(self):
-        return f"<WordAnnotation norm={self.word.norm} annot={self.annot.value}>"
+        return f"<WordFeature norm={self.word.norm} feature={self.feature.value}>"
 
 
 # custom lookup to implement SQL's LIKE clause
