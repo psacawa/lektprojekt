@@ -26,10 +26,10 @@ export interface TokenSpan {
   start: number;
   end: number;
   lexeme?: number;
-  annotation?: number;
+  feature?: number;
 }
 
-interface Annotation {
+interface Feature {
   id: number;
   value: string;
   description: string;
@@ -39,7 +39,7 @@ interface Word {
   id: number;
   lexeme: Lexeme;
   norm: string;
-  annotations: Annotation[];
+  features: Feature[];
 }
 
 export interface Phrase {

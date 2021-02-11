@@ -7,17 +7,17 @@ import {
 import { CircularProgress } from "@material-ui/core";
 import React, { useState } from "react";
 
-import { useLanguages, usePairFeatureSearch } from "../clientHooks";
+import { useLanguages, usePairObservableSearch } from "../clientHooks";
 import LanguageSelect from "../components/LanguageSelect";
 import PhrasePairListTable from "../components/PhrasePairListTable";
 import PhrasePairSearchOptions from "../components/PhrasePairSearchOptions";
-import { Annotation, Coloured, Language, Lexeme } from "../types";
+import { Coloured, Feature, Language, Lexeme } from "../types";
 
 const PhrasePairListView = () => {
   const [baseLanguage, setBaseLanguage] = useState<Language | null>(null);
   const [targetLanguage, setTargetLanguage] = useState<Language | null>(null);
   const [lexemes, setLexemes] = useState<Coloured<Lexeme>[]>([]);
-  const [annotations, setAnnotations] = useState<Coloured<Annotation>[]>([]);
+  const [features, setFeatures] = useState<Coloured<Feature>[]>([]);
   const [pageNumber, setPageNumber] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
 
@@ -34,12 +34,12 @@ const PhrasePairListView = () => {
     );
   }
 
-  const phrasePairQuery = usePairFeatureSearch(
+  const phrasePairQuery = usePairObservableSearch(
     {
       baseLang: baseLanguage?.id,
       targetLang: targetLanguage?.id,
       lexemes: lexemes.map((lexeme) => lexeme.id),
-      annotations: annotations.map((annotation) => annotation.id),
+      features: features.map((feature) => feature.id),
       page: pageNumber + 1,
       pageSize: rowsPerPage,
     },
@@ -47,7 +47,7 @@ const PhrasePairListView = () => {
       enabled:
         !!baseLanguage &&
         !!targetLanguage &&
-        lexemes.length + annotations.length > 0,
+        lexemes.length + features.length > 0,
     }
   );
   const handleChangePage = (event: React.ChangeEvent<{}>, page: number) => {
@@ -83,8 +83,8 @@ const PhrasePairListView = () => {
             <PhrasePairSearchOptions
               lexemes={lexemes}
               setLexemes={setLexemes}
-              annotations={annotations}
-              setAnnotations={setAnnotations}
+              features={features}
+              setFeatures={setFeatures}
               language={targetLanguage}
             />
             <PhrasePairListTable
@@ -95,7 +95,7 @@ const PhrasePairListView = () => {
                 rowsPerPage,
                 phrasePairQuery,
                 lexemes,
-                annotations,
+                features,
                 onChangeRowsPerPage: handleChangeRowsPerPage,
                 onChangePage: handleChangePage,
               }}

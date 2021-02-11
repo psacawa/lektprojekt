@@ -2,16 +2,16 @@ import { makeStyles } from "@material-ui/core";
 import { difference, random } from "lodash";
 import React from "react";
 
-import { Annotation, Coloured, Language, Lexeme } from "../types";
-import AnnotationSelect from "./AnnotationSelect";
+import { Coloured, Feature, Language, Lexeme } from "../types";
+import FeatureSelect from "./FeatureSelect";
 import LexemeSelect from "./LexemeSelect";
 
 interface Props {
   language: Language | null;
   lexemes: Coloured<Lexeme>[];
-  annotations: Annotation[];
+  features: Feature[];
   setLexemes: React.Dispatch<Lexeme[]>;
-  setAnnotations: React.Dispatch<Annotation[]>;
+  setFeatures: React.Dispatch<Feature[]>;
 }
 
 const lightColours = [
@@ -44,15 +44,15 @@ const useStyles = makeStyles(() => ({
 const PhrasePairSearchOptions = ({
   lexemes,
   setLexemes,
-  annotations,
-  setAnnotations,
+  features,
+  setFeatures,
   language,
 }: Props) => {
   const classes = useStyles();
 
   const getRandomUnusedColour = () => {
-    let currentColours = (lexemes as Coloured<Lexeme | Annotation>[])
-      .concat(annotations)
+    let currentColours = (lexemes as Coloured<Lexeme | Feature>[])
+      .concat(features)
       .map((feature) => feature.colour);
     let availableColours = difference(lightColours, currentColours);
     return availableColours[random(availableColours.length)];
@@ -73,16 +73,16 @@ const PhrasePairSearchOptions = ({
           }
         }}
       />
-      <AnnotationSelect
+      <FeatureSelect
         disabled={false}
         language={language}
-        value={annotations}
-        setValue={setAnnotations}
-        onChange={(event, newAnnotations, reason) => {
-          if (newAnnotations.length > annotations.length) {
-            let idx = newAnnotations.length - 1;
-            newAnnotations[idx].colour = getRandomUnusedColour();
-            setAnnotations(newAnnotations);
+        value={features}
+        setValue={setFeatures}
+        onChange={(event, newFeatures, reason) => {
+          if (newFeatures.length > features.length) {
+            let idx = newFeatures.length - 1;
+            newFeatures[idx].colour = getRandomUnusedColour();
+            setFeatures(newFeatures);
           }
         }}
       />

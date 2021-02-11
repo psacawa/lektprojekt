@@ -43,39 +43,36 @@ class LanguageParser(object):
     """
 
     lid: str = None
-    modelname: str = None
-    modelname_template: Template = None
+    model: str = None
+    model_template: Template = None
     nlp: SpacyLanguage
 
-    def __init__(self, size=None, modelname=None, test_only=False, **kwargs):
+    def __init__(self, lid, size=None, model=None, test_only=False, **kwargs):
 
-        assert isinstance(self.lid, str) and isinstance(
-            self.modelname_template, Template
-        ), (
-            " LanguageParser subclasses must define 'lid' and 'modelname_template'"
-            "attributes."
-        )
+        self.lid = lid
+        self.model_template = self.model_template(self.lid)
+
         # select a model prioritizing kwargs passed in precedence of their specificity
-        if modelname is not None:
-            self.modelname = modelname
+        if model is not None:
+            self.model = model
         elif size is not None:
-            self.modelname = self.modelname_template.substitute(lid=self.lid, size=size)
+            self.model = self.model_template.substitute(lid=self.lid, size=size)
         else:
             candidate_modelnames = [
-                self.modelname_template.substitute(lid=self.lid, size=size)
-                for size in ["lg", "md", "sm"]
+                self.model_template.substitute(lid=self.lid, size=size)
+                for size in ["lg", "md", "sm", "trf"]
             ]
             # attempt to find each of the candidate models
-            for modelname in candidate_modelnames:
-                if importlib.util.find_spec(modelname):
-                    self.modelname = modelname
+            for model in candidate_modelnames:
+                if importlib.util.find_spec(model):
+                    self.model = model
                     break
-            if self.modelname is None:
+            if self.model is None:
                 print(
                     f"None of the spacy models {','.join(candidate_modelnames)} detected"
                 )
                 raise NLPModelLoadError()
-        print(f"Selected model {self.modelname}")
+        print(f"Selected model {self.model}")
         print("Obtaining model...")
         try:
             self.lang = Language.objects.get(lid=self.lid)
@@ -83,12 +80,21 @@ class LanguageParser(object):
             logger.error("Languages {self.lid} not created yet.")
             raise
 
-        if importlib.util.find_spec(self.modelname):
+        if importlib.util.find_spec(self.model):
             if not test_only:
-                self.nlp = spacy.load(self.modelname)
+                self.nlp = spacy.load(self.model)
         else:
-            print(f"Unable to find Spacy model {self.modelname}.")
+            print(f"Unable to find Spacy model {self.model}.")
             raise NLPModelLoadError()
+
+    @staticmethod
+    def model_template(lid: str):
+        """E.g. en ->  Template("${lid}_core_web_${size}") """
+        #  the family of English models uniqely has a different naming scheme
+        if lid == "en":
+            return Template("${lid}_core_web_${size}")
+        else:
+            return Template("${lid}_core_news_${size}")
 
     def get_pipe(self, phrases):
         return self.nlp.pipe(phrases)
@@ -103,20 +109,16 @@ class LanguageParser(object):
             lemma = token.lemma_
             norm = token.norm_
             pos = token.pos_
-            tag: str = token.tag_
+            tag = token.tag_
+            morph = str(token.morph)
             ent_type = token.ent_type_
             is_oov = token.is_oov
             is_stop = token.is_stop
             prob = token.prob
 
             # TODO: ad hoc filtration logic, should be refactored
-            if pos == "PUNCT":
+            if pos == "PUNCT" or pos == "X":
                 continue
-            # this is here to deal with the "-PRON-" issue
-            if lemma == "-PRON-":
-                lemma = norm
-            # this is still necessary; lemmtziation does nothing normalize capitalization
-            lemma = lemma.lower()
 
             try:
                 cur_lexeme = self.get_lexeme(
@@ -133,6 +135,7 @@ class LanguageParser(object):
                     lexeme=cur_lexeme,
                     norm=norm,
                     tag=tag,
+                    morph=morph,
                     ent_type=ent_type,
                     is_oov=is_oov,
                     is_stop=is_stop,
@@ -153,11 +156,11 @@ class LanguageParser(object):
                 logger.debug(f"New word for {self.lid}: {text}")
 
                 cur_word.prob = prob
-                feature_values = self.parse_features(tag)
+                features = {m.split("=")[0]: m.split("=")[1] for m in list(token.morph)}
 
                 features = {
-                    self.get_feature(value=value, lang=self.lang)
-                    for value in feature_values
+                    self.get_feature(name=n, value=v, lang=self.lang)
+                    for n, v in features.items()
                 }
                 cur_word.features.add(*features)
 
@@ -197,6 +200,7 @@ class LanguageParser(object):
         lexeme=None,
         norm=None,
         tag=None,
+        morph=None,
         ent_type=None,
         is_oov=None,
         is_stop=None,
@@ -205,6 +209,7 @@ class LanguageParser(object):
             lexeme=lexeme,
             norm=norm,
             tag=tag,
+            morph=morph,
             ent_type=ent_type,
             is_oov=is_oov,
             is_stop=is_stop,
@@ -218,13 +223,14 @@ class LanguageParser(object):
         Unlimited cache for features. Logic for settings human-readable explanataions
         impplemented here.
         """
+        name = kwargs.pop("name")
         value = kwargs.pop("value")
         lang = kwargs.pop("lang")
         feature, feature_created = Feature.objects.get_or_create(
-            value=value, lang=self.lang
+            name=name, value=value, lang=self.lang
         )
         if feature_created:
-            description = self.describe_feature(value)
+            description = self.describe_feature(name, value)
             if isinstance(description, str) and len(description) > 0:
                 feature.description = description
                 feature.save()
@@ -260,222 +266,46 @@ class LanguageParser(object):
             progress.next()
         progress.finish()
 
-    def parse_features(self, tag: str):
-        """
-        For models en_core_web_* and other language models, the Token.tag_ attribute
-        contains the morphological data, so we return it in a list. This is treated a
-        default behaviour.
-        """
-        return [tag]
-
-    def describe_feature(self, tag: str):
-        """For some labelling schemes, spacy.explain has data"""
-        return spacy.explain(tag)
-
-
-class PipeSeparatedFeaturesMixin(object):
     @staticmethod
-    @lru_cache()
-    def parse_features(tag: str):
-        """
-        "VERB__Mood=Sub|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin" ->
-        [Mood=Sub, Number=Sing, Person=3, Tense=Pres, VerbForm=Fin]
-        """
-        tag_parts = re.split(r"__", tag)
-        if len(tag_parts) == 2 and len(tag_parts[1]) > 0:
-            features = tag_parts[1].split("|")
-            ret = []
-            for feature in features:
-                # handle the PronType=Int,Rel case
-                match = re.fullmatch("(\w+)=(\w+),(\w+)", feature)
-                if match:
-                    k, v1, v2 = match.groups()
-                    if k == "Case":
-                        ret.append(f"{k}={v1}")
-                        ret.append(f"{k}={v2}")
-                    else:
-                        ret.append(f"{k}={v1}")
-                else:
-                    ret.append(feature)
-            return ret
-        else:
-            return []
+    def describe_feature(name, value):
+        """Yield human-facing textual description of a feature."""
+        return feature_description_dict.get((name, value), f"{name}={value}")
 
 
-class SpanishParser(PipeSeparatedFeaturesMixin, LanguageParser):
-    """Subclass for parsing with the family of models es-core-news-XX."""
-
-    modelname_template = Template("${lid}_core_news_${size}")
-    lid = "es"
-    feature_description_dict = {
-        "Case=Acc": "accusative case",
-        "Case=Com": "conjunctive case",
-        "Case=Dat": "dative case",
-        "Case=Nom": "nominative case",
-        "Gender=Fem": "femininine gender",
-        "Gender=Masc": "masculine gender",
-        "Mood=Cnd": "conditional mood",
-        "Mood=Imp": "imperative mood",
-        "Mood=Ind": "indicative mood",
-        "Mood=Sub": "subjunctive mood",
-        "Person=1": "first person",
-        "Person=2": "second person",
-        "Person=3": "third person",
-        "PronType=Art": "article",
-        "PronType=Dem": "demonstrative pronoun",
-        "PronType=Ind": "indicative pronoun",
-        "PronType=Int": "interrogative pronoun",
-        "PronType=Neg": "negative pronoun",
-        "PronType=Prs": "personal pronoun",
-        "PronType=Tot": "universal pronoun",
-        "Number=Plur": "plural",
-        "Number=Sing": "singular",
-        "Poss=Yes": "possesive",
-        "VerbForm=Fin": "finite verb form",
-        "VerbForm=Ger": "present particle",
-        "VerbForm=Inf": "infinitive verb form",
-        "VerbForm=Part": "past particle",
-        "Tense=Fut": "future tense",
-        "Tense=Imp": "imperfect tense",
-        "Tense=Past": "preterite tense",
-        "Tense=Pres": "present tense",
-    }
-    #  AdpType=Prep
-    #  AdpType=Preppron
-    #  AdvType=Tim
-    #  Definite=Def
-    #  Definite=Ind
-    #  Degree=Abs
-    #  Degree=Cmp
-    #  Degree=Sup
-    #  Number[psor]=Plur
-    #  Number[psor]=Sing
-    #  NumForm=Digit
-    #  NumType=Card
-    #  NumType=Frac
-    #  NumType=Ord
-    #  Polarity=Neg
-    #  Polite=Form
-    #  PrepCase=Npr
-    #  PrepCase=Pre
-    #  Reflex=Yes
-
-    def describe_feature(self, value: str):
-        """ spacy does not explain es_core_news_md features"""
-        return (
-            self.feature_description_dict[value]
-            if value in self.feature_description_dict
-            else value
-        )
-
-
-class EnglishParser(LanguageParser):
-    """Subclass for parsing with the family of models en-core-web-XX."""
-
-    modelname_template = Template("${lid}_core_web_${size}")
-    lid = "en"
-
-
-class PolishParser(LanguageParser):
-    """Subclass for parsing with the family of models pl-core-news-*."""
-
-    modelname_template = Template("${lid}_core_news_${size}")
-    lid = "pl"
-
-
-class FrenchParser(PipeSeparatedFeaturesMixin, LanguageParser):
-    """Subclass for parsing with the family of models fr-core-news-*."""
-
-    modelname_template = Template("${lid}_core_news_${size}")
-    lid = "fr"
-
-
-class GermanParser(LanguageParser):
-    """Subclass for parsing with the family of models de-core-news-*."""
-
-    modelname_template = Template("${lid}_core_news_${size}")
-    lid = "de"
-
-
-class ItalianParser(PipeSeparatedFeaturesMixin, LanguageParser):
-    """Subclass for parsing with the family of models it-core-news-*."""
-
-    modelname_template = Template("${lid}_core_news_${size}")
-    lid = "it"
-
-
-class JapaneseParser(LanguageParser):
-    """Subclass for parsing with the family of models ja-core-news-*."""
-
-    modelname_template = Template("${lid}_core_news_${size}")
-    lid = "ja"
-
-
-class PortugueseParser(PipeSeparatedFeaturesMixin, LanguageParser):
-    """Subclass for parsing with the family of models pt-core-news-*."""
-
-    modelname_template = Template("${lid}_core_news_${size}")
-    lid = "pt"
-
-
-class DutchParser(PipeSeparatedFeaturesMixin, LanguageParser):
-    """Subclass for parsing with the family of models nl-core-news-*."""
-
-    modelname_template = Template("${lid}_core_news_${size}")
-    lid = "nl"
-
-
-class RomanianParser(LanguageParser):
-    """Subclass for parsing with the family of models ro-core-news-*."""
-
-    modelname_template = Template("${lid}_core_news_${size}")
-    lid = "ro"
-
-
-class DanishParser(PipeSeparatedFeaturesMixin, LanguageParser):
-    """Subclass for parsing with the family of models da-core-news-*."""
-
-    modelname_template = Template("${lid}_core_news_${size}")
-    lid = "da"
-
-
-class GreekParser(PipeSeparatedFeaturesMixin, LanguageParser):
-    """Subclass for parsing with the family of models el-core-news-*."""
-
-    modelname_template = Template("${lid}_core_news_${size}")
-    lid = "el"
-
-
-class LithuanianParser(PipeSeparatedFeaturesMixin, LanguageParser):
-    """Subclass for parsing with the family of models lt-core-news-*."""
-
-    modelname_template = Template("${lid}_core_news_${size}")
-    lid = "lt"
-
-
-class NorwegianParser(PipeSeparatedFeaturesMixin, LanguageParser):
-    """Subclass for parsing with the family of models nb-core-news-*."""
-
-    modelname_template = Template("${lid}_core_news_${size}")
-    lid = "nb"
-
-
-class ChineseParser(LanguageParser):
-    """Subclass for parsing with the family of models zh-core-news-*."""
-
-    modelname_template = Template("${lid}_core_news_${size}")
-    lid = "zh"
-
-
-#  we find all LanguageParser classes in the local scope, and create a dict mapping their
-#  lid attributes to them, for the purpose of initializing the CorpusManager's parsers
-module_globals = globals()
-parsers = [
-    obj
-    for obj in globals().values()
-    if isclass(obj) and issubclass(obj, LanguageParser) and obj != LanguageParser
-]
-parser_dict = {parser.lid: parser for parser in parsers}
+#  TODO 10/02/20 psacawa: get a more robust solution for this data
+feature_description_dict = {
+    ("Case", "Acc"): "accusative case",
+    ("Case", "Com"): "conjunctive case",
+    ("Case", "Dat"): "dative case",
+    ("Case", "Nom"): "nominative case",
+    ("Gender", "Fem"): "femininine gender",
+    ("Gender", "Masc"): "masculine gender",
+    ("Mood", "Cnd"): "conditional mood",
+    ("Mood", "Imp"): "imperative mood",
+    ("Mood", "Ind"): "indicative mood",
+    ("Mood", "Sub"): "subjunctive mood",
+    ("Person", "1"): "first person",
+    ("Person", "2"): "second person",
+    ("Person", "3"): "third person",
+    ("PronType", "Art"): "article",
+    ("PronType", "Dem"): "demonstrative pronoun",
+    ("PronType", "Ind"): "indicative pronoun",
+    ("PronType", "Int"): "interrogative pronoun",
+    ("PronType", "Neg"): "negative pronoun",
+    ("PronType", "Prs"): "personal pronoun",
+    ("PronType", "Tot"): "universal pronoun",
+    ("Number", "Plur"): "plural",
+    ("Number", "Sing"): "singular",
+    ("Poss", "Yes"): "possesive",
+    ("VerbForm", "Fin"): "finite verb form",
+    ("VerbForm", "Ger"): "present particle",
+    ("VerbForm", "Inf"): "infinitive verb form",
+    ("VerbForm", "Part"): "past particle",
+    ("Tense", "Fut"): "future tense",
+    ("Tense", "Imp"): "imperfect tense",
+    ("Tense", "Past"): "preterite tense",
+    ("Tense", "Pres"): "present tense",
+}
 
 
 class NLPModelLoadError(Exception):

@@ -21,4 +21,4 @@ class Command(BaseCommand):
             print("Computing feature weights...")
             cursor.execute("CALL compute_feature_weights ();")
             print("Computing feature weights...")
-            cursor.execute("CALL compute_feature_weights ();")
+            cursor.execute("CALL compute_observable_weights ();")

@@ -209,11 +209,17 @@ class Feature(Observable):
         parent_link=True,
         db_column="observable_id",
     )
+    name = models.CharField(
+        max_length=20,
+        verbose_name="Feature name",
+        help_text="""value of Feature as attached by Spacy to the processed token, 
+        e.g. PronType""",
+    )
     value = models.CharField(
         max_length=20,
         verbose_name="Feature value",
         help_text="""value of POS/tag as attached by Spacy to the processed token, 
-        e.g. Mood=Sub""",
+        e.g. Sub in Mood=Sub""",
     )
     description = models.CharField(
         max_length=100,
@@ -362,9 +368,14 @@ class Word(TimestampedModel):
     )
     tag = models.CharField(
         max_length=200,
-        verbose_name="Detailed part of speech",
+        verbose_name="Detailed part of speech, represents XPOS in CoNLL-u if present",
         help_text="""computed as Token.tag_,
-        e.g. VERB__Mood=Ind|Number=Sing|Person=3|Tense=Imp|VerbForm=Fin""",
+        e.g. JJ, ADJ, ...""",
+    )
+    morph = models.CharField(
+        max_length=200,
+        verbose_name="Concentaion of morphological features, represents FEATS in CoNLL-u",
+        help_text="""computed as str(Token.morph)""",
     )
     ent_type = models.CharField(
         max_length=50,
@@ -403,6 +414,7 @@ class Word(TimestampedModel):
             "norm",
             "lexeme",
             "tag",
+            "morph",
             "ent_type",
             "is_oov",
             "is_stop",

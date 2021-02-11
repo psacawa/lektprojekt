@@ -39,9 +39,9 @@ const PhrasePairDetailTable = ({ id }: Props) => {
                 </TableCell>
                 <TableCell key={2}>{word.lexeme.pos}</TableCell>
                 <TableCell key={3}>
-                  {word.annotations.map((annot, idx) => (
+                  {word.features.map((annot, idx) => (
                     <>
-                      <Link key={idx} to={`/annots/${annot.id}/`}>
+                      <Link key={idx} to={`/features/${annot.id}/`}>
                         {annot.description}
                       </Link>{" "}
                     </>

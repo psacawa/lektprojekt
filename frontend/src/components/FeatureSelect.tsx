@@ -15,17 +15,17 @@ import { Clear } from "@material-ui/icons";
 import { Autocomplete } from "@material-ui/lab";
 import React, { useState } from "react";
 
-import { useAnnotations } from "../clientHooks";
-import { Annotation, Coloured, Language } from "../types";
+import { useFeatures } from "../clientHooks";
+import { Coloured, Feature, Language } from "../types";
 
 interface Props {
   language: Language | null;
   disabled: boolean;
-  value: Coloured<Annotation>[];
-  setValue: React.Dispatch<Annotation[]>;
+  value: Coloured<Feature>[];
+  setValue: React.Dispatch<Feature[]>;
   onChange: (
     ev: React.ChangeEvent<{}>,
-    value: Coloured<Annotation>[],
+    value: Coloured<Feature>[],
     reason: any
   ) => any;
 }
@@ -36,18 +36,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AnnotationSelect = ({
+const FeatureSelect = ({
   language,
   disabled,
   value,
   setValue,
   onChange,
 }: Props) => {
-  const [options, setOptions] = useState<Annotation[]>([]);
+  const [options, setOptions] = useState<Feature[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const classes = useStyles();
 
-  const annotationQuery = useAnnotations(
+  const featureQuery = useFeatures(
     { lang: language?.id },
     {
       staleTime: 60 * 1000,
@@ -66,8 +66,8 @@ const AnnotationSelect = ({
         renderTags={() => null}
         value={value}
         getOptionLabel={(option) => option.description}
-        options={annotationQuery.data ?? []}
-        loading={annotationQuery.isFetching}
+        options={featureQuery.data ?? []}
+        loading={featureQuery.isFetching}
         disabled={disabled}
         onInputChange={handleInputChange}
         onChange={onChange}
@@ -80,7 +80,7 @@ const AnnotationSelect = ({
               ...params.InputProps,
               endAdornment: (
                 <>
-                  {annotationQuery.isFetching ? (
+                  {featureQuery.isFetching ? (
                     <CircularProgress color="inherit" size={20} />
                   ) : null}
                   {params.InputProps.endAdornment}
@@ -98,14 +98,14 @@ const AnnotationSelect = ({
         )}
       />
       <List dense>
-        {value.map((annotation, idx) => (
+        {value.map((feature, idx) => (
           <ListItem
             key={idx}
             className={classes.listItem}
-            style={{ backgroundColor: annotation.colour! }}
+            style={{ backgroundColor: feature.colour! }}
           >
             <ListItemText>
-              <Typography>{annotation.description}</Typography>
+              <Typography>{feature.description}</Typography>
             </ListItemText>
             <ListItemSecondaryAction>
               <IconButton
@@ -126,4 +126,4 @@ const AnnotationSelect = ({
   );
 };
 
-export default AnnotationSelect;
+export default FeatureSelect;

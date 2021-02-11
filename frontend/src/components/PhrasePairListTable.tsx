@@ -19,8 +19,8 @@ import React, { useState } from "react";
 import { QueryObserverResult } from "react-query";
 
 import {
-  Annotation,
   Coloured,
+  Feature,
   Language,
   Lexeme,
   PaginatedApiOutput,
@@ -76,7 +76,7 @@ interface Props {
   targetLanguage: Language | null;
   phrasePairQuery: QueryObserverResult<PaginatedApiOutput<PhrasePair>>;
   lexemes: Coloured<Lexeme>[];
-  annotations: Coloured<Annotation>[];
+  features: Coloured<Feature>[];
   onChangePage: (event: any, page: number) => void;
   pageNumber: number;
   rowsPerPage: number;
@@ -88,13 +88,13 @@ const PhrasePairTable = ({
   baseLanguage,
   targetLanguage,
   lexemes,
-  annotations,
+  features,
   onChangePage,
   pageNumber,
   rowsPerPage,
   onChangeRowsPerPage,
 }: Props) => {
-  const annotationColourMap: Record<number, string | undefined> = _(annotations)
+  const featureColourMap: Record<number, string | undefined> = _(features)
     .keyBy("id")
     .mapValues("colour")
     .value();
@@ -102,7 +102,7 @@ const PhrasePairTable = ({
     .keyBy("id")
     .mapValues("colour")
     .value();
-  const colourMap = { ...annotationColourMap, ...lexemeColourMap };
+  const colourMap = { ...featureColourMap, ...lexemeColourMap };
   const { data, isSuccess, isFetching } = phrasePairQuery;
   return (
     <Grid container justify="center">

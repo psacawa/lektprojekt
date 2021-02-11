@@ -10,20 +10,17 @@ interface Props {
 
 const HighlightedPhrase = ({ phrase, colourMap }: Props) => {
   const lexemeMatches = sortBy(phrase.lexeme_matches!, (match) => match.start);
-  const annotationMatches = sortBy(
-    phrase.annot_matches!,
-    (match) => match.start
-  );
+  const featureMatches = sortBy(phrase.annot_matches!, (match) => match.start);
   const text = phrase.text;
 
   // merge match lists
   let matches: TokenSpan[] = [];
   let [i, j] = [0, 0];
-  while (i !== lexemeMatches.length && j !== annotationMatches.length) {
-    if (lexemeMatches[i].start < annotationMatches[j].start) {
+  while (i !== lexemeMatches.length && j !== featureMatches.length) {
+    if (lexemeMatches[i].start < featureMatches[j].start) {
       matches.push(lexemeMatches[i++]);
-    } else if (lexemeMatches[i].start > annotationMatches[j].start) {
-      matches.push(annotationMatches[j++]);
+    } else if (lexemeMatches[i].start > featureMatches[j].start) {
+      matches.push(featureMatches[j++]);
     } else {
       // in this case, both types of matches occur, and we highlight only the lexeme
       matches.push(lexemeMatches[i++]);
@@ -31,11 +28,7 @@ const HighlightedPhrase = ({ phrase, colourMap }: Props) => {
     }
   }
   // add unused matches
-  matches = [
-    ...matches,
-    ...lexemeMatches.slice(i),
-    ...annotationMatches.slice(j),
-  ];
+  matches = [...matches, ...lexemeMatches.slice(i), ...featureMatches.slice(j)];
 
   return (
     <>
@@ -43,7 +36,7 @@ const HighlightedPhrase = ({ phrase, colourMap }: Props) => {
         <>
           {text.slice(0, matches[0].start)}
           {matches.map((span, idx) => {
-            let colour = colourMap[(span.lexeme ?? span.annotation) as number];
+            let colour = colourMap[(span.lexeme ?? span.feature) as number];
             return (
               <Fragment key={idx}>
                 <span style={{ backgroundColor: colour, borderRadius: "3px" }}>

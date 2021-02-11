@@ -2,16 +2,16 @@ import { CircularProgress, Grid, Typography } from "@material-ui/core";
 import React from "react";
 import { useParams } from "react-router";
 
-import { useAnnotation } from "../clientHooks";
+import { useFeature } from "../clientHooks";
 
 const LexemeDetailView = () => {
   const { id } = useParams<any>();
-  const { isSuccess, data: annotation } = useAnnotation({ id });
+  const { isSuccess, data: feature } = useFeature({ id });
   return (
     <Grid container justify="center">
       {isSuccess ? (
         <>
-          <Typography variant="h5">{annotation?.description}</Typography>
+          <Typography variant="h5">{feature?.description}</Typography>
         </>
       ) : (
         <Grid item>

@@ -36,18 +36,6 @@ class FeatureViewTest:
             "present tense",
         )
 
-    def complete_test(self):
-        with assertNumQueries(1):
-            response: Response = client.get("/api/features/?lang=4")
-            assert response.status_code == 200
-        results = response.data
-        assert_that(results).is_length(46).extracting("description").contains(
-            "future tense",
-            "imperfect tense",
-            "preterite tense",
-            "present tense",
-        )
-
 
 @pytest.mark.django_db
 class LanguageViewTest:
@@ -166,7 +154,7 @@ class PhrasePairFeatureSearchViewTest:
 
 
 @pytest.mark.django_db
-class PhrasePairObservableSearchView:
+class PhrasePairObservableSearchViewTest:
     #  <Lexeme lemma=deber pos=AUX> pk=18 observable_id=36
     #  <Lexeme lemma=llegar pos=VERB> pk=19 observable_id=38
     #  <Feature Mood=Cnd conditional mood> pk=19 observable_id=37

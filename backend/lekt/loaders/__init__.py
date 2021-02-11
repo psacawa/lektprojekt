@@ -1,2 +1,2 @@
-from .language import EnglishParser, LanguageParser, SpanishParser
+from .language import LanguageParser
 from .loaders import CorpusManager, PollyLanguageLoader

@@ -12,7 +12,7 @@ from django.db import IntegrityError, connection, transaction
 from progress.bar import Bar
 
 from lekt import models
-from lekt.loaders.language import LanguageParser, NLPModelLoadError, parser_dict
+from lekt.loaders.language import LanguageParser, NLPModelLoadError
 from lekt.models import Corpus, Language, Phrase, PhrasePair, Voice, Word
 
 logger = logging.getLogger(__name__)
@@ -37,7 +37,7 @@ class CorpusManager(object):
         self.name = self.connection.execute("select name from meta").fetchone()[0]
         self.domain = self.connection.execute("select domain from meta").fetchone()[0]
         self.init_corpus()
-        self.init_parsers(**kwargs)
+        self._init_parsers(**kwargs)
 
     def init_corpus(self):
         self.corpus, self.created = Corpus.objects.get_or_create(
@@ -46,7 +46,7 @@ class CorpusManager(object):
         if self.created:
             self.corpus.languages.add(*self.langs)
 
-    def init_parsers(self, **kwargs):
+    def _init_parsers(self, **kwargs):
         """Set the parsers(pipelines) involved"""
 
         # mark whether the first of the two models was absent
@@ -64,9 +64,7 @@ class CorpusManager(object):
             if model_was_absent:
                 kwargs["test_only"] = True
             try:
-                self.parsers.append(
-                    parser_dict.get(lid, LanguageParser)(**parser_kwargs)
-                )
+                self.parsers.append(LanguageParser(lid, **parser_kwargs))
             except NLPModelLoadError as e:
                 model_was_absent = True
 

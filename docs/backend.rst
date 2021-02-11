@@ -94,8 +94,9 @@ The test suite can run with ``pytest-watch``. This runs it in "watch mode", just
 
 .. code-block:: shell
 
-  python3 manage.py load_corpus assets/spanishdict.sqlite --limit 100
+  DJANGO_DATABASE=test python3 manage.py load_corpus assets/spanishdict.sqlite --limit 100
 
+Of course you have to create the database and migrate first.
 You can run this command and then run in ``psql``:
 
 .. code-block:: sql

@@ -8,9 +8,9 @@ import {
 } from "react-query";
 
 import {
-  Annotation,
   CreateAccountServerErrors,
   CreateAccountValues,
+  Feature,
   Language,
   Lexeme,
   LoginServerErrors,
@@ -73,51 +73,51 @@ export const useLexemes = (
     { ...options }
   );
 
-export const useAnnotation = (
+export const useFeature = (
   params: {
     id: number;
   },
-  options?: UseQueryOptions<Annotation>
+  options?: UseQueryOptions<Feature>
 ) =>
   useQuery(
-    ["annotation", { ...params }],
+    ["feature", { ...params }],
     () =>
       axios
-        .get(`${apiRoot}annotations/${params.id}/`)
-        .then((response: AxiosResponse<Annotation>) => response.data),
+        .get(`${apiRoot}features/${params.id}/`)
+        .then((response: AxiosResponse<Feature>) => response.data),
     { ...options }
   );
 
-export const useAnnotations = (
+export const useFeatures = (
   params: {
     lang?: number;
   },
-  options?: UseQueryOptions<Annotation[]>
+  options?: UseQueryOptions<Feature[]>
 ) =>
   useQuery(
-    ["annotations", { ...params }],
+    ["features", { ...params }],
     () =>
       axios
-        .get(`${apiRoot}annots/`, {
+        .get(`${apiRoot}features/`, {
           params,
         })
-        .then((response: AxiosResponse<Annotation[]>) => response.data),
+        .then((response: AxiosResponse<Feature[]>) => response.data),
     { ...options }
   );
 
-export const usePairFeatureSearch = (
+export const usePairObservableSearch = (
   params: {
     baseLang?: number;
     targetLang?: number;
     lexemes?: number[];
-    annotations?: number[];
+    features?: number[];
     page?: number;
     pageSize?: number;
   },
   options?: UseQueryOptions<PaginatedApiOutput<PhrasePair>>
 ) =>
   useQuery(
-    ["pairs-feature-search", { ...params }],
+    ["pairs-observable-search", { ...params }],
     () =>
       axios
         .get(`${apiRoot}pairs/search/`, {
@@ -125,7 +125,7 @@ export const usePairFeatureSearch = (
             base: params.baseLang,
             target: params.targetLang,
             lexemes: params.lexemes?.join(","),
-            annots: params.annotations?.join(","),
+            features: params.features?.join(","),
             page: params.page,
             page_size: params.pageSize,
           },
@@ -147,7 +147,7 @@ export const usePairLexemeSearch = (
   options?: UseQueryOptions<PhrasePair[]>
 ) =>
   useQuery(
-    ["pairs-feature-search", { ...params }],
+    ["pairs-lexeme-search", { ...params }],
     () =>
       axios
         .get(`${apiRoot}pairs/lexeme-search`, {
@@ -163,23 +163,23 @@ export const usePairLexemeSearch = (
     { ...options }
   );
 
-export const usePairAnnotationSearch = (
+export const usePairFeatureSearch = (
   params: {
     baseLang?: number;
     targetLang?: number;
-    annotations?: number[];
+    features?: number[];
     page?: number;
   },
   options?: UseQueryOptions<PhrasePair[]>
 ) =>
   useQuery(
-    ["pairs-annotation-search", { ...params }],
+    ["pairs-feature-search", { ...params }],
     () =>
       axios
         .get(`${apiRoot}pairs/annot-search`, {
           params: {
             ...params,
-            annots: params.annotations?.join(","),
+            features: params.features?.join(","),
           },
         })
         .then(
