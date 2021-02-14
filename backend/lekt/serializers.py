@@ -8,11 +8,12 @@ from rest_framework.views import APIView
 from .models import (
     Feature,
     Language,
+    LanguageSubscription,
     Lexeme,
     Phrase,
     PhrasePair,
     PhraseWord,
-    Subscription,
+    TrackedList,
     UserProfile,
     Voice,
     Word,
@@ -126,31 +127,40 @@ class PhrasePairDetailSerializer(serializers.ModelSerializer):
         fields = ["id", "base", "target"]
 
 
-class SubscriptionGetSerializer(serializers.ModelSerializer):
+class TrackedListSerializer(serializers.Serializer):
+    #  TODO 14/02/20 psacawa: finish this
+    words = WordSerializer()
+    features = FeatureSerializer()
+
+
+class LanguageSubscriptionGetSerializer(serializers.ModelSerializer):
     """ Serialize the data for a language subscription."""
 
     base_lang = LanguageSerializer()
     target_lang = LanguageSerializer()
     base_voice = VoiceSerializer()
     target_voice = VoiceSerializer()
+    lists = serializers.PrimaryKeyRelatedField(
+        queryset=TrackedList.objects.all(), many=True, source="trackedlist_set"
+    )
 
     class Meta:
-        model = Subscription
+        model = LanguageSubscription
         exclude = ["created_at", "updated_at", "owner"]
 
 
-class SubscriptionPostSerializer(serializers.ModelSerializer):
+class LanguageSubscriptionPostSerializer(serializers.ModelSerializer):
     """ Serialize the data for a language subscription."""
 
     class Meta:
-        model = Subscription
+        model = LanguageSubscription
         fields = ["base_lang", "target_lang", "base_voice", "target_voice", "owner"]
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
     """Serializes user's language subsriptions and User object."""
 
-    subscription_set = SubscriptionGetSerializer(many=True)
+    subscription_set = LanguageSubscriptionGetSerializer(many=True)
 
     class Meta:
         model = UserProfile

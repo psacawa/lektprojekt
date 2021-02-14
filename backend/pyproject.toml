@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "lektprojekt-server"
-version = "0.1.0"
+version = "0.0.2"
 description = "LektProjekt Application Server"
 authors = ["Paweł Sacawa <psacawa@math.toronto.edu>"]
 
@@ -33,7 +33,7 @@ pylint = "^2.6.0"
 black = "^20.8b1"
 Sphinx = "^3.4.0"
 sphinx-rtd-theme = "^0.5.0"
-spacy = "^2.3.5"
+spacy = "^3.0.1"
 recommonmark = "^0.7.1"
 pytest = "^6.2.1"
 pytest-watch = "^4.2.0"

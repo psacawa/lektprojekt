@@ -6,7 +6,7 @@ from rest_framework import routers
 from . import views
 
 router = routers.SimpleRouter()
-router.register(r"subs", views.SubscriptionViewSet, basename="sub")
+router.register(r"subs", views.LanguageSubscriptionViewSet, basename="sub")
 router.register(r"languages", views.LanguageViewSet, basename="language")
 router.register(r"lexemes", views.LexemeViewSet, basename="lexeme")
 router.register(r"features", views.FeatureViewSet, basename="features")

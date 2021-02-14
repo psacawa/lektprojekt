@@ -24,12 +24,12 @@ from . import filters, serializers
 from .models import (
     Feature,
     Language,
+    LanguageSubscription,
     Lexeme,
     LexemeWeight,
     Phrase,
     PhrasePair,
     PhraseWord,
-    Subscription,
     Voice,
     Word,
 )
@@ -344,8 +344,13 @@ class PhrasePairObservableSearchView(ValidateFilterListMixin, generics.ListAPIVi
         return queryset
 
 
+class TrackedListView(generics.RetrieveAPIView):
+    serializer_class = serializers.TrackedListSerializer
+    #  TODO 14/02/20 psacawa: finish this
+
+
 class UserProfileView(generics.RetrieveAPIView):
-    """ API view for retrieving a logged in user's list of `Subscription`s."""
+    """ API view for retrieving a logged in user's list of `LanguageSubscription`s."""
 
     serializer_class = serializers.UserProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -356,10 +361,10 @@ class UserProfileView(generics.RetrieveAPIView):
         return user.userprofile
 
 
-class SubscriptionViewSet(viewsets.ModelViewSet):
+class LanguageSubscriptionViewSet(viewsets.ModelViewSet):
     """
     API view set for performing create, read, update, delete and list operations on the
-    `Subscription` models attachsed to the `UserProfile` of the currently logged in
+    `LanguageSubscription` models attachsed to the `UserProfile` of the currently logged in
     `User`.
     """
 
@@ -388,9 +393,9 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         # WARNING: this failed under generateschema
         if self.action in ["list", "retrieve"]:
-            return serializers.SubscriptionGetSerializer
+            return serializers.LanguageSubscriptionGetSerializer
         else:
-            return serializers.SubscriptionPostSerializer
+            return serializers.LanguageSubscriptionPostSerializer
 
     def get_queryset(self):
         user = self.request.user

@@ -154,6 +154,11 @@ class Observable(PolymorphicModel, TimestampedModel):
     observable_id = models.AutoField(primary_key=True, db_column="observable_id")
     objects = PolymorphicManager()
 
+    def __repr__(self):
+        return f"<Observable {self.polymorphic_ctype.name}, {str(self.get_real_instance())}>"
+
+    __str__ = __repr__
+
 
 class ObservableWeight(models.Model):
     """
@@ -235,10 +240,10 @@ class Feature(Observable):
     objects = managers.FeatureManager()
 
     def __repr__(self):
-        return f"<Feature {self.value} {self.description}>"
+        return f"<Feature {self.name}={self.value}>"
 
     def __str__(self):
-        return f"{self.value}"
+        return f"{self.name}={self.value}"
 
 
 class FeatureWeight(models.Model):
@@ -572,7 +577,7 @@ class UserProfile(TimestampedModel):
     leave the User model for auth purposes, and UserProfile will be used for
     application-specific purpses.
 
-    These models exists in one-to-many relationship with :model:`lekt.Subscription`.
+    These models exists in one-to-many relationship with :model:`lekt.LanguageSubscription`.
     """
 
     id = models.AutoField(primary_key=True, db_column="userprofile_id")
@@ -592,7 +597,7 @@ class UserProfile(TimestampedModel):
         return self.user.username
 
 
-class Subscription(TimestampedModel):
+class LanguageSubscription(TimestampedModel):
     """
     Represents the configuration data for a single language pair tracked by a single user.
 
@@ -606,6 +611,7 @@ class Subscription(TimestampedModel):
         UserProfile,
         on_delete=models.CASCADE,
         verbose_name="Owner's profile",
+        related_name="subscription_set",
         help_text="UserProfile of the account owning the subscription",
     )
 
@@ -644,12 +650,61 @@ class Subscription(TimestampedModel):
         unique_together = ("owner", "base_lang", "target_lang")
 
     def __repr__(self):
-        return "<Subscription owner={} base={} target={}>".format(
+        return "<LanguageLanguageSubscription owner={} base={} target={}>".format(
             self.owner, self.base_lang.lid, self.target_lang.lid
         )
 
     def __str__(self):
         return f"({self.owner}: {self.base_lang.lid}, {self.target_lang.lid})"
+
+
+class TrackedList(TimestampedModel):
+    """
+    Model representing a list of items that the user may be tracking.
+    There exist many :model:`lekt.TrackedObservable` models associated with each
+    TrackedList.
+    """
+
+    name = models.CharField(max_length=100, blank=True)
+    subscription = models.ForeignKey(
+        LanguageSubscription,
+        on_delete=models.CASCADE,
+        verbose_name="Language Subscription",
+    )
+
+    def __repr__(self):
+        return f"<TrackedList name={self.name} sub={str(self.subscription)}>"
+
+    __str__ = __repr__
+
+
+class TrackedObservable(TimestampedModel):
+    """
+    Model representing basic tracking relationship of user in relation to an Observable.
+    """
+
+    list = models.ForeignKey(
+        TrackedList,
+        on_delete=models.CASCADE,
+        verbose_name="Tracking List",
+        related_name="observables",
+    )
+    observable = models.ForeignKey(Observable, on_delete=models.RESTRICT)
+    difficulty = models.FloatField(
+        default=1.0, help_text="Relative weights of the observable during scheduling"
+    )
+    last_answered_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ["list", "observable"]
+
+    def __repr__(self):
+        return (
+            f"<TrackedObservable {self.observable.polymorphic_ctype.name}: "
+            f"{str(self.observable.get_real_instance())}, {self.difficulty}>"
+        )
+
+    __str__ = __repr__
 
 
 class PhraseWord(models.Model):
