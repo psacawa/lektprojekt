@@ -1,4 +1,6 @@
-Miscellaneous Backend Information
+
+=================================
+LektProjekt Backend 
 =================================
 
 Custon Admin Commands
@@ -112,3 +114,50 @@ This will set ``test_lektprojekt_db`` in the required state. You can request dja
 
 
 
+Technologies Used
+--------------------
+
+-  **django** - opinionated web framework
+-  **django-rest-framework** (``rest_framework``) - adds stuff list
+   ser/deserialization, generic CRUD viewsets, validation, auth,
+   throttling for REST
+-  **django-filter** (``django_filters``) - modular filtering in REST
+   API endpoints via query parameters
+-  **django-allauth** (``allauth``) - alternate auth backend to
+   django’s, supporting 3rd party auth, JWT, email confirmation flow
+-  **dj-restauth** (``dj_rest_auth``) - REST endpoints for the above.
+   allauth itself only has html template endpoints
+-  **django-polymorphic** (``polymorphic``) - adds a better manager for
+   polymorphic django models. “Polymorphic” is understood in the sense
+   of inheritance polymorphism
+-  **django-rest-polymorphic** (``rest_polymorphic``) - adds serializer
+   for polymorphic django models
+-  **django-model-utils** (``model_utils``) - grab bag of useful django
+   stuff. Another inheritance manager. Ambivalent.
+
+-  **django-extensions** (``django_extensions``) - a set of
+   ``manage.py`` commands that are crucial for development,
+   e.g. \ ``shell_plus``
+-  **django-debug-toolbar** (``debug_toolbar``) - adds a widget to HTML
+   response pages that shows you what the application did while serving
+   the request: SQL queries, timing, etc..
+-  **ipython** - better Python shell
+
+-  **pytest** - python test framework more flexible than ``unittest``
+-  **pytest-watch** - watches file-system for changes, running tests in
+   response. Akin to ``jest`` watch mode
+-  **pytest-sugar** - more compact appearance for pytest
+-  **pytest-django** - pytest fixtures specific to django. Ambivalent.
+
+-  **postgres** - DB
+-  **redis** - in-memory key-value DB, used for caching
+
+-  **spacy** - natural language processing library
+-  **poetry** - roughly npm for python, supports separation of prod/dev
+   dependencies, deterministic builds
+-  **pre-commit** - manage pre-commit hooks: ``pre-commit install`` to
+   install
+-  **black** - opinionated code formatter
+-  **pip** - package management
+-  **sphinx** - generates fancy documenation with search from
+   restructured text and markdown

@@ -2,6 +2,9 @@
 # precommit can run eslint --fix on js, ts files in the indexa nd rejected the commit if 
 # that changed them
 
+echo in eslint-hook
+echo $@
+
 cd frontend
 committed_eslintable_files=${@/frontend\//}
 declare -A files_before_lint

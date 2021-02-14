@@ -26,7 +26,7 @@ author = "sacawa"
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["sphinx_rtd_theme", "recommonmark"]
+extensions = ["sphinx_rtd_theme"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -38,7 +38,7 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 source_suffix = {
     ".rst": "restructuredtext",
-    ".md": "markdown",
+    #  ".md": "markdown",
 }
 
 # Internationalization
@@ -49,7 +49,6 @@ language = "en"
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-#  html_theme = 'alabaster'
 html_theme = "sphinx_rtd_theme"
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -59,5 +58,5 @@ html_static_path = []
 
 html_baseurl = "docs"
 html_theme_options = {
-    "navigation_depth": 1,
+    #  "navigation_depth": 2,
 }
