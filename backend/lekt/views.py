@@ -30,6 +30,7 @@ from .models import (
     Phrase,
     PhrasePair,
     PhraseWord,
+    TrackedList,
     Voice,
     Word,
 )
@@ -346,7 +347,7 @@ class PhrasePairObservableSearchView(ValidateFilterListMixin, generics.ListAPIVi
 
 class TrackedListView(generics.RetrieveAPIView):
     serializer_class = serializers.TrackedListSerializer
-    #  TODO 14/02/20 psacawa: finish this
+    queryset = TrackedList.objects.all()
 
 
 class UserProfileView(generics.RetrieveAPIView):

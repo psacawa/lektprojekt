@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.request import Request
 from rest_framework.views import APIView
+from rest_polymorphic.serializers import PolymorphicSerializer
 
 from .models import (
     Feature,
@@ -14,6 +15,7 @@ from .models import (
     PhrasePair,
     PhraseWord,
     TrackedList,
+    TrackedObservable,
     UserProfile,
     Voice,
     Word,
@@ -127,10 +129,27 @@ class PhrasePairDetailSerializer(serializers.ModelSerializer):
         fields = ["id", "base", "target"]
 
 
-class TrackedListSerializer(serializers.Serializer):
-    #  TODO 14/02/20 psacawa: finish this
-    words = WordSerializer()
-    features = FeatureSerializer()
+class ObservableSerializer(PolymorphicSerializer):
+    model_serializer_mapping = {
+        Lexeme: LexemeSerializer,
+        Feature: FeatureSerializer,
+    }
+
+
+class TrackedObservableSerializer(serializers.ModelSerializer):
+    observable = ObservableSerializer()
+
+    class Meta:
+        model = TrackedObservable
+        fields = ["observable", "difficulty", "last_answered_at"]
+
+
+class TrackedListSerializer(serializers.ModelSerializer):
+    observables = TrackedObservableSerializer(many=True)
+
+    class Meta:
+        model = TrackedList
+        fields = "__all__"
 
 
 class LanguageSubscriptionGetSerializer(serializers.ModelSerializer):

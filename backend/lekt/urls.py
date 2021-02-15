@@ -14,6 +14,7 @@ urlpatterns = router.urls
 
 urlpatterns += [
     path(r"profile/", views.UserProfileView.as_view(), name="profile"),
+    path(r"trackedlist/<int:pk>/", views.TrackedListView.as_view(), name="trackedlist"),
     path(r"words/", views.WordCompletionView.as_view(), name="word-completion"),
     path(r"phrases/", views.PhraseCompletionView.as_view(), name="phrase-completion"),
     path(r"pairs/<int:pk>/", views.PhrasePairDetailView.as_view(), name="pair-detail"),

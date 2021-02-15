@@ -672,6 +672,14 @@ class TrackedList(TimestampedModel):
         verbose_name="Language Subscription",
     )
 
+    def add_observables(self, *observables):
+        TrackedObservable.objects.bulk_create(
+            [
+                TrackedObservable(observable=obs.observable_ptr, tracked_list=self)
+                for obs in observables
+            ]
+        )
+
     def __repr__(self):
         return f"<TrackedList name={self.name} sub={str(self.subscription)}>"
 
@@ -683,7 +691,7 @@ class TrackedObservable(TimestampedModel):
     Model representing basic tracking relationship of user in relation to an Observable.
     """
 
-    list = models.ForeignKey(
+    tracked_list = models.ForeignKey(
         TrackedList,
         on_delete=models.CASCADE,
         verbose_name="Tracking List",
@@ -696,7 +704,7 @@ class TrackedObservable(TimestampedModel):
     last_answered_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ["list", "observable"]
+        unique_together = ["tracked_list", "observable"]
 
     def __repr__(self):
         return (
