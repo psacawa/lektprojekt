@@ -47,7 +47,7 @@ export interface Phrase {
   text: string;
   lang: number;
   lexeme_matches?: TokenSpan[];
-  annot_matches?: TokenSpan[];
+  feature_matches?: TokenSpan[];
   words?: Word[];
 }
 

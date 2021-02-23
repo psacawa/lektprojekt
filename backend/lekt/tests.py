@@ -60,8 +60,8 @@ class PhrasePairViewTest:
 
 @pytest.mark.django_db
 class PhrasePairLexemeSearchViewTest:
-    #  <Lexeme lemma=deber pos=AUX> pk=18
-    #  <Lexeme lemma=llegar pos=VERB> pk=19
+    #  <Lexeme lemma=deber pos=AUX> pk=35
+    #  <Lexeme lemma=llegar pos=VERB> pk=37
     #  <Lexeme lemma=ser pos=AUX> pk=67
 
     def lexeme_search_test(self):
@@ -74,8 +74,8 @@ class PhrasePairLexemeSearchViewTest:
     @pytest.mark.parametrize(
         "url",
         [
-            "/api/pairs/lexeme-search/?base=3&target=4&lexemes=18,19",
-            "/api/pairs/lexeme-search/?base=3&target=4&lexemes=18,19&noise=ASDF",
+            "/api/pairs/lexeme-search/?base=3&target=4&lexemes=35,37",
+            "/api/pairs/lexeme-search/?base=3&target=4&lexemes=35,37&noise=ASDF",
         ],
     )
     def lexeme_search_success_test(self, url):
@@ -155,15 +155,15 @@ class PhrasePairFeatureSearchViewTest:
 
 @pytest.mark.django_db
 class PhrasePairObservableSearchViewTest:
-    #  <Lexeme lemma=deber pos=AUX> pk=18 observable_id=36
-    #  <Lexeme lemma=llegar pos=VERB> pk=19 observable_id=38
-    #  <Feature Mood=Cnd conditional mood> pk=19 observable_id=37
-    #  <Feature VerbForm=Ger present particle> pk=71, observable_id=702
+    #  <Lexeme lemma=deber pos=AUX> pk=35
+    #  <Lexeme lemma=llegar pos=VERB> pk=19
+    #  <Feature Mood=Cnd conditional mood> pk=19
+    #  <Feature VerbForm=Ger present particle> pk=71
 
     def observable_search_test(self):
         with assertNumQueries(6):
             response: Response = client.get(
-                "/api/pairs/search/?base=3&target=4&lexemes=18,19&features=19,71"
+                "/api/pairs/search/?base=3&target=4&lexemes=35,19&features=19,71"
             )
             assert response.status_code == 200
         results = response.data["results"]
@@ -172,8 +172,8 @@ class PhrasePairObservableSearchViewTest:
         "url",
         [
             "/api/pairs/search/?base=3&target=4&features=19,71",
-            "/api/pairs/search/?base=3&target=4&lexemes=18.19&noise=ASDF",
-            "/api/pairs/search/?base=3&target=4&features=19,71&lexemes=18,19&noise=ASDF",
+            "/api/pairs/search/?base=3&target=4&lexemes=35.19&noise=ASDF",
+            "/api/pairs/search/?base=3&target=4&features=19,71&lexemes=35,19&noise=ASDF",
         ],
     )
     def observable_search_success_test(self, url):
@@ -187,7 +187,7 @@ class PhrasePairObservableSearchViewTest:
             "/api/pairs/search/?base=3&target=4&features=",
             "/api/pairs/search/?base=3&target=4",
             "/api/pairs/search/?base=3&target=4&lexemes=",
-            "/api/pairs/search/?base=3&target=4&features=18 19",
+            "/api/pairs/search/?base=3&target=4&features=35 19",
             "/api/pairs/search/?base=3&target=4&lexemes=ASDF",
             "/api/pairs/search/?base=ASDF&target=4&features=19",
         ],

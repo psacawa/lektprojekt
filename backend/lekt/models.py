@@ -151,7 +151,7 @@ class Observable(PolymorphicModel, TimestampedModel):
     # with subclasses Lexeme, Feature
     #  TODO 09/01/20 psacawa: manually implementing the DB manifestation of inheritance
     #  without using python level inheritance might get around this. Inverstiage
-    observable_id = models.AutoField(primary_key=True, db_column="observable_id")
+    id = models.AutoField(primary_key=True, db_column="observable_id")
     objects = PolymorphicManager()
 
     def __repr__(self):
@@ -207,7 +207,7 @@ class Feature(Observable):
     These objects exist in many-to-many relationship with :model:`lekt.Word` object.
     """
 
-    id = models.AutoField(primary_key=True, db_column="feature_id")
+    #  id = models.AutoField(primary_key=True, db_column="feature_id")
     observable_ptr = models.OneToOneField(
         Observable,
         on_delete=models.CASCADE,
@@ -266,7 +266,7 @@ class FeatureWeight(models.Model):
 
     def __repr__(self):
         return (
-            f"<FeatureWeight feature={self.feature.value} "
+            f"<FeatureWeight feature={self.feature} "
             f"text={self.phrasepair.target.text} weight={self.weight}>"
         )
 
@@ -283,11 +283,10 @@ class Lexeme(Observable):
     This model represents lexemes in the linguistic sense. It's an approximation though:
     these Lexemes only include the lemmatized form of the word and the part of speech.
 
-    These objects exist in one-to-many relationship with :model:`lekt.Word`
-    and :model:`lekt.Feature` objects.
+    These objects exist in one-to-many relationship with :model:`lekt.Word` objects.
     """
 
-    id = models.AutoField(primary_key=True, db_column="lexeme_id")
+    #  id = models.AutoField(primary_key=True, db_column="lexeme_id")
     observable_ptr = models.OneToOneField(
         Observable,
         on_delete=models.CASCADE,

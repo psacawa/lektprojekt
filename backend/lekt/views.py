@@ -306,12 +306,8 @@ class PhrasePairObservableSearchView(ValidateFilterListMixin, generics.ListAPIVi
         if features is None:
             features = []
         observables = []
-        observables += list(
-            Lexeme.objects.filter(id__in=lexemes).values_list("observable_id")
-        )
-        observables += list(
-            Feature.objects.filter(id__in=features).values_list("observable_id")
-        )
+        observables += list(Lexeme.objects.filter(id__in=lexemes).values_list("id"))
+        observables += list(Feature.objects.filter(id__in=features).values_list("id"))
         if len(observables) == 0:
             raise ParseError("At least one search term is needed.")
         queryset = (

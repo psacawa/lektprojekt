@@ -176,7 +176,7 @@ export const usePairFeatureSearch = (
     ["pairs-feature-search", { ...params }],
     () =>
       axios
-        .get(`${apiRoot}pairs/annot-search`, {
+        .get(`${apiRoot}pairs/feature-search`, {
           params: {
             ...params,
             features: params.features?.join(","),

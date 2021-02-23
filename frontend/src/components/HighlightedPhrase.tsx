@@ -10,7 +10,10 @@ interface Props {
 
 const HighlightedPhrase = ({ phrase, colourMap }: Props) => {
   const lexemeMatches = sortBy(phrase.lexeme_matches!, (match) => match.start);
-  const featureMatches = sortBy(phrase.annot_matches!, (match) => match.start);
+  const featureMatches = sortBy(
+    phrase.feature_matches!,
+    (match) => match.start
+  );
   const text = phrase.text;
 
   // merge match lists
