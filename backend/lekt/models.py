@@ -671,13 +671,16 @@ class TrackedList(TimestampedModel):
         verbose_name="Language Subscription",
     )
 
-    def add_observables(self, *observables):
+    def add_observables(self, observables):
         TrackedObservable.objects.bulk_create(
             [
                 TrackedObservable(observable=obs.observable_ptr, tracked_list=self)
                 for obs in observables
             ]
         )
+
+    class Meta:
+        unique_together = ["subscription", "name"]
 
     def __repr__(self):
         return f"<TrackedList name={self.name} sub={str(self.subscription)}>"

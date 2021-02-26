@@ -11,6 +11,7 @@ from .models import (
     Language,
     LanguageSubscription,
     Lexeme,
+    Observable,
     Phrase,
     PhrasePair,
     PhraseWord,
@@ -137,19 +138,35 @@ class ObservableSerializer(PolymorphicSerializer):
 
 
 class TrackedObservableSerializer(serializers.ModelSerializer):
+
     observable = ObservableSerializer()
 
     class Meta:
         model = TrackedObservable
-        fields = ["observable", "difficulty", "last_answered_at"]
+        fields = ["id", "observable", "difficulty", "last_answered_at"]
+
+
+class tracked_list_default:
+    requires_context = True
+
+    def __call__(self, serializer_field):
+        view: APIView = serializer_field.context["view"]
+        return TrackedList(id=view.kwargs.get("list_pk"))
+
+
+class TrackedObservablePostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TrackedObservable
+        fields = ["tracked_list", "observable"]
+        extra_kwargs = {
+            "tracked_list": {"default": tracked_list_default(), "required": False}
+        }
 
 
 class TrackedListSerializer(serializers.ModelSerializer):
-    observables = TrackedObservableSerializer(many=True)
-
     class Meta:
         model = TrackedList
-        fields = "__all__"
+        fields = ["id", "name", "subscription"]
 
 
 class LanguageSubscriptionGetSerializer(serializers.ModelSerializer):

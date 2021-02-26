@@ -95,3 +95,7 @@ class PhrasePairObservableSearchFilterSet(ValidateFilterSetMixin, FilterSet):
     target = NumberFilter(field_name="observable_weights__target_lang", required=True)
     lexemes = NumberInFilter(field_name="sadf", lookup_expr="in", required=True)
     features = NumberInFilter(field_name="sdf", lookup_expr="in", required=True)
+
+
+class TrackedItemFilterSet(FilterSet):
+    list = NumberFilter(field_name="tracked_list", required=True)

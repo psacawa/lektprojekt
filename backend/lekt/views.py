@@ -13,10 +13,13 @@ from django.views.decorators.cache import cache_page
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
-from rest_framework import generics, permissions, viewsets
+from rest_framework import generics, mixins, permissions, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.exceptions import ParseError, ValidationError
 from rest_framework.filters import OrderingFilter
 from rest_framework.request import Request
+from rest_framework.response import Response
+from rest_framework.serializers import Serializer
 
 from lekt.pagination import LargePageNumberPagination
 
@@ -27,10 +30,13 @@ from .models import (
     LanguageSubscription,
     Lexeme,
     LexemeWeight,
+    Observable,
     Phrase,
     PhrasePair,
     PhraseWord,
     TrackedList,
+    TrackedObservable,
+    UserProfile,
     Voice,
     Word,
 )
@@ -341,11 +347,6 @@ class PhrasePairObservableSearchView(ValidateFilterListMixin, generics.ListAPIVi
         return queryset
 
 
-class TrackedListView(generics.RetrieveAPIView):
-    serializer_class = serializers.TrackedListSerializer
-    queryset = TrackedList.objects.all()
-
-
 class UserProfileView(generics.RetrieveAPIView):
     """ API view for retrieving a logged in user's list of `LanguageSubscription`s."""
 
@@ -370,21 +371,16 @@ class LanguageSubscriptionViewSet(viewsets.ModelViewSet):
     ordering = ["id"]
 
     def create(self, request: Request, *args, **kwargs):
-        logger.debug(f"{self.__class__.__name__}: In create")
         user = request.user
-        logger.debug(
-            f"{self.__class__.__name__} in create; set owner  to {user.username} "
-        )
-        request.data["owner"] = user.userprofile_id
+        request.data["owner"] = user.userprofile.id
 
-        base_lang = request.data["base_lang"]
-        target_lang = request.data["target_lang"]
-        base_voice = Language.objects.get(pk=base_lang).default_voice_id
-        target_voice = Language.objects.get(pk=target_lang).default_voice_id
-        request.data["base_voice"] = base_voice
-        request.data["target_voice"] = target_voice
-        logger.debug(f"{self.__class__.__name__}: request data={request.data}")
-        serializer = self.get_serializer(data=request.data)
+        #  assign default voices
+        for s in ["base", "target"]:
+            if request.data.get(f"{s}_voice") is None:
+                lang_pk = request.data.get(f"{s}_lang")
+                default_voice_pk = Language.objects.get(pk=lang_pk).default_voice_id
+                request.data[f"{s}_voice"] = default_voice_pk
+
         return super().create(request, *args, **kwargs)
 
     def get_serializer_class(self):
@@ -398,6 +394,76 @@ class LanguageSubscriptionViewSet(viewsets.ModelViewSet):
         user = self.request.user
         return user.userprofile.subscription_set.select_related(
             "base_lang", "target_lang", "base_voice", "target_voice"
+        )
+
+
+class CreateUpdateDestroyAPIViewSet(
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet,
+):
+    """
+    Generic API view for create, destroy, and update operations
+    """
+
+    pass
+
+
+class TrackedListViewSet(CreateUpdateDestroyAPIViewSet):
+    #  permission_classes = [IsSubscriptionOwner]
+    serializer_class = serializers.TrackedListSerializer
+    queryset = TrackedList.objects.all()
+
+
+class CreateListDestroyAPIViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet,
+):
+    """
+    Generic API view for create, destroy, and listing operations
+    """
+
+    pass
+
+
+class TrackedObservableViewSet(CreateListDestroyAPIViewSet):
+    permission_classes = []
+    #  TODO 26/02/20 psacawa: handle permissions
+
+    def get_serializer_class(self):
+        #  return serializers.TrackedObservableSerializer
+        if self.action == "list":
+            return serializers.TrackedObservableSerializer
+        else:
+            return serializers.TrackedObservablePostSerializer
+
+    def get_queryset(self):
+        list_pk = self.kwargs.get("list_pk")
+        return TrackedObservable.objects.filter(tracked_list=list_pk)
+
+
+class TrackedLexemeViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    permission_classes = []
+    serializer_class = serializers.TrackedObservableSerializer
+
+    def get_queryset(self):
+        list_pk = self.kwargs.get("list_pk")
+        return TrackedObservable.objects.filter(
+            tracked_list=list_pk, observable__in=Observable.objects.instance_of(Lexeme)
+        )
+
+
+class TrackedFeatureViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    permission_classes = []
+    serializer_class = serializers.TrackedObservableSerializer
+
+    def get_queryset(self):
+        list_pk = self.kwargs.get("list_pk")
+        return TrackedObservable.objects.filter(
+            tracked_list=list_pk, observable__in=Observable.objects.instance_of(Feature)
         )
 
 
