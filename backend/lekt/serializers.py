@@ -157,7 +157,7 @@ class tracked_list_default:
 class TrackedObservablePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = TrackedObservable
-        fields = ["tracked_list", "observable"]
+        fields = ["id", "tracked_list", "observable"]
         extra_kwargs = {
             "tracked_list": {"default": tracked_list_default(), "required": False}
         }

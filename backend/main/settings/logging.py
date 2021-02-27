@@ -4,15 +4,16 @@ if DEBUG:
     # DEBUG and verbose format, and a stderr handler with level ERROR and simple format
     # for both, there will be no propagation
     LEKTPROJEKT_LOGGED_MODULES = [
-        "lekt.views",
-        "lekt.serializers",
         "lekt.filters",
         "lekt.models",
+        "lekt.permissions",
+        "lekt.serializers",
         "lekt.signals",
+        "lekt.views",
         "lekt.loaders",
-        "main.views",
         "main.models",
         "main.signals",
+        "main.views",
         "django.db.backends",
     ]
     HANDLERS = {

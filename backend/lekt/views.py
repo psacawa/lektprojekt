@@ -7,6 +7,7 @@ from django.core.exceptions import PermissionDenied
 from django.db.models import Count, F, Prefetch, Q, Subquery
 from django.db.models.aggregates import Sum
 from django.db.models.expressions import RawSQL
+from django.shortcuts import get_object_or_404
 from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -20,8 +21,6 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer
-
-from lekt.pagination import LargePageNumberPagination
 
 from . import filters, serializers
 from .models import (
@@ -39,6 +38,12 @@ from .models import (
     UserProfile,
     Voice,
     Word,
+)
+from .pagination import LargePageNumberPagination
+from .permissions import (
+    IsSubscriptionOwner,
+    IsTrackedListOwner,
+    IsTrackedObservableOwner,
 )
 
 logger = logging.getLogger(__name__)
@@ -366,7 +371,7 @@ class LanguageSubscriptionViewSet(viewsets.ModelViewSet):
     `User`.
     """
 
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsSubscriptionOwner]
     filter_backends = [OrderingFilter]
     ordering = ["id"]
 
@@ -397,44 +402,26 @@ class LanguageSubscriptionViewSet(viewsets.ModelViewSet):
         )
 
 
-class CreateUpdateDestroyAPIViewSet(
+class TrackedListViewSet(
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
-    """
-    Generic API view for create, destroy, and update operations
-    """
-
-    pass
-
-
-class TrackedListViewSet(CreateUpdateDestroyAPIViewSet):
-    #  permission_classes = [IsSubscriptionOwner]
+    permission_classes = [IsTrackedListOwner]
     serializer_class = serializers.TrackedListSerializer
     queryset = TrackedList.objects.all()
 
 
-class CreateListDestroyAPIViewSet(
+class TrackedObservableViewSet(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
-    """
-    Generic API view for create, destroy, and listing operations
-    """
-
-    pass
-
-
-class TrackedObservableViewSet(CreateListDestroyAPIViewSet):
-    permission_classes = []
-    #  TODO 26/02/20 psacawa: handle permissions
+    permission_classes = [IsTrackedObservableOwner]
 
     def get_serializer_class(self):
-        #  return serializers.TrackedObservableSerializer
         if self.action == "list":
             return serializers.TrackedObservableSerializer
         else:
@@ -443,6 +430,16 @@ class TrackedObservableViewSet(CreateListDestroyAPIViewSet):
     def get_queryset(self):
         list_pk = self.kwargs.get("list_pk")
         return TrackedObservable.objects.filter(tracked_list=list_pk)
+
+    def get_object(self):
+        list_pk = self.kwargs.get("list_pk")
+        pk = self.kwargs.get("pk")
+        queryset = TrackedObservable.objects.filter(
+            tracked_list_id=list_pk, observable_id=pk
+        )
+        obj = get_object_or_404(queryset)
+        self.check_object_permissions(self.request, obj)
+        return obj
 
 
 class TrackedLexemeViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
