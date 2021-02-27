@@ -2,6 +2,14 @@
 
 This is the monorepo for _LektProjekt_. See `docs/` for general documentation.
 
+## Hooks
+
+Install git-hooks which help preserve project health.
+
+```
+scripts/install-hooks.sh
+```
+
 ## General Docs
 
 After installing `sphinx`, run:
