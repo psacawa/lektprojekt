@@ -45,6 +45,11 @@ ProfileView
 ~~~~~~~~~~~
 
 - crud of tracked lists 
+- curd of subscriptions
+
+TrackedListView
+~~~~~~~~~~~~~~~
+
 - crud of tracked observables
 
 
