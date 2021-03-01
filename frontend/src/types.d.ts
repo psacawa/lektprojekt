@@ -1,10 +1,3 @@
-export interface Lexeme {
-  id: number;
-  lemma: string;
-  pos: string;
-  lang: number;
-}
-
 export interface Voice {
   id: number;
   lang: number;
@@ -29,13 +22,28 @@ export interface TokenSpan {
   feature?: number;
 }
 
-interface Feature {
+export interface Lexeme {
+  id: number;
+  lemma: string;
+  pos: string;
+  lang: number;
+}
+
+export interface Feature {
   id: number;
   value: string;
   description: string;
 }
 
-interface Word {
+export type Observable = Lexeme | Feature;
+
+export interface Tracked<T> {
+  difficulty: number;
+  id: number;
+  observable: T;
+}
+
+export interface Word {
   id: number;
   lexeme: Lexeme;
   norm: string;
@@ -66,27 +74,27 @@ export interface PaginatedApiOutput<T> {
 
 type Coloured<T> = T & { colour?: string };
 
-interface LoginData {
+export interface LoginData {
   email: string;
   password: string;
 }
 
-interface AuthData {
+export interface AuthData {
   key: string;
 }
 
-interface User {
+export interface User {
   id: number;
   profile: number;
   username: string;
   email: string;
 }
 
-interface LoginSuccessPayload extends AuthData {
+export interface LoginSuccessPayload extends AuthData {
   user: User;
 }
 
-interface UserState {
+export interface UserState {
   loggedIn: boolean;
   user?: User;
   key?: string;
@@ -104,11 +112,23 @@ export interface LoginValues {
   password: string;
 }
 
-export type ServerErrors<T> = Partial<
-  Record<keyof T | "non_field_errors", string[]>
->;
-
-export type CreateAccountServerErrors = ServerErrors<CreateAccountValues>;
-export type LoginServerErrors = ServerErrors<LoginValues>;
+type ServerErrors<T> = Partial<Record<keyof T | "non_field_errors", string[]>>;
+type CreateAccountServerErrors = ServerErrors<CreateAccountValues>;
+type LoginServerErrors = ServerErrors<LoginValues>;
 
 type RootState = ReturnType<typeof import("./store/reducers").default>;
+
+interface TrackedList {
+  id: number;
+  name: string;
+  subscription: number;
+}
+
+export interface Subscription {
+  id: number;
+  lists: TrackedList[];
+  base_lang: Language;
+  base_voice: Voice;
+  target_lang: Language;
+  target_voice: Voice;
+}

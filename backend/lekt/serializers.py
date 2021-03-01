@@ -176,9 +176,7 @@ class LanguageSubscriptionGetSerializer(serializers.ModelSerializer):
     target_lang = LanguageSerializer()
     base_voice = VoiceSerializer()
     target_voice = VoiceSerializer()
-    lists = serializers.PrimaryKeyRelatedField(
-        queryset=TrackedList.objects.all(), many=True, source="trackedlist_set"
-    )
+    lists = TrackedListSerializer(many=True, source="trackedlist_set")
 
     class Meta:
         model = LanguageSubscription

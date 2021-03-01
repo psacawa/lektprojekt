@@ -18,6 +18,8 @@ import {
   LoginValues,
   PaginatedApiOutput,
   PhrasePair,
+  Subscription,
+  Tracked,
   User,
 } from "./types";
 
@@ -268,4 +270,53 @@ export const useResetPassword = (options?: UseMutationOptions<{}, any, any>) =>
         .post("/auth/password/reset/", { ...params })
         .then((response: AxiosResponse<any>) => response.data),
     options
+  );
+
+export const useSubs = (
+  options?: UseQueryOptions<PaginatedApiOutput<Subscription>>
+) =>
+  useQuery(["subs"], () =>
+    axios
+      .get("/api/subs/")
+      .then(
+        (response: AxiosResponse<PaginatedApiOutput<Subscription>>) =>
+          response.data
+      )
+  );
+
+export const useTrackedLexemes = (
+  params: {
+    id: number;
+  },
+  options?: UseQueryOptions<PaginatedApiOutput<Tracked<Lexeme>>>
+) =>
+  useQuery(["tracked-lexemes", { ...params }], () =>
+    axios
+      .get(`/api/lists/${params.id}/lexemes/`)
+      .then(
+        (response: AxiosResponse<PaginatedApiOutput<Tracked<Lexeme>>>) =>
+          response.data
+      )
+  );
+
+export const useTrackedFeatures = (
+  params: {
+    id: number;
+  },
+  options?: UseQueryOptions<PaginatedApiOutput<Tracked<Feature>>>
+) =>
+  useQuery(["tracked-features", { ...params }], () =>
+    axios
+      .get(`/api/lists/${params.id}/features/`)
+      .then(
+        (response: AxiosResponse<PaginatedApiOutput<Tracked<Feature>>>) =>
+          response.data
+      )
+  );
+
+export const useTrackObservable = (options?: UseMutationOptions<any>) =>
+  useMutation((params: { id: number; observable_id: number }) =>
+    axios.post(`/api/lists/${params.id}/`, {
+      observable: params.observable_id,
+    })
   );

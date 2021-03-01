@@ -9,6 +9,6 @@
   echo pre-commit hooks installed
 
   # post-merge
-  cp scripts/build-docs-hook.sh .git/hooks/
+  cp scripts/build-docs-hook.sh .git/hooks/post-merge
   echo documentation hook installed
 )

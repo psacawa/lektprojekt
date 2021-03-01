@@ -209,6 +209,13 @@ class PhrasePairObservableSearchViewTest:
 
 
 @pytest.mark.django_db
+class SubscriptionViewTest:
+    def subscription_crud_test(self, test_user):
+        client.force_login(user=test_user)
+        #  TODO 28/02/20 psacawa: finish this
+
+
+@pytest.mark.django_db
 class TrackedListViewTest:
     def tracked_list_crud_test(self, test_subscription, test_user):
         client.force_login(user=test_user)

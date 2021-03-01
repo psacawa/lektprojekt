@@ -41,6 +41,11 @@ PhrasePairDetailView
    -  associated annotations
    -  associated phrase word data
 
+ProfileView
+~~~~~~~~~~~
+
+- crud of tracked lists 
+- crud of tracked observables
 
 
 Technologies Used

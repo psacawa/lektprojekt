@@ -8,6 +8,7 @@ import LoginView from "./views/LoginView";
 import LogoutView from "./views/LogoutView";
 import PhrasePairDetailView from "./views/PhrasePairDetailView";
 import PhrasePairListView from "./views/PhrasePairListView";
+import ProfileView from "./views/ProfileView";
 import ResetPasswordView from "./views/ResetPasswordView";
 
 export interface Route {
@@ -54,6 +55,12 @@ export const baseRoutes: Route[] = [
 ];
 
 export const loggedInRoutes: Route[] = [
+  {
+    path: "/profile/",
+    name: "Profile",
+    exact: false,
+    component: ProfileView,
+  },
   {
     path: "/logout/",
     name: "Logout",
