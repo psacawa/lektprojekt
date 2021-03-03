@@ -3,6 +3,9 @@ import {
   AccordionDetails,
   AccordionSummary,
   CircularProgress,
+  Link as MuiLink,
+  List,
+  ListItem,
   makeStyles,
   Paper,
   Tab,
@@ -10,9 +13,10 @@ import {
   Typography,
 } from "@material-ui/core";
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 import { useSubs } from "../clientHooks";
-import TrackedListDisplay from "../components/TrackedListDisplay";
+import TrackedListView from "../components/TrackedListView";
 import { Subscription, TrackedList } from "../types";
 
 function TrackedListAccordion({ lists }: { lists: TrackedList[] }) {
@@ -30,7 +34,7 @@ function TrackedListAccordion({ lists }: { lists: TrackedList[] }) {
             <Typography>{list.name}</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <TrackedListDisplay list={list} />
+            {/* <TrackedListView list={list} /> */}
           </AccordionDetails>
         </Accordion>
       ))}
@@ -64,7 +68,15 @@ const ProfileView = () => {
             ))}
           </Tabs>
           {subscription ? (
-            <TrackedListAccordion lists={subscription?.lists} />
+            <List>
+              {subscription.lists.map((list, idx) => (
+                <ListItem>
+                  <MuiLink component={Link} to={`/lists/${list.id}/`}>
+                    {list.name}
+                  </MuiLink>
+                </ListItem>
+              ))}
+            </List>
           ) : null}
         </>
       ) : (

@@ -1,6 +1,7 @@
 import { concat } from "lodash";
 import React from "react";
 
+import TrackedListView from "./components/TrackedListView";
 import CreateAccountView from "./views/CreateAccountView";
 import Home from "./views/Home";
 import LexemeDetailView from "./views/LexemeDetailView";
@@ -26,7 +27,7 @@ export const drawerRoutes: Route[] = [
     component: Home,
   },
   {
-    path: "/gimped",
+    path: "/gimped/",
     name: "Search Phrases",
     exact: false,
     component: PhrasePairListView,
@@ -35,16 +36,22 @@ export const drawerRoutes: Route[] = [
 
 export const baseRoutes: Route[] = [
   {
-    path: "/pairs/:id",
+    path: "/pairs/:id/",
     name: "PhrasePair Detail View",
     exact: false,
     component: PhrasePairDetailView,
   },
   {
-    path: "/lexemes/:id",
+    path: "/lexemes/:id/",
     name: "Lexeme Detail View",
     exact: false,
     component: LexemeDetailView,
+  },
+  {
+    path: "/lists/:id",
+    name: "Training List View",
+    exact: false,
+    component: TrackedListView,
   },
   {
     path: "/reset-password",
@@ -71,13 +78,13 @@ export const loggedInRoutes: Route[] = [
 
 export const loggedOutRoutes: Route[] = [
   {
-    path: "/login",
+    path: "/login/",
     name: "Login",
     exact: false,
     component: LoginView,
   },
   {
-    path: "/create-account",
+    path: "/create-account/",
     name: "Register",
     exact: false,
     component: CreateAccountView,
