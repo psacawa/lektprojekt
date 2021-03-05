@@ -52,6 +52,12 @@ TrackedListView
 
 - crud of tracked observables
 
+PracticeView
+~~~~~~~~~~~~~~~
+
+- aka Focus Mode
+
+
 
 Technologies Used
 ----------------------
