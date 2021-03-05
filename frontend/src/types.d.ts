@@ -37,7 +37,7 @@ export interface Feature {
 
 export type Observable = Lexeme | Feature;
 
-export interface Tracked<T> {
+export interface Tracked<T = number> {
   difficulty: number;
   id: number;
   observable: T;
@@ -118,17 +118,17 @@ type LoginServerErrors = ServerErrors<LoginValues>;
 
 type RootState = ReturnType<typeof import("./store/reducers").default>;
 
-interface TrackedList {
+interface TrackedList<ExpandSub extends boolean = false> {
   id: number;
   name: string;
-  subscription: number;
+  subscription: ExpandSub extends true ? Subscription : number;
 }
 
-export interface Subscription {
+export interface Subscription<ExpandLang extends boolean = false> {
   id: number;
   lists: TrackedList[];
-  base_lang: Language;
+  base_lang: ExpandLang extends true ? Language : number;
   base_voice: Voice;
-  target_lang: Language;
+  target_lang: ExpandLang extends true ? Language : number;
   target_voice: Voice;
 }

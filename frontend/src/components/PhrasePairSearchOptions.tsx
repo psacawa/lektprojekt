@@ -61,7 +61,6 @@ const PhrasePairSearchOptions = ({
   return (
     <>
       <LexemeSelect
-        disabled={false}
         language={language}
         value={lexemes}
         setValue={setLexemes}
@@ -74,7 +73,6 @@ const PhrasePairSearchOptions = ({
         }}
       />
       <FeatureSelect
-        disabled={false}
         language={language}
         value={features}
         setValue={setFeatures}

@@ -476,6 +476,14 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
+name = "drf-flex-fields"
+version = "0.8.9"
+description = "Flexible, dynamic fields and nested resources for Django REST Framework serializers."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "drf-yasg"
 version = "1.20.0"
 description = "Automated generation of real Swagger/OpenAPI 2.0 schemas from Django Rest Framework code."
@@ -1550,7 +1558,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "f4fd584fae34ff7f7ac339795e14db1b0e278112411758bf1142eb5cd2fdfad9"
+content-hash = "8c25c3eab614152d1647ecbf0c2b17d9c17e008864247b9c570c994319d808cf"
 
 [metadata.files]
 alabaster = [
@@ -1837,6 +1845,9 @@ docopt = [
 docutils = [
     {file = "docutils-0.16-py2.py3-none-any.whl", hash = "sha256:0c5b78adfbf7762415433f5515cd5c9e762339e23369dbe8000d84a4bf4ab3af"},
     {file = "docutils-0.16.tar.gz", hash = "sha256:c2de3a60e9e7d07be26b7f2b00ca0309c207e06c100f9cc2a94931fc75a478fc"},
+]
+drf-flex-fields = [
+    {file = "drf-flex-fields-0.8.9.tar.gz", hash = "sha256:f68174ee294c7597933989522e87e2c69bbafde922fb353e27b3bc53487fc7de"},
 ]
 drf-yasg = [
     {file = "drf-yasg-1.20.0.tar.gz", hash = "sha256:d50f197c7f02545d0b736df88c6d5cf874f8fea2507ad85ad7de6ae5bf2d9e5a"},

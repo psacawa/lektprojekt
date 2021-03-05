@@ -3,8 +3,8 @@ import axios from "axios";
 import React from "react";
 import { Route, Switch } from "react-router";
 
-import { useCsrfToken } from "./clientHooks";
 import LektDrawer from "./components/Drawer";
+import { useCsrfToken } from "./hooks";
 import { routes } from "./routes";
 
 const useStyles = makeStyles(() => ({

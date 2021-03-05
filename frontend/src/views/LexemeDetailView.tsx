@@ -3,7 +3,7 @@ import { CircularProgress, Typography } from "@material-ui/core";
 import React from "react";
 import { useParams } from "react-router";
 
-import { useLexeme } from "../clientHooks";
+import { useLexeme } from "../hooks";
 
 const LexemeDetailView = () => {
   const { id } = useParams<any>();

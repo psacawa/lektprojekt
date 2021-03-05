@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
+import { flatMap } from "lodash";
 import {
   MutateFunction,
   useMutation,
@@ -20,10 +21,14 @@ import {
   PhrasePair,
   Subscription,
   Tracked,
+  TrackedList,
   User,
-} from "./types";
+} from "../types";
 
 const apiRoot = "/api/";
+const HOUR = 60 * 60 * 1000;
+
+// TODO 05/03/20 psacawa: find solution to handle server errors
 
 export const useLanguages = (options?: UseQueryOptions<Language[]>) =>
   useQuery(
@@ -35,7 +40,7 @@ export const useLanguages = (options?: UseQueryOptions<Language[]>) =>
           (response: AxiosResponse<PaginatedApiOutput<Language>>) =>
             response.data.results
         ),
-    { ...options }
+    { staleTime: HOUR, refetchOnWindowFocus: false, ...options }
   );
 
 export const useLexeme = (
@@ -273,15 +278,41 @@ export const useResetPassword = (options?: UseMutationOptions<{}, any, any>) =>
   );
 
 export const useSubs = (
-  options?: UseQueryOptions<PaginatedApiOutput<Subscription>>
+  options?: UseQueryOptions<PaginatedApiOutput<Subscription<true>>>
 ) =>
-  useQuery(["subs"], () =>
+  useQuery(
+    ["subs"],
+    () =>
+      axios
+        .get("/api/subs/")
+        .then(
+          (response: AxiosResponse<PaginatedApiOutput<Subscription<true>>>) =>
+            response.data
+        ),
+    options
+  );
+
+export const useList = (
+  params: { id: number },
+  options?: UseQueryOptions<TrackedList<true>>
+) =>
+  useQuery(["lists", params.id], () =>
     axios
-      .get("/api/subs/")
-      .then(
-        (response: AxiosResponse<PaginatedApiOutput<Subscription>>) =>
-          response.data
-      )
+      .get(`/api/lists/${params.id}/?expand=subscription`)
+      .then((response: AxiosResponse<TrackedList<true>>) => response.data)
+  );
+
+export const useSub = (
+  params: { id: number },
+  options?: UseQueryOptions<Subscription>
+) =>
+  useQuery(
+    ["sub", params.id],
+    () =>
+      axios
+        .get("/api/subs/")
+        .then((response: AxiosResponse<Subscription>) => response.data),
+    options
   );
 
 export const useTrackedLexemes = (
@@ -314,9 +345,26 @@ export const useTrackedFeatures = (
       )
   );
 
-export const useTrackObservable = (options?: UseMutationOptions<any>) =>
+export const useTrackObservable = (
+  options?: UseMutationOptions<
+    Tracked,
+    unknown,
+    { id: string; observable_id: number }
+  >
+) =>
   useMutation((params: { id: number; observable_id: number }) =>
-    axios.post(`/api/lists/${params.id}/`, {
+    axios.post(`/api/lists/${params.id}/obs/`, {
       observable: params.observable_id,
     })
+  );
+
+export const useUntrackObservable = (
+  options?: UseMutationOptions<
+    void,
+    unknown,
+    { id: number; observable_id: number }
+  >
+) =>
+  useMutation((params: { id: number; observable_id: number }) =>
+    axios.delete(`/api/lists/${params.id}/obs/${params.observable_id}/`)
   );

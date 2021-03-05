@@ -5,6 +5,7 @@ for f in $(git diff --name-only --diff-filter=AMD HEAD HEAD^ | grep "\.rst$"); d
   echo Documentation source changed: $f
   changed=1
 done
+echo
 
 if [[ $changed == 1 ]]; then
   echo

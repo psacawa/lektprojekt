@@ -15,12 +15,11 @@ import { Clear } from "@material-ui/icons";
 import { Autocomplete } from "@material-ui/lab";
 import React, { useState } from "react";
 
-import { useFeatures } from "../clientHooks";
+import { useFeatures } from "../hooks";
 import { Coloured, Feature, Language } from "../types";
 
 interface Props {
   language: Language | null;
-  disabled: boolean;
   value: Coloured<Feature>[];
   setValue: React.Dispatch<Feature[]>;
   onChange: (
@@ -36,13 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const FeatureSelect = ({
-  language,
-  disabled,
-  value,
-  setValue,
-  onChange,
-}: Props) => {
+const FeatureSelect = ({ language, value, setValue, onChange }: Props) => {
   const [options, setOptions] = useState<Feature[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const classes = useStyles();
@@ -68,7 +61,6 @@ const FeatureSelect = ({
         getOptionLabel={(option) => option.description}
         options={featureQuery.data ?? []}
         loading={featureQuery.isFetching}
-        disabled={disabled}
         onInputChange={handleInputChange}
         onChange={onChange}
         renderInput={(params) => (

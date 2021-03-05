@@ -19,8 +19,8 @@ import { useDispatch } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import * as yup from "yup";
 
-import { useLogin } from "../clientHooks";
 import ClientErrorHelper from "../components/ClientErrorHelper";
+import { useLogin } from "../hooks";
 import { login } from "../store/actions";
 import { useLoggedIn } from "../store/selectors";
 import { LoginServerErrors, LoginValues } from "../types";

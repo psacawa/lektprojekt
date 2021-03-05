@@ -21,8 +21,8 @@ import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import * as yup from "yup";
 
-import { useCreateAccount } from "../clientHooks";
 import ClientErrorHelper from "../components/ClientErrorHelper";
+import { useCreateAccount } from "../hooks";
 import { CreateAccountServerErrors, CreateAccountValues } from "../types";
 
 const validationSchema: yup.SchemaOf<CreateAccountValues> = yup.object().shape({

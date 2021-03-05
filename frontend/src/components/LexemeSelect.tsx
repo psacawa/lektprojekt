@@ -16,12 +16,11 @@ import { Autocomplete } from "@material-ui/lab";
 import { isEqual, uniqWith } from "lodash";
 import React, { useState } from "react";
 
-import { useLexemes } from "../clientHooks";
+import { useLexemes } from "../hooks";
 import { Coloured, Language, Lexeme } from "../types";
 
 interface Props {
   language: Language | null;
-  disabled: boolean;
   value: Coloured<Lexeme>[];
   setValue: React.Dispatch<Lexeme[]>;
   onChange: (
@@ -37,13 +36,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const LexemeSelect = ({
-  language,
-  disabled,
-  value,
-  setValue,
-  onChange,
-}: Props) => {
+const LexemeSelect = ({ language, value, setValue, onChange }: Props) => {
   const classes = useStyles();
   const [options, setOptions] = useState<Lexeme[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
@@ -70,11 +63,9 @@ const LexemeSelect = ({
       <Autocomplete
         multiple
         renderTags={() => null}
-        value={value}
         getOptionLabel={(option) => option.lemma}
         options={options}
         loading={lexemeQuery.isFetching}
-        disabled={disabled}
         onInputChange={handleInputChange}
         onChange={onChange}
         renderInput={(params) => (

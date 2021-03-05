@@ -7,10 +7,10 @@ import {
 import { CircularProgress } from "@material-ui/core";
 import React, { useState } from "react";
 
-import { useLanguages, usePairObservableSearch } from "../clientHooks";
 import LanguageSelect from "../components/LanguageSelect";
 import PhrasePairListTable from "../components/PhrasePairListTable";
 import PhrasePairSearchOptions from "../components/PhrasePairSearchOptions";
+import { useLanguages, usePairObservableSearch } from "../hooks";
 import { Coloured, Feature, Language, Lexeme } from "../types";
 
 const PhrasePairListView = () => {

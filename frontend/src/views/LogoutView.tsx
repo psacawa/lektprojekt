@@ -2,7 +2,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { Redirect } from "react-router";
 
-import { useLogout } from "../clientHooks";
+import { useLogout } from "../hooks";
 import { logout } from "../store/actions";
 import { useLoggedIn } from "../store/selectors";
 

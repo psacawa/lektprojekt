@@ -15,8 +15,8 @@ import {
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-import { useSubs } from "../clientHooks";
 import TrackedListView from "../components/TrackedListView";
+import { useSubs } from "../hooks";
 import { Subscription, TrackedList } from "../types";
 
 function TrackedListAccordion({ lists }: { lists: TrackedList[] }) {
@@ -52,7 +52,7 @@ const ProfileView = () => {
   const classes = useStyles();
   const [activeTab, setActiveTab] = useState(0);
   const subscriptionQuery = useSubs();
-  const subscription: Subscription | undefined =
+  const subscription: Subscription<true> | undefined =
     subscriptionQuery.data?.results[activeTab];
   return (
     <Paper className={classes.root}>

@@ -9,7 +9,7 @@ import {
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { useUser } from "../clientHooks";
+import { useUser } from "../hooks";
 import { Route } from "../routes";
 import { drawerRoutes, loggedInRoutes, loggedOutRoutes } from "../routes";
 import { useLoggedIn } from "../store/selectors";

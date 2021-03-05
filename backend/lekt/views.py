@@ -405,6 +405,7 @@ class LanguageSubscriptionViewSet(viewsets.ModelViewSet):
 class TrackedListViewSet(
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
+    mixins.RetrieveModelMixin,
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
@@ -443,7 +444,7 @@ class TrackedObservableViewSet(
 
 
 class TrackedLexemeViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    permission_classes = []
+    permission_classes = [IsTrackedObservableOwner]
     serializer_class = serializers.TrackedObservableSerializer
 
     def get_queryset(self):
@@ -454,7 +455,7 @@ class TrackedLexemeViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
 
 class TrackedFeatureViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    permission_classes = []
+    permission_classes = [IsTrackedObservableOwner]
     serializer_class = serializers.TrackedObservableSerializer
 
     def get_queryset(self):

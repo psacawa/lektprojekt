@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
-import { usePair } from "../clientHooks";
+import { usePair } from "../hooks";
 
 interface Props {
   id: number;

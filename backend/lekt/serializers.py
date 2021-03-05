@@ -1,6 +1,7 @@
 import logging
 
 from django.contrib.auth.models import User
+from rest_flex_fields import FlexFieldsModelSerializer
 from rest_framework import serializers
 from rest_framework.request import Request
 from rest_framework.views import APIView
@@ -163,10 +164,17 @@ class TrackedObservablePostSerializer(serializers.ModelSerializer):
         }
 
 
-class TrackedListSerializer(serializers.ModelSerializer):
+class LanguageSubscriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LanguageSubscription
+        exclude = ["created_at", "updated_at", "owner"]
+
+
+class TrackedListSerializer(FlexFieldsModelSerializer):
     class Meta:
         model = TrackedList
         fields = ["id", "name", "subscription"]
+        expandable_fields = {"subscription": LanguageSubscriptionSerializer}
 
 
 class LanguageSubscriptionGetSerializer(serializers.ModelSerializer):
