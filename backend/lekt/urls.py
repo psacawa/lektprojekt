@@ -16,6 +16,7 @@ list_router = routers.NestedSimpleRouter(router, r"lists", lookup="list")
 list_router.register(r"obs", views.TrackedObservableViewSet, basename="list-obs")
 list_router.register(r"lexemes", views.TrackedLexemeViewSet, basename="list-lexemes")
 list_router.register(r"features", views.TrackedFeatureViewSet, basename="list-features")
+list_router.register(r"plan", views.TrainingPlanView, basename="list-plan")
 
 urlpatterns = [
     re_path(r"^", include(router.urls)),

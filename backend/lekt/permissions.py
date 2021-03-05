@@ -28,6 +28,21 @@ class IsSubscriptionOwner(BasePermission):
 
 
 class IsTrackedListOwner(BasePermission):
+    """
+    This permission will check the URL param list_pk if one was passed, and the object
+    identified in get_object
+    """
+
+    def has_permission(self, request: Request, view: APIView):
+        list_pk = view.kwargs.get("list_pk")
+        if list_pk is None:
+            return True
+        try:
+            profile = UserProfile.objects.get(subscription_set__trackedlist__id=list_pk)
+        except UserProfile.DoesNotExist as e:
+            raise Http404
+        return request.user.id == profile.user_id
+
     def has_object_permission(
         self, request: Request, view: APIView, tracked_list: TrackedList
     ):

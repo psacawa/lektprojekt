@@ -9,6 +9,7 @@ import LoginView from "./views/LoginView";
 import LogoutView from "./views/LogoutView";
 import PhrasePairDetailView from "./views/PhrasePairDetailView";
 import PhrasePairListView from "./views/PhrasePairListView";
+import PracticeView from "./views/PracticeView";
 import ProfileView from "./views/ProfileView";
 import ResetPasswordView from "./views/ResetPasswordView";
 
@@ -18,6 +19,10 @@ export interface Route {
   exact: boolean;
   component?: React.FunctionComponent<any>;
 }
+
+// TODO 05/03/20 psacawa: there are several binary attributes here, which vary independently:
+// whether the route is displayed for (un)authed users, whether it should be in the drawer, etc
+// figure out a robust policy for this
 
 export const drawerRoutes: Route[] = [
   {
@@ -50,8 +55,14 @@ export const baseRoutes: Route[] = [
   {
     path: "/lists/:id",
     name: "Training List View",
-    exact: false,
+    exact: true,
     component: TrackedListView,
+  },
+  {
+    path: "/lists/:id/practice/",
+    name: "Practice Mode",
+    exact: false,
+    component: PracticeView,
   },
   {
     path: "/reset-password",

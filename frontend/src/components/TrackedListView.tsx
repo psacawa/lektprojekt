@@ -25,7 +25,7 @@ import axios from "axios";
 import { isEqual, uniqWith } from "lodash";
 import React, { Component, useState } from "react";
 import { QueryObserverResult, useQuery, useQueryClient } from "react-query";
-import { Link, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 
 import {
   useLanguages,
@@ -64,6 +64,7 @@ const useStyles = makeStyles({
 const TrackedListView = ({ list }: Props) => {
   const classes = useStyles();
   const { id } = useParams<{ id: any }>();
+  const history = useHistory();
   const queryClient = useQueryClient();
   const listQuery = useList({ id });
   const languagesQuery = useLanguages();
@@ -320,6 +321,14 @@ const TrackedListView = ({ list }: Props) => {
       ) : (
         <CircularProgress />
       )}
+      <Button
+        variant="contained"
+        onClick={(event: React.MouseEvent) =>
+          history.push(`/lists/${id}/practice/`)
+        }
+      >
+        Practice
+      </Button>
     </>
   );
 };

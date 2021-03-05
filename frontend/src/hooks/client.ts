@@ -368,3 +368,16 @@ export const useUntrackObservable = (
   useMutation((params: { id: number; observable_id: number }) =>
     axios.delete(`/api/lists/${params.id}/obs/${params.observable_id}/`)
   );
+
+export const useTrainingPlan = (
+  params: { list_id: number },
+  options?: UseQueryOptions<PaginatedApiOutput<PhrasePair>, { id: number }>
+) =>
+  useQuery(["plan", { ...params }], () =>
+    axios
+      .get(`/api/lists/${params.list_id}/plan/`)
+      .then(
+        (response: AxiosResponse<PaginatedApiOutput<PhrasePair>>) =>
+          response.data
+      )
+  );

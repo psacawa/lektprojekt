@@ -414,6 +414,35 @@ class TrackedListViewSet(
     queryset = TrackedList.objects.all()
 
 
+class TrainingPlanView(mixins.ListModelMixin, viewsets.GenericViewSet):
+    #  TODO 05/03/20 psacawa: make resilient to errors
+    permission_classes = [IsTrackedListOwner]
+    serializer_class = serializers.PhrasePairSerializer
+
+    def get_queryset(self):
+        list_pk = self.kwargs.get("list_pk")
+        subscription: LanguageSubscription = LanguageSubscription.objects.get(
+            trackedlist__id=list_pk
+        )
+        observables = [
+            obs.id for obs in TrackedObservable.objects.filter(tracked_list_id=list_pk)
+        ]
+
+        if len(observables) == 0:
+            raise ParseError("At least one search term is needed in the training list.")
+        queryset = (
+            PhrasePair.objects.filter(
+                observable_weights__base_lang=subscription.base_lang,
+                observable_weights__target_lang=subscription.target_lang,
+                observable_weights__observable__in=observables,
+            )
+            .annotate(score=Sum("observable_weights__weight"))
+            .order_by("-score")
+            .select_related("base", "target")
+        )
+        return queryset
+
+
 class TrackedObservableViewSet(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,

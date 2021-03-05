@@ -3,6 +3,8 @@ import {
   AccordionDetails,
   AccordionSummary,
   CircularProgress,
+  Divider,
+  Grid,
   Link as MuiLink,
   List,
   ListItem,
@@ -68,15 +70,20 @@ const ProfileView = () => {
             ))}
           </Tabs>
           {subscription ? (
-            <List>
-              {subscription.lists.map((list, idx) => (
-                <ListItem>
-                  <MuiLink component={Link} to={`/lists/${list.id}/`}>
-                    {list.name}
-                  </MuiLink>
-                </ListItem>
-              ))}
-            </List>
+            <>
+              <List>
+                {subscription.lists.map((list, idx) => (
+                  <ListItem>
+                    <MuiLink component={Link} to={`/lists/${list.id}/`}>
+                      {list.name}
+                    </MuiLink>
+                  </ListItem>
+                ))}
+              </List>
+              <Divider />
+              <Typography variant="h5">Language Config</Typography>
+              <Typography variant="body1">placeholder</Typography>
+            </>
           ) : null}
         </>
       ) : (
