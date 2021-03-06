@@ -89,8 +89,7 @@ const TrackedListView = ({ list }: Props) => {
   );
 
   // refetch read queries involving observable_id
-  const refetchQueries = (observable_id: number) => {
-    console.log("refetchQueries");
+  const invalidateQueries = (observable_id: number) => {
     const queries: Record<
       string,
       QueryObserverResult<PaginatedApiOutput<Tracked<Observable>>>
@@ -100,8 +99,7 @@ const TrackedListView = ({ list }: Props) => {
     };
     for (const key in queries) {
       if (queries[key].data?.results.find((obs) => (obs.id = observable_id))) {
-        queryClient.invalidateQueries(key);
-        queryClient.refetchQueries(key);
+        queryClient.invalidateQueries();
       }
     }
   };
@@ -109,13 +107,12 @@ const TrackedListView = ({ list }: Props) => {
   const trackedFeatureQuery = useTrackedFeatures({ id });
   const trackObservable = useTrackObservable({
     onSuccess: (data, variables, context) => {
-      // TODO 05/03/20 psacawa: broken, fix refetch
-      queryClient.refetchQueries();
+      invalidateQueries(variables.observable_id);
     },
   });
   const untrackObservable = useUntrackObservable({
     onSuccess: (data, variables, context) => {
-      refetchQueries(variables.observable_id);
+      invalidateQueries(variables.observable_id);
     },
   });
   return (
@@ -286,7 +283,7 @@ const TrackedListView = ({ list }: Props) => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Word</TableCell>
+                  <TableCell>Feature</TableCell>
                   <TableCell>Difficulty</TableCell>
                   <TableCell></TableCell>
                 </TableRow>
