@@ -28,6 +28,7 @@ import { QueryObserverResult, useQuery, useQueryClient } from "react-query";
 import { Link, useHistory, useParams } from "react-router-dom";
 
 import {
+  useFeatures,
   useLanguages,
   useLexemes,
   useList,
@@ -37,6 +38,7 @@ import {
   useUntrackObservable,
 } from "../hooks";
 import {
+  Feature,
   Lexeme,
   Observable,
   PaginatedApiOutput,
@@ -88,6 +90,23 @@ const TrackedListView = ({ list }: Props) => {
     }
   );
 
+  // available features and auxiliary search queries
+  const trackedFeatureQuery = useTrackedFeatures({ id });
+  const [featureOptions, setFeatureOptions] = useState<Feature[]>([]);
+  const [featureValue, setFeatureValue] = useState<Feature | undefined>(
+    undefined
+  );
+  const featureSearchQuery = useFeatures(
+    {
+      lang: listQuery.data?.subscription.target_lang,
+    },
+    {
+      onSuccess: (results) => {
+        setFeatureOptions(results);
+      },
+    }
+  );
+
   // refetch read queries involving observable_id
   const invalidateQueries = (observable_id: number) => {
     const queries: Record<
@@ -104,7 +123,6 @@ const TrackedListView = ({ list }: Props) => {
     }
   };
   // available features and auxiliary search queries
-  const trackedFeatureQuery = useTrackedFeatures({ id });
   const trackObservable = useTrackObservable({
     onSuccess: (data, variables, context) => {
       invalidateQueries(variables.observable_id);
@@ -240,15 +258,11 @@ const TrackedListView = ({ list }: Props) => {
       {trackedFeatureQuery.isSuccess ? (
         <Grid className={classes.listContainer} item>
           <Autocomplete
-            renderTags={() => null}
-            getOptionLabel={(option) => option.lemma}
-            options={lexemeOptions}
-            loading={lexemeSearchQuery.isFetching}
-            onInputChange={debounce((event, newValue) => {
-              setLexemeInputValue(newValue);
-            }, 300)}
+            getOptionLabel={(option) => option.description}
+            options={featureOptions}
+            loading={featureSearchQuery.isFetching}
             onChange={(event, newValue, reason) => {
-              newValue && setLexemeValue(newValue);
+              newValue && setFeatureValue(newValue);
             }}
             renderInput={(params) => (
               <TextField
@@ -259,7 +273,7 @@ const TrackedListView = ({ list }: Props) => {
                   ...params.InputProps,
                   endAdornment: (
                     <>
-                      {lexemeSearchQuery.isFetching ? (
+                      {featureSearchQuery.isFetching ? (
                         <CircularProgress color="inherit" size={20} />
                       ) : null}
                       {params.InputProps.endAdornment}
@@ -271,14 +285,30 @@ const TrackedListView = ({ list }: Props) => {
             renderOption={(option) => (
               <Grid container>
                 <Grid item xs={6}>
-                  <Typography>{option.lemma}</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <Typography>{option.pos}</Typography>
+                  <Typography>{option.description}</Typography>
                 </Grid>
               </Grid>
             )}
           />
+          {featureValue && (
+            <Card className={classes.card}>
+              <CardContent>
+                <Typography variant="h5">{featureValue.description}</Typography>
+                <Typography variant="body2">placeholder for example</Typography>
+                <Button
+                  onClick={(event: React.MouseEvent<{}>) =>
+                    featureValue &&
+                    trackObservable.mutate({
+                      id: listQuery.data!.id,
+                      observable_id: featureValue.id,
+                    })
+                  }
+                >
+                  Track
+                </Button>
+              </CardContent>
+            </Card>
+          )}
           <TableContainer className={classes.table} component={Paper}>
             <Table>
               <TableHead>

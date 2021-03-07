@@ -25,7 +25,7 @@ const PracticeItem = ({ list_id, pair_id }: ItemProps) => {
   );
 };
 
-// eventually, the state of the practice should enter redux
+// eventually, the state of the practice should be availabe globally - perhaps redux
 const PracticeView = () => {
   const { id } = useParams<{ id: any }>();
   const [pairIds, setPairIds] = useState<number[]>([]);
@@ -33,7 +33,7 @@ const PracticeView = () => {
     { list_id: id },
     {
       onSuccess: (data) => {
-        setPairIds(planQuery.data!.results.map((pair) => pair.id));
+        setPairIds(data.results.map((pair) => pair.id));
       },
     }
   );

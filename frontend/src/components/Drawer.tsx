@@ -18,7 +18,9 @@ const DrawerItemList = (props: { routes: Route[] }) => (
   <>
     {props.routes.map((route, idx) => (
       <ListItem key={idx} component={Link} to={route.path}>
-        <ListItemText>{route.name}</ListItemText>
+        <ListItemText>
+          <b>{route.name}</b>
+        </ListItemText>
       </ListItem>
     ))}
   </>

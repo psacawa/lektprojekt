@@ -425,7 +425,8 @@ class TrainingPlanView(mixins.ListModelMixin, viewsets.GenericViewSet):
             trackedlist__id=list_pk
         )
         observables = [
-            obs.id for obs in TrackedObservable.objects.filter(tracked_list_id=list_pk)
+            obs.observable_id
+            for obs in TrackedObservable.objects.filter(tracked_list_id=list_pk)
         ]
 
         if len(observables) == 0:

@@ -40,7 +40,7 @@ export const useLanguages = (options?: UseQueryOptions<Language[]>) =>
           (response: AxiosResponse<PaginatedApiOutput<Language>>) =>
             response.data.results
         ),
-    { staleTime: HOUR, refetchOnWindowFocus: false, ...options }
+    { staleTime: HOUR, ...options }
   );
 
 export const useLexeme = (
@@ -141,7 +141,7 @@ export const usePairObservableSearch = (
           (response: AxiosResponse<PaginatedApiOutput<PhrasePair>>) =>
             response.data
         ),
-    { ...options }
+    { staleTime: HOUR, ...options }
   );
 
 export const usePairLexemeSearch = (
@@ -167,7 +167,7 @@ export const usePairLexemeSearch = (
           (response: AxiosResponse<PaginatedApiOutput<PhrasePair>>) =>
             response.data.results
         ),
-    { ...options }
+    { staleTime: HOUR, ...options }
   );
 
 export const usePairFeatureSearch = (
@@ -193,7 +193,7 @@ export const usePairFeatureSearch = (
           (response: AxiosResponse<PaginatedApiOutput<PhrasePair>>) =>
             response.data.results
         ),
-    { ...options }
+    { staleTime: HOUR, ...options }
   );
 
 export const usePair = (
@@ -206,7 +206,7 @@ export const usePair = (
       axios
         .get(`${apiRoot}pairs/${params.id}/`)
         .then((response: AxiosResponse<PhrasePair>) => response.data),
-    { ...options }
+    { staleTime: HOUR, ...options }
   );
 
 export const useUser = (options?: UseQueryOptions<User>) =>
@@ -347,37 +347,40 @@ export const useTrackedFeatures = (
 
 export const useTrackObservable = (
   options?: UseMutationOptions<
-    Tracked,
-    unknown,
-    { id: string; observable_id: number }
-  >
-) =>
-  useMutation((params: { id: number; observable_id: number }) =>
-    axios.post(`/api/lists/${params.id}/obs/`, {
-      observable: params.observable_id,
-    })
-  );
-
-export const useUntrackObservable = (
-  options?: UseMutationOptions<
-    void,
+    any,
     unknown,
     { id: number; observable_id: number }
   >
 ) =>
-  useMutation((params: { id: number; observable_id: number }) =>
-    axios.delete(`/api/lists/${params.id}/obs/${params.observable_id}/`)
+  useMutation(
+    (params: { id: number; observable_id: number }) =>
+      axios.post(`/api/lists/${params.id}/obs/`, {
+        observable: params.observable_id,
+      }),
+    { ...options }
+  );
+
+export const useUntrackObservable = (
+  options?: UseMutationOptions<unknown, any, any>
+) =>
+  useMutation(
+    (params: { id: number; observable_id: number }) =>
+      axios.delete(`/api/lists/${params.id}/obs/${params.observable_id}/`),
+    { ...options }
   );
 
 export const useTrainingPlan = (
   params: { list_id: number },
   options?: UseQueryOptions<PaginatedApiOutput<PhrasePair>, { id: number }>
 ) =>
-  useQuery(["plan", { ...params }], () =>
-    axios
-      .get(`/api/lists/${params.list_id}/plan/`)
-      .then(
-        (response: AxiosResponse<PaginatedApiOutput<PhrasePair>>) =>
-          response.data
-      )
+  useQuery(
+    ["plan", { ...params }],
+    () =>
+      axios
+        .get(`/api/lists/${params.list_id}/plan/`)
+        .then(
+          (response: AxiosResponse<PaginatedApiOutput<PhrasePair>>) =>
+            response.data
+        ),
+    { ...options }
   );
