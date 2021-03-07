@@ -35,6 +35,7 @@ ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_ADAPTER = "main.adapter.AccountAdapter"
 
 # email is relevant primarily for email-bases auth flow
 # in development it's printed to the console
