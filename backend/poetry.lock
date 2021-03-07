@@ -527,6 +527,18 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "drf-nested-routers"
+version = "0.92.5"
+description = "Nested resources for the Django Rest Framework"
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[package.dependencies]
+Django = ">=1.11"
+djangorestframework = ">=3.6.0"
+
+[[package]]
 name = "drf-yasg"
 version = "1.20.0"
 description = "Automated generation of real Swagger/OpenAPI 2.0 schemas from Django Rest Framework code."
@@ -1639,7 +1651,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "8f8fa5e6051f791f173db410fd2589e1436fee6040102df4d68114d132bdf095"
+content-hash = "b0181af38635a91ce579904ed7d0752d4946e9d79cfde35a53ad9ba82bd295c5"
 
 [metadata.files]
 alabaster = [
@@ -1941,6 +1953,10 @@ docutils = [
 ]
 drf-flex-fields = [
     {file = "drf-flex-fields-0.8.9.tar.gz", hash = "sha256:f68174ee294c7597933989522e87e2c69bbafde922fb353e27b3bc53487fc7de"},
+]
+drf-nested-routers = [
+    {file = "drf-nested-routers-0.92.5.tar.gz", hash = "sha256:9d6a326333e9b16549e63b893c27075d98bbc217cd05fb10bbfa770d728d3f66"},
+    {file = "drf_nested_routers-0.92.5-py2.py3-none-any.whl", hash = "sha256:995b831be036911e330a86b7129dc6589de62f2a53d72067e7ce2b4a90f28c35"},
 ]
 drf-yasg = [
     {file = "drf-yasg-1.20.0.tar.gz", hash = "sha256:d50f197c7f02545d0b736df88c6d5cf874f8fea2507ad85ad7de6ae5bf2d9e5a"},
