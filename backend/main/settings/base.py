@@ -26,12 +26,11 @@ if not isdir(LOGS_DIR):
 SECRET_KEY = "dzif4vpy6wc-y3nmon9eexcgz39-*wq1ew)csp7*u18s8g)m#5"
 
 # the DEBUG variable is interpreted by django to turn on the server in development mode
-# DEVELOPMENT is an alias with a friendly name for the config
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = ENVIRONMENT == "development"
-DEVELOPMENT = DEBUG
 
-ALLOWED_HOSTS = ["lektprojekt.com", "127.0.0.1", "localhost", "l"]
+DOMAIN = "www.lektprojekt.com"
+ALLOWED_HOSTS = [DOMAIN, "lektprojekt.com", "127.0.0.1", "localhost", "l"]
 
 LEKTPROJEKT_APPS = [
     # first party applications
@@ -73,7 +72,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "main.urls"
 WSGI_APPLICATION = "main.wsgi.application"
-SITE_ID = 1
+#  needed for allauth - it's just a hardcoded primary key
+SITE_ID = 100
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"

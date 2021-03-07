@@ -5,7 +5,7 @@ def _get_database_config(mode="main"):
         "NAME": "{}lekt_db".format("test_" if mode == "test" else ""),
         # In development mode a database superuser is used
         # who can delete and recrete the database
-        "USER": "lekt_admin" if DEVELOPMENT else "lekt_user",
+        "USER": "lekt_admin" if DEBUG else "lekt_user",
         "PASSWORD": "django-pass",
         "HOST": "localhost",
     }
@@ -19,7 +19,7 @@ DATABASES = {}
 DATABASES["default"] = _get_database_config(default_database)
 
 # caching in development makes tests flaky
-if DEVELOPMENT:
+if DEBUG:
     CACHES = {
         "default": {
             "BACKEND": "django.core.cache.backends.dummy.DummyCache",

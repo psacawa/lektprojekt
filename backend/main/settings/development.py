@@ -4,7 +4,7 @@
 INTERNAL_IPS = ALLOWED_HOSTS
 
 # developer convenience - django-(extensions|debug-toolbar)
-if DEVELOPMENT:
+if DEBUG:
     INSTALLED_APPS += [
         "drf_yasg",
         "django_extensions",

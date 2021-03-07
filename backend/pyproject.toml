@@ -23,6 +23,7 @@ colorama = "^0.4.4"
 django-redis = "^4.12.1"
 django-rest-polymorphic = "^0.1.9"
 drf-flex-fields = "^0.8.9"
+django-ses = "^1.0.3"
 
 [tool.poetry.dev-dependencies]
 django-debug-toolbar = "^3.2"
