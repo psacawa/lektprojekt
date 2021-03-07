@@ -27,7 +27,7 @@ SECRET_KEY = "dzif4vpy6wc-y3nmon9eexcgz39-*wq1ew)csp7*u18s8g)m#5"
 
 # the DEBUG variable is interpreted by django to turn on the server in development mode
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = ENVIRONMENT == "development"
+DEBUG = ENVIRONMENT == "dev"
 
 DOMAIN = "www.lektprojekt.com"
 ALLOWED_HOSTS = [DOMAIN, "lektprojekt.com", "127.0.0.1", "localhost", "l"]
