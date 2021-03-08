@@ -45,6 +45,8 @@ else:
     DEFAULT_FROM_EMAIL = "{name} <{email}>".format(
         name="LektProjekt", email="info@lektprojekt.com"
     )
+    SERVER_EMAIL = "{name} <{email}>".format(name="Alert", email="info@lektprojekt.com")
+
     EMAIL_BACKEND = "django_ses.SESBackend"
     #  TODO 06/03/20 psacawa: recreate aws user credentials and config env. var
     AWS_ACCESS_KEY_ID = "AKIA44VGLSENF2OVH4YJ"
