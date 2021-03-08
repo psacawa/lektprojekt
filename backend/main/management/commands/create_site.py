@@ -8,9 +8,13 @@ class Command(BaseCommand):
     help = """Add www.lektprojekt.com to the sites table"""
 
     def handle(self, **kwargs):
-        try:
-            Site.objects.create(id=100, domain=settings.DOMAIN, name="LektProjekt")
-        except IntegrityError as e:
-            print("Site is already in the Sites table")
+        site, created = Site.objects.get_or_create(id=100)
+        if site.domain != settings.DOMAIN:
+            created = True
+        site.domain = settings.DOMAIN
+        site.name = "LektProjekt"
+        site.save()
+        if created:
+            print(f"{settings.DOMAIN} added to Sites table")
         else:
-            print("f{settings.DOMAIN} added to Sites table")
+            print(f"{settings.DOMAIN} already in Sites table")
