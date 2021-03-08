@@ -34,7 +34,6 @@ if DEBUG:
             "formatter": "verbose",
         }
     }
-
     LOGGING = {
         "version": 1,
         "disable_existing_loggers": False,
@@ -55,3 +54,28 @@ if DEBUG:
         },
         "handlers": HANDLERS,
     }
+else:
+    LOGGING = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "handlers": {
+            "file/django": {
+                "level": "DEBUG",
+                "class": "logging.handlers.RotatingFileHandler",
+                "filename": join(LOGS_DIR, "django.log"),
+                "maxBytes": 2 ** 20,
+                "backupCount": 1,
+                #  "formatter": "verbose",
+            }
+        },
+        "loggers": {
+            "django": {
+                "handlers": ["file/django"],
+                "level": "ERROR",
+                "propagate": False,
+            }
+        },
+    }
+
+
+ADMINS = [("paweł", "pawelsacawa@gmail.com")]

@@ -30,7 +30,9 @@ SECRET_KEY = "dzif4vpy6wc-y3nmon9eexcgz39-*wq1ew)csp7*u18s8g)m#5"
 DEBUG = ENVIRONMENT == "dev"
 
 DOMAIN = "www.lektprojekt.com"
-ALLOWED_HOSTS = [DOMAIN, "lektprojekt.com", "127.0.0.1", "localhost", "l"]
+ALLOWED_HOSTS = [DOMAIN]
+if DEBUG:
+    ALLOWED_HOSTS += ["lektprojekt.com", "127.0.0.1", "localhost", "l"]
 
 LEKTPROJEKT_APPS = [
     # first party applications
