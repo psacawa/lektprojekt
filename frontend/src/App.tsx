@@ -1,26 +1,34 @@
 import { makeStyles } from "@material-ui/core";
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { Route, Switch } from "react-router";
 
-import LektDrawer from "./components/Drawer";
+import Navbar from "./components/Navbar";
+import Sidebar from "./components/Sidebar";
+import { drawerWidth } from "./constants";
 import { useCsrfToken } from "./hooks";
 import { routes } from "./routes";
 
-const useStyles = makeStyles(() => ({
-  main: {
-    marginLeft: 220,
-    marginRight: 20,
-    maxWidth: 800,
+const useStyles = makeStyles((theme) => ({
+  mainPanel: {
+    [theme.breakpoints.up("md")]: {
+      width: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: drawerWidth,
+    },
   },
 }));
 
 function App() {
   const classes = useStyles();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const handleSidebarToggle = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
   return (
-    <div>
-      <LektDrawer />
-      <main className={classes.main}>
+    <>
+      <Sidebar {...{ sidebarOpen, handleSidebarToggle }} />
+      <Navbar {...{ handleSidebarToggle }} />
+      <main className={classes.mainPanel}>
         <Switch>
           {routes.map((route, idx) => (
             <Route
@@ -32,7 +40,7 @@ function App() {
           ))}
         </Switch>
       </main>
-    </div>
+    </>
   );
 }
 
