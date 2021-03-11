@@ -33,11 +33,11 @@ const PhrasePairDetailTable = ({ id }: Props) => {
               <TableRow key={idx}>
                 <TableCell key={0}>{word.norm}</TableCell>
                 <TableCell key={1}>
-                  <Link to={`/lexemes/${word.lexeme.id}/`}>
-                    {word.lexeme.lemma}
+                  <Link to={`/lexemes/${word.lexeme?.id}/`}>
+                    {word.lexeme?.lemma}
                   </Link>
                 </TableCell>
-                <TableCell key={2}>{word.lexeme.pos}</TableCell>
+                <TableCell key={2}>{word.lexeme?.pos}</TableCell>
                 <TableCell key={3}>
                   {word.features.map((feature, idx) => (
                     <>
