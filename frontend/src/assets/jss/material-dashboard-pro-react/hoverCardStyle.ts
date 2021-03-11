@@ -11,7 +11,7 @@ const hoverCardStyle = {
   },
   cardHoverUnder: {
     position: "absolute",
-    zIndex: "1",
+    zIndex: 1,
     top: "-50px",
     width: "calc(100% - 30px)",
     left: "17px",

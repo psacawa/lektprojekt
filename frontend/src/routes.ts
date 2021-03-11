@@ -23,19 +23,30 @@ import PracticeView from "./views/PracticeView";
 import ProfileView from "./views/ProfileView";
 import ResetPasswordView from "./views/ResetPasswordView";
 
-export interface Route {
+export interface BaseRoute {
   path: string;
   name: string;
   exact: boolean;
   component: React.FunctionComponent<any>;
   icon?: React.FunctionComponent<any>;
+  redirect?: boolean;
+  mini?: any;
 }
 
-// TODO 05/03/20 psacawa: there are several binary attributes here, which vary independently:
+// the following attributes add typing to mdr-pro's collapsible views support
+interface CollapsibleRoute extends BaseRoute {
+  views: CollapsibleRoute[];
+  collapse: boolean;
+  state: string;
+}
+
+export type AppRoute = BaseRoute | CollapsibleRoute;
+
+export // TODO 05/03/20 psacawa: there are several binary attributes here, which vary independently:
 // whether the route is displayed for (un)authed users, whether it should be in the drawer, etc
 // figure out a robust policy for this
 
-export const drawerRoutes: Route[] = [
+const drawerRoutes: AppRoute[] = [
   {
     path: "/",
     name: "Home",
@@ -52,7 +63,7 @@ export const drawerRoutes: Route[] = [
   },
 ];
 
-export const baseRoutes: Route[] = [
+export const baseRoutes: AppRoute[] = [
   {
     path: "/pairs/:id/",
     name: "PhrasePair Detail View",
@@ -87,7 +98,7 @@ export const baseRoutes: Route[] = [
   },
 ];
 
-export const loggedInRoutes: Route[] = [
+export const loggedInRoutes: AppRoute[] = [
   {
     path: "/profile/",
     name: "Profile",
@@ -104,7 +115,7 @@ export const loggedInRoutes: Route[] = [
   },
 ];
 
-export const loggedOutRoutes: Route[] = [
+export const loggedOutRoutes: AppRoute[] = [
   {
     path: "/login/",
     name: "Login",
@@ -121,7 +132,7 @@ export const loggedOutRoutes: Route[] = [
   },
 ];
 
-export const routes: Route[] = [
+export const routes: AppRoute[] = [
   ...drawerRoutes,
   ...baseRoutes,
   ...loggedInRoutes,

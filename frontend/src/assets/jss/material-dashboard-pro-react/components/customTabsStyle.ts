@@ -1,7 +1,4 @@
-import {
-  hexToRgb,
-  whiteColor,
-} from "assets/jss/material-dashboard-pro-react.js";
+import { hexToRgb, whiteColor } from "../../material-dashboard-pro-react";
 
 const customTabsStyle = {
   cardTitle: {
@@ -43,7 +40,7 @@ const customTabsStyle = {
     padding: "0px",
   },
   tabLabel: {
-    fontWeight: "500",
+    fontWeight: 500,
     fontSize: "12px",
   },
   tabSelected: {
@@ -60,7 +57,7 @@ const customTabsStyle = {
     maxHeight: "unset !important",
     fontSize: "12px",
     lineHeight: "24px",
-    fontWeight: "500",
+    fontWeight: 500,
     "& > svg,& > .fab,& > .fas,& > .far,& > .fal,& > .material-icons": {
       verticalAlign: "middle",
       margin: "-1px 5px 0 0 !important",

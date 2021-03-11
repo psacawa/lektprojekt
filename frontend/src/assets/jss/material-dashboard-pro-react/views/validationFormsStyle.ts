@@ -3,8 +3,8 @@ import {
   dangerColor,
   grayColor,
   whiteColor,
-} from "assets/jss/material-dashboard-pro-react.js";
-import customCheckboxRadioSwitch from "assets/jss/material-dashboard-pro-react/customCheckboxRadioSwitch.js";
+} from "../../material-dashboard-pro-react";
+import customCheckboxRadioSwitch from "../../material-dashboard-pro-react/customCheckboxRadioSwitch";
 
 const validationFormsStyle = {
   ...customCheckboxRadioSwitch,

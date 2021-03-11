@@ -2,9 +2,9 @@ import {
   blackColor,
   cardTitle,
   hexToRgb,
-} from "assets/jss/material-dashboard-pro-react.js";
-import customCheckboxRadioSwitch from "assets/jss/material-dashboard-pro-react/customCheckboxRadioSwitch.js";
-import customSelectStyle from "assets/jss/material-dashboard-pro-react/customSelectStyle.js";
+} from "../../material-dashboard-pro-react";
+import customCheckboxRadioSwitch from "../../material-dashboard-pro-react/customCheckboxRadioSwitch";
+import customSelectStyle from "../../material-dashboard-pro-react/customSelectStyle";
 
 const extendedFormsStyle = {
   ...customCheckboxRadioSwitch,
@@ -21,7 +21,7 @@ const extendedFormsStyle = {
     color: "rgba(" + hexToRgb(blackColor) + ", 0.26)",
     fontSize: "14px",
     lineHeight: "1.428571429",
-    fontWeight: "400",
+    fontWeight: 400,
     display: "inline-flex",
   },
   mrAuto: {

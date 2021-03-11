@@ -6,7 +6,7 @@ import {
   roseColor,
   successColor,
   warningColor,
-} from "assets/jss/material-dashboard-pro-react.js";
+} from "../../material-dashboard-pro-react";
 
 const infoStyle = {
   infoArea: {

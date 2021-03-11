@@ -5,13 +5,13 @@ import {
   primaryBoxShadow,
   primaryColor,
   whiteColor,
-} from "assets/jss/material-dashboard-pro-react.js";
+} from "../material-dashboard-pro-react";
 
 const customSelectStyle = {
   select: {
     padding: "12px 0 7px",
     fontSize: ".75rem",
-    fontWeight: "400",
+    fontWeight: 400,
     lineHeight: "1.42857",
     textDecoration: "none",
     textTransform: "uppercase",
@@ -76,7 +76,7 @@ const customSelectStyle = {
     transition: "all 150ms linear",
     display: "block",
     clear: "both",
-    fontWeight: "400",
+    fontWeight: 400,
     lineHeight: "2",
     whiteSpace: "nowrap",
     color: grayColor[7],

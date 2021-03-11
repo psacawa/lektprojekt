@@ -1,11 +1,11 @@
-import { title, whiteColor } from "assets/jss/material-dashboard-pro-react.js";
+import { title, whiteColor } from "../../material-dashboard-pro-react";
 
 const errorPageStyles = () => ({
   contentCenter: {
     position: "absolute",
     top: "50%",
     left: "50%",
-    zIndex: "3",
+    zIndex: 3,
     transform: "translate(-50%,-50%)",
     textAlign: "center",
     color: whiteColor,
@@ -18,7 +18,7 @@ const errorPageStyles = () => ({
     fontSize: "13.7em",
     color: whiteColor,
     letterSpacing: "14px",
-    fontWeight: "700",
+    fontWeight: 700,
   },
   subTitle: {
     fontSize: "2.25rem",

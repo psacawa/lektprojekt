@@ -1,5 +1,5 @@
-import { grayColor } from "assets/jss/material-dashboard-pro-react.js";
-import buttonGroupStyle from "assets/jss/material-dashboard-pro-react/buttonGroupStyle.js";
+import { grayColor } from "../../material-dashboard-pro-react";
+import buttonGroupStyle from "../../material-dashboard-pro-react/buttonGroupStyle";
 
 const buttonsStyle = {
   cardTitle: {
@@ -9,7 +9,7 @@ const buttonsStyle = {
     fontSize: "18px",
   },
   cardHeader: {
-    zIndex: "3",
+    zIndex: 3,
   },
   cardContentLeft: {
     padding: "15px 20px 15px 0px",

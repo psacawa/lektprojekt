@@ -1,7 +1,4 @@
-import {
-  hexToRgb,
-  whiteColor,
-} from "assets/jss/material-dashboard-pro-react.js";
+import { hexToRgb, whiteColor } from "../../material-dashboard-pro-react";
 
 const cardBodyStyle = {
   cardBody: {
@@ -12,7 +9,7 @@ const cardBodyStyle = {
   },
   cardBodyBackground: {
     position: "relative",
-    zIndex: "2",
+    zIndex: 2,
     minHeight: "280px",
     paddingTop: "40px",
     paddingBottom: "40px",

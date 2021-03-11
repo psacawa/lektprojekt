@@ -7,7 +7,7 @@ import {
   successColor,
   warningColor,
   whiteColor,
-} from "assets/jss/material-dashboard-pro-react.js";
+} from "../../material-dashboard-pro-react";
 
 const badgeStyle = {
   badge: {
@@ -15,7 +15,7 @@ const badgeStyle = {
     padding: "5px 12px",
     textTransform: "uppercase",
     fontSize: "10px",
-    fontWeight: "700",
+    fontWeight: 700,
     lineHeight: "1",
     color: whiteColor,
     textAlign: "center",

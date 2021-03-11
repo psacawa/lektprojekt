@@ -13,43 +13,37 @@ import {
 import { Grid } from "@material-ui/core";
 import { Clear } from "@material-ui/icons";
 import { Autocomplete } from "@material-ui/lab";
-import { isEqual, uniqWith } from "lodash";
 import React, { useState } from "react";
 
-import { useLexemes } from "../hooks";
-import { Coloured, Language, Lexeme } from "../types";
+import { useFeatures } from "../../hooks";
+import { Coloured, Feature, Language } from "../../types";
 
 interface Props {
   language: Language | null;
-  value: Coloured<Lexeme>[];
-  setValue: React.Dispatch<Lexeme[]>;
+  value: Coloured<Feature>[];
+  setValue: React.Dispatch<Feature[]>;
   onChange: (
     ev: React.ChangeEvent<{}>,
-    value: Coloured<Lexeme>[],
+    value: Coloured<Feature>[],
     reason: any
   ) => any;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   listItem: {
     borderRadius: "10px",
   },
 }));
 
-const LexemeSelect = ({ language, value, setValue, onChange }: Props) => {
-  const classes = useStyles();
-  const [options, setOptions] = useState<Lexeme[]>([]);
+const FeatureSelect = ({ language, value, setValue, onChange }: Props) => {
+  const [options, setOptions] = useState<Feature[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
+  const classes = useStyles();
 
-  const lexemeQuery = useLexemes(
-    { lang: language?.id, prompt: inputValue },
+  const featureQuery = useFeatures(
+    { lang: language?.id },
     {
-      enabled: inputValue.length >= 3,
       staleTime: 60 * 1000,
-      onSuccess: (results) => {
-        const newOptions = uniqWith([...results, ...options], isEqual);
-        setOptions(newOptions);
-      },
     }
   );
   const handleInputChange: any = debounce(
@@ -63,21 +57,22 @@ const LexemeSelect = ({ language, value, setValue, onChange }: Props) => {
       <Autocomplete
         multiple
         renderTags={() => null}
-        getOptionLabel={(option) => option.lemma}
-        options={options}
-        loading={lexemeQuery.isFetching}
+        value={value}
+        getOptionLabel={(option) => option.description}
+        options={featureQuery.data ?? []}
+        loading={featureQuery.isFetching}
         onInputChange={handleInputChange}
         onChange={onChange}
         renderInput={(params) => (
           <TextField
             {...params}
-            label="Select words"
+            label="Select grammatical features"
             variant="standard"
             InputProps={{
               ...params.InputProps,
               endAdornment: (
                 <>
-                  {lexemeQuery.isFetching ? (
+                  {featureQuery.isFetching ? (
                     <CircularProgress color="inherit" size={20} />
                   ) : null}
                   {params.InputProps.endAdornment}
@@ -89,26 +84,20 @@ const LexemeSelect = ({ language, value, setValue, onChange }: Props) => {
         renderOption={(option) => (
           <Grid container>
             <Grid item xs={6}>
-              <Typography>{option.lemma}</Typography>
-            </Grid>
-            <Grid item xs={6}>
-              <Typography>{option.pos}</Typography>
+              <Typography>{option.description}</Typography>
             </Grid>
           </Grid>
         )}
       />
       <List dense>
-        {value.map((lexeme, idx) => (
+        {value.map((feature, idx) => (
           <ListItem
             key={idx}
             className={classes.listItem}
-            style={{ backgroundColor: lexeme.colour! }}
+            style={{ backgroundColor: feature.colour! }}
           >
             <ListItemText>
-              <Typography>{lexeme.lemma}</Typography>
-            </ListItemText>
-            <ListItemText>
-              <Typography>{lexeme.pos}</Typography>
+              <Typography>{feature.description}</Typography>
             </ListItemText>
             <ListItemSecondaryAction>
               <IconButton
@@ -129,4 +118,4 @@ const LexemeSelect = ({ language, value, setValue, onChange }: Props) => {
   );
 };
 
-export default LexemeSelect;
+export default FeatureSelect;

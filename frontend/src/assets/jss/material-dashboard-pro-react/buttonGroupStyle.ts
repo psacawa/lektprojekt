@@ -12,7 +12,7 @@ const buttonGroupStyle = {
     position: "relative",
     float: "left",
     "&:hover": {
-      zIndex: "2",
+      zIndex: 2,
     },
   },
   middleButton: {
@@ -21,7 +21,7 @@ const buttonGroupStyle = {
     position: "relative",
     float: "left",
     "&:hover": {
-      zIndex: "2",
+      zIndex: 2,
     },
   },
   lastButton: {
@@ -29,7 +29,7 @@ const buttonGroupStyle = {
     borderBottomLeftRadius: "0",
     margin: "0",
     "&:hover": {
-      zIndex: "2",
+      zIndex: 2,
     },
   },
 };

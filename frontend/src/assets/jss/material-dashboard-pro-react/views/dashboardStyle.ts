@@ -3,8 +3,8 @@ import {
   grayColor,
   successColor,
   tooltip,
-} from "assets/jss/material-dashboard-pro-react.js";
-import hoverCardStyle from "assets/jss/material-dashboard-pro-react/hoverCardStyle.js";
+} from "../../material-dashboard-pro-react";
+import hoverCardStyle from "../../material-dashboard-pro-react/hoverCardStyle";
 
 const dashboardStyle = {
   ...hoverCardStyle,

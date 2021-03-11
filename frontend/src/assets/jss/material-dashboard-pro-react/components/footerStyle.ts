@@ -1,3 +1,5 @@
+import { createStyles } from "@material-ui/core";
+
 import {
   container,
   containerFluid,
@@ -5,18 +7,18 @@ import {
   grayColor,
   primaryColor,
   whiteColor,
-} from "assets/jss/material-dashboard-pro-react.js";
+} from "../../material-dashboard-pro-react";
 
-const footerStyle = {
+const footerStyle = createStyles({
   block: {},
   left: {
-    float: "left!important",
+    float: "left!important" as any,
     display: "block",
   },
   right: {
     margin: "0",
     fontSize: "14px",
-    float: "right!important",
+    float: "right!important" as any,
     padding: "15px",
   },
   footer: {
@@ -56,5 +58,5 @@ const footerStyle = {
       color: whiteColor,
     },
   },
-};
+});
 export default footerStyle;

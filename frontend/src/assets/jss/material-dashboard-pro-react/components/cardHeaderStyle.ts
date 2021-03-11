@@ -8,14 +8,14 @@ import {
   successCardHeader,
   warningCardHeader,
   whiteColor,
-} from "assets/jss/material-dashboard-pro-react.js";
+} from "../../material-dashboard-pro-react";
 const cardHeaderStyle = {
   cardHeader: {
     padding: "0.75rem 1.25rem",
     marginBottom: "0",
     borderBottom: "none",
     background: "transparent",
-    zIndex: "3 !important",
+    zIndex: "3 !important" as any,
     "&$cardHeaderPlain,&$cardHeaderImage,&$cardHeaderContact,&$cardHeaderSignup,&$cardHeaderIcon,&$cardHeaderStats,&$warningCardHeader,&$successCardHeader,&$dangerCardHeader,&$infoCardHeader,&$primaryCardHeader,&$roseCardHeader": {
       margin: "0 15px",
       padding: "0",
@@ -72,7 +72,7 @@ const cardHeaderStyle = {
   cardHeaderImage: {
     position: "relative",
     padding: "0",
-    zIndex: "1",
+    zIndex: 1,
     "& img": {
       width: "100%",
       borderRadius: "6px",

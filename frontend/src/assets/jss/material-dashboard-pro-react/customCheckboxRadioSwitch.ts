@@ -6,7 +6,7 @@ import {
   primaryColor,
   roseColor,
   whiteColor,
-} from "assets/jss/material-dashboard-pro-react.js";
+} from "../material-dashboard-pro-react";
 
 const customCheckboxRadioSwitch = {
   checkRoot: {
@@ -71,7 +71,7 @@ const customCheckboxRadioSwitch = {
     color: grayColor[3],
     fontSize: "14px",
     lineHeight: "1.428571429",
-    fontWeight: "400",
+    fontWeight: 400,
     display: "inline-flex",
     transition: "0.3s ease all",
     letterSpacing: "unset",
@@ -82,7 +82,7 @@ const customCheckboxRadioSwitch = {
     display: "inline-flex",
     fontSize: "14px",
     lineHeight: "1.428571429",
-    fontWeight: "400",
+    fontWeight: 400,
     paddingTop: "39px",
     marginRight: "0",
     "@media (min-width: 992px)": {
@@ -98,7 +98,7 @@ const customCheckboxRadioSwitch = {
     display: "inline-flex",
     fontSize: "14px",
     lineHeight: "1.428571429",
-    fontWeight: "400",
+    fontWeight: 400,
     paddingTop: "22px",
     marginRight: "0",
   },

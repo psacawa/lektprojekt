@@ -1,7 +1,4 @@
-import {
-  cardTitle,
-  grayColor,
-} from "assets/jss/material-dashboard-pro-react.js";
+import { cardTitle, grayColor } from "../../material-dashboard-pro-react";
 
 const userProfileStyles = {
   cardTitle,
@@ -11,7 +8,7 @@ const userProfileStyles = {
     marginBottom: "0px",
     "& small": {
       fontSize: "80%",
-      fontWeight: "400",
+      fontWeight: 400,
     },
   },
   cardCategory: {

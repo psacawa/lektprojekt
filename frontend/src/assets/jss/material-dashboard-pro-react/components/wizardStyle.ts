@@ -9,7 +9,7 @@ import {
   successColor,
   warningColor,
   whiteColor,
-} from "assets/jss/material-dashboard-pro-react.js";
+} from "../../material-dashboard-pro-react";
 
 const wizardStyle = {
   wizardContainer: {},
@@ -72,7 +72,7 @@ const wizardStyle = {
     lineHeight: "18px",
     textTransform: "uppercase",
     fontSize: "12px",
-    fontWeight: "500",
+    fontWeight: 500,
     minWidth: "100px",
     textAlign: "center",
     color: grayColor[6] + " !important",
@@ -100,7 +100,7 @@ const wizardStyle = {
     borderRadius: "4px",
     color: whiteColor,
     cursor: "pointer",
-    fontWeight: "500",
+    fontWeight: 500,
   },
   primary: {
     backgroundColor: primaryColor[0],

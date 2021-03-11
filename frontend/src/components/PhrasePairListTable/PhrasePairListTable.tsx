@@ -25,9 +25,9 @@ import {
   Lexeme,
   PaginatedApiOutput,
   PhrasePair,
-} from "../types";
-import HighlightedPhrase from "./HighlightedPhrase";
-import PhrasePairDetailTable from "./PhrasePairDetailTable";
+} from "../../types";
+import HighlightedPhrase from "../HighlightedPhrase";
+import PhrasePairDetailTable from "../PhrasePairDetailTable";
 
 const useRowStyles = makeStyles({
   root: {

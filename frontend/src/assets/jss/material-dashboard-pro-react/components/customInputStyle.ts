@@ -5,7 +5,7 @@ import {
   primaryColor,
   successColor,
   whiteColor,
-} from "assets/jss/material-dashboard-pro-react.js";
+} from "../../material-dashboard-pro-react";
 
 const customInputStyle = {
   disabled: {
@@ -22,7 +22,7 @@ const customInputStyle = {
       borderColor: primaryColor[0],
     },
     "& + p": {
-      fontWeight: "300",
+      fontWeight: 300,
     },
   },
   underlineError: {
@@ -38,7 +38,7 @@ const customInputStyle = {
   labelRoot: {
     ...defaultFont,
     color: grayColor[3] + " !important",
-    fontWeight: "400",
+    fontWeight: 400,
     fontSize: "14px",
     lineHeight: "1.42857",
     top: "10px",
@@ -76,7 +76,7 @@ const customInputStyle = {
     "&,&::placeholder": {
       fontSize: "14px",
       fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-      fontWeight: "400",
+      fontWeight: 400,
       lineHeight: "1.42857",
       opacity: "1",
     },

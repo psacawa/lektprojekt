@@ -36,7 +36,7 @@ import {
   useTrackedLexemes,
   useTrackObservable,
   useUntrackObservable,
-} from "../hooks";
+} from "../../hooks";
 import {
   Feature,
   Lexeme,
@@ -44,7 +44,7 @@ import {
   PaginatedApiOutput,
   Tracked,
   TrackedList,
-} from "../types";
+} from "../../types";
 
 interface Props {
   list: TrackedList;

@@ -1,9 +1,6 @@
-import {
-  cardTitle,
-  grayColor,
-} from "assets/jss/material-dashboard-pro-react.js";
-import buttonGroupStyle from "assets/jss/material-dashboard-pro-react/buttonGroupStyle.js";
-import customCheckboxRadioSwitch from "assets/jss/material-dashboard-pro-react/customCheckboxRadioSwitch.js";
+import { cardTitle, grayColor } from "../../material-dashboard-pro-react";
+import buttonGroupStyle from "../../material-dashboard-pro-react/buttonGroupStyle";
+import customCheckboxRadioSwitch from "../../material-dashboard-pro-react/customCheckboxRadioSwitch";
 
 const extendedTablesStyle = {
   ...customCheckboxRadioSwitch,
@@ -45,7 +42,7 @@ const extendedTablesStyle = {
   },
   tdName: {
     minWidth: "200px",
-    fontWeight: "400",
+    fontWeight: 400,
     fontSize: "1.5em",
   },
   tdNameAnchor: {
@@ -54,12 +51,12 @@ const extendedTablesStyle = {
   tdNameSmall: {
     color: grayColor[0],
     fontSize: "0.75em",
-    fontWeight: "300",
+    fontWeight: 300,
   },
   tdNumber: {
     textAlign: "right",
     minWidth: "145px",
-    fontWeight: "300",
+    fontWeight: 300,
     fontSize: "1.3em !important",
   },
   tdNumberSmall: {

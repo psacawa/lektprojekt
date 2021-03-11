@@ -6,7 +6,7 @@ interface Props {
   handleSidebarToggle: () => void;
 }
 
-const Navbar = ({ handleSidebarToggle }: Props) => {
+const LektNavbar = ({ handleSidebarToggle }: Props) => {
   return (
     <AppBar position="static">
       <Toolbar>
@@ -24,4 +24,4 @@ const Navbar = ({ handleSidebarToggle }: Props) => {
   );
 };
 
-export default Navbar;
+export default LektNavbar;

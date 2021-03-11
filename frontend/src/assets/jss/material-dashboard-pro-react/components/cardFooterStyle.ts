@@ -1,4 +1,4 @@
-import { grayColor } from "assets/jss/material-dashboard-pro-react.js";
+import { grayColor } from "../../material-dashboard-pro-react";
 
 const cardFooterStyle = {
   cardFooter: {
@@ -21,7 +21,7 @@ const cardFooterStyle = {
     backgroundColor: "transparent",
   },
   cardFooterPricing: {
-    zIndex: "2",
+    zIndex: 2,
   },
   cardFooterTestimonial: {
     display: "block",

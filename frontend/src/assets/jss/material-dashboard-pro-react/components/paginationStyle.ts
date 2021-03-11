@@ -7,7 +7,7 @@ import {
   successColor,
   warningColor,
   whiteColor,
-} from "assets/jss/material-dashboard-pro-react.js";
+} from "../../material-dashboard-pro-react";
 
 const paginationStyle = {
   pagination: {
@@ -33,7 +33,7 @@ const paginationStyle = {
     height: "30px",
     minHeight: "auto",
     lineHeight: "30px",
-    fontWeight: "400",
+    fontWeight: 400,
     fontSize: "12px",
     textTransform: "uppercase",
     background: "transparent",
@@ -45,7 +45,7 @@ const paginationStyle = {
       color: grayColor[0],
     },
     "&:hover,&:focus": {
-      zIndex: "3",
+      zIndex: 3,
       backgroundColor: grayColor[8],
       borderColor: grayColor[5],
     },
@@ -68,7 +68,7 @@ const paginationStyle = {
         ", 0.2)",
     },
     "&:hover,&:focus": {
-      zIndex: "2",
+      zIndex: 2,
       cursor: "default",
     },
   },
@@ -87,7 +87,7 @@ const paginationStyle = {
         ", 0.2)",
     },
     "&:hover,&:focus": {
-      zIndex: "2",
+      zIndex: 2,
       cursor: "default",
     },
   },
@@ -106,7 +106,7 @@ const paginationStyle = {
         ", 0.2)",
     },
     "&:hover,&:focus": {
-      zIndex: "2",
+      zIndex: 2,
       cursor: "default",
     },
   },
@@ -125,7 +125,7 @@ const paginationStyle = {
         ", 0.2)",
     },
     "&:hover,&:focus": {
-      zIndex: "2",
+      zIndex: 2,
       cursor: "default",
     },
   },
@@ -144,7 +144,7 @@ const paginationStyle = {
         ", 0.2)",
     },
     "&:hover,&:focus": {
-      zIndex: "2",
+      zIndex: 2,
       cursor: "default",
     },
   },

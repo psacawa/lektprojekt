@@ -11,13 +11,13 @@ import {
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 
-import { drawerWidth } from "../constants";
-import { useAuth } from "../hooks/auth";
-import { Route } from "../routes";
-import { drawerRoutes, loggedInRoutes, loggedOutRoutes } from "../routes";
+import { drawerWidth } from "../../constants";
+import { useAuth } from "../../hooks/auth";
+import { AppRoute } from "../../routes";
+import { drawerRoutes, loggedInRoutes, loggedOutRoutes } from "../../routes";
 
 const DrawerItemList = (props: {
-  routes: Route[];
+  routes: AppRoute[];
   handleSidebarToggle: () => void;
 }) => {
   const history = useHistory();
@@ -57,7 +57,7 @@ interface Props {
   handleSidebarToggle: () => void;
 }
 
-const Sidebar = ({ sidebarOpen, handleSidebarToggle }: Props) => {
+const LektSidebar = ({ sidebarOpen, handleSidebarToggle }: Props) => {
   const classes = useStyles();
   const { user } = useAuth();
   const links = (
@@ -105,4 +105,4 @@ const Sidebar = ({ sidebarOpen, handleSidebarToggle }: Props) => {
   );
 };
 
-export default Sidebar;
+export default LektSidebar;

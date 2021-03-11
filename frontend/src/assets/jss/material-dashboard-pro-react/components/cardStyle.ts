@@ -9,7 +9,7 @@ import {
   successColor,
   warningColor,
   whiteColor,
-} from "assets/jss/material-dashboard-pro-react.js";
+} from "../../material-dashboard-pro-react";
 
 const cardStyle = {
   card: {
@@ -55,7 +55,7 @@ const cardStyle = {
     textAlign: "center",
     "&:after": {
       position: "absolute",
-      zIndex: "1",
+      zIndex: 1,
       width: "100%",
       height: "100%",
       display: "block",
@@ -116,7 +116,7 @@ const cardStyle = {
       borderColor: "rgba(" + hexToRgb(whiteColor) + ",0.3)",
       "& b, & svg,& .fab,& .fas,& .far,& .fal,& .material-icons": {
         color: whiteColor,
-        fontWeight: "700",
+        fontWeight: 700,
       },
     },
   },

@@ -16,7 +16,7 @@ import {
   warningBoxShadow,
   warningColor,
   whiteColor,
-} from "assets/jss/material-dashboard-pro-react.js";
+} from "../../material-dashboard-pro-react";
 
 const snackbarContentStyle = {
   root: {
