@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
 const LoginView = () => {
   const classes = useStyles();
   const history = useHistory();
-  const [clientErrors] = useState<LoginServerErrors>({});
+  const [clientErrors, setClientErrors] = useState<LoginServerErrors>({});
   const { user, login } = useAuth();
   return (
     <>
@@ -74,7 +74,8 @@ const LoginView = () => {
               onSubmit={async (values, bag) => {
                 bag.setSubmitting(true);
                 await login.mutateAsync(values, {
-                  onError: () => {
+                  onError: (error) => {
+                    setClientErrors(error);
                     bag.setSubmitting(false);
                   },
                   onSuccess: () => {

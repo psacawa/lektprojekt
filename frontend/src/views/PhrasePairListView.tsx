@@ -59,8 +59,8 @@ const PhrasePairListView = () => {
   return (
     <>
       <Typography variant="h5" style={{ margin: 30 }}>
-        Welcome to <span style={{ color: "blue" }}>Less Gimped Search</span>{" "}
-        Mode
+        Welcome to{" "}
+        <span style={{ color: "blue" }}>Sematically Enhanced Search</span> Mode
       </Typography>
       <Grid container justify="center" spacing={4}>
         {languageQuery.isFetching ? (

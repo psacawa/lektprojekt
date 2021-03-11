@@ -32,7 +32,7 @@ export const drawerRoutes: Route[] = [
     component: Home,
   },
   {
-    path: "/gimped/",
+    path: "/search/",
     name: "Search Phrases",
     exact: false,
     component: PhrasePairListView,
