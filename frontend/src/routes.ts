@@ -1,3 +1,13 @@
+import {
+  Create,
+  Home as MuiHome,
+  InsertEmoticon,
+  LockOpen,
+  PanTool,
+  Person,
+  Search,
+  VpnKey,
+} from "@material-ui/icons";
 import { concat } from "lodash";
 import React from "react";
 
@@ -17,7 +27,8 @@ export interface Route {
   path: string;
   name: string;
   exact: boolean;
-  component?: React.FunctionComponent<any>;
+  component: React.FunctionComponent<any>;
+  icon?: React.FunctionComponent<any>;
 }
 
 // TODO 05/03/20 psacawa: there are several binary attributes here, which vary independently:
@@ -30,12 +41,14 @@ export const drawerRoutes: Route[] = [
     name: "Home",
     exact: true,
     component: Home,
+    icon: MuiHome,
   },
   {
     path: "/search/",
     name: "Search Phrases",
     exact: false,
     component: PhrasePairListView,
+    icon: Search,
   },
 ];
 
@@ -63,12 +76,14 @@ export const baseRoutes: Route[] = [
     name: "Practice Mode",
     exact: false,
     component: PracticeView,
+    icon: InsertEmoticon,
   },
   {
     path: "/reset-password",
     name: "Reset Password",
     exact: false,
     component: ResetPasswordView,
+    icon: VpnKey,
   },
 ];
 
@@ -78,12 +93,14 @@ export const loggedInRoutes: Route[] = [
     name: "Profile",
     exact: false,
     component: ProfileView,
+    icon: Person,
   },
   {
     path: "/logout/",
     name: "Logout",
     exact: false,
     component: LogoutView,
+    icon: PanTool,
   },
 ];
 
@@ -93,12 +110,14 @@ export const loggedOutRoutes: Route[] = [
     name: "Login",
     exact: false,
     component: LoginView,
+    icon: LockOpen,
   },
   {
     path: "/create-account/",
     name: "Register",
     exact: false,
     component: CreateAccountView,
+    icon: Create,
   },
 ];
 

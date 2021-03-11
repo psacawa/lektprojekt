@@ -27,6 +27,7 @@
     "bfj": "^7.0.2",
     "camelcase": "^6.1.0",
     "case-sensitive-paths-webpack-plugin": "2.3.0",
+    "classnames": "^2.2.6",
     "css-loader": "4.3.0",
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
@@ -52,6 +53,7 @@
     "lodash": "^4.17.20",
     "mini-css-extract-plugin": "0.11.3",
     "optimize-css-assets-webpack-plugin": "5.0.4",
+    "perfect-scrollbar": "^1.5.0",
     "pnp-webpack-plugin": "1.6.4",
     "postcss-flexbugs-fixes": "4.2.1",
     "postcss-loader": "3.0.0",
@@ -117,6 +119,7 @@
   "devDependencies": {
     "@types/babel__core": "7.1.12",
     "@types/case-sensitive-paths-webpack-plugin": "2.1.4",
+    "@types/classnames": "^2.2.11",
     "@types/eslint": "^7.2.6",
     "@types/file-loader": "4.2.0",
     "@types/fs-extra": "^9.0.5",
