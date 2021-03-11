@@ -116,12 +116,15 @@ type ServerErrors<T> = Partial<Record<keyof T | "non_field_errors", string[]>>;
 type CreateAccountServerErrors = ServerErrors<CreateAccountValues>;
 type LoginServerErrors = ServerErrors<LoginValues>;
 
-type RootState = ReturnType<typeof import("./store/reducers").default>;
-
 interface TrackedList<ExpandSub extends boolean = false> {
   id: number;
   name: string;
   subscription: ExpandSub extends true ? Subscription : number;
+}
+
+interface CreateTrackedListValues {
+  name: string;
+  subscription: number;
 }
 
 export interface Subscription<ExpandLang extends boolean = false> {

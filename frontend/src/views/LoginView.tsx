@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Box,
   Button,
   Container,
   CssBaseline,
@@ -10,19 +9,14 @@ import {
   Typography,
 } from "@material-ui/core";
 import { LockOutlined } from "@material-ui/icons";
-import axios from "axios";
 import { Field, Form, Formik } from "formik";
-import { CheckboxWithLabel, TextField } from "formik-material-ui";
-import { flatten } from "lodash";
+import { TextField } from "formik-material-ui";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
 import * as yup from "yup";
 
 import ClientErrorHelper from "../components/ClientErrorHelper";
-import { useLogin } from "../hooks";
-import { login } from "../store/actions";
-import { useLoggedIn } from "../store/selectors";
+import { useAuth } from "../hooks/auth";
 import { LoginServerErrors, LoginValues } from "../types";
 
 const validationSchema: yup.SchemaOf<LoginValues> = yup.object().shape({
@@ -56,22 +50,12 @@ const useStyles = makeStyles((theme) => ({
 
 const LoginView = () => {
   const classes = useStyles();
-  const loggedIn = useLoggedIn();
-  const [clientErrors, setClientErrors] = useState<LoginServerErrors>({});
-  const dispatch = useDispatch();
-  const loginMutation = useLogin({
-    onSuccess: (loginSuccessPayload) => {
-      axios.defaults.headers[
-        "Authorization"
-      ] = `Token ${loginSuccessPayload.key}`;
-      dispatch(login(loginSuccessPayload));
-    },
-    onError: (data, variables) => setClientErrors(data),
-  });
-
+  const history = useHistory();
+  const [clientErrors] = useState<LoginServerErrors>({});
+  const { user, login } = useAuth();
   return (
     <>
-      {!loggedIn ? (
+      {!user ? (
         <Container component="main" maxWidth="xs">
           <CssBaseline />
           <div className={classes.paper}>
@@ -89,8 +73,14 @@ const LoginView = () => {
               validationSchema={validationSchema}
               onSubmit={async (values, bag) => {
                 bag.setSubmitting(true);
-                await loginMutation.mutate(values);
-                setTimeout(() => bag.setSubmitting(false), 1000);
+                await login.mutateAsync(values, {
+                  onError: () => {
+                    bag.setSubmitting(false);
+                  },
+                  onSuccess: () => {
+                    history.push("/");
+                  },
+                });
               }}
             >
               <Form>
@@ -121,6 +111,7 @@ const LoginView = () => {
                 />
                 <ClientErrorHelper errors={clientErrors.password} />
                 {/*
+                    TODO 10/03/20 psacawa: add "remember me" as an option
                  * <Field
                  *   component{CheckboxWithLabel}
                  *   control={<Checkbox value="remember" color="primary" />}

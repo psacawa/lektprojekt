@@ -11,6 +11,7 @@ import {
 import {
   CreateAccountServerErrors,
   CreateAccountValues,
+  CreateTrackedListValues,
   Feature,
   Language,
   Lexeme,
@@ -219,26 +220,14 @@ export const useUser = (options?: UseQueryOptions<User>) =>
     { refetchOnWindowFocus: false, ...options }
   );
 
-export const useLogin = (
-  options?: UseMutationOptions<
-    LoginSuccessPayload,
-    LoginServerErrors,
-    LoginValues
-  >
+export const useCreateTrackedList = (
+  options?: UseMutationOptions<CreateTrackedListValues>
 ) =>
-  useMutation((params: LoginValues) => {
-    return axios
-      .post("/auth/login/", { ...params })
-      .then((response: AxiosResponse<any>) => response.data)
-      .catch((error: AxiosError<any>) => Promise.reject(error.response?.data));
-  }, options);
-
-export const useLogout = (options?: UseMutationOptions) =>
-  useMutation(() => {
-    return axios
-      .post("/auth/logout/")
-      .then((response: AxiosResponse<any>) => response.data);
-  }, options);
+  useMutation((params: CreateTrackedListValues) =>
+    axios
+      .post("/api/lists/")
+      .then((response: AxiosResponse<TrackedList>) => response.data)
+  );
 
 export const useCreateAccount = (
   options?: UseMutationOptions<
@@ -310,7 +299,7 @@ export const useSub = (
     ["sub", params.id],
     () =>
       axios
-        .get("/api/subs/")
+        .get(`/api/subs/${params.id}`)
         .then((response: AxiosResponse<Subscription>) => response.data),
     options
   );

@@ -9,10 +9,9 @@ import {
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { useUser } from "../hooks";
+import { useAuth } from "../hooks/auth";
 import { Route } from "../routes";
 import { drawerRoutes, loggedInRoutes, loggedOutRoutes } from "../routes";
-import { useLoggedIn } from "../store/selectors";
 
 const DrawerItemList = (props: { routes: Route[] }) => (
   <>
@@ -33,23 +32,18 @@ const useStyles = makeStyles(() => ({
 }));
 const LektDrawer = () => {
   const classes = useStyles();
-  const loggedIn = useLoggedIn();
-  const userQuery = useUser({ enabled: loggedIn });
+  const { user } = useAuth();
   return (
     <Drawer variant="permanent">
       <List className={classes.list}>
         <DrawerItemList routes={drawerRoutes} />
         <Divider />
-        {loggedIn ? (
+        {!!user ? (
           <>
             <DrawerItemList routes={loggedInRoutes} />
-            {userQuery.isSuccess && (
-              <ListItem>
-                <ListItemText>
-                  Logged in as: {userQuery.data!.username}
-                </ListItemText>
-              </ListItem>
-            )}
+            <ListItem>
+              <ListItemText>Logged in as: {user.username}</ListItemText>
+            </ListItem>
           </>
         ) : (
           <>

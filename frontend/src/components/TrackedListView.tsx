@@ -118,7 +118,7 @@ const TrackedListView = ({ list }: Props) => {
     };
     for (const key in queries) {
       if (queries[key].data?.results.find((obs) => (obs.id = observable_id))) {
-        queryClient.invalidateQueries();
+        queryClient.refetchQueries([key]);
       }
     }
   };

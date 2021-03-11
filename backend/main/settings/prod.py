@@ -5,3 +5,6 @@
 # ustawiać cokolwiek dla SSL
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
+
+#  TODO 09/03/20 psacawa: profile the effect of this parameter
+CONN_MAX_AGE = 60

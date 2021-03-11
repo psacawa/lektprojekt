@@ -1,20 +1,14 @@
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useEffect } from "react";
 import { Redirect } from "react-router";
 
-import { useLogout } from "../hooks";
-import { logout } from "../store/actions";
-import { useLoggedIn } from "../store/selectors";
+import { useAuth } from "../hooks/auth";
 
 const LogoutView = () => {
-  const loggedIn = useLoggedIn();
-  const logoutMutation = useLogout();
-  const dispatch = useDispatch();
-  if (loggedIn) {
-    logoutMutation.mutate();
-    delete axios.defaults.headers["Authorization"];
-    dispatch(logout());
-  }
+  const { logout } = useAuth();
+  useEffect(() => {
+    logout.mutate();
+  });
   return <Redirect to="/" />;
 };
 

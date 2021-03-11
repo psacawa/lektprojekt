@@ -2,9 +2,11 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Button,
   CircularProgress,
   Divider,
   Grid,
+  IconButton,
   Link as MuiLink,
   List,
   ListItem,
@@ -12,13 +14,16 @@ import {
   Paper,
   Tab,
   Tabs,
+  TextField,
   Typography,
 } from "@material-ui/core";
+import { Add, ExpandMore } from "@material-ui/icons";
 import React, { useState } from "react";
+import { useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 
 import TrackedListView from "../components/TrackedListView";
-import { useSubs } from "../hooks";
+import { useCreateTrackedList, useSubs } from "../hooks";
 import { Subscription, TrackedList } from "../types";
 
 function TrackedListAccordion({ lists }: { lists: TrackedList[] }) {
@@ -53,9 +58,13 @@ const useStyles = makeStyles({
 const ProfileView = () => {
   const classes = useStyles();
   const [activeTab, setActiveTab] = useState(0);
+  const queryClient = useQueryClient();
   const subscriptionQuery = useSubs();
   const subscription: Subscription<true> | undefined =
     subscriptionQuery.data?.results[activeTab];
+  const [listNameInputValue, setListNameInputValue] = useState("");
+  const [createNewListOpen, setCreateNewListOpen] = useState(false);
+  const createListMutation = useCreateTrackedList();
   return (
     <Paper className={classes.root}>
       {subscriptionQuery.isSuccess ? (
@@ -79,6 +88,19 @@ const ProfileView = () => {
                     </MuiLink>
                   </ListItem>
                 ))}
+                <ListItem>
+                  <TextField id="name" name="name" label="Name" />
+                  <IconButton
+                    onClick={(ev: React.MouseEvent<{}>) => {
+                      createListMutation.mutate({
+                        subscription: subscription.id,
+                        name: listNameInputValue,
+                      });
+                    }}
+                  >
+                    <Add />
+                  </IconButton>
+                </ListItem>
               </List>
               <Divider />
               <Typography variant="h5">Language Config</Typography>

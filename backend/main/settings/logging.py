@@ -27,13 +27,15 @@ if DEBUG:
         }
         for module in LEKTPROJEKT_LOGGED_MODULES
     }
-    HANDLERS |= {
-        "console": {
-            "level": "ERROR",
-            "class": "logging.StreamHandler",
-            "formatter": "verbose",
+    HANDLERS.update(
+        {
+            "console": {
+                "level": "ERROR",
+                "class": "logging.StreamHandler",
+                "formatter": "verbose",
+            }
         }
-    }
+    )
     LOGGING = {
         "version": 1,
         "disable_existing_loggers": False,

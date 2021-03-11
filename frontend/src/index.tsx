@@ -3,25 +3,24 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { Provider } from "react-redux";
 import { Router } from "react-router-dom";
 
 import App from "./App";
+import { AuthProvider } from "./hooks/auth";
 import reportWebVitals from "./reportWebVitals";
-import { store } from "./store";
 
 const history = createBrowserHistory();
 const queryClient = new QueryClient();
 
 ReactDOM.render(
-  <Provider store={store}>
-    <QueryClientProvider client={queryClient}>
+  <QueryClientProvider client={queryClient}>
+    <AuthProvider>
       <Router history={history}>
         <App />
       </Router>
-      <ReactQueryDevtools initialIsOpen />
-    </QueryClientProvider>
-  </Provider>,
+    </AuthProvider>
+    <ReactQueryDevtools />
+  </QueryClientProvider>,
   document.getElementById("root")
 );
 
