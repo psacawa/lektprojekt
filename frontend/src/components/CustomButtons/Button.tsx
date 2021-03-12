@@ -6,7 +6,7 @@ import classNames from "classnames";
 // nodejs library to set properties for components
 import React from "react";
 
-import styles from "../../assets/jss/material-dashboard-pro-react/components/buttonStyle";
+import styles from "../../assets/jss/styles/components/buttonStyle";
 
 const useStyles = makeStyles(styles as any);
 

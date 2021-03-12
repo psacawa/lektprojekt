@@ -18,7 +18,7 @@ import Icon from "@material-ui/core/Icon";
 // core components
 import { AdminNavbarLinks } from "../../components/Navbars";
 
-import sidebarStyle from "../../assets/jss/material-dashboard-pro-react/components/sidebarStyle";
+import sidebarStyle from "../../assets/jss/styles/components/sidebarStyle";
 
 import avatar from "../../assets/img/faces/avatar.jpg";
 import { AppRoute } from "../../routes";

@@ -1,20 +1,20 @@
 // variables and mixins
-@import "material-dashboard-pro-react/variables";
-@import "material-dashboard-pro-react/mixins";
-@import "material-dashboard-pro-react/shadows";
+@import "styles/variables";
+@import "styles/mixins";
+@import "styles/shadows";
 
 // plugin css
-@import "material-dashboard-pro-react/plugins/plugin-nouislider";
-@import "material-dashboard-pro-react/plugins/plugin-perfect-scrollbar";
-@import "material-dashboard-pro-react/plugins/plugin-react-datetime";
-@import "material-dashboard-pro-react/plugins/plugin-react-bootstrap-sweetalert";
-@import "material-dashboard-pro-react/plugins/plugin-react-chartist";
-@import "material-dashboard-pro-react/plugins/plugin-react-big-calendar";
-@import "material-dashboard-pro-react/plugins/plugin-react-jvectormap";
-@import "material-dashboard-pro-react/plugins/plugin-react-table";
-@import "material-dashboard-pro-react/plugins/plugin-react-tagsinput";
+@import "styles/plugins/plugin-nouislider";
+@import "styles/plugins/plugin-perfect-scrollbar";
+@import "styles/plugins/plugin-react-datetime";
+@import "styles/plugins/plugin-react-bootstrap-sweetalert";
+@import "styles/plugins/plugin-react-chartist";
+@import "styles/plugins/plugin-react-big-calendar";
+@import "styles/plugins/plugin-react-jvectormap";
+@import "styles/plugins/plugin-react-table";
+@import "styles/plugins/plugin-react-tagsinput";
 
 // Core CSS
-@import "material-dashboard-pro-react/misc";
-@import "material-dashboard-pro-react/fileupload";
-@import "material-dashboard-pro-react/fixed-plugin";
+@import "styles/misc";
+@import "styles/fileupload";
+@import "styles/fixed-plugin";

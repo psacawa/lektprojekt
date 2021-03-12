@@ -16,7 +16,7 @@ import Search from "@material-ui/icons/Search";
 import classNames from "classnames";
 import React from "react";
 
-import styles from "../../assets/jss/material-dashboard-pro-react/components/adminNavbarLinksStyle";
+import styles from "../../assets/jss/styles/components/adminNavbarLinksStyle";
 // core components
 import CustomInput from "..//CustomInput/CustomInput";
 import { Button } from "../CustomButtons";

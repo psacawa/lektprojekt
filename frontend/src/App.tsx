@@ -9,7 +9,7 @@ import React, { useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 
 import logo from "./assets/img/logo192.png";
-import styles from "./assets/jss/material-dashboard-pro-react/layouts/adminStyle";
+import styles from "./assets/jss/styles/layouts/adminStyle";
 import Footer from "./components/Footer";
 import LektNavbar from "./components/LektNavbar";
 // core components

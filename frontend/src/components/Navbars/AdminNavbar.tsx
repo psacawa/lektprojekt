@@ -11,7 +11,7 @@ import cx from "classnames";
 // nodejs library to set properties for components
 import React from "react";
 
-import styles from "../../assets/jss/material-dashboard-pro-react/components/adminNavbarStyle";
+import styles from "../../assets/jss/styles/components/adminNavbarStyle";
 import { Button } from "../CustomButtons";
 // core components
 import AdminNavbarLinks from "./AdminNavbarLinks";

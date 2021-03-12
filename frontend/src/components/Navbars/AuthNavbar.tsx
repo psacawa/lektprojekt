@@ -18,7 +18,7 @@ import cx from "classnames";
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import styles from "../../assets/jss/material-dashboard-pro-react/components/authNavbarStyle";
+import styles from "../../assets/jss/styles/components/authNavbarStyle";
 // core components
 import { Button } from "../CustomButtons";
 

@@ -9,7 +9,7 @@ import classNames from "classnames";
 // nodejs library to set properties for components
 import React from "react";
 
-import styles from "../../assets/jss/material-dashboard-pro-react/components/customInputStyle";
+import styles from "../../assets/jss/styles/components/customInputStyle";
 
 const useStyles = makeStyles(styles as any);
 
