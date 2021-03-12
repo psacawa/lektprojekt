@@ -1,10 +1,7 @@
-import "perfect-scrollbar/css/perfect-scrollbar.css";
-
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import cx from "classnames";
 // creates a beautiful scrollbar
-import PerfectScrollbar from "perfect-scrollbar";
 import React, { useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 
@@ -18,8 +15,6 @@ import Sidebar from "./components/Sidebar";
 import LektSidebar from "./components/Sidebar";
 import { AppRoute, routes } from "./routes";
 
-let ps: any;
-
 const useStyles = makeStyles(styles);
 
 export default function App(
@@ -31,9 +26,9 @@ export default function App(
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [miniActive, setMiniActive] = React.useState(false);
   const [image, setImage] = React.useState(require("assets/img/sidebar-2.jpg"));
-  let color = "purple";
   // const [bgColor, setBgColor] = React.useState("black");
   let bgColor = "black";
+  let color = "blue";
   // const [logo, setLogo] = React.useState(require("assets/img/logo-white.svg"));
   // styles
   const classes = useStyles();
@@ -42,27 +37,15 @@ export default function App(
     " " +
     cx({
       [classes.mainPanelSidebarMini]: miniActive,
-      [classes.mainPanelWithPerfectScrollbar]:
-        navigator.platform.indexOf("Win") > -1,
     });
   // ref for main panel div
   const mainPanel = React.createRef<any>();
   // effect instead of componentDidMount, componentDidUpdate and componentWillUnmount
   React.useEffect(() => {
-    if (navigator.platform.indexOf("Win") > -1) {
-      ps = new PerfectScrollbar(mainPanel.current, {
-        suppressScrollX: true,
-        suppressScrollY: false,
-      });
-      document.body.style.overflow = "hidden";
-    }
     window.addEventListener("resize", resizeFunction);
 
     // Specify how to clean up after this effect:
     return function cleanup() {
-      if (navigator.platform.indexOf("Win") > -1) {
-        ps.destroy();
-      }
       window.removeEventListener("resize", resizeFunction);
     };
   });
@@ -147,28 +130,3 @@ export default function App(
     </div>
   );
 }
-
-// function App() {
-//   const [sidebarOpen, setSidebarOpen] = useState(false);
-//   const handleSidebarToggle = () => {
-//     setSidebarOpen(!sidebarOpen);
-//   };
-//   return (
-//     <>
-//       <LektSidebar {...{ sidebarOpen, handleSidebarToggle }} />
-//       <LektNavbar {...{ handleSidebarToggle }} />
-//       <main>
-//         <Switch>
-//           {routes.map((route, idx) => (
-//             <Route
-//               key={idx}
-//               path={route.path}
-//               exact={route.exact}
-//               component={route.component}
-//             ></Route>
-//           ))}
-//         </Switch>
-//       </main>
-//     </>
-//   );
-// }

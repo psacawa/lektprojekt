@@ -8,7 +8,6 @@ import {
   Search,
   VpnKey,
 } from "@material-ui/icons";
-import { concat } from "lodash";
 import React from "react";
 
 import TrackedListView from "./components/TrackedListView";

@@ -88,7 +88,8 @@ const sidebarStyle = (theme: Theme) =>
     blueBackground: {
       color: whiteColor,
       "&:after": {
-        background: infoColor[0],
+        // background: infoColor[0],
+        background: "#00f",
         opacity: ".93",
       },
     },
@@ -393,7 +394,8 @@ const sidebarStyle = (theme: Theme) =>
     blue: {
       "&,&:hover,&:focus": {
         color: whiteColor,
-        backgroundColor: infoColor[0],
+        // backgroundColor: infoColor[0],
+        backgroundColor: "#00f",
         boxShadow:
           "0 12px 20px -10px rgba(" +
           hexToRgb(infoColor[0]) +

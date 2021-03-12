@@ -51,6 +51,7 @@ const footerStyle = createStyles({
   inlineBlock: {
     display: "inline-block",
     padding: "0",
+    paddingRight: "5px",
     width: "auto",
   },
   whiteColor: {

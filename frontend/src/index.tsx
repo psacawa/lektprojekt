@@ -1,3 +1,5 @@
+import "assets/scss/material-dashboard-pro-react.scss?v=1.9.0";
+
 import { createBrowserHistory } from "history";
 import React from "react";
 import ReactDOM from "react-dom";

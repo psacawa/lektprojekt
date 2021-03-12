@@ -8,6 +8,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 
 import styles from "../../assets/jss/styles/components/footerStyle";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(styles);
 
@@ -38,24 +39,14 @@ export default function Footer({ fluid, white }: Props) {
         <div className={classes.left}>
           <List className={classes.list}>
             <ListItem className={classes.inlineBlock}>
-              <a href="#home" className={block}>
+              <Link to="/" className={classes.inlineBlock}>
                 Home
-              </a>
-            </ListItem>
+              </Link>
+            </ListItem>{" "}
             <ListItem className={classes.inlineBlock}>
-              <a href="#company" className={block}>
-                Company
-              </a>
-            </ListItem>
-            <ListItem className={classes.inlineBlock}>
-              <a href="#portfolio" className={block}>
-                Portfolio
-              </a>
-            </ListItem>
-            <ListItem className={classes.inlineBlock}>
-              <a href="#blog" className={block}>
-                Blog
-              </a>
+              <Link to="/" className={classes.inlineBlock}>
+                About
+              </Link>
             </ListItem>
           </List>
         </div>
