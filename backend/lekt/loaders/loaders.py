@@ -170,7 +170,8 @@ class PollyLanguageLoader(object):
     """
 
     VOICE_DATA_SOURCE = join(settings.ASSET_DIR, "voices.json")
-    assigned_voices = {("en", "Joanna"), ("es", "Lucia")}
+    #  voice_overrides = {"en": "Joanna", "es": "Lucia", "fr": "Céline"}
+    voice_overrides = {"en": "Joanna", "es": "Lucia", "fr": "Celine"}
 
     def __init__(self):
 
@@ -230,21 +231,21 @@ class PollyLanguageLoader(object):
         progress.finish()
 
     def assign_default_voices(self):
-        """docstring for assign_default_voices"""
+        """Assign default voice to the first eligible one, accounting for overrides."""
 
         for lang in Language.objects.all():
-            if lang.lid in self.assigned_voices:
+            if lang.lid in self.voice_overrides:
                 try:
-                    voice = Voice.objects.get(name=self.assigned_voices[lang.lid])
+                    voice = Voice.objects.get(name=self.voice_overrides[lang.lid])
                 except KeyError as e:
                     logger.error(
-                        f"Voice {self.assigned_voices[lang.lid]}"
+                        f"Voice {self.voice_overrides[lang.lid]}"
                         "for {lang} not found in database."
                     )
             else:
                 try:
                     voice = lang.voice_set.order_by("id")[0]
-                except Exception as e:
+                except Voice.DoesNotExists as e:
                     logger.error(f"{__module__}: No voices attached to {lang}.")
                     raise e
             lang.default_voice = voice
