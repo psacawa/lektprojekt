@@ -1,18 +1,13 @@
-// @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import cx from "classnames";
-// creates a beautiful scrollbar
-import React, { useState } from "react";
+import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 
 import logo from "./assets/img/logo192.png";
 import styles from "./assets/jss/styles/layouts/adminStyle";
 import Footer from "./components/Footer";
-import LektNavbar from "./components/LektNavbar";
-// core components
 import { AdminNavbar } from "./components/Navbars";
 import Sidebar from "./components/Sidebar";
-import LektSidebar from "./components/Sidebar";
 import { AppRoute, routes } from "./routes";
 
 const useStyles = makeStyles(styles);
@@ -52,24 +47,6 @@ export default function App(
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  const getActiveRoute: (routes: AppRoute[]) => any = (routes) => {
-    let activeRoute = "Default Brand Text";
-    for (let route of routes) {
-      if ("collapse" in route) {
-        let collapseActiveRoute = getActiveRoute(route.views);
-        if (collapseActiveRoute !== activeRoute) {
-          return collapseActiveRoute;
-        }
-      } else {
-        // NOTE 11/03/20 psacawa: layouts unlikely to be part of the routing here
-        // if (window.location.href.indexOf(route.layout + route.path) !== -1) {
-        if (window.location.href.indexOf(route.path) !== -1) {
-          return route.name;
-        }
-      }
-    }
-    return activeRoute;
-  };
   const getRoutes: (routes: AppRoute[]) => any = (routes: AppRoute[]) => {
     return routes.map((route, key) => {
       if ("collapse" in route) {
@@ -98,7 +75,6 @@ export default function App(
   return (
     <div className={classes.wrapper}>
       <Sidebar
-        routes={routes}
         logoText={process.env.REACT_APP_NAME}
         logo={logo}
         image={image}
@@ -113,7 +89,6 @@ export default function App(
         <AdminNavbar
           sidebarMinimize={sidebarMinimize.bind(this)}
           miniActive={miniActive}
-          brandText={getActiveRoute(routes)}
           handleDrawerToggle={handleDrawerToggle}
           {...rest}
         />

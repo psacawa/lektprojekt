@@ -22,7 +22,7 @@ import PracticeView from "./views/PracticeView";
 import ProfileView from "./views/ProfileView";
 import ResetPasswordView from "./views/ResetPasswordView";
 
-export interface BaseRoute {
+interface BaseRoute {
   path: string;
   name: string;
   exact: boolean;
@@ -41,11 +41,11 @@ interface CollapsibleRoute extends BaseRoute {
 
 export type AppRoute = BaseRoute | CollapsibleRoute;
 
-export // TODO 05/03/20 psacawa: there are several binary attributes here, which vary independently:
+// TODO 05/03/20 psacawa: there are several binary attributes here, which vary independently:
 // whether the route is displayed for (un)authed users, whether it should be in the drawer, etc
 // figure out a robust policy for this
 
-const drawerRoutes: AppRoute[] = [
+const baseDrawerRoutes: AppRoute[] = [
   {
     path: "/",
     name: "Home",
@@ -62,7 +62,7 @@ const drawerRoutes: AppRoute[] = [
   },
 ];
 
-export const baseRoutes: AppRoute[] = [
+const baseRoutes: AppRoute[] = [
   {
     path: "/pairs/:id/",
     name: "PhrasePair Detail View",
@@ -97,7 +97,7 @@ export const baseRoutes: AppRoute[] = [
   },
 ];
 
-export const loggedInRoutes: AppRoute[] = [
+const loggedInRoutes: AppRoute[] = [
   {
     path: "/profile/",
     name: "Profile",
@@ -114,7 +114,7 @@ export const loggedInRoutes: AppRoute[] = [
   },
 ];
 
-export const loggedOutRoutes: AppRoute[] = [
+const loggedOutRoutes: AppRoute[] = [
   {
     path: "/login/",
     name: "Login",
@@ -131,9 +131,17 @@ export const loggedOutRoutes: AppRoute[] = [
   },
 ];
 
-export const routes: AppRoute[] = [
-  ...drawerRoutes,
+const routes: AppRoute[] = [
+  ...baseDrawerRoutes,
   ...baseRoutes,
   ...loggedInRoutes,
   ...loggedOutRoutes,
 ];
+
+export {
+  baseDrawerRoutes,
+  baseRoutes,
+  loggedInRoutes,
+  loggedOutRoutes,
+  routes,
+};

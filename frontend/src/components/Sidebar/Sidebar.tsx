@@ -1,29 +1,25 @@
-/*eslint-disable*/
-import React, { useRef, useState } from "react";
-// javascript plugin used to create scrollbars on windows
-import { NavLink, useLocation } from "react-router-dom";
-import cx from "classnames";
-
-// @material-ui/core components
-import withStyles from "@material-ui/core/styles/withStyles";
+import { Avatar, makeStyles } from "@material-ui/core";
+import Collapse from "@material-ui/core/Collapse";
 import Drawer from "@material-ui/core/Drawer";
+import Hidden from "@material-ui/core/Hidden";
+import Icon from "@material-ui/core/Icon";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import Hidden from "@material-ui/core/Hidden";
-import Collapse from "@material-ui/core/Collapse";
-import Icon from "@material-ui/core/Icon";
-
-// core components
-import { AdminNavbarLinks } from "../../components/Navbars";
+import { Person } from "@material-ui/icons";
+import cx from "classnames";
+import React, { useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
 
 import sidebarStyle from "../../assets/jss/styles/components/sidebarStyle";
-
-import avatar from "../../assets/img/faces/avatar.jpg";
-import { AppRoute } from "../../routes";
-import { Avatar, makeStyles } from "@material-ui/core";
-import { Person } from "@material-ui/icons";
+import { AdminNavbarLinks } from "../../components/Navbars";
 import { useAuth } from "../../hooks/auth";
+import {
+  AppRoute,
+  baseDrawerRoutes,
+  loggedInRoutes,
+  loggedOutRoutes,
+} from "../../routes";
 
 interface SidebarWrapperProps {
   className: string;
@@ -54,18 +50,20 @@ interface SidebarProps {
   logo: string;
   logoText: string;
   image: string;
-  routes: AppRoute[];
   miniActive: boolean;
   open: boolean;
   handleDrawerToggle: (ev: React.MouseEvent<any>) => void;
 }
 
-// class Sidebar extends React.Component<SidebarProps, any> {
 function Sidebar(props: SidebarProps) {
-  const { logo, image, logoText, routes, bgColor } = props;
+  const { logo, image, logoText, bgColor } = props;
   const classes = useStyles();
   const location = useLocation();
   const { user } = useAuth();
+  const drawerRoutesToDisplay = [
+    ...baseDrawerRoutes,
+    ...(!!user ? loggedInRoutes : loggedOutRoutes),
+  ];
   // this creates the intial state of this component based on the collapse routes
   // that it gets through props.routes
   function getCollapseStates(routes: AppRoute[]): Record<string, boolean> {
@@ -100,7 +98,7 @@ function Sidebar(props: SidebarProps) {
   const [openAvatar, setOpenAvatar] = useState(false);
   const [miniActive, setMiniActive] = useState(true);
   const [routeCollapse, setRouteCollapse] = useState(
-    getCollapseStates(props.routes)
+    getCollapseStates(drawerRoutesToDisplay)
   );
   const mainPanel = React.useRef<any>();
 
@@ -297,7 +295,9 @@ function Sidebar(props: SidebarProps) {
       </List>
     </div>
   );
-  let links = <List className={classes.list}>{createLinks(routes)}</List>;
+  let links = (
+    <List className={classes.list}>{createLinks(drawerRoutesToDisplay)}</List>
+  );
 
   const logoNormal =
     classes.logoNormal +
@@ -407,9 +407,5 @@ function Sidebar(props: SidebarProps) {
     </div>
   );
 }
-
-(Sidebar as any).defaultProps = {
-  bgColor: "blue",
-};
 
 export default Sidebar;

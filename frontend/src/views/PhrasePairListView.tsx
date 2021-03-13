@@ -60,7 +60,7 @@ const PhrasePairListView = () => {
     <>
       <Typography variant="h5" style={{ margin: 30 }}>
         Welcome to{" "}
-        <span style={{ color: "blue" }}>Sematically Enhanced Search</span> Mode
+        <span style={{ color: "blue" }}>Semantically Enhanced Search</span> Mode
       </Typography>
       <Grid container justify="center" spacing={4}>
         {languageQuery.isFetching ? (
@@ -86,6 +86,7 @@ const PhrasePairListView = () => {
               features={features}
               setFeatures={setFeatures}
               language={targetLanguage}
+              setPageNumber={setPageNumber}
             />
             <PhrasePairListTable
               {...{

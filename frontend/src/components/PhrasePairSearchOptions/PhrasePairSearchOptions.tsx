@@ -12,6 +12,7 @@ interface Props {
   features: Feature[];
   setLexemes: React.Dispatch<Lexeme[]>;
   setFeatures: React.Dispatch<Feature[]>;
+  setPageNumber: React.Dispatch<number>;
 }
 
 const lightColours = [
@@ -47,6 +48,7 @@ const PhrasePairSearchOptions = ({
   features,
   setFeatures,
   language,
+  setPageNumber,
 }: Props) => {
   const classes = useStyles();
 
@@ -69,6 +71,7 @@ const PhrasePairSearchOptions = ({
             let idx = newLexemes.length - 1;
             newLexemes[idx].colour = getRandomUnusedColour();
             setLexemes(newLexemes);
+            setPageNumber(1);
           }
         }}
       />
@@ -81,6 +84,7 @@ const PhrasePairSearchOptions = ({
             let idx = newFeatures.length - 1;
             newFeatures[idx].colour = getRandomUnusedColour();
             setFeatures(newFeatures);
+            setPageNumber(1);
           }
         }}
       />
