@@ -11,6 +11,7 @@ import {
 import {
   CreateAccountServerErrors,
   CreateAccountValues,
+  CreateSubscriptionValues,
   CreateTrackedListValues,
   Feature,
   Language,
@@ -220,6 +221,22 @@ export const useUser = (options?: UseQueryOptions<User>) =>
     { refetchOnWindowFocus: false, ...options }
   );
 
+export const useCreateSubscription = (
+  options?: UseMutationOptions<Subscription, any, CreateSubscriptionValues>
+) =>
+  useMutation(
+    (params: CreateSubscriptionValues) =>
+      axios
+        .post("/api/subs/", params)
+        .then((response: AxiosResponse<Subscription>) => response.data),
+    { ...options }
+  );
+
+export const useDeleteSubscription = (
+  params: { sub_id: number },
+  options?: UseMutationOptions<void, any, { sub_id: number }>
+) => (axios.delete(`/api/subs/${params.sub_id}/`), { ...options });
+
 export const useCreateTrackedList = (
   options?: UseMutationOptions<CreateTrackedListValues>
 ) =>
@@ -229,24 +246,6 @@ export const useCreateTrackedList = (
       .then((response: AxiosResponse<TrackedList>) => response.data)
   );
 
-export const useCreateAccount = (
-  options?: UseMutationOptions<
-    { detail: string },
-    CreateAccountServerErrors,
-    CreateAccountValues
-  >
-) =>
-  useMutation<
-    { detail: string },
-    CreateAccountServerErrors,
-    CreateAccountValues
-  >((params: CreateAccountValues) => {
-    return axios
-      .post("/auth/registration/", { ...params })
-      .then((response: AxiosResponse<{ detail: string }>) => response.data)
-      .catch((error: AxiosError<any>) => Promise.reject(error.response?.data));
-  }, options);
-
 export const useCsrfToken = (options?: UseQueryOptions) =>
   useQuery(
     ["csrf"],
@@ -254,15 +253,6 @@ export const useCsrfToken = (options?: UseQueryOptions) =>
       axios.get("/csrf-token/").then((response: AxiosResponse<unknown>) => {
         console.log(response.headers["csrf_token"]);
       }),
-    options
-  );
-
-export const useResetPassword = (options?: UseMutationOptions<{}, any, any>) =>
-  useMutation(
-    (params: { email: string }) =>
-      axios
-        .post("/auth/password/reset/", { ...params })
-        .then((response: AxiosResponse<any>) => response.data),
     options
   );
 

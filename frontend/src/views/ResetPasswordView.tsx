@@ -19,7 +19,7 @@ import { useState } from "react";
 import { useHistory } from "react-router";
 import * as yup from "yup";
 
-import { useResetPassword } from "../hooks";
+import { useResetPassword } from "../hooks/auth";
 
 const SuccessDialog = ({
   open,

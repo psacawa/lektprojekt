@@ -1,6 +1,8 @@
+import { createStyles } from "@material-ui/core";
+
 import { hexToRgb, whiteColor } from "../../base";
 
-const customTabsStyle = {
+const customTabsStyle = createStyles({
   cardTitle: {
     float: "left",
     padding: "10px 10px 10px 0px",
@@ -63,6 +65,6 @@ const customTabsStyle = {
       margin: "-1px 5px 0 0 !important",
     },
   },
-};
+});
 
 export default customTabsStyle;

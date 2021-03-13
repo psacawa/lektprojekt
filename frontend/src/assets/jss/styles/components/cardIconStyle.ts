@@ -1,3 +1,5 @@
+import { createStyles } from "@material-ui/core";
+
 import {
   dangerCardHeader,
   grayColor,
@@ -7,7 +9,8 @@ import {
   successCardHeader,
   warningCardHeader,
 } from "../../base";
-const cardIconStyle = {
+
+const cardIconStyle = createStyles({
   cardIcon: {
     "&$warningCardHeader,&$successCardHeader,&$dangerCardHeader,&$infoCardHeader,&$primaryCardHeader,&$roseCardHeader": {
       borderRadius: "3px",
@@ -24,6 +27,6 @@ const cardIconStyle = {
   infoCardHeader,
   primaryCardHeader,
   roseCardHeader,
-};
+});
 
 export default cardIconStyle;

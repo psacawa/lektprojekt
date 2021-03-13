@@ -1,6 +1,8 @@
+import { createStyles } from "@material-ui/core";
+
 import { blackColor, hexToRgb } from "../../base";
 
-const cardAvatarStyle = {
+const cardAvatarStyle = createStyles({
   cardAvatar: {
     "&$cardAvatarProfile img,&$cardAvatarTestimonial img": {
       width: "100%",
@@ -50,6 +52,6 @@ const cardAvatarStyle = {
     marginBottom: "-50px",
     marginTop: "10px",
   },
-};
+});
 
 export default cardAvatarStyle;

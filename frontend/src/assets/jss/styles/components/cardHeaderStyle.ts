@@ -1,3 +1,5 @@
+import { createStyles } from "@material-ui/core";
+
 import {
   blackColor,
   dangerCardHeader,
@@ -9,7 +11,8 @@ import {
   warningCardHeader,
   whiteColor,
 } from "../../base";
-const cardHeaderStyle = {
+
+const cardHeaderStyle = createStyles({
   cardHeader: {
     padding: "0.75rem 1.25rem",
     marginBottom: "0",
@@ -164,6 +167,6 @@ const cardHeaderStyle = {
       ...roseCardHeader,
     },
   },
-};
+});
 
 export default cardHeaderStyle;

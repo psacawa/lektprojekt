@@ -10,17 +10,19 @@ import {
 } from "react-query";
 
 import {
+  CreateAccountServerErrors,
+  CreateAccountValues,
   LoginServerErrors,
   LoginSuccessPayload,
   LoginValues,
   User,
 } from "../types";
-import { useCreateAccount } from "./client";
 
 interface AuthContextContent {
   login: ReturnType<typeof useLogin>;
   logout: ReturnType<typeof useLogout>;
-  createAccount: any;
+  createAccount: ReturnType<typeof useCreateAccount>;
+  resetPassword: ReturnType<typeof useResetPassword>;
   user: User | null;
 }
 
@@ -104,6 +106,33 @@ const useLogout = (options?: UseMutationOptions) =>
       .post("/auth/logout/")
       .then((response: AxiosResponse<any>) => response.data);
   }, options);
+
+const useCreateAccount = (
+  options?: UseMutationOptions<
+    { detail: string },
+    CreateAccountServerErrors,
+    CreateAccountValues
+  >
+) =>
+  useMutation<
+    { detail: string },
+    CreateAccountServerErrors,
+    CreateAccountValues
+  >((params: CreateAccountValues) => {
+    return axios
+      .post("/auth/registration/", { ...params })
+      .then((response: AxiosResponse<{ detail: string }>) => response.data)
+      .catch((error: AxiosError<any>) => Promise.reject(error.response?.data));
+  }, options);
+
+export const useResetPassword = (options?: UseMutationOptions<{}, any, any>) =>
+  useMutation(
+    (params: { email: string }) =>
+      axios
+        .post("/auth/password/reset/", { ...params })
+        .then((response: AxiosResponse<any>) => response.data),
+    options
+  );
 
 // only try to acquire use information if authToken set, otherwise short to null,
 // which represents "no user"

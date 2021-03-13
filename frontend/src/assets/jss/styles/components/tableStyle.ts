@@ -90,6 +90,7 @@ const tableStyle = (theme: Theme) =>
       minHeight: "0.1%",
       overflowX: "auto",
     },
+    tableRow: {},
     tableStripedRow: {
       backgroundColor: grayColor[12],
     },

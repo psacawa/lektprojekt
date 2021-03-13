@@ -1,3 +1,5 @@
+import { createStyles } from "@material-ui/core";
+
 import {
   dangerCardHeader,
   grayColor,
@@ -8,7 +10,7 @@ import {
   warningCardHeader,
 } from "../../base";
 
-const cardTextStyle = {
+const cardTextStyle = createStyles({
   cardText: {
     float: "none",
     display: "inline-block",
@@ -24,6 +26,6 @@ const cardTextStyle = {
   infoCardHeader,
   primaryCardHeader,
   roseCardHeader,
-};
+});
 
 export default cardTextStyle;

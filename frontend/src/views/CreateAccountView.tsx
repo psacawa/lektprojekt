@@ -22,7 +22,7 @@ import { Link, useHistory } from "react-router-dom";
 import * as yup from "yup";
 
 import ClientErrorHelper from "../components/ClientErrorHelper";
-import { useCreateAccount } from "../hooks";
+import { useAuth } from "../hooks/auth";
 import { CreateAccountServerErrors, CreateAccountValues } from "../types";
 
 const validationSchema: yup.SchemaOf<CreateAccountValues> = yup.object().shape({
@@ -106,19 +106,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CreateAccountView = () => {
+  const { createAccount } = useAuth();
   const classes = useStyles();
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
   const [clientErrors, setClientErrors] = useState<CreateAccountServerErrors>(
     {}
   );
-  const createAccountMutation = useCreateAccount({
-    onSuccess: (data, variables, context) => {
-      setSuccessDialogOpen(true);
-    },
-    onError: (data, variables) => {
-      setClientErrors(data);
-    },
-  });
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -139,7 +132,14 @@ const CreateAccountView = () => {
           validationSchema={validationSchema}
           onSubmit={async (values, bag) => {
             bag.setSubmitting(true);
-            await createAccountMutation.mutate(values);
+            await createAccount.mutateAsync(values, {
+              onSuccess: () => {
+                setSuccessDialogOpen(true);
+              },
+              onError: (data: CreateAccountServerErrors) => {
+                setClientErrors(data);
+              },
+            });
             bag.setSubmitting(false);
           }}
         >

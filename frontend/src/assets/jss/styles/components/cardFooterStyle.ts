@@ -1,6 +1,8 @@
+import { createStyles } from "@material-ui/core";
+
 import { grayColor } from "../../base";
 
-const cardFooterStyle = {
+const cardFooterStyle = createStyles({
   cardFooter: {
     padding: "0",
     paddingTop: "10px",
@@ -49,6 +51,6 @@ const cardFooterStyle = {
   cardFooterChart: {
     borderTop: "1px solid" + grayColor[8],
   },
-};
+});
 
 export default cardFooterStyle;

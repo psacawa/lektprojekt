@@ -196,7 +196,14 @@ class LanguageSubscriptionPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = LanguageSubscription
-        fields = ["base_lang", "target_lang", "base_voice", "target_voice", "owner"]
+        fields = [
+            "id",
+            "base_lang",
+            "target_lang",
+            "base_voice",
+            "target_voice",
+            "owner",
+        ]
 
 
 class UserProfileSerializer(serializers.ModelSerializer):

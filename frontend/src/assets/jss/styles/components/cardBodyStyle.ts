@@ -1,10 +1,12 @@
+import { createStyles } from "@material-ui/core";
+
 import { hexToRgb, whiteColor } from "../../base";
 
-const cardBodyStyle = {
+const cardBodyStyle = createStyles({
   cardBody: {
     padding: "0.9375rem 20px",
     flex: "1 1 auto",
-    WebkitBoxFlex: "1",
+    WebkitBoxFlex: 1,
     position: "relative",
   },
   cardBodyBackground: {
@@ -48,6 +50,6 @@ const cardBodyStyle = {
   cardBodyCalendar: {
     padding: "0px !important",
   },
-};
+});
 
 export default cardBodyStyle;

@@ -1,3 +1,5 @@
+import { createStyles } from "@material-ui/core";
+
 import {
   blackColor,
   dangerColor,
@@ -11,7 +13,7 @@ import {
   whiteColor,
 } from "../../base";
 
-const cardStyle = {
+const cardStyle = createStyles({
   card: {
     border: "0",
     marginBottom: "30px",
@@ -181,6 +183,6 @@ const cardStyle = {
     transform: "translate3d(" + hexToRgb(blackColor) + ")",
     transition: "all 300ms linear",
   },
-};
+});
 
 export default cardStyle;

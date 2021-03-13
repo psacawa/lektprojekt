@@ -135,3 +135,10 @@ export interface Subscription<ExpandLang extends boolean = false> {
   target_lang: ExpandLang extends true ? Language : number;
   target_voice: Voice;
 }
+
+export interface CreateSubscriptionValues {
+  base_lang: number;
+  base_voice: number;
+  target_lang: number;
+  target_voice: number;
+}
