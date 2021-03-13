@@ -1,4 +1,3 @@
-==================================
 LektProjekt Frontend 
 ==================================
 
@@ -95,3 +94,16 @@ Technologies Used
    write tests that things more proximate to users e.g. is some text,
    regex visible, rather than characteristics of the DOM which are
    opaque to users. ARIA friendly
+
+Styling
+-------------
+
+The style is based off of the pro version of the Material UI Dashboard template from
+Creative Time, significantly modified so that it would work well with Typescript. Styles
+and images are contained in `assets`
+
+Miscellaneous Notes
+-------------------
+
+- Material UI CSS Typescript object does not want to accept ``zIndex`` as an attribute
+

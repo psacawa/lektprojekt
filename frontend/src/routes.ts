@@ -1,4 +1,13 @@
-import { concat } from "lodash";
+import {
+  Create,
+  Home as MuiHome,
+  InsertEmoticon,
+  LockOpen,
+  PanTool,
+  Person,
+  Search,
+  VpnKey,
+} from "@material-ui/icons";
 import React from "react";
 
 import TrackedListView from "./components/TrackedListView";
@@ -13,33 +22,47 @@ import PracticeView from "./views/PracticeView";
 import ProfileView from "./views/ProfileView";
 import ResetPasswordView from "./views/ResetPasswordView";
 
-export interface Route {
+interface BaseRoute {
   path: string;
   name: string;
   exact: boolean;
-  component?: React.FunctionComponent<any>;
+  component: React.FunctionComponent<any>;
+  icon?: React.FunctionComponent<any>;
+  redirect?: boolean;
+  mini?: any;
 }
+
+// the following attributes add typing to mdr-pro's collapsible views support
+interface CollapsibleRoute extends BaseRoute {
+  views: CollapsibleRoute[];
+  collapse: boolean;
+  state: string;
+}
+
+export type AppRoute = BaseRoute | CollapsibleRoute;
 
 // TODO 05/03/20 psacawa: there are several binary attributes here, which vary independently:
 // whether the route is displayed for (un)authed users, whether it should be in the drawer, etc
 // figure out a robust policy for this
 
-export const drawerRoutes: Route[] = [
+const baseDrawerRoutes: AppRoute[] = [
   {
     path: "/",
     name: "Home",
     exact: true,
     component: Home,
+    icon: MuiHome,
   },
   {
     path: "/search/",
     name: "Search Phrases",
     exact: false,
     component: PhrasePairListView,
+    icon: Search,
   },
 ];
 
-export const baseRoutes: Route[] = [
+const baseRoutes: AppRoute[] = [
   {
     path: "/pairs/:id/",
     name: "PhrasePair Detail View",
@@ -63,48 +86,62 @@ export const baseRoutes: Route[] = [
     name: "Practice Mode",
     exact: false,
     component: PracticeView,
+    icon: InsertEmoticon,
   },
   {
     path: "/reset-password",
     name: "Reset Password",
     exact: false,
     component: ResetPasswordView,
+    icon: VpnKey,
   },
 ];
 
-export const loggedInRoutes: Route[] = [
+const loggedInRoutes: AppRoute[] = [
   {
     path: "/profile/",
     name: "Profile",
     exact: false,
     component: ProfileView,
+    icon: Person,
   },
   {
     path: "/logout/",
     name: "Logout",
     exact: false,
     component: LogoutView,
+    icon: PanTool,
   },
 ];
 
-export const loggedOutRoutes: Route[] = [
+const loggedOutRoutes: AppRoute[] = [
   {
     path: "/login/",
     name: "Login",
     exact: false,
     component: LoginView,
+    icon: LockOpen,
   },
   {
     path: "/create-account/",
     name: "Register",
     exact: false,
     component: CreateAccountView,
+    icon: Create,
   },
 ];
 
-export const routes: Route[] = [
-  ...drawerRoutes,
+const routes: AppRoute[] = [
+  ...baseDrawerRoutes,
   ...baseRoutes,
   ...loggedInRoutes,
   ...loggedOutRoutes,
 ];
+
+export {
+  baseDrawerRoutes,
+  baseRoutes,
+  loggedInRoutes,
+  loggedOutRoutes,
+  routes,
+};
