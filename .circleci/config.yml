@@ -1,21 +1,13 @@
 version: 2.1
 
 orbs:
-  python: circleci/python@0.2.1
-
-jobs:
-  test-backend:
-    executor: python/default
-    steps:
-      - checkout
-      - run: cd backend
-      - run: pip install poetry
-      - run: poetry install
-      - run:
-          command: pytest
-          name: Test
+  python: circleci/python@1.3.2
 
 workflows:
   main:
     jobs:
-      - test-backend
+      - python/test:
+          app-dir: backend
+          pkg-manager: poetry
+          version: "3.9"
+          test-tool: "pytest"
