@@ -1,7 +1,5 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { flatMap } from "lodash";
 import {
-  MutateFunction,
   useMutation,
   UseMutationOptions,
   useQuery,
@@ -233,9 +231,12 @@ export const useCreateSubscription = (
   );
 
 export const useDeleteSubscription = (
-  params: { sub_id: number },
-  options?: UseMutationOptions<void, any, { sub_id: number }>
-) => (axios.delete(`/api/subs/${params.sub_id}/`), { ...options });
+  options?: UseMutationOptions<any, any, { sub_id: number }>
+) =>
+  useMutation(
+    (params: { sub_id: number }) => axios.delete(`/api/subs/${params.sub_id}/`),
+    { ...options }
+  );
 
 export const useCreateTrackedList = (
   options?: UseMutationOptions<CreateTrackedListValues>
@@ -244,16 +245,6 @@ export const useCreateTrackedList = (
     axios
       .post("/api/lists/")
       .then((response: AxiosResponse<TrackedList>) => response.data)
-  );
-
-export const useCsrfToken = (options?: UseQueryOptions) =>
-  useQuery(
-    ["csrf"],
-    () =>
-      axios.get("/csrf-token/").then((response: AxiosResponse<unknown>) => {
-        console.log(response.headers["csrf_token"]);
-      }),
-    options
   );
 
 export const useSubs = (

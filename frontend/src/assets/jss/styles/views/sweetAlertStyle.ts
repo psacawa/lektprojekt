@@ -1,7 +1,9 @@
+import { createStyles } from "@material-ui/core";
+
 import { grayColor } from "../../base";
 import buttonStyle from "../../styles/components/buttonStyle";
 
-const sweetAlertStyle = {
+const sweetAlertStyle = createStyles({
   cardTitle: {
     marginTop: "0",
     marginBottom: "3px",
@@ -18,6 +20,6 @@ const sweetAlertStyle = {
     textAlign: "left",
   },
   ...buttonStyle,
-};
+});
 
 export default sweetAlertStyle;

@@ -1,3 +1,5 @@
+import { createStyles } from "@material-ui/core";
+
 import {
   behanceColor,
   blackColor,
@@ -21,7 +23,7 @@ import {
   youtubeColor,
 } from "../../base";
 
-const buttonStyle = {
+const buttonStyle = createStyles({
   button: {
     minHeight: "auto",
     minWidth: "auto",
@@ -679,6 +681,6 @@ const buttonStyle = {
       },
     },
   },
-};
+});
 
 export default buttonStyle;
