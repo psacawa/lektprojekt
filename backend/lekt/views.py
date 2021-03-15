@@ -56,7 +56,11 @@ class LanguageViewSet(viewsets.ReadOnlyModelViewSet):
     It's possible to possible to pass multiple `lid` parameter.
     """
 
-    queryset = Language.objects.prefetch_related("voice_set")
+    queryset = (
+        Language.objects.filter(active=True)
+        .prefetch_related("voice_set")
+        .order_by("name")
+    )
     filterset_class = filters.LanguageFilterSet
     serializer_class = serializers.LanguageVoiceSerializer
     ordering = ["id"]

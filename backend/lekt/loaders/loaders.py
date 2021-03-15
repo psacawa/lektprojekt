@@ -170,8 +170,9 @@ class PollyLanguageLoader(object):
     """
 
     VOICE_DATA_SOURCE = join(settings.ASSET_DIR, "voices.json")
+    active_languages = set(["es", "fr", "de", "it", "pl", "en", "pt", "ru"])
     #  voice_overrides = {"en": "Joanna", "es": "Lucia", "fr": "Céline"}
-    voice_overrides = {"en": "Joanna", "es": "Lucia", "fr": "Celine"}
+    voice_overrides = {"en": "Joanna", "es": "Lucia", "fr": "Celine", "pt": "Ricardo"}
 
     def __init__(self):
 
@@ -211,7 +212,9 @@ class PollyLanguageLoader(object):
 
             lang_query = Language.objects.filter(lid=lid)
             if lang_query.count() == 0:
-                cur_lang = Language(name=base_lang_name, lid=lid)
+                cur_lang = Language(
+                    name=base_lang_name, lid=lid, active=lid in self.active_languages
+                )
                 logger.debug(f"new language found: {cur_lang}")
                 self.new_languages.append(cur_lang)
                 cur_lang.save()

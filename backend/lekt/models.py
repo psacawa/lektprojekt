@@ -52,6 +52,7 @@ class Language(TimestampedModel):
         verbose_name="Default voice",
         help_text="E.g. Voice=Chantal, Canadian French",
     )
+    active = models.BooleanField()
     objects = managers.LektManager()
 
     def __repr__(self):
