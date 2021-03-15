@@ -4,6 +4,7 @@ import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 
 import logo from "./assets/img/logo192.png";
+import bgImage from "./assets/img/sidebar-2.jpg";
 import styles from "./assets/jss/styles/layouts/adminStyle";
 import Footer from "./components/Footer";
 import { AdminNavbar } from "./components/Navbars";
@@ -20,9 +21,6 @@ export default function App(
   // states and functions
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [miniActive, setMiniActive] = React.useState(false);
-  const [image, setImage] = React.useState(
-    require("./assets/img/sidebar-2.jpg")
-  );
   // const [bgColor, setBgColor] = React.useState("black");
   let bgColor = "black";
   let color = "blue";
@@ -79,7 +77,7 @@ export default function App(
       <Sidebar
         logoText={process.env.REACT_APP_NAME}
         logo={logo}
-        image={image}
+        // image={bgImage}
         handleDrawerToggle={handleDrawerToggle}
         open={mobileOpen}
         color={color}

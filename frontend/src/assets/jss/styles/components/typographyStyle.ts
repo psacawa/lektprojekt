@@ -1,3 +1,5 @@
+import { createStyles } from "@material-ui/core";
+
 import {
   dangerColor,
   defaultFont,
@@ -8,7 +10,7 @@ import {
   warningColor,
 } from "../../base";
 
-const typographyStyle = {
+const typographyStyle = createStyles({
   defaultFontStyle: {
     ...defaultFont,
     fontSize: "14px",
@@ -51,6 +53,6 @@ const typographyStyle = {
   dangerText: {
     color: dangerColor[0],
   },
-};
+});
 
 export default typographyStyle;

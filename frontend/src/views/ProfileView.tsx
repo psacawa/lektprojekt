@@ -73,9 +73,9 @@ const NewSubscriptionForm = () => {
                 }) as Language;
                 createSubscription.mutate({
                   base_lang: enLang.id,
-                  base_voice: enLang.default_voice.id,
+                  base_voice: enLang.default_voice,
                   target_lang: value.id,
-                  target_voice: value.default_voice.id,
+                  target_voice: value.default_voice,
                 });
               }}
             >

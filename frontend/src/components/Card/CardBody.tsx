@@ -16,7 +16,7 @@ interface Props {
   color?: boolean;
   profile?: boolean;
   calendar?: boolean;
-  children?: React.ReactNode[];
+  children?: React.ReactNode;
 }
 export default function CardBody(props: Props) {
   const classes = useStyles();

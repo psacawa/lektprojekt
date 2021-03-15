@@ -7,11 +7,12 @@ export interface Voice {
   gender: string;
 }
 
-export interface Language {
+export interface Language<ExpandVoice extends boolean = false> {
   id: number;
   lid: string;
   name: string;
-  default_voice: Voice;
+  default_voice: ExpandVoice extends true ? Voice : number;
+  voice_set: Voice[];
 }
 
 export interface TokenSpan {

@@ -19,7 +19,7 @@ interface Props {
   product?: boolean;
   chart?: boolean;
   login?: boolean;
-  children: ReactNode[];
+  children: ReactNode;
 }
 
 function Card(props: Props) {
