@@ -9,7 +9,8 @@ from polymorphic.managers import PolymorphicManager
 from polymorphic.models import PolymorphicModel
 from tabulate import tabulate
 
-from lekt import managers
+from . import managers
+from .constants import lexeme_pos_choices
 
 logger = logging.getLogger(__name__)
 
@@ -301,7 +302,10 @@ class Lexeme(Observable):
         e.g. "hablar" """,
     )
     pos = models.CharField(
-        max_length=50, verbose_name="Part of speech", help_text="computed as Token.pos_"
+        max_length=50,
+        choices=lexeme_pos_choices,
+        verbose_name="Part of speech",
+        help_text="computed as Token.pos_",
     )
 
     lang = models.ForeignKey(

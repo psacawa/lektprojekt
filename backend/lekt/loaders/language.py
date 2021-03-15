@@ -272,7 +272,8 @@ class LanguageParser(object):
         return feature_description_dict.get((name, value), f"{name}={value}")
 
 
-#  TODO 10/02/20 psacawa: get a more robust solution for this data
+#  TODO 10/02/20 psacawa: get a more robust solution for these data
+#  supporting multiple locales
 feature_description_dict = {
     ("AdpType", "Prep"): "preposition",
     ("AdpType", "Preppron"): "prepositional pronoun",

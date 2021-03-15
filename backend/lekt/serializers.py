@@ -3,10 +3,12 @@ import logging
 from django.contrib.auth.models import User
 from rest_flex_fields import FlexFieldsModelSerializer
 from rest_framework import serializers
+from rest_framework.fields import CharField
 from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_polymorphic.serializers import PolymorphicSerializer
 
+from .constants import verb_description_dict
 from .models import (
     Feature,
     Language,
@@ -48,7 +50,15 @@ class FeatureSerializer(serializers.ModelSerializer):
         fields = ["id", "name", "value", "description"]
 
 
+class CharDescriptionField(CharField):
+    def to_representation(self, value):
+        #  try to get the description for the hard-coded dict, use the value as a fallback
+        return verb_description_dict.get(value, value)
+
+
 class LexemeSerializer(serializers.ModelSerializer):
+    pos = CharDescriptionField()
+
     class Meta:
         model = Lexeme
         fields = ["id", "lemma", "pos"]
