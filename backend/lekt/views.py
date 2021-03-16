@@ -22,6 +22,8 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer
 
+from main.decorators import generate_lazy_user
+
 from . import filters, serializers
 from .models import (
     Feature,
@@ -368,6 +370,7 @@ class UserProfileView(generics.RetrieveAPIView):
         return user.userprofile
 
 
+@method_decorator(generate_lazy_user, name="dispatch")
 class LanguageSubscriptionViewSet(viewsets.ModelViewSet):
     """
     API view set for performing create, read, update, delete and list operations on the
