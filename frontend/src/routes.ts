@@ -60,6 +60,13 @@ const baseDrawerRoutes: AppRoute[] = [
     component: PhrasePairListView,
     icon: Search,
   },
+  {
+    path: "/profile/",
+    name: "Profile",
+    exact: false,
+    component: ProfileView,
+    icon: Person,
+  },
 ];
 
 const baseRoutes: AppRoute[] = [
@@ -98,13 +105,6 @@ const baseRoutes: AppRoute[] = [
 ];
 
 const loggedInRoutes: AppRoute[] = [
-  {
-    path: "/profile/",
-    name: "Profile",
-    exact: false,
-    component: ProfileView,
-    icon: Person,
-  },
   {
     path: "/logout/",
     name: "Logout",

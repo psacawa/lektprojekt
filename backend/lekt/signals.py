@@ -20,25 +20,6 @@ def create_userprofile(sender, created: bool, instance: User, **kwargs):
             raise e
 
 
-@receiver(post_save, sender=UserProfile)
-def create_spanish_subscription(sender, created: bool, instance: UserProfile, **kwargs):
-    """If a user profile was created, give them a Spanish LanguageSubscription"""
-    if created:
-        try:
-            en = Language.objects.get(lid="en")
-            es = Language.objects.get(lid="es")
-            LanguageSubscription.objects.create(
-                owner=instance,
-                base_lang=en,
-                base_voice=en.default_voice,
-                target_lang=es,
-                target_voice=es.default_voice,
-            )
-        except Exception as e:
-            logger.error(e)
-            raise e
-
-
 @receiver(post_save, sender=LanguageSubscription)
 def create_default_trackedlist(
     sender, created: bool, instance: LanguageSubscription, **kwargs

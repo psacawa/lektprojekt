@@ -20,11 +20,13 @@ def transfer_anonymous_profile(
     if request.user:
         try:
             with transaction.atomic():
-                profile = request.user.userprofile
+                old_user = request.user
+                profile = old_user.userprofile
                 new_user = email_address.user
                 new_user.userprofile.delete()
                 profile.user = new_user
                 profile.save()
+                old_user.delete()
                 logger.info(
                     f"Email address {email_address} confirmed: "
                     f"profile of {request.user=} tranferred"
