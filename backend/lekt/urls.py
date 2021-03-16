@@ -27,20 +27,21 @@ urlpatterns = [
     path(r"pairs/<int:pk>/", views.PhrasePairDetailView.as_view(), name="pair-detail"),
     path(
         r"pairs/lexeme-search/",
-        views.PhrasePairLexemeSearchView().as_view(),
+        views.PhrasePairLexemeSearchView.as_view(),
         name="pair-lexeme-search",
     ),
     path(
         r"pairs/feature-search/",
-        views.PhrasePairFeatureSearchView().as_view(),
+        views.PhrasePairFeatureSearchView.as_view(),
         name="pair-feature-search",
     ),
     path(
         r"pairs/search/",
-        views.PhrasePairObservableSearchView().as_view(),
+        views.PhrasePairObservableSearchView.as_view(),
         name="pair-search",
     ),
     path(r"pairs/", views.PhrasePairListView.as_view(), name="pair-list"),
+    path(r"pair-counts/", views.PairCountsView.as_view(), name="pair-stats"),
 ]
 
 if settings.DEBUG:

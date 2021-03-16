@@ -125,6 +125,7 @@ Technologies Used
    API endpoints via query parameters
 -  **django-allauth** (``allauth``) - alternate auth backend to
    django’s, supporting 3rd party auth, JWT, email confirmation flow
+- **django-ses** (``django_ses``) - AWS SES backend for email services
 -  **dj-restauth** (``dj_rest_auth``) - REST endpoints for the above.
    allauth itself only has html template endpoints
 -  **django-polymorphic** (``polymorphic``) - adds a better manager for
@@ -132,15 +133,14 @@ Technologies Used
    of inheritance polymorphism
 -  **django-rest-polymorphic** (``rest_polymorphic``) - adds serializer
    for polymorphic django models
--  **django-model-utils** (``model_utils``) - grab bag of useful django
-   stuff. Another inheritance manager. Ambivalent.
-
 -  **django-extensions** (``django_extensions``) - a set of
    ``manage.py`` commands that are crucial for development,
    e.g. \ ``shell_plus``
 -  **django-debug-toolbar** (``debug_toolbar``) - adds a widget to HTML
    response pages that shows you what the application did while serving
    the request: SQL queries, timing, etc..
+-  **django-split-settings** - lets you split your configs into multiple files. Need to
+  get rid of this
 -  **ipython** - better Python shell
 
 -  **pytest** - python test framework more flexible than ``unittest``

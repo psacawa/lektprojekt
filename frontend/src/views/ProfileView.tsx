@@ -37,6 +37,7 @@ import {
   useLanguages,
   useSubs,
 } from "../hooks";
+import { useAuth } from "../hooks/auth";
 import { Language, Subscription, TrackedList } from "../types";
 
 const useStyles = makeStyles(styles);
@@ -66,21 +67,23 @@ const NewSubscriptionForm = () => {
             )}
           />
           {value && (
-            <Button
-              onClick={() => {
-                let enLang = find(languageQuery.data!, {
-                  lid: "en",
-                }) as Language;
-                createSubscription.mutate({
-                  base_lang: enLang.id,
-                  base_voice: enLang.default_voice,
-                  target_lang: value.id,
-                  target_voice: value.default_voice,
-                });
-              }}
-            >
-              Add
-            </Button>
+            <>
+              <Button
+                onClick={() => {
+                  let enLang = find(languageQuery.data!, {
+                    lid: "en",
+                  }) as Language;
+                  createSubscription.mutate({
+                    base_lang: enLang.id,
+                    base_voice: enLang.default_voice,
+                    target_lang: value.id,
+                    target_voice: value.default_voice,
+                  });
+                }}
+              >
+                Add
+              </Button>
+            </>
           )}
         </>
       ) : (
@@ -95,6 +98,7 @@ const ProfileView = () => {
   const [activeTab, setActiveTab] = useState(0);
   const queryClient = useQueryClient();
   const subscriptionQuery = useSubs();
+  const { user } = useAuth();
   const deleteSubscription = useDeleteSubscription({
     onSuccess: (data, variables) => {
       queryClient.refetchQueries(["subs"]);
@@ -153,6 +157,12 @@ const ProfileView = () => {
                 >
                   Delete all lists
                 </Button>
+                {!user && (
+                  <p>
+                    Data for users without an account is deleted after 24 hours,
+                    make an account to persist it.
+                  </p>
+                )}
               </List>
               {deleteSubscriptionModalOpen && (
                 <SweetAlert

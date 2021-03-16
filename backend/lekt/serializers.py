@@ -224,3 +224,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         exclude = ["created_at", "updated_at"]
+
+
+class PairCountsSerializer(serializers.Serializer):
+    base_lang = serializers.CharField(source="base__lang__name")
+    target_lang = serializers.CharField(source="target__lang__name")
+    count = serializers.IntegerField()

@@ -18,6 +18,7 @@ import {
   LoginSuccessPayload,
   LoginValues,
   PaginatedApiOutput,
+  PairCount,
   PhrasePair,
   Subscription,
   Tracked,
@@ -41,6 +42,18 @@ export const useLanguages = (options?: UseQueryOptions<Language[]>) =>
             response.data.results
         ),
     { staleTime: HOUR, ...options }
+  );
+
+export const usePairCounts = (
+  options?: UseQueryOptions<PaginatedApiOutput<PairCount>>
+) =>
+  useQuery("pair-count", () =>
+    axios
+      .get(`${apiRoot}pair-counts`)
+      .then(
+        (response: AxiosResponse<PaginatedApiOutput<PairCount>>) =>
+          response.data
+      )
   );
 
 export const useLexeme = (

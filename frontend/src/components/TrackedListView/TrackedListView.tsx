@@ -107,7 +107,7 @@ const TrackedListView = ({ list }: Props) => {
   );
 
   // refetch read queries involving observable_id
-  const invalidateQueries = (observable_id: number) => {
+  const invalidateQueries = async (observable_id: number) => {
     const queries: Record<
       string,
       QueryObserverResult<PaginatedApiOutput<Tracked<Observable>>>
@@ -116,9 +116,7 @@ const TrackedListView = ({ list }: Props) => {
       "tracked-features": trackedFeatureQuery,
     };
     for (const key in queries) {
-      if (queries[key].data?.results.find((obs) => (obs.id = observable_id))) {
-        queryClient.refetchQueries([key]);
-      }
+      await queryClient.refetchQueries([key]);
     }
   };
   // available features and auxiliary search queries

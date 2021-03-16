@@ -502,6 +502,22 @@ class TrackedFeatureViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         )
 
 
+@method_decorator(cache_page(60 * 60), name="dispatch")
+class PairCountsView(generics.ListAPIView):
+    """
+    Some silly temporary view that reports on the counts of particular phrase pairs in
+    particular language pairs for users' benefit
+    """
+
+    serializer_class = serializers.PairCountsSerializer
+    queryset = (
+        PhrasePair.objects.filter(base__lang__active=True, target__lang__active=True)
+        .values("base__lang__name", "target__lang__name")
+        .annotate(count=Count("*"))
+        .order_by("-count")
+    )
+
+
 docs_schema_view = get_schema_view(
     openapi.Info(
         title="Lekt API",

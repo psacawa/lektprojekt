@@ -143,3 +143,9 @@ export interface CreateSubscriptionValues {
   target_lang: number;
   target_voice: number;
 }
+
+export interface PairCount {
+  base_lang: string;
+  target_lang: string;
+  count: number;
+}

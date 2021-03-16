@@ -1,4 +1,14 @@
-import { IconButton, makeStyles } from "@material-ui/core";
+import {
+  IconButton,
+  ListItem,
+  makeStyles,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@material-ui/core";
 import { Card, CardContent } from "@material-ui/core";
 import { find } from "lodash";
 import React from "react";
@@ -8,7 +18,7 @@ import flags from "../assets/img/flags";
 import cardBodyStyles from "../assets/jss/styles/components/cardBodyStyle";
 import cardStyles from "../assets/jss/styles/components/cardStyle";
 import { GridContainer, GridItem } from "../components/Grid";
-import { useCreateSubscription, useLanguages } from "../hooks";
+import { useCreateSubscription, useLanguages, usePairCounts } from "../hooks";
 import { Language } from "../types";
 
 const useStyles = makeStyles({
@@ -84,6 +94,41 @@ const Home = () => {
             </GridItem>
           ))}
       </GridContainer>
+      <PhrasePairCountsTable />
+    </>
+  );
+};
+
+const PhrasePairCountsTable = () => {
+  const classes = useStyles();
+  const pairCountsQuery = usePairCounts();
+  return (
+    <>
+      {pairCountsQuery.isSuccess && (
+        <>
+          <h5>Current phrase pair counts in database:</h5>
+          <TableContainer className={classes.container}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Base Language</TableCell>
+                  <TableCell>Target Language</TableCell>
+                  <TableCell>Phrase Pair Count</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {pairCountsQuery.data!.results.map((stat, idx) => (
+                  <TableRow key={idx}>
+                    <TableCell>{stat.base_lang}</TableCell>
+                    <TableCell>{stat.target_lang}</TableCell>
+                    <TableCell>{stat.count}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </>
+      )}
     </>
   );
 };
