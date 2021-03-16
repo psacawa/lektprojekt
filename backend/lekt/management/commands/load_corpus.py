@@ -3,6 +3,7 @@ import sys
 from argparse import ArgumentParser
 from os.path import isfile, join
 
+import spacy
 from django.conf import settings
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
@@ -72,6 +73,13 @@ class Command(BaseCommand):
             default=True,
             help="wether to run SQL script to refresh search weights",
         )
+        parser.add_argument(
+            "--gpu",
+            "-g",
+            type=bool,
+            default=False,
+            help="Allocate model memory on GPU (doesn't help speed)",
+        )
 
     def handle(
         self,
@@ -85,8 +93,12 @@ class Command(BaseCommand):
         lang2_size=None,
         lang2_model=None,
         compute_weights=None,
+        gpu=None,
         **kwargs,
     ):
+
+        if gpu:
+            spacy.require_gpu()
 
         if Language.objects.count() == 0 or Voice.objects.count() == 0:
             print("Language, Voice data not detected...Automatically loading")
