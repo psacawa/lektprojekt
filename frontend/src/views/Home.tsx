@@ -2,6 +2,7 @@ import {
   IconButton,
   ListItem,
   makeStyles,
+  Snackbar,
   Table,
   TableBody,
   TableCell,
@@ -24,7 +25,7 @@ const useStyles = makeStyles({
   ...cardStyles,
   ...cardBodyStyles,
   container: {
-    maxWidth: "1000px",
+    maxWidth: 800,
   },
   center: {
     textAlign: "center",

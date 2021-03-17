@@ -59,7 +59,6 @@ const useStyles = makeStyles({
   },
   listContainer: {
     maxWidth: "600px",
-    margin: "auto",
   },
 });
 

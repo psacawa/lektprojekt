@@ -12,10 +12,10 @@ const PracticeItem = ({ list_id, pair_id }: ItemProps) => {
   const pairQuery = usePair({ id: pair_id });
   return (
     <>
-      {pairQuery.isSuccess ? (
+      {pairQuery.data ? (
         <>
-          <Typography variant="body2">{pairQuery.data!.base.text}</Typography>
-          <Typography variant="body2">{pairQuery.data!.target.text}</Typography>
+          <Typography variant="body2">{pairQuery.data.base.text}</Typography>
+          <Typography variant="body2">{pairQuery.data.target.text}</Typography>
         </>
       ) : (
         <CircularProgress />
@@ -41,7 +41,7 @@ const PracticeView = () => {
       {planQuery.isSuccess ? (
         <>
           <Typography variant="h4">Practice Mode</Typography>
-          {planQuery.data!.results.map((pair) => (
+          {planQuery.data?.results.map((pair) => (
             <>
               <Typography variant="body2">{pair.base.text}</Typography>
               <Typography variant="body2">{pair.target.text}</Typography>

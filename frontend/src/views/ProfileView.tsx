@@ -172,7 +172,7 @@ const ProfileView = () => {
                 <TextField
                   value={listNameInputValue}
                   onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
-                    setListNameInputValue(ev.target.value);
+                    setListNameInputValue(ev.currentTarget.value);
                   }}
                   id="name"
                   name="name"
@@ -184,6 +184,7 @@ const ProfileView = () => {
                       subscription: sub.id,
                       name: listNameInputValue,
                     });
+                    setListNameInputValue("");
                     queryClient.refetchQueries(["subs"]);
                   }}
                 >

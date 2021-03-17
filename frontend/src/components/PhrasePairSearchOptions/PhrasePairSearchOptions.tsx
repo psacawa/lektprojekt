@@ -70,7 +70,7 @@ const PhrasePairSearchOptions = ({
             let idx = newLexemes.length - 1;
             newLexemes[idx].colour = getRandomUnusedColour();
             setLexemes(newLexemes);
-            setPageNumber(1);
+            setPageNumber(0);
           }
         }}
       />
@@ -83,7 +83,7 @@ const PhrasePairSearchOptions = ({
             let idx = newFeatures.length - 1;
             newFeatures[idx].colour = getRandomUnusedColour();
             setFeatures(newFeatures);
-            setPageNumber(1);
+            setPageNumber(0);
           }
         }}
       />

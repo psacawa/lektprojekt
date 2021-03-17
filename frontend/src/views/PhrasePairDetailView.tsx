@@ -13,7 +13,7 @@ const PhrasePairDetailView = () => {
         {phrasePairQuery.isSuccess ? (
           <>
             <Typography variant="h6">
-              {phrasePairQuery.data.target!.text}
+              {phrasePairQuery.data.target.text}
             </Typography>
             <Typography variant="caption">
               {phrasePairQuery.data.base!.text}

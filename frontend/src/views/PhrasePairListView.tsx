@@ -54,7 +54,7 @@ const PhrasePairListView = () => {
   };
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
-  ) => setRowsPerPage(parseInt(event.target.value));
+  ) => setRowsPerPage(parseInt(event.currentTarget.value));
   return (
     <>
       <Typography variant="h5" style={{ margin: 30 }}>

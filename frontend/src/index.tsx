@@ -1,5 +1,6 @@
 import "assets/scss/base.scss?v=1.9.0";
 
+import { Snackbar } from "@material-ui/core";
 import { createBrowserHistory } from "history";
 import { AuthProvider } from "hooks/auth";
 import React from "react";
