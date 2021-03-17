@@ -1,17 +1,16 @@
-import Button from "@material-ui/core/Button";
+import Button, { ButtonProps } from "@material-ui/core/Button";
 // material-ui components
 import { makeStyles } from "@material-ui/core/styles";
+import styles from "assets/jss/styles/components/buttonStyle";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // nodejs library to set properties for components
 import React from "react";
 
-import styles from "../../assets/jss/styles/components/buttonStyle";
-
 const useStyles = makeStyles(styles as any);
 
-interface Props {
-  color:
+interface Props extends Omit<ButtonProps, "color" | "size"> {
+  color?:
     | "primary"
     | "info"
     | "success"
@@ -31,22 +30,24 @@ interface Props {
     | "dribbble"
     | "reddit"
     | "transparent";
-  size: "sm" | "lg";
-  simple: boolean;
-  round: boolean;
-  fullWidth: boolean;
-  disabled: boolean;
-  block: boolean;
-  link: boolean;
-  justIcon: boolean;
-  className: string;
-  muiClasses: object;
+  size?: "sm" | "lg";
+  simple?: boolean;
+  round?: boolean;
+  fullWidth?: boolean;
+  disabled?: boolean;
+  block?: boolean;
+  link?: boolean;
+  justIcon?: boolean;
+  className?: string;
+  muiClasses?: object;
 }
 
+// TODO 16/03/20 psacawa: figure out the typing situation re encapsulated components
+// so this doesn't have to be "any"
 const RegularButton = React.forwardRef((props: any, ref) => {
   const classes = useStyles();
   const {
-    color,
+    color = "primary",
     round,
     children,
     fullWidth,
@@ -62,7 +63,9 @@ const RegularButton = React.forwardRef((props: any, ref) => {
   } = props;
   const btnClasses = classNames({
     [classes.button]: true,
-    [classes[size]]: size,
+    // TODO 16/03/20 psacawa: this essentially addes a key "underfined" in the object
+    // need to clean house with this MDR prop js nonsense
+    [classes[size!]]: size,
     [classes[color]]: color,
     [classes.round]: round,
     [classes.fullWidth]: fullWidth,
@@ -71,10 +74,15 @@ const RegularButton = React.forwardRef((props: any, ref) => {
     [classes.block]: block,
     [classes.link]: link,
     [classes.justIcon]: justIcon,
-    [className]: className,
+    [className!]: className,
   });
   return (
-    <Button {...rest} ref={ref} classes={muiClasses} className={btnClasses}>
+    <Button
+      {...(rest as any)}
+      ref={ref}
+      classes={muiClasses}
+      className={btnClasses}
+    >
       {children}
     </Button>
   );

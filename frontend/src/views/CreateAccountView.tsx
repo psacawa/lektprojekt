@@ -15,15 +15,14 @@ import {
   Typography,
 } from "@material-ui/core";
 import { LockOutlined } from "@material-ui/icons";
+import ClientErrorHelper from "components/ClientErrorHelper";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
+import { useAuth } from "hooks/auth";
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
+import { CreateAccountServerErrors, CreateAccountValues } from "types";
 import * as yup from "yup";
-
-import ClientErrorHelper from "../components/ClientErrorHelper";
-import { useAuth } from "../hooks/auth";
-import { CreateAccountServerErrors, CreateAccountValues } from "../types";
 
 const validationSchema: yup.SchemaOf<CreateAccountValues> = yup.object().shape({
   username: yup

@@ -1,6 +1,5 @@
 import { createStyles, Theme } from "@material-ui/core";
-
-import { cardTitle, container, grayColor, whiteColor } from "../../base";
+import { cardTitle, container, grayColor, whiteColor } from "assets/jss/base";
 const loginPageStyle = (theme: Theme) =>
   createStyles({
     container: {

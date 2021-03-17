@@ -615,7 +615,7 @@ class LanguageSubscription(TimestampedModel):
         UserProfile,
         on_delete=models.CASCADE,
         verbose_name="Owner's profile",
-        related_name="subscription_set",
+        related_name="subscriptions",
         help_text="UserProfile of the account owning the subscription",
     )
 
@@ -674,6 +674,7 @@ class TrackedList(TimestampedModel):
         LanguageSubscription,
         on_delete=models.CASCADE,
         verbose_name="Language Subscription",
+        related_name="lists",
     )
 
     def add_observables(self, observables):

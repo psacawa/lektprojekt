@@ -1,6 +1,5 @@
 import { createStyles } from "@material-ui/core";
-
-import { grayColor } from "../../base";
+import { grayColor } from "assets/jss/base";
 
 const cardFooterStyle = createStyles({
   cardFooter: {

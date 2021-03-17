@@ -194,7 +194,7 @@ class LanguageSubscriptionGetSerializer(serializers.ModelSerializer):
     target_lang = LanguageSerializer()
     base_voice = VoiceSerializer()
     target_voice = VoiceSerializer()
-    lists = TrackedListSerializer(many=True, source="trackedlist_set")
+    lists = TrackedListSerializer(many=True)
 
     class Meta:
         model = LanguageSubscription
@@ -219,7 +219,7 @@ class LanguageSubscriptionPostSerializer(serializers.ModelSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     """Serializes user's language subsriptions and User object."""
 
-    subscription_set = LanguageSubscriptionGetSerializer(many=True)
+    subscriptions = LanguageSubscriptionGetSerializer(many=True)
 
     class Meta:
         model = UserProfile

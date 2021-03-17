@@ -404,8 +404,12 @@ class LanguageSubscriptionViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return user.userprofile.subscription_set.select_related(
+        return user.userprofile.subscriptions.select_related(
             "base_lang", "target_lang", "base_voice", "target_voice"
+        ).prefetch_related(
+            Prefetch(
+                "lists",
+            )
         )
 
 
@@ -413,12 +417,17 @@ class TrackedListViewSet(
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
     mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet,
 ):
     permission_classes = [IsTrackedListOwner]
     serializer_class = serializers.TrackedListSerializer
-    queryset = TrackedList.objects.all()
+
+    def get_queryset(self):
+        return TrackedList.objects.filter(
+            subscription__owner__user_id=self.request.user.id
+        ).annotate(count=Count("observables"))
 
 
 class TrainingPlanView(mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -429,7 +438,7 @@ class TrainingPlanView(mixins.ListModelMixin, viewsets.GenericViewSet):
     def get_queryset(self):
         list_pk = self.kwargs.get("list_pk")
         subscription: LanguageSubscription = LanguageSubscription.objects.get(
-            trackedlist__id=list_pk
+            lists__id=list_pk
         )
         observables = [
             obs.observable_id

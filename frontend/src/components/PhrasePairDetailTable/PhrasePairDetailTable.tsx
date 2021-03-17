@@ -6,9 +6,8 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
+import { usePair } from "hooks";
 import { Link } from "react-router-dom";
-
-import { usePair } from "../../hooks";
 
 interface Props {
   id: number;

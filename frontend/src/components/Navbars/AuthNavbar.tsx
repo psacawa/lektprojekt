@@ -14,13 +14,12 @@ import LockOpen from "@material-ui/icons/LockOpen";
 import Menu from "@material-ui/icons/Menu";
 import MonetizationOn from "@material-ui/icons/MonetizationOn";
 import PersonAdd from "@material-ui/icons/PersonAdd";
+import styles from "assets/jss/styles/components/authNavbarStyle";
 import cx from "classnames";
+// core components
+import { Button } from "components/CustomButtons";
 import React from "react";
 import { NavLink } from "react-router-dom";
-
-import styles from "../../assets/jss/styles/components/authNavbarStyle";
-// core components
-import { Button } from "../CustomButtons";
 
 const useStyles = makeStyles(styles);
 

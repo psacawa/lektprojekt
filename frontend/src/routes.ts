@@ -8,26 +8,25 @@ import {
   Search,
   VpnKey,
 } from "@material-ui/icons";
+import TrackedListView from "components/TrackedListView";
 import React from "react";
-
-import TrackedListView from "./components/TrackedListView";
-import CreateAccountView from "./views/CreateAccountView";
-import Home from "./views/Home";
-import LexemeDetailView from "./views/LexemeDetailView";
-import LoginView from "./views/LoginView";
-import LogoutView from "./views/LogoutView";
-import PhrasePairDetailView from "./views/PhrasePairDetailView";
-import PhrasePairListView from "./views/PhrasePairListView";
-import PracticeView from "./views/PracticeView";
-import ProfileView from "./views/ProfileView";
-import ResetPasswordView from "./views/ResetPasswordView";
+import CreateAccountView from "views/CreateAccountView";
+import Home from "views/Home";
+import LexemeDetailView from "views/LexemeDetailView";
+import LoginView from "views/LoginView";
+import LogoutView from "views/LogoutView";
+import PhrasePairDetailView from "views/PhrasePairDetailView";
+import PhrasePairListView from "views/PhrasePairListView";
+import PracticeView from "views/PracticeView";
+import ProfileView from "views/ProfileView";
+import ResetPasswordView from "views/ResetPasswordView";
 
 interface BaseRoute {
   path: string;
   name: string;
   exact: boolean;
-  component: React.FunctionComponent<any>;
-  icon?: React.FunctionComponent<any>;
+  component: React.ComponentType<any>;
+  icon?: React.ComponentType<any>;
   redirect?: boolean;
   mini?: any;
 }

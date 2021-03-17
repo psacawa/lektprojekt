@@ -14,6 +14,8 @@ import {
   TableRow,
 } from "@material-ui/core";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@material-ui/icons";
+import HighlightedPhrase from "components/HighlightedPhrase";
+import PhrasePairDetailTable from "components/PhrasePairDetailTable";
 import _ from "lodash";
 import React, { useState } from "react";
 import { QueryObserverResult } from "react-query";
@@ -26,8 +28,6 @@ import {
   PaginatedApiOutput,
   PhrasePair,
 } from "../../types";
-import HighlightedPhrase from "../HighlightedPhrase";
-import PhrasePairDetailTable from "../PhrasePairDetailTable";
 
 const useRowStyles = makeStyles({
   root: {

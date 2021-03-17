@@ -6,39 +6,46 @@ import {
   Divider,
   Grid,
   IconButton,
-  Link as MuiLink,
+  Link as TableCell,
   List,
   ListItem,
+  ListItemSecondaryAction,
   makeStyles,
   Paper,
   Tab,
+  TableBody,
+  TableContainer,
+  TableHead,
+  TableRow,
   Tabs,
   TextField,
   Typography,
 } from "@material-ui/core";
-import { Add, ExpandMore, Home } from "@material-ui/icons";
+import { Add, Clear, ExpandMore, Home } from "@material-ui/icons";
 import { Autocomplete } from "@material-ui/lab";
+import flags from "assets/img/flags";
+import styles from "assets/jss/styles/components/buttonStyle";
+import { Button } from "components/CustomButtons";
+import { CustomTabs } from "components/CustomTabs";
+import { GridContainer, GridItem } from "components/Grid";
+import { Table } from "components/Table";
+import TrackedListView from "components/TrackedListView";
+import { useAuth } from "hooks/auth";
 import { find } from "lodash";
 import React, { useState } from "react";
 import SweetAlert from "react-bootstrap-sweetalert";
 import { useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
+import { Language, Subscription, TrackedList } from "types";
 
-import flags from "../assets/img/flags";
-import styles from "../assets/jss/styles/components/buttonStyle";
-import { Button } from "../components/CustomButtons";
-import { CustomTabs } from "../components/CustomTabs";
-import { GridContainer, GridItem } from "../components/Grid";
-import TrackedListView from "../components/TrackedListView";
 import {
   useCreateSubscription,
   useCreateTrackedList,
   useDeleteSubscription,
+  useDeleteTrackedList,
   useLanguages,
   useSubs,
 } from "../hooks";
-import { useAuth } from "../hooks/auth";
-import { Language, Subscription, TrackedList } from "../types";
 
 const useStyles = makeStyles(styles);
 
@@ -109,6 +116,7 @@ const ProfileView = () => {
   const [listNameInputValue, setListNameInputValue] = useState("");
   const [createNewListOpen, setCreateNewListOpen] = useState(false);
   const createListMutation = useCreateTrackedList();
+  const deleteListMutation = useDeleteTrackedList();
   const [addingNewSubscription, setAddingNewSubscription] = useState(false);
   const [
     deleteSubscriptionModalOpen,
@@ -127,43 +135,75 @@ const ProfileView = () => {
           tabIcon: <img src={flags[sub.target_voice.aid.slice(3)]} />,
           tabContent: (
             <>
-              <List>
-                {sub.lists.map((list, idx) => (
-                  <ListItem key={idx}>
-                    <MuiLink component={Link} to={`/lists/${list.id}/`}>
-                      {list.name}
-                    </MuiLink>
-                  </ListItem>
-                ))}
-                <ListItem>
-                  <TextField id="name" name="name" label="Name" />
+              <Table
+                // tableHead={["name", "name", "name"]}
+                tableData={sub.lists.map((list, idx) => [
+                  list.name,
+                  <Button
+                    size="sm"
+                    component={Link}
+                    to={`/lists/${list.id}/`}
+                    variant="outlined"
+                  >
+                    Edit
+                  </Button>,
+                  <Button
+                    size="sm"
+                    component={Link}
+                    to={`/lists/${list.id}/practice/`}
+                    variant="outlined"
+                  >
+                    Practice
+                  </Button>,
+
                   <IconButton
-                    onClick={(ev: React.MouseEvent<{}>) => {
-                      createListMutation.mutate({
-                        subscription: sub.id,
-                        name: listNameInputValue,
+                    onClick={async (ev: React.MouseEvent<{}>) => {
+                      await deleteListMutation.mutateAsync({
+                        list_pk: list.id,
                       });
+                      await queryClient.refetchQueries(["subs"]);
                     }}
                   >
-                    <Add />
-                  </IconButton>
-                </ListItem>
-
+                    <Clear />
+                  </IconButton>,
+                ])}
+              ></Table>
+              <div>
+                <TextField
+                  value={listNameInputValue}
+                  onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
+                    setListNameInputValue(ev.target.value);
+                  }}
+                  id="name"
+                  name="name"
+                  label="Add a new list"
+                />
                 <Button
-                  color="danger"
-                  onClick={(ev: React.MouseEvent<{}>) => {
-                    setDeleteSubscriptionModalOpen(true);
+                  onClick={async (ev: React.MouseEvent<{}>) => {
+                    await createListMutation.mutateAsync({
+                      subscription: sub.id,
+                      name: listNameInputValue,
+                    });
+                    queryClient.refetchQueries(["subs"]);
                   }}
                 >
-                  Delete all lists
+                  Create
                 </Button>
-                {!user && (
-                  <p>
-                    Data for users without an account is deleted after 24 hours,
-                    make an account to persist it.
-                  </p>
-                )}
-              </List>
+              </div>
+              <Button
+                color="danger"
+                onClick={(ev: React.MouseEvent<{}>) => {
+                  setDeleteSubscriptionModalOpen(true);
+                }}
+              >
+                Delete all lists
+              </Button>
+              {!user && (
+                <p>
+                  Data for users without an account is deleted after 24 hours,
+                  make an account to persist it.
+                </p>
+              )}
               {deleteSubscriptionModalOpen && (
                 <SweetAlert
                   warning

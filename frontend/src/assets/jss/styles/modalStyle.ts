@@ -1,6 +1,5 @@
 import { createStyles, Theme } from "@material-ui/core";
-
-import { grayColor } from "../base";
+import { grayColor } from "assets/jss/base";
 
 const modalStyle = (theme: Theme) =>
   createStyles({

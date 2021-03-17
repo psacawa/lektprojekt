@@ -1,11 +1,10 @@
 import { makeStyles } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
+import styles from "assets/jss/styles/components/customTabsStyle";
 import classNames from "classnames";
+import { Card, CardBody, CardHeader } from "components/Card";
 import React from "react";
-
-import styles from "../../assets/jss/styles/components/customTabsStyle";
-import { Card, CardBody, CardHeader } from "../../components/Card";
 
 const useStyles = makeStyles(styles);
 

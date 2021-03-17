@@ -252,12 +252,33 @@ export const useDeleteSubscription = (
   );
 
 export const useCreateTrackedList = (
-  options?: UseMutationOptions<CreateTrackedListValues>
+  options?: UseMutationOptions<any, any, CreateTrackedListValues>
 ) =>
-  useMutation((params: CreateTrackedListValues) =>
-    axios
-      .post("/api/lists/")
-      .then((response: AxiosResponse<TrackedList>) => response.data)
+  useMutation(
+    (params: CreateTrackedListValues) =>
+      axios
+        .post("/api/lists/", params)
+        .then((response: AxiosResponse<TrackedList>) => response.data),
+    options
+  );
+
+export const useUpdateTrackedList = (
+  options?: UseMutationOptions<any, any, { id: number; name?: string }>
+) =>
+  useMutation(
+    (params) =>
+      axios
+        .patch(`/api/lists/${params.id}`, params)
+        .then((response: AxiosResponse<TrackedList>) => response.data),
+    options
+  );
+
+export const useDeleteTrackedList = (
+  options?: UseMutationOptions<void, any, { list_pk: number }>
+) =>
+  useMutation(
+    (params) => axios.delete(`/api/lists/${params.list_pk}/`),
+    options
   );
 
 export const useSubs = (

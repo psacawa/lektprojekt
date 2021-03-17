@@ -13,10 +13,9 @@ import {
 import { Grid } from "@material-ui/core";
 import { Clear } from "@material-ui/icons";
 import { Autocomplete } from "@material-ui/lab";
+import { useFeatures } from "hooks";
 import React, { useState } from "react";
-
-import { useFeatures } from "../../hooks";
-import { Coloured, Feature, Language } from "../../types";
+import { Coloured, Feature, Language } from "types";
 
 interface Props {
   language: Language | null;

@@ -38,7 +38,7 @@ class IsTrackedListOwner(BasePermission):
         if list_pk is None:
             return True
         try:
-            profile = UserProfile.objects.get(subscription_set__trackedlist__id=list_pk)
+            profile = UserProfile.objects.get(subscriptions__lists__id=list_pk)
         except UserProfile.DoesNotExist as e:
             raise Http404
         return request.user.id == profile.user_id

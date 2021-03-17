@@ -15,11 +15,10 @@ import {
 import { LockOutlined } from "@material-ui/icons";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
+import { useResetPassword } from "hooks/auth";
 import { useState } from "react";
 import { useHistory } from "react-router";
 import * as yup from "yup";
-
-import { useResetPassword } from "../hooks/auth";
 
 const SuccessDialog = ({
   open,

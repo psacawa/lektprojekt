@@ -1,8 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import HighlightedPhrase from "components/HighlightedPhrase";
 import React from "react";
-
-import HighlightedPhrase from "../components/HighlightedPhrase";
-import { Phrase } from "../types";
+import { Phrase } from "types";
 
 const phrase: Phrase = {
   id: 264,

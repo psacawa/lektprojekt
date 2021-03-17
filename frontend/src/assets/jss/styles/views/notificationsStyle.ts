@@ -1,7 +1,6 @@
 import { createStyles, Theme } from "@material-ui/core";
-
-import { defaultFont, grayColor } from "../../base";
-import modalStyle from "../../styles/modalStyle";
+import { defaultFont, grayColor } from "assets/jss/base";
+import modalStyle from "assets/jss/styles/modalStyle";
 const notificationsStyle = (theme: Theme) =>
   createStyles({
     cardTitle: {

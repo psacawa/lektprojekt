@@ -1,6 +1,5 @@
 import { createStyles } from "@material-ui/core";
-
-import { blackColor, hexToRgb } from "../../base";
+import { blackColor, hexToRgb } from "assets/jss/base";
 
 const cardAvatarStyle = createStyles({
   cardAvatar: {

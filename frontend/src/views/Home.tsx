@@ -10,16 +10,15 @@ import {
   TableRow,
 } from "@material-ui/core";
 import { Card, CardContent } from "@material-ui/core";
+import flags from "assets/img/flags";
+import cardBodyStyles from "assets/jss/styles/components/cardBodyStyle";
+import cardStyles from "assets/jss/styles/components/cardStyle";
+import { GridContainer, GridItem } from "components/Grid";
+import { useCreateSubscription, useLanguages, usePairCounts } from "hooks";
 import { find } from "lodash";
 import React from "react";
 import { useHistory } from "react-router";
-
-import flags from "../assets/img/flags";
-import cardBodyStyles from "../assets/jss/styles/components/cardBodyStyle";
-import cardStyles from "../assets/jss/styles/components/cardStyle";
-import { GridContainer, GridItem } from "../components/Grid";
-import { useCreateSubscription, useLanguages, usePairCounts } from "../hooks";
-import { Language } from "../types";
+import { Language } from "types";
 
 const useStyles = makeStyles({
   ...cardStyles,

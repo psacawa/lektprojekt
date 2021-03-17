@@ -1,4 +1,4 @@
-import { boxShadow } from "../../base";
+import { boxShadow } from "assets/jss/base";
 
 const iconsStyle = {
   iframe: {

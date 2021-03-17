@@ -5,13 +5,13 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Menu from "@material-ui/icons/Menu";
 import MoreVert from "@material-ui/icons/MoreVert";
 import ViewList from "@material-ui/icons/ViewList";
+import styles from "assets/jss/styles/components/adminNavbarStyle";
 import cx from "classnames";
+import { Button } from "components/CustomButtons";
 import React from "react";
 import { useLocation } from "react-router-dom";
+import { AppRoute, routes } from "routes";
 
-import styles from "../../assets/jss/styles/components/adminNavbarStyle";
-import { AppRoute, routes } from "../../routes";
-import { Button } from "../CustomButtons";
 import AdminNavbarLinks from "./AdminNavbarLinks";
 
 const useStyles = makeStyles(styles);
@@ -19,8 +19,8 @@ const useStyles = makeStyles(styles);
 interface Props {
   color: "primary" | "info" | "success" | "warning" | "danger";
   miniActive: boolean;
-  handleDrawerToggle: Function;
-  sidebarMinimize: Function;
+  handleDrawerToggle: (ev: React.MouseEvent<any>) => void;
+  sidebarMinimize: (ev: React.MouseEvent<any>) => void;
 }
 export default function AdminNavbar(props: Props) {
   const classes = useStyles();

@@ -13,11 +13,10 @@ import {
 import { Grid } from "@material-ui/core";
 import { Clear } from "@material-ui/icons";
 import { Autocomplete } from "@material-ui/lab";
+import { useLexemes } from "hooks";
 import { isEqual, uniqWith } from "lodash";
 import React, { useState } from "react";
-
-import { useLexemes } from "../../hooks";
-import { Coloured, Language, Lexeme } from "../../types";
+import { Coloured, Language, Lexeme } from "types";
 
 interface Props {
   language: Language | null;

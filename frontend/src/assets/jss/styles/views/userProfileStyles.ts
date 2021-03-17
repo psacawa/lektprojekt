@@ -1,4 +1,4 @@
-import { cardTitle, grayColor } from "../../base";
+import { cardTitle, grayColor } from "assets/jss/base";
 
 const userProfileStyles = {
   cardTitle,

@@ -1,6 +1,7 @@
 import "assets/scss/base.scss?v=1.9.0";
 
 import { createBrowserHistory } from "history";
+import { AuthProvider } from "hooks/auth";
 import React from "react";
 import ReactDOM from "react-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -8,7 +9,6 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { Router } from "react-router-dom";
 
 import App from "./App";
-import { AuthProvider } from "./hooks/auth";
 import reportWebVitals from "./reportWebVitals";
 
 const history = createBrowserHistory();

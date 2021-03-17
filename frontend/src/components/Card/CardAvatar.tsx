@@ -1,12 +1,11 @@
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
+// @material-ui/icons
+// core components
+import styles from "assets/jss/styles/components/cardAvatarStyle";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 import React from "react";
-
-// @material-ui/icons
-// core components
-import styles from "../../assets/jss/styles/components/cardAvatarStyle";
 
 const useStyles = makeStyles(styles);
 

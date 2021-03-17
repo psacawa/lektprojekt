@@ -1,3 +1,5 @@
+import customCheckboxRadioSwitch from "assets/jss/styles/customCheckboxRadioSwitch";
+
 import {
   blackColor,
   cardTitle,
@@ -5,7 +7,6 @@ import {
   grayColor,
   hexToRgb,
 } from "../../base";
-import customCheckboxRadioSwitch from "../../styles/customCheckboxRadioSwitch";
 
 const registerPageStyle = {
   ...customCheckboxRadioSwitch,

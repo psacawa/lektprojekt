@@ -1,10 +1,9 @@
 import { makeStyles } from "@material-ui/core";
+import FeatureSelect from "components/FeatureSelect";
+import LexemeSelect from "components/LexemeSelect";
 import { difference, random } from "lodash";
 import React from "react";
-
-import { Coloured, Feature, Language, Lexeme } from "../../types";
-import FeatureSelect from "../FeatureSelect";
-import LexemeSelect from "../LexemeSelect";
+import { Coloured, Feature, Language, Lexeme } from "types";
 
 interface Props {
   language: Language | null;

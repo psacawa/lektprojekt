@@ -4,15 +4,14 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import styles from "assets/jss/styles/components/tableStyle";
 import cx from "classnames";
 import React from "react";
-
-import styles from "../../assets/jss/styles/components/tableStyle";
 
 const useStyles = makeStyles(styles);
 
 interface Props {
-  tableHeaderColor:
+  tableHeaderColor?:
     | "warning"
     | "primary"
     | "danger"
@@ -20,20 +19,19 @@ interface Props {
     | "info"
     | "rose"
     | "gray";
-  tableHead: string[];
+  tableHead?: string[];
   // Of(arrayOf(React.ReactNode)) || Of(object),
   tableData: any[];
-  hover: boolean;
-  coloredColls: number[];
+  hover?: boolean;
+  coloredColls?: number[];
   // Of(["warning","primary","danger","success","info","rose","gray"]) - colorsColls
-  colorsColls: [];
-  customCellClasses: string[];
-  customClassesForCells: number[];
-  customHeadCellClasses: string[];
-  customHeadClassesForCells: number[];
-  striped: boolean;
+  colorsColls?: [];
+  customCellClasses?: string[];
+  customClassesForCells?: number[];
+  customHeadCellClasses?: string[];
+  customHeadClassesForCells?: number[];
+  striped?: boolean;
   // this will cause some changes in font
-  tableShopping: boolean;
 }
 
 export default function CustomTable(props: Props) {
@@ -50,7 +48,6 @@ export default function CustomTable(props: Props) {
     tableData,
     tableHead,
     tableHeaderColor = "gray",
-    tableShopping,
   } = props;
   return (
     <div className={classes.tableResponsive}>
@@ -68,8 +65,6 @@ export default function CustomTable(props: Props) {
                     [customHeadCellClasses[
                       customHeadClassesForCells.indexOf(key)
                     ]]: customHeadClassesForCells.indexOf(key) !== -1,
-                    [classes.tableShoppingHead]: tableShopping,
-                    [classes.tableHeadFontSize]: !tableShopping,
                   });
                 return (
                   <TableCell className={tableCellClasses} key={key}>

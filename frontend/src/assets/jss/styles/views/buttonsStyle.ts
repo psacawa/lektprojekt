@@ -1,5 +1,5 @@
-import { grayColor } from "../../base";
-import buttonGroupStyle from "../../styles/buttonGroupStyle";
+import { grayColor } from "assets/jss/base";
+import buttonGroupStyle from "assets/jss/styles/buttonGroupStyle";
 
 const buttonsStyle = {
   cardTitle: {

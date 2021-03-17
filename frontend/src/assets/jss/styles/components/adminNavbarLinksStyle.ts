@@ -1,7 +1,6 @@
 import { createStyles, Theme } from "@material-ui/core";
-
-import { dangerColor, defaultFont, whiteColor } from "../../base";
-import customDropdownStyle from "../../styles/components/customDropdownStyle";
+import { dangerColor, defaultFont, whiteColor } from "assets/jss/base";
+import customDropdownStyle from "assets/jss/styles/components/customDropdownStyle";
 
 const adminNavbarLinksStyle = (theme: Theme) =>
   createStyles({

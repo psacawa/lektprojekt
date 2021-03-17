@@ -1,6 +1,5 @@
 import { createStyles } from "@material-ui/core";
-
-import { hexToRgb, whiteColor } from "../../base";
+import { hexToRgb, whiteColor } from "assets/jss/base";
 
 const customTabsStyle = createStyles({
   cardTitle: {

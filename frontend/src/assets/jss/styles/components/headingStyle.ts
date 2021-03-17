@@ -1,4 +1,4 @@
-import { grayColor } from "../../base";
+import { grayColor } from "assets/jss/base";
 
 const headingStyle = {
   heading: {

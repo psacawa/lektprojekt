@@ -1,3 +1,5 @@
+import customCheckboxRadioSwitch from "assets/jss/styles/customCheckboxRadioSwitch";
+
 import {
   dangerColor,
   defaultFont,
@@ -5,7 +7,6 @@ import {
   primaryColor,
   tooltip,
 } from "../../base";
-import customCheckboxRadioSwitch from "../../styles/customCheckboxRadioSwitch";
 
 const tasksStyle = {
   ...customCheckboxRadioSwitch,

@@ -13,13 +13,12 @@ import Notifications from "@material-ui/icons/Notifications";
 // @material-ui/icons
 import Person from "@material-ui/icons/Person";
 import Search from "@material-ui/icons/Search";
+import styles from "assets/jss/styles/components/adminNavbarLinksStyle";
 import classNames from "classnames";
-import React from "react";
-
-import styles from "../../assets/jss/styles/components/adminNavbarLinksStyle";
+import { Button } from "components/CustomButtons";
 // core components
-import CustomInput from "..//CustomInput/CustomInput";
-import { Button } from "../CustomButtons";
+import CustomInput from "components/CustomInput";
+import React from "react";
 
 const useStyles = makeStyles(styles);
 
@@ -99,7 +98,7 @@ export default function HeaderLinks(props: {}) {
           color="transparent"
           justIcon
           aria-label="Notifications"
-          aria-owns={openNotification ? "notification-menu-list" : null}
+          aria-owns={openNotification ? "notification-menu-list" : undefined}
           aria-haspopup="true"
           onClick={handleClickNotification}
           className={classes.buttonLink}
@@ -184,7 +183,7 @@ export default function HeaderLinks(props: {}) {
           color="transparent"
           aria-label="Person"
           justIcon
-          aria-owns={openProfile ? "profile-menu-list" : null}
+          aria-owns={openProfile ? "profile-menu-list" : undefined}
           aria-haspopup="true"
           onClick={handleClickProfile}
           className={classes.buttonLink}

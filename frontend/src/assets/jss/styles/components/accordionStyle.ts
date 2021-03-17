@@ -1,6 +1,5 @@
 import { createStyles, Theme } from "@material-ui/core";
-
-import { grayColor, primaryColor } from "../../base";
+import { grayColor, primaryColor } from "assets/jss/base";
 
 const accordionStyle = (theme: Theme) =>
   createStyles({

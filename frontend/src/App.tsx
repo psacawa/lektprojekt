@@ -1,15 +1,14 @@
 import { makeStyles } from "@material-ui/core/styles";
+import logo from "assets/img/logo192.png";
+import bgImage from "assets/img/sidebar-2.jpg";
+import styles from "assets/jss/styles/layouts/adminStyle";
 import cx from "classnames";
+import Footer from "components/Footer";
+import { AdminNavbar } from "components/Navbars";
+import Sidebar from "components/Sidebar";
 import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
-
-import logo from "./assets/img/logo192.png";
-import bgImage from "./assets/img/sidebar-2.jpg";
-import styles from "./assets/jss/styles/layouts/adminStyle";
-import Footer from "./components/Footer";
-import { AdminNavbar } from "./components/Navbars";
-import Sidebar from "./components/Sidebar";
-import { AppRoute, routes } from "./routes";
+import { AppRoute, routes } from "routes";
 
 const useStyles = makeStyles(styles);
 

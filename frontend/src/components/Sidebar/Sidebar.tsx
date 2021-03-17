@@ -7,13 +7,13 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import { Person } from "@material-ui/icons";
+import sidebarStyle from "assets/jss/styles/components/sidebarStyle";
 import cx from "classnames";
+import { AdminNavbarLinks } from "components/Navbars";
+import { useAuth } from "hooks/auth";
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
-import sidebarStyle from "../../assets/jss/styles/components/sidebarStyle";
-import { AdminNavbarLinks } from "../../components/Navbars";
-import { useAuth } from "../../hooks/auth";
 import {
   AppRoute,
   baseDrawerRoutes,

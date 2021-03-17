@@ -1,8 +1,7 @@
 import { CircularProgress, Typography } from "@material-ui/core";
+import { usePair, useTrainingPlan } from "hooks";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-
-import { usePair, useTrainingPlan } from "../hooks";
 
 interface ItemProps {
   list_id: number;

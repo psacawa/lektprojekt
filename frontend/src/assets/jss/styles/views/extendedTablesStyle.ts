@@ -1,6 +1,6 @@
-import { cardTitle, grayColor } from "../../base";
-import buttonGroupStyle from "../../styles/buttonGroupStyle";
-import customCheckboxRadioSwitch from "../../styles/customCheckboxRadioSwitch";
+import { cardTitle, grayColor } from "assets/jss/base";
+import buttonGroupStyle from "assets/jss/styles/buttonGroupStyle";
+import customCheckboxRadioSwitch from "assets/jss/styles/customCheckboxRadioSwitch";
 
 const extendedTablesStyle = {
   ...customCheckboxRadioSwitch,

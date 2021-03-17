@@ -1,5 +1,5 @@
-import { cardTitle, dangerColor, grayColor, whiteColor } from "../../base";
-import customCheckboxRadioSwitch from "../../styles/customCheckboxRadioSwitch";
+import { cardTitle, dangerColor, grayColor, whiteColor } from "assets/jss/base";
+import customCheckboxRadioSwitch from "assets/jss/styles/customCheckboxRadioSwitch";
 
 const validationFormsStyle = {
   ...customCheckboxRadioSwitch,

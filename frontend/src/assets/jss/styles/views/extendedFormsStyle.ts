@@ -1,6 +1,6 @@
-import { blackColor, cardTitle, hexToRgb } from "../../base";
-import customCheckboxRadioSwitch from "../../styles/customCheckboxRadioSwitch";
-import customSelectStyle from "../../styles/customSelectStyle";
+import { blackColor, cardTitle, hexToRgb } from "assets/jss/base";
+import customCheckboxRadioSwitch from "assets/jss/styles/customCheckboxRadioSwitch";
+import customSelectStyle from "assets/jss/styles/customSelectStyle";
 
 const extendedFormsStyle = {
   ...customCheckboxRadioSwitch,

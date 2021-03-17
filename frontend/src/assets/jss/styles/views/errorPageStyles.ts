@@ -1,4 +1,4 @@
-import { title, whiteColor } from "../../base";
+import { title, whiteColor } from "assets/jss/base";
 
 const errorPageStyles = () => ({
   contentCenter: {

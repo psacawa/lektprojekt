@@ -1,9 +1,8 @@
 import { CircularProgress, Typography } from "@material-ui/core";
+import PhrasePairDetailTable from "components/PhrasePairDetailTable";
+import { usePair } from "hooks";
 import React from "react";
 import { useParams } from "react-router-dom";
-
-import PhrasePairDetailTable from "../components/PhrasePairDetailTable";
-import { usePair } from "../hooks";
 
 const PhrasePairDetailView = () => {
   const { id } = useParams<any>();

@@ -1,7 +1,6 @@
 import { createStyles } from "@material-ui/core";
-
-import { grayColor } from "../../base";
-import buttonStyle from "../../styles/components/buttonStyle";
+import { grayColor } from "assets/jss/base";
+import buttonStyle from "assets/jss/styles/components/buttonStyle";
 
 const sweetAlertStyle = createStyles({
   cardTitle: {

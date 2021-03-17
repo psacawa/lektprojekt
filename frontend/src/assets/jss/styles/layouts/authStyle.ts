@@ -1,6 +1,5 @@
 import { createStyles, Theme } from "@material-ui/core";
-
-import { blackColor, hexToRgb, whiteColor } from "../../base";
+import { blackColor, hexToRgb, whiteColor } from "assets/jss/base";
 
 const pagesStyle = (theme: Theme) =>
   createStyles({

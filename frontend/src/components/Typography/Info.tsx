@@ -1,8 +1,7 @@
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
+import styles from "assets/jss/styles/components/typographyStyle";
 import React from "react";
-
-import styles from "../../assets/jss/styles/components/typographyStyle";
 
 const useStyles = makeStyles(styles);
 

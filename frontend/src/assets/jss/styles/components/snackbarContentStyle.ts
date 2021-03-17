@@ -1,3 +1,5 @@
+import { createStyles } from "@material-ui/core";
+
 import {
   blackColor,
   dangerBoxShadow,
@@ -18,7 +20,7 @@ import {
   whiteColor,
 } from "../../base";
 
-const snackbarContentStyle = {
+const snackbarContentStyle = createStyles({
   root: {
     ...defaultFont,
     flexWrap: "unset",
@@ -132,6 +134,6 @@ const snackbarContentStyle = {
     paddingLeft: "50px",
     display: "block",
   },
-};
+});
 
 export default snackbarContentStyle;

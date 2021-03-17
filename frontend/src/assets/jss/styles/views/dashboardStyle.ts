@@ -1,5 +1,5 @@
-import { cardTitle, grayColor, successColor, tooltip } from "../../base";
-import hoverCardStyle from "../../styles/hoverCardStyle";
+import { cardTitle, grayColor, successColor, tooltip } from "assets/jss/base";
+import hoverCardStyle from "assets/jss/styles/hoverCardStyle";
 
 const dashboardStyle = {
   ...hoverCardStyle,

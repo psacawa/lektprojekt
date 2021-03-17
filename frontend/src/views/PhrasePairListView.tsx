@@ -5,13 +5,12 @@ import {
   Typography,
 } from "@material-ui/core";
 import { CircularProgress } from "@material-ui/core";
+import LanguageSelect from "components/LanguageSelect";
+import PhrasePairListTable from "components/PhrasePairListTable";
+import PhrasePairSearchOptions from "components/PhrasePairSearchOptions";
+import { useLanguages, usePairObservableSearch } from "hooks";
 import React, { useState } from "react";
-
-import LanguageSelect from "../components/LanguageSelect";
-import PhrasePairListTable from "../components/PhrasePairListTable";
-import PhrasePairSearchOptions from "../components/PhrasePairSearchOptions";
-import { useLanguages, usePairObservableSearch } from "../hooks";
-import { Coloured, Feature, Language, Lexeme } from "../types";
+import { Coloured, Feature, Language, Lexeme } from "types";
 
 const PhrasePairListView = () => {
   const [baseLanguage, setBaseLanguage] = useState<Language | null>(null);

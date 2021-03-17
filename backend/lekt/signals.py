@@ -27,7 +27,10 @@ def create_default_trackedlist(
     """If a subscription is created, create a default training plan."""
     if created:
         try:
-            TrackedList.objects.create(name="Default", subscription=instance)
+            TrackedList.objects.create(
+                name="Default Empty List - Add Some Words or Grammar to Begin!",
+                subscription=instance,
+            )
         except Exception as e:
             logger.error(e)
             raise e

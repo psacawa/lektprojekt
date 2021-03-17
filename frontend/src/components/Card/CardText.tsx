@@ -1,8 +1,7 @@
 import { makeStyles } from "@material-ui/core/styles";
+import styles from "assets/jss/styles/components/cardTextStyle";
 import classNames from "classnames";
 import React from "react";
-
-import styles from "../../assets/jss/styles/components/cardTextStyle";
 
 const useStyles = makeStyles(styles);
 interface Props {

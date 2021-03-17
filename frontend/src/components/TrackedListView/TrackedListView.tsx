@@ -52,6 +52,7 @@ interface Props {
 const useStyles = makeStyles({
   table: {
     margin: "10px",
+    maxWidth: 1000,
   },
   card: {
     minHeight: "20px",
