@@ -66,7 +66,7 @@ export interface PhrasePair {
   target: Phrase;
 }
 
-export interface PaginatedApiOutput<T> {
+export interface Paginate<T> {
   count: number;
   next: string;
   previous: string;

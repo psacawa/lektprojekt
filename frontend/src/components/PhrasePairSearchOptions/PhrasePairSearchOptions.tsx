@@ -1,5 +1,6 @@
 import { makeStyles } from "@material-ui/core";
 import FeatureSelect from "components/FeatureSelect";
+import { GridContainer, GridItem } from "components/Grid";
 import LexemeSelect from "components/LexemeSelect";
 import { difference, random } from "lodash";
 import React from "react";

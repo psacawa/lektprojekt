@@ -52,7 +52,7 @@ const FeatureSelect = ({ language, value, setValue, onChange }: Props) => {
   );
 
   return (
-    <Grid item xs={6}>
+    <Grid item xs={12} md={6}>
       <Autocomplete
         multiple
         renderTags={() => null}

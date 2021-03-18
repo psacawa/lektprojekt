@@ -40,7 +40,7 @@ import {
   Feature,
   Lexeme,
   Observable,
-  PaginatedApiOutput,
+  Paginate,
   Tracked,
   TrackedList,
 } from "../../types";
@@ -110,7 +110,7 @@ const TrackedListView = ({ list }: Props) => {
   const invalidateQueries = async (observable_id: number) => {
     const queries: Record<
       string,
-      QueryObserverResult<PaginatedApiOutput<Tracked<Observable>>>
+      QueryObserverResult<Paginate<Tracked<Observable>>>
     > = {
       "tracked-lexemes": trackedLexemeQuery,
       "tracked-features": trackedFeatureQuery,

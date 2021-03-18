@@ -4,9 +4,10 @@ from operator import __or__, itemgetter
 
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
-from django.db.models import Count, F, Prefetch, Q, Subquery
+from django.db.models import Count, F, Func, Prefetch, Q, Subquery
 from django.db.models.aggregates import Sum
 from django.db.models.expressions import RawSQL
+from django.db.models.fields import FloatField
 from django.shortcuts import get_object_or_404
 from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.decorators import method_decorator
@@ -430,20 +431,33 @@ class TrackedListViewSet(
         ).annotate(count=Count("observables"))
 
 
+class Random(Func):
+    function = "RANDOM"
+    output_field = FloatField()
+
+
 class TrainingPlanView(mixins.ListModelMixin, viewsets.GenericViewSet):
     #  TODO 05/03/20 psacawa: make resilient to errors
     permission_classes = [IsTrackedListOwner]
     serializer_class = serializers.PhrasePairSerializer
+
+    def get_serializer_context(self):
+        return {"expand_matches": ["lexeme", "feature"]}
 
     def get_queryset(self):
         list_pk = self.kwargs.get("list_pk")
         subscription: LanguageSubscription = LanguageSubscription.objects.get(
             lists__id=list_pk
         )
-        observables = [
-            obs.observable_id
-            for obs in TrackedObservable.objects.filter(tracked_list_id=list_pk)
-        ]
+        #  observables = [
+        #      obs.observable_id
+        #      for obs in TrackedObservable.objects.filter(tracked_list_id=list_pk)
+        #  ]
+        observables = Observable.objects.filter(
+            trackedobservable__tracked_list_id=list_pk
+        )
+        lexemes = observables.instance_of(Lexeme)
+        features = observables.instance_of(Feature)
 
         if len(observables) == 0:
             raise ParseError("At least one search term is needed in the training list.")
@@ -453,9 +467,29 @@ class TrainingPlanView(mixins.ListModelMixin, viewsets.GenericViewSet):
                 observable_weights__target_lang=subscription.target_lang,
                 observable_weights__observable__in=observables,
             )
-            .annotate(score=Sum("observable_weights__weight"))
+            #  We use Random() to implement some kind of basic randomization
+            #  TODO 17/03/20 psacawa: make a real scalable SRS solution for this
+            .annotate(score=Random() * Sum("observable_weights__weight"))
             .order_by("-score")
             .select_related("base", "target")
+        )
+        queryset = queryset.prefetch_related(
+            Prefetch(
+                "target__phraseword_set",
+                queryset=PhraseWord.objects.filter(word__lexeme__in=lexemes).annotate(
+                    lexeme=F("word__lexeme")
+                ),
+                to_attr="lexeme_matches",
+            )
+        )
+        queryset = queryset.prefetch_related(
+            Prefetch(
+                "target__phraseword_set",
+                queryset=PhraseWord.objects.filter(
+                    word__features__in=features
+                ).annotate(feature=F("word__features")),
+                to_attr="feature_matches",
+            )
         )
         return queryset
 

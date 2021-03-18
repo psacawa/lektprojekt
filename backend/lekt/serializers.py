@@ -125,6 +125,11 @@ class PhrasePairSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         expand_matches = self.context.get("expand_matches", [])
+        for match_type in expand_matches:
+            assert match_type in ["lexeme", "feature",], (
+                "Currently accepted matches to highlight for "
+                "phrases are 'feature' and 'lexeme'."
+            )
         self.fields["target"] = PhraseSerializer(expand_matches=expand_matches)
 
     class Meta:

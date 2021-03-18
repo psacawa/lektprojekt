@@ -3,6 +3,7 @@ import {
   CircularProgress,
   Collapse,
   Grid,
+  Hidden,
   IconButton,
   makeStyles,
   Table,
@@ -25,7 +26,7 @@ import {
   Feature,
   Language,
   Lexeme,
-  PaginatedApiOutput,
+  Paginate,
   PhrasePair,
 } from "../../types";
 
@@ -74,7 +75,7 @@ const PhrasePairTableRow = ({ phrasePair, colourMap }: RowProps) => {
 interface Props {
   baseLanguage: Language | null;
   targetLanguage: Language | null;
-  phrasePairQuery: QueryObserverResult<PaginatedApiOutput<PhrasePair>>;
+  phrasePairQuery: QueryObserverResult<Paginate<PhrasePair>>;
   lexemes: Coloured<Lexeme>[];
   features: Coloured<Feature>[];
   onChangePage: (event: any, page: number) => void;
@@ -82,6 +83,17 @@ interface Props {
   rowsPerPage: number;
   onChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
+
+// TODO 17/03/20 psacawa: figure out how to present the PhrasePairTable on xs
+// https://stackoverflow.com/questions/42785964/is-it-possible-to-display-table-rows-vertically-with-css
+// https://stackoverflow.com/questions/19723617/responsive-tables-the-smart-way
+const useStyles = makeStyles((theme) => ({
+  [theme.breakpoints.down("sm")]: {
+    "*": {
+      backgroundColor: "blue",
+    },
+  },
+}));
 
 const PhrasePairTable = ({
   phrasePairQuery,
@@ -94,6 +106,7 @@ const PhrasePairTable = ({
   rowsPerPage,
   onChangeRowsPerPage,
 }: Props) => {
+  const classes = useStyles();
   const featureColourMap: Record<number, string | undefined> = _(features)
     .keyBy("id")
     .mapValues("colour")
@@ -105,9 +118,9 @@ const PhrasePairTable = ({
   const colourMap = { ...featureColourMap, ...lexemeColourMap };
   const { data, isSuccess, isFetching } = phrasePairQuery;
   return (
-    <Grid container justify="center">
+    <>
       {isSuccess ? (
-        <Grid item xs={12}>
+        <>
           <TableContainer>
             <Table size="small">
               <TableHead>
@@ -118,7 +131,6 @@ const PhrasePairTable = ({
                   <TableCell key={1} align="left">
                     {targetLanguage?.name}
                   </TableCell>
-                  <TableCell />
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -141,13 +153,13 @@ const PhrasePairTable = ({
             onChangePage={onChangePage}
             onChangeRowsPerPage={onChangeRowsPerPage}
           />
-        </Grid>
+        </>
       ) : isFetching ? (
         <Grid item>
           <CircularProgress />
         </Grid>
       ) : null}
-    </Grid>
+    </>
   );
 };
 

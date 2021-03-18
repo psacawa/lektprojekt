@@ -17,7 +17,7 @@ import {
   LoginServerErrors,
   LoginSuccessPayload,
   LoginValues,
-  PaginatedApiOutput,
+  Paginate,
   PairCount,
   PhrasePair,
   Subscription,
@@ -38,22 +38,16 @@ export const useLanguages = (options?: UseQueryOptions<Language[]>) =>
       axios
         .get(`${apiRoot}languages/`)
         .then(
-          (response: AxiosResponse<PaginatedApiOutput<Language>>) =>
-            response.data.results
+          (response: AxiosResponse<Paginate<Language>>) => response.data.results
         ),
     { staleTime: HOUR, ...options }
   );
 
-export const usePairCounts = (
-  options?: UseQueryOptions<PaginatedApiOutput<PairCount>>
-) =>
+export const usePairCounts = (options?: UseQueryOptions<Paginate<PairCount>>) =>
   useQuery("pair-count", () =>
     axios
       .get(`${apiRoot}pair-counts`)
-      .then(
-        (response: AxiosResponse<PaginatedApiOutput<PairCount>>) =>
-          response.data
-      )
+      .then((response: AxiosResponse<Paginate<PairCount>>) => response.data)
   );
 
 export const useLexeme = (
@@ -87,8 +81,7 @@ export const useLexemes = (
           params,
         })
         .then(
-          (response: AxiosResponse<PaginatedApiOutput<Lexeme>>) =>
-            response.data.results
+          (response: AxiosResponse<Paginate<Lexeme>>) => response.data.results
         ),
     { ...options }
   );
@@ -134,7 +127,7 @@ export const usePairObservableSearch = (
     page?: number;
     pageSize?: number;
   },
-  options?: UseQueryOptions<PaginatedApiOutput<PhrasePair>>
+  options?: UseQueryOptions<Paginate<PhrasePair>>
 ) =>
   useQuery(
     ["pairs-observable-search", { ...params }],
@@ -150,10 +143,7 @@ export const usePairObservableSearch = (
             page_size: params.pageSize,
           },
         })
-        .then(
-          (response: AxiosResponse<PaginatedApiOutput<PhrasePair>>) =>
-            response.data
-        ),
+        .then((response: AxiosResponse<Paginate<PhrasePair>>) => response.data),
     { staleTime: HOUR, ...options }
   );
 
@@ -177,7 +167,7 @@ export const usePairLexemeSearch = (
           },
         })
         .then(
-          (response: AxiosResponse<PaginatedApiOutput<PhrasePair>>) =>
+          (response: AxiosResponse<Paginate<PhrasePair>>) =>
             response.data.results
         ),
     { staleTime: HOUR, ...options }
@@ -203,7 +193,7 @@ export const usePairFeatureSearch = (
           },
         })
         .then(
-          (response: AxiosResponse<PaginatedApiOutput<PhrasePair>>) =>
+          (response: AxiosResponse<Paginate<PhrasePair>>) =>
             response.data.results
         ),
     { staleTime: HOUR, ...options }
@@ -282,7 +272,7 @@ export const useDeleteTrackedList = (
   );
 
 export const useSubs = (
-  options?: UseQueryOptions<PaginatedApiOutput<Subscription<true>>>
+  options?: UseQueryOptions<Paginate<Subscription<true>>>
 ) =>
   useQuery(
     ["subs"],
@@ -290,7 +280,7 @@ export const useSubs = (
       axios
         .get("/api/subs/")
         .then(
-          (response: AxiosResponse<PaginatedApiOutput<Subscription<true>>>) =>
+          (response: AxiosResponse<Paginate<Subscription<true>>>) =>
             response.data
         ),
     options
@@ -323,14 +313,13 @@ export const useTrackedLexemes = (
   params: {
     id: number;
   },
-  options?: UseQueryOptions<PaginatedApiOutput<Tracked<Lexeme>>>
+  options?: UseQueryOptions<Paginate<Tracked<Lexeme>>>
 ) =>
   useQuery(["tracked-lexemes", { ...params }], () =>
     axios
       .get(`/api/lists/${params.id}/lexemes/`)
       .then(
-        (response: AxiosResponse<PaginatedApiOutput<Tracked<Lexeme>>>) =>
-          response.data
+        (response: AxiosResponse<Paginate<Tracked<Lexeme>>>) => response.data
       )
   );
 
@@ -338,14 +327,13 @@ export const useTrackedFeatures = (
   params: {
     id: number;
   },
-  options?: UseQueryOptions<PaginatedApiOutput<Tracked<Feature>>>
+  options?: UseQueryOptions<Paginate<Tracked<Feature>>>
 ) =>
   useQuery(["tracked-features", { ...params }], () =>
     axios
       .get(`/api/lists/${params.id}/features/`)
       .then(
-        (response: AxiosResponse<PaginatedApiOutput<Tracked<Feature>>>) =>
-          response.data
+        (response: AxiosResponse<Paginate<Tracked<Feature>>>) => response.data
       )
   );
 
@@ -375,7 +363,7 @@ export const useUntrackObservable = (
 
 export const useTrainingPlan = (
   params: { list_id: number },
-  options?: UseQueryOptions<PaginatedApiOutput<PhrasePair>, { id: number }>
+  options?: UseQueryOptions<PhrasePair[], { id: number }>
 ) =>
   useQuery(
     ["plan", { ...params }],
@@ -383,8 +371,8 @@ export const useTrainingPlan = (
       axios
         .get(`/api/lists/${params.list_id}/plan/`)
         .then(
-          (response: AxiosResponse<PaginatedApiOutput<PhrasePair>>) =>
-            response.data
+          (response: AxiosResponse<Paginate<PhrasePair>>) =>
+            response.data.results
         ),
     { ...options }
   );
