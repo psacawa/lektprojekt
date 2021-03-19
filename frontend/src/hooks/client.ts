@@ -46,7 +46,7 @@ export const useLanguages = (options?: UseQueryOptions<Language[]>) =>
 export const usePairCounts = (options?: UseQueryOptions<Paginate<PairCount>>) =>
   useQuery("pair-count", () =>
     axios
-      .get(`${apiRoot}pair-counts`)
+      .get(`${apiRoot}pair-counts/`)
       .then((response: AxiosResponse<Paginate<PairCount>>) => response.data)
   );
 
@@ -264,10 +264,10 @@ export const useUpdateTrackedList = (
   );
 
 export const useDeleteTrackedList = (
-  options?: UseMutationOptions<void, any, { list_pk: number }>
+  options?: UseMutationOptions<void, any, { list_id: number }>
 ) =>
   useMutation(
-    (params) => axios.delete(`/api/lists/${params.list_pk}/`),
+    (params) => axios.delete(`/api/lists/${params.list_id}/`),
     options
   );
 
@@ -362,17 +362,27 @@ export const useUntrackObservable = (
   );
 
 export const useTrainingPlan = (
-  params: { list_id: number },
+  params: { list_id: number; page_size: number },
   options?: UseQueryOptions<PhrasePair[], { id: number }>
 ) =>
   useQuery(
     ["plan", { ...params }],
     () =>
       axios
-        .get(`/api/lists/${params.list_id}/plan/`)
+        .get(`/api/lists/${params.list_id}/plan/`, {
+          params: { page_size: params.page_size },
+        })
         .then(
           (response: AxiosResponse<Paginate<PhrasePair>>) =>
             response.data.results
         ),
     { ...options }
+  );
+
+export const useScoreQuestion = (option?: UseMutationOptions<any, any>) =>
+  useMutation((params: { list_id: number; phrase_id: number; grade: number }) =>
+    axios.post(`/api/lists/${params.list_id}/score/`, {
+      phrase: params.phrase_id,
+      grade: params.grade,
+    })
   );

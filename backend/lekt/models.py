@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Lookup
 from django.db.models.fields import Field
+from django.db.models.manager import Manager
 from model_utils.managers import InheritanceManager
 from polymorphic.managers import PolymorphicManager
 from polymorphic.models import PolymorphicModel
@@ -685,6 +686,8 @@ class TrackedList(TimestampedModel):
             ]
         )
 
+    objects = Manager()
+
     class Meta:
         unique_together = ["subscription", "name"]
 
@@ -706,10 +709,10 @@ class TrackedObservable(TimestampedModel):
         related_name="observables",
     )
     observable = models.ForeignKey(Observable, on_delete=models.RESTRICT)
-    difficulty = models.FloatField(
-        default=1.0, help_text="Relative weights of the observable during scheduling"
-    )
+    score = models.FloatField(default=0, help_text="Cumulative score of the observable")
     last_answered_at = models.DateTimeField(auto_now_add=True)
+
+    objects = Manager()
 
     class Meta:
         unique_together = ["tracked_list", "observable"]
@@ -717,7 +720,7 @@ class TrackedObservable(TimestampedModel):
     def __repr__(self):
         return (
             f"<TrackedObservable {self.observable.polymorphic_ctype.name}: "
-            f"{str(self.observable.get_real_instance())}, {self.difficulty}>"
+            f"{str(self.observable.get_real_instance())}, {self.score}>"
         )
 
     __str__ = __repr__

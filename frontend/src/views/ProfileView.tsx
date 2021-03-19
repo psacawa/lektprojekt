@@ -145,7 +145,7 @@ const ProfileView = () => {
                     to={`/lists/${list.id}/`}
                     variant="outlined"
                   >
-                    Edit
+                    Add Items
                   </Button>,
                   <Button
                     size="sm"
@@ -153,13 +153,13 @@ const ProfileView = () => {
                     to={`/lists/${list.id}/practice/`}
                     variant="outlined"
                   >
-                    Practice
+                    Go!
                   </Button>,
 
                   <IconButton
                     onClick={async (ev: React.MouseEvent<{}>) => {
                       await deleteListMutation.mutateAsync({
-                        list_pk: list.id,
+                        list_id: list.id,
                       });
                       await queryClient.refetchQueries(["subs"]);
                     }}

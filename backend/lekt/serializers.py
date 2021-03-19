@@ -159,7 +159,7 @@ class TrackedObservableSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TrackedObservable
-        fields = ["id", "observable", "difficulty", "last_answered_at"]
+        fields = ["id", "observable", "score", "last_answered_at"]
 
 
 class tracked_list_default:
@@ -190,6 +190,11 @@ class TrackedListSerializer(FlexFieldsModelSerializer):
         model = TrackedList
         fields = ["id", "name", "subscription"]
         expandable_fields = {"subscription": LanguageSubscriptionSerializer}
+
+
+class ScoreResponseSerializer(serializers.Serializer):
+    phrase = serializers.IntegerField()
+    grade = serializers.IntegerField(min_value=1, max_value=5)
 
 
 class LanguageSubscriptionGetSerializer(serializers.ModelSerializer):

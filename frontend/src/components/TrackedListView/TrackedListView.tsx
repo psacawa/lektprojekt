@@ -217,7 +217,7 @@ const TrackedListView = ({ list }: Props) => {
                 <TableRow>
                   <TableCell>Word</TableCell>
                   <TableCell>Part of Speech</TableCell>
-                  <TableCell>Difficulty</TableCell>
+                  <TableCell>Score</TableCell>
                   <TableCell></TableCell>
                 </TableRow>
               </TableHead>
@@ -226,7 +226,7 @@ const TrackedListView = ({ list }: Props) => {
                   <TableRow key={idx}>
                     <TableCell>{tracked.observable.lemma}</TableCell>
                     <TableCell>{tracked.observable.pos}</TableCell>
-                    <TableCell>{tracked.difficulty}</TableCell>
+                    <TableCell>{tracked.score}</TableCell>
                     <TableCell>
                       {!untrackObservable.isLoading ? (
                         <IconButton
@@ -311,7 +311,7 @@ const TrackedListView = ({ list }: Props) => {
               <TableHead>
                 <TableRow>
                   <TableCell>Feature</TableCell>
-                  <TableCell>Difficulty</TableCell>
+                  <TableCell>Score</TableCell>
                   <TableCell></TableCell>
                 </TableRow>
               </TableHead>
@@ -319,7 +319,7 @@ const TrackedListView = ({ list }: Props) => {
                 {trackedFeatureQuery.data!.results.map((tracked, idx) => (
                   <TableRow key={idx}>
                     <TableCell>{tracked.observable.description}</TableCell>
-                    <TableCell>{tracked.difficulty}</TableCell>
+                    <TableCell>{tracked.score}</TableCell>
                     <TableCell>
                       {!untrackObservable.isLoading ? (
                         <IconButton

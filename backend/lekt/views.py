@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from functools import reduce
 from operator import __or__, itemgetter
 
@@ -6,7 +7,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 from django.db.models import Count, F, Func, Prefetch, Q, Subquery
 from django.db.models.aggregates import Sum
-from django.db.models.expressions import RawSQL
+from django.db.models.expressions import RawSQL, Value
 from django.db.models.fields import FloatField
 from django.shortcuts import get_object_or_404
 from django.utils.datastructures import MultiValueDictKeyError
@@ -109,7 +110,6 @@ class WordCompletionView(generics.ListAPIView):
     """
 
     queryset = Word.objects.prefetch_related("features", "lexeme")
-    page_size = 25
     serializer_class = serializers.WordSerializer
     filterset_class = filters.WordFilterSet
     ordering = ["id"]
@@ -429,6 +429,30 @@ class TrackedListViewSet(
         return TrackedList.objects.filter(
             subscription__owner__user_id=self.request.user.id
         ).annotate(count=Count("observables"))
+
+    @action(detail=True, methods=["post"])
+    def score(self, request: Request, pk=None):
+        """
+        Here is the API's entrypoint the spaced repetition system scheduling logic
+        """
+        serializer = serializers.ScoreResponseSerializer(data=request.data)
+        if serializer.is_valid():
+            phrase_pk = request.data["phrase"]
+            grade = request.data["grade"]
+            try:
+                TrackedObservable.objects.filter(
+                    tracked_list=pk,
+                    observable__in=Observable.objects.filter(
+                        Q(Lexeme___word__phrase=phrase_pk)
+                        | Q(Feature___word__phrase=phrase_pk)
+                    ),
+                ).update(score=F("score") + 1)
+            except Exception as exc:
+                logger.error(f"{exc=}")
+                raise ParseError()
+            return Response(status=200)
+        else:
+            raise ValidationError(serializer.errors)
 
 
 class Random(Func):

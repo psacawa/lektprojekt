@@ -39,7 +39,7 @@ export interface Feature {
 export type Observable = Lexeme | Feature;
 
 export interface Tracked<T = number> {
-  difficulty: number;
+  score: number;
   id: number;
   observable: T;
 }
@@ -148,4 +148,19 @@ export interface PairCount {
   base_lang: string;
   target_lang: string;
   count: number;
+}
+
+// the below types hold some information about the application UI, such as the "active"
+// list, and the active practice session, for the purpose of providing a user friendly
+// flow. In a separate architecture, this would be the content of some react context
+
+interface PracticeState {
+  pairs: PhrasePair[];
+  activePairIdx: number;
+}
+
+interface RootState {
+  activeSubscriptionId?: number;
+  activeTrackedListId?: number;
+  practice?: PracticeState;
 }
