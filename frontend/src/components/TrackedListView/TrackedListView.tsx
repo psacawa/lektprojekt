@@ -21,8 +21,9 @@ import {
 import { Clear } from "@material-ui/icons";
 import { Autocomplete } from "@material-ui/lab";
 import axios from "axios";
+import { useSession } from "hooks/session";
 import { isEqual, uniqWith } from "lodash";
-import React, { Component, useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 import { QueryObserverResult, useQuery, useQueryClient } from "react-query";
 import { Link, useHistory, useParams } from "react-router-dom";
 
@@ -65,6 +66,11 @@ const useStyles = makeStyles({
 const TrackedListView = ({ list }: Props) => {
   const classes = useStyles();
   const { id } = useParams<{ id: any }>();
+  const { session, setSession } = useSession();
+  useEffect(() => {
+    console.log(`setting tracked list: ${id}`);
+    setSession({ currentTrackedList: id });
+  }, [id]);
   const history = useHistory();
   const queryClient = useQueryClient();
   const listQuery = useList({ id });

@@ -7,7 +7,9 @@ import {
   Typography,
 } from "@material-ui/core";
 import { usePair, useScoreQuestion, useTrainingPlan } from "hooks";
-import React, { useReducer, useState } from "react";
+import { useSession } from "hooks/session";
+import React, { useEffect, useReducer, useState } from "react";
+import SweetAlert from "react-bootstrap-sweetalert";
 import { useQueryClient } from "react-query";
 import { Redirect, useHistory, useParams } from "react-router-dom";
 
@@ -26,10 +28,30 @@ const useStyles = makeStyles({
   progress: {},
 });
 
+const PracticeView = () => {
+  const { session } = useSession();
+  const history = useHistory();
+  return (
+    <>
+      {session.currentTrackedList === undefined ? (
+        <SweetAlert
+          title="No training plan chosen"
+          onConfirm={() => {
+            history.push("/profile/");
+          }}
+        />
+      ) : (
+        <Redirect to={`/lists/${session.currentTrackedList}/practice/`} />
+      )}
+    </>
+  );
+};
+
 const grades = ["Wrong", "Hard", "OK", "Good", "Easy"];
 // eventually, the state of the practice should be availabe globally - perhaps redux
-const PracticeView = () => {
+const ListPracticeView = () => {
   const queryClient = useQueryClient();
+  const { setSession } = useSession();
   const history = useHistory();
   const { id: list_id } = useParams<{ id?: any }>();
   const classes = useStyles();
@@ -37,6 +59,9 @@ const PracticeView = () => {
     { list_id, page_size: 20 },
     { staleTime: Infinity }
   );
+  useEffect(() => {
+    setSession({ currentTrackedList: list_id });
+  });
   const [currentPairIdx, setCurrentPairIdx] = useState<number>(0);
   const [questionAnswered, setQuestionAnswered] = useState(false);
   const scoreQuestion = useScoreQuestion();
@@ -142,4 +167,4 @@ const PracticeView = () => {
   );
 };
 
-export default PracticeView;
+export { ListPracticeView, PracticeView };

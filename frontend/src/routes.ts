@@ -17,7 +17,7 @@ import LoginView from "views/LoginView";
 import LogoutView from "views/LogoutView";
 import PhrasePairDetailView from "views/PhrasePairDetailView";
 import PhrasePairListView from "views/PhrasePairListView";
-import PracticeView from "views/PracticeView";
+import { ListPracticeView, PracticeView } from "views/PracticeView";
 import ProfileView from "views/ProfileView";
 import ResetPasswordView from "views/ResetPasswordView";
 
@@ -66,6 +66,13 @@ const baseDrawerRoutes: AppRoute[] = [
     component: ProfileView,
     icon: Person,
   },
+  {
+    path: "/practice/",
+    name: "Practice",
+    exact: false,
+    component: PracticeView,
+    icon: InsertEmoticon,
+  },
 ];
 
 const baseRoutes: AppRoute[] = [
@@ -91,8 +98,7 @@ const baseRoutes: AppRoute[] = [
     path: "/lists/:id/practice/",
     name: "Practice Mode",
     exact: false,
-    component: PracticeView,
-    icon: InsertEmoticon,
+    component: ListPracticeView,
   },
   {
     path: "/reset-password",

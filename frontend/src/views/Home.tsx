@@ -11,7 +11,6 @@ import {
   TableRow,
 } from "@material-ui/core";
 import { Card, CardContent } from "@material-ui/core";
-import flags from "assets/img/flags";
 import cardBodyStyles from "assets/jss/styles/components/cardBodyStyle";
 import cardStyles from "assets/jss/styles/components/cardStyle";
 import { GridContainer, GridItem } from "components/Grid";
@@ -26,12 +25,16 @@ const useStyles = makeStyles({
   ...cardBodyStyles,
   container: {
     maxWidth: 800,
+    margin: "auto",
   },
   center: {
     textAlign: "center",
   },
   flagIcon: {
     padding: "20%",
+  },
+  list: {
+    listStyleType: "none",
   },
 });
 
@@ -58,11 +61,23 @@ const Home = () => {
     },
   });
   return (
-    <>
+    <div className={classes.center}>
       <h3>
-        Welcome to <b>LektProjekt</b>, the most awesome website since ancient
-        Sumer. Cowabunga!
+        Welcome to <b>LektProjekt</b>
       </h3>
+      <p>which aims to let you practice your</p>
+      <ul className={classes.list}>
+        <li>
+          <b>vocabulary</b>
+        </li>
+        <li>
+          <b>grammar</b>
+        </li>
+        <li>
+          <b>idioms</b> (to be added)
+        </li>
+      </ul>
+      ...in the context of actual phrases in the language of your choice
       <h4>I'm learning...</h4>
       <GridContainer className={classes.container}>
         {languageQuery.data &&
@@ -95,7 +110,7 @@ const Home = () => {
           ))}
       </GridContainer>
       <PhrasePairCountsTable />
-    </>
+    </div>
   );
 };
 
@@ -103,7 +118,7 @@ const PhrasePairCountsTable = () => {
   const classes = useStyles();
   const pairCountsQuery = usePairCounts();
   return (
-    <>
+    <div className={classes.center}>
       {pairCountsQuery.isSuccess && (
         <>
           <h5>Current phrase pair counts in database:</h5>
@@ -129,7 +144,7 @@ const PhrasePairCountsTable = () => {
           </TableContainer>
         </>
       )}
-    </>
+    </div>
   );
 };
 

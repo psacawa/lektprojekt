@@ -1,8 +1,8 @@
 import "assets/scss/base.scss?v=1.9.0";
 
-import { Snackbar } from "@material-ui/core";
 import { createBrowserHistory } from "history";
 import { AuthProvider } from "hooks/auth";
+import { SessionProvider } from "hooks/session";
 import React from "react";
 import ReactDOM from "react-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -18,9 +18,11 @@ const queryClient = new QueryClient();
 ReactDOM.render(
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <Router history={history}>
-        <App />
-      </Router>
+      <SessionProvider>
+        <Router history={history}>
+          <App />
+        </Router>
+      </SessionProvider>
     </AuthProvider>
     <ReactQueryDevtools />
   </QueryClientProvider>,

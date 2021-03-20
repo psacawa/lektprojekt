@@ -242,7 +242,7 @@ export const useDeleteSubscription = (
   );
 
 export const useCreateTrackedList = (
-  options?: UseMutationOptions<any, any, CreateTrackedListValues>
+  options?: UseMutationOptions<TrackedList, any, CreateTrackedListValues>
 ) =>
   useMutation(
     (params: CreateTrackedListValues) =>
