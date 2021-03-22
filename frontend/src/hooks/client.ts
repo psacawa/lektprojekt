@@ -213,13 +213,10 @@ export const usePair = (
   );
 
 export const useUser = (options?: UseQueryOptions<User>) =>
-  useQuery(
-    ["user"],
-    () =>
-      axios
-        .get("/auth/user/")
-        .then((response: AxiosResponse<User>) => response.data),
-    { refetchOnWindowFocus: false, ...options }
+  useQuery(["user"], () =>
+    axios
+      .get("/auth/user/")
+      .then((response: AxiosResponse<User>) => response.data)
   );
 
 export const useCreateSubscription = (
@@ -239,6 +236,17 @@ export const useDeleteSubscription = (
   useMutation(
     (params: { sub_id: number }) => axios.delete(`/api/subs/${params.sub_id}/`),
     { ...options }
+  );
+
+export const useTrackedList = (
+  params: { id: number },
+  // options?: UseQueryOptions<TrackedList<true>>
+  options?: UseQueryOptions<TrackedList<true>>
+) =>
+  useQuery(["lists", params.id], () =>
+    axios
+      .get(`/api/lists/${params.id}/?expand=subscription`)
+      .then((response: AxiosResponse<TrackedList<true>>) => response.data)
   );
 
 export const useCreateTrackedList = (
@@ -273,6 +281,11 @@ export const useDeleteTrackedList = (
 
 export const useSubs = (
   options?: UseQueryOptions<Paginate<Subscription<true>>>
+  // options?: UseQueryOptions<
+  //   Paginate<Subscription<true>>,
+  //   unknown,
+  //   Paginate<Subscription<true>> | Subscription<true>
+  // >
 ) =>
   useQuery(
     ["subs"],
@@ -284,16 +297,6 @@ export const useSubs = (
             response.data
         ),
     options
-  );
-
-export const useList = (
-  params: { id: number },
-  options?: UseQueryOptions<TrackedList<true>>
-) =>
-  useQuery(["lists", params.id], () =>
-    axios
-      .get(`/api/lists/${params.id}/?expand=subscription`)
-      .then((response: AxiosResponse<TrackedList<true>>) => response.data)
   );
 
 export const useSub = (

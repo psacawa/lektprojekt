@@ -44,7 +44,7 @@ export default function Footer({ fluid, white }: Props) {
               </Link>
             </ListItem>{" "}
             <ListItem className={classes.inlineBlock}>
-              <Link to="/" className={classes.inlineBlock}>
+              <Link to="/about/" className={classes.inlineBlock}>
                 About
               </Link>
             </ListItem>

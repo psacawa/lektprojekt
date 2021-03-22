@@ -314,15 +314,16 @@ function Sidebar(props: SidebarProps) {
     });
   let brand = (
     <div className={logoClasses}>
+      {/* TODO 21/03/20 psacawa: change to Link */}
       <a
-        href={process.env.REACT_APP_DOMAIN}
+        href={`https://${process.env.REACT_APP_DOMAIN}`}
         target="_blank"
         className={logoMini}
       >
         <img src={logo} alt="logo" className={classes.img} />
       </a>
       <a
-        href={process.env.REACT_APP_DOMAIN}
+        href={`https://${process.env.REACT_APP_DOMAIN}`}
         target="_blank"
         className={logoNormal}
       >

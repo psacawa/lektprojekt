@@ -1,17 +1,19 @@
 import {
-  Create,
-  Home as MuiHome,
+  CreateOutlined,
+  HelpOutline,
+  HomeOutlined as MuiHome,
   InsertEmoticon,
   LockOpen,
   PanTool,
-  Person,
+  PersonOutline,
   Search,
   VpnKey,
 } from "@material-ui/icons";
 import TrackedListView from "components/TrackedListView";
 import React from "react";
+import AboutView from "views/AboutView";
 import CreateAccountView from "views/CreateAccountView";
-import Home from "views/Home";
+import HomeView from "views/HomeView";
 import LexemeDetailView from "views/LexemeDetailView";
 import LoginView from "views/LoginView";
 import LogoutView from "views/LogoutView";
@@ -49,7 +51,7 @@ const baseDrawerRoutes: AppRoute[] = [
     path: "/",
     name: "Home",
     exact: true,
-    component: Home,
+    component: HomeView,
     icon: MuiHome,
   },
   {
@@ -64,7 +66,7 @@ const baseDrawerRoutes: AppRoute[] = [
     name: "Profile",
     exact: false,
     component: ProfileView,
-    icon: Person,
+    icon: PersonOutline,
   },
   {
     path: "/practice/",
@@ -72,6 +74,13 @@ const baseDrawerRoutes: AppRoute[] = [
     exact: false,
     component: PracticeView,
     icon: InsertEmoticon,
+  },
+  {
+    path: "/about/",
+    name: "About",
+    exact: false,
+    component: AboutView,
+    icon: HelpOutline,
   },
 ];
 
@@ -132,7 +141,7 @@ const loggedOutRoutes: AppRoute[] = [
     name: "Register",
     exact: false,
     component: CreateAccountView,
-    icon: Create,
+    icon: CreateOutlined,
   },
 ];
 

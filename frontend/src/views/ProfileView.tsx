@@ -192,6 +192,7 @@ const ProfileView = () => {
                   label="Add a new list"
                 />
                 <Button
+                  style={{ marginLeft: "20px" }}
                   onClick={async (ev: React.MouseEvent<{}>) => {
                     await createListMutation.mutateAsync({
                       subscription: sub.id,

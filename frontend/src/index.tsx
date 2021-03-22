@@ -13,7 +13,15 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
 const history = createBrowserHistory();
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      // TODO 21/03/20 psacawa: investigate whether this can be safely added
+      refetchOnMount: false,
+    },
+  },
+});
 
 ReactDOM.render(
   <QueryClientProvider client={queryClient}>

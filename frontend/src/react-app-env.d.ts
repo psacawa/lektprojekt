@@ -8,7 +8,7 @@ declare namespace NodeJS {
     readonly PUBLIC_URL: string;
     readonly REACT_APP_NAME: string;
     readonly REACT_APP_DOMAIN: string;
-    readonly REACT_APP_AUDIO_ĆDN_DOMAIN: string;
+    readonly REACT_APP_AUDIO_CDN_DOMAIN: string;
   }
 }
 

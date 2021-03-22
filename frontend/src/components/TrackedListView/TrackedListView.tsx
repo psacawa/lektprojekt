@@ -31,9 +31,9 @@ import {
   useFeatures,
   useLanguages,
   useLexemes,
-  useList,
   useTrackedFeatures,
   useTrackedLexemes,
+  useTrackedList,
   useTrackObservable,
   useUntrackObservable,
 } from "../../hooks";
@@ -73,7 +73,7 @@ const TrackedListView = ({ list }: Props) => {
   }, [id]);
   const history = useHistory();
   const queryClient = useQueryClient();
-  const listQuery = useList({ id });
+  const listQuery = useTrackedList({ id });
   const languagesQuery = useLanguages();
 
   // available lexemes and auxiliary search queries
