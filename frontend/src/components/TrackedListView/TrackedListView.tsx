@@ -18,14 +18,16 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import { Clear } from "@material-ui/icons";
+import { Clear, Edit } from "@material-ui/icons";
 import { Autocomplete } from "@material-ui/lab";
-import axios from "axios";
+import { Field, Form, Formik } from "formik";
+import { TextField as FormikTextField } from "formik-material-ui";
 import { useSession } from "hooks/session";
 import { isEqual, uniqWith } from "lodash";
 import React, { Component, useEffect, useState } from "react";
 import { QueryObserverResult, useQuery, useQueryClient } from "react-query";
 import { Link, useHistory, useParams } from "react-router-dom";
+import * as yup from "yup";
 
 import {
   useFeatures,
@@ -36,9 +38,11 @@ import {
   useTrackedList,
   useTrackObservable,
   useUntrackObservable,
+  useUpdateTrackedList,
 } from "../../hooks";
 import {
   Feature,
+  Language,
   Lexeme,
   Observable,
   Paginate,
@@ -46,9 +50,62 @@ import {
   TrackedList,
 } from "../../types";
 
-interface Props {
-  list: TrackedList;
+interface HeaderProps {
+  list: TrackedList<true>;
+  language?: Language;
 }
+
+const headerSchema: yup.SchemaOf<{ name: string }> = yup.object().shape({
+  name: yup.string().required(),
+});
+
+const TrackedListHeader = ({ list, language }: HeaderProps) => {
+  const queryClient = useQueryClient();
+  const [editingTitle, setEditingTitle] = useState(false);
+  const [titleValue, setTitleValue] = useState("");
+  const updateList = useUpdateTrackedList();
+  return (
+    <>
+      {!editingTitle ? (
+        <Typography variant="h5">
+          {list.name}
+          <IconButton
+            onClick={async (ev: React.MouseEvent<any>) => {
+              setEditingTitle(true);
+            }}
+          >
+            <Edit />
+          </IconButton>
+        </Typography>
+      ) : (
+        <Formik
+          initialValues={{ name: "" }}
+          validationSchema={headerSchema}
+          onSubmit={async (values, bag) => {
+            bag.setSubmitting(true);
+            await updateList.mutateAsync({ id: list.id, name: values.name });
+            await queryClient.refetchQueries(["lists", list.id]);
+            await queryClient.refetchQueries(["subs"]);
+            setEditingTitle(false);
+            bag.setSubmitting(false);
+          }}
+        >
+          <Form>
+            <Field
+              component={FormikTextField}
+              name="name"
+              label="New Training Plan Name"
+            />
+          </Form>
+        </Formik>
+      )}
+      {language && <Typography variant="subtitle1">{language.name}</Typography>}
+      <MuiLink to="/profile/" component={Link}>
+        back
+      </MuiLink>
+    </>
+  );
+};
 
 const useStyles = makeStyles({
   table: {
@@ -63,9 +120,13 @@ const useStyles = makeStyles({
   },
 });
 
+interface Props {
+  list: TrackedList;
+}
+
 const TrackedListView = ({ list }: Props) => {
   const classes = useStyles();
-  const { id } = useParams<{ id: any }>();
+  const id = parseInt(useParams<{ id: string }>().id);
   const { session, setSession } = useSession();
   useEffect(() => {
     console.log(`setting tracked list: ${id}`);
@@ -109,6 +170,7 @@ const TrackedListView = ({ list }: Props) => {
       onSuccess: (results) => {
         setFeatureOptions(results);
       },
+      enabled: listQuery.isSuccess,
     }
   );
 
@@ -140,18 +202,12 @@ const TrackedListView = ({ list }: Props) => {
     <>
       {listQuery.isSuccess && languagesQuery.isSuccess ? (
         <>
-          <Typography variant="h5">{listQuery.data.name}</Typography>
-          <Typography variant="subtitle1">
-            {
-              languagesQuery.data!.find(
-                (lang, idx) =>
-                  lang.id === listQuery.data!.subscription.target_lang
-              )?.name
-            }
-          </Typography>
-          <MuiLink to="/profile/" component={Link}>
-            back
-          </MuiLink>
+          <TrackedListHeader
+            list={listQuery.data}
+            language={languagesQuery.data.find(
+              (lang) => lang.id === listQuery.data.subscription.target_lang
+            )}
+          />
         </>
       ) : (
         <CircularProgress />

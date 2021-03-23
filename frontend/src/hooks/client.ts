@@ -266,7 +266,7 @@ export const useUpdateTrackedList = (
   useMutation(
     (params) =>
       axios
-        .patch(`/api/lists/${params.id}`, params)
+        .patch(`/api/lists/${params.id}/`, params)
         .then((response: AxiosResponse<TrackedList>) => response.data),
     options
   );
