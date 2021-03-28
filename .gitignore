@@ -70,3 +70,5 @@ dmypy.json
 .prof
 
 *.tmp
+
+.env.secret

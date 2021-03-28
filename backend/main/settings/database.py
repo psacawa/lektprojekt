@@ -1,3 +1,7 @@
+DB_HOST = environ.get("POSTGRES_HOST", "localhost")
+DB_PASS = environ.get("POSTGRES_PASSWORD", "django-pass")
+
+
 def _get_database_config(mode="main"):
     """Get the DB config for either main or test database"""
     return {
@@ -6,8 +10,8 @@ def _get_database_config(mode="main"):
         # In development mode a database superuser is used
         # who can delete and recrete the database
         "USER": "lekt_admin" if DEBUG else "lekt_user",
-        "PASSWORD": "django-pass",
-        "HOST": "localhost",
+        "HOST": DB_HOST,
+        "PASSWORD": DB_PASS,
     }
 
 
@@ -17,6 +21,8 @@ def _get_database_config(mode="main"):
 default_database = environ.get("DJANGO_DATABASE", "main")
 DATABASES = {}
 DATABASES["default"] = _get_database_config(default_database)
+
+REDIS_HOST = environ.get("REDIS_HOST", "localhost")
 
 # caching in development makes tests flaky
 if DEBUG:
@@ -31,7 +37,7 @@ else:
         "default": {
             "BACKEND": "django_redis.cache.RedisCache",
             "TIMEOUT": 30,
-            "LOCATION": "redis://127.0.0.1:6379",
+            "LOCATION": f"redis://{REDIS_HOST}",
             "OPTIONS": {
                 "CLIENT_CLASS": "django_redis.client.DefaultClient",
             },

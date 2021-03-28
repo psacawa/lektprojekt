@@ -5,6 +5,7 @@ from os.path import isfile, join
 
 import spacy
 from django.conf import settings
+from django.contrib.sites.models import Site
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.db import transaction
@@ -100,8 +101,14 @@ class Command(BaseCommand):
         if gpu:
             spacy.require_gpu()
 
+        try:
+            Site.objects.get(domain=f"{settings.DOMAIN}")
+        except:
+            print(f"{settings.DOMAIN} site absent...Automatically loading")
+            call_command("create_site")
+
         if Language.objects.count() == 0 or Voice.objects.count() == 0:
-            print("Language, Voice data not detected...Automatically loading")
+            print("Language, Voice data not detected...Automatically creating")
             call_command("load_languages")
 
         logger.debug(corpus)

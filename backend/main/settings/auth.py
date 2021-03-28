@@ -39,18 +39,17 @@ ACCOUNT_ADAPTER = "main.adapter.AccountAdapter"
 
 # email is relevant primarily for email-bases auth flow
 # in development it's printed to the console
-if DEBUG:
+DEFAULT_FROM_EMAIL = "{name} <{email}>".format(name=SITE_NAME, email=f"info@{DOMAIN}")
+SERVER_EMAIL = "{name} <{email}>".format(name="Alert", email=f"info@{DOMAIN}")
+
+if ENVIRONMENT in ["dev", "test"]:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 else:
-    DEFAULT_FROM_EMAIL = "{name} <{email}>".format(
-        name="LektProjekt", email="info@lektprojekt.com"
-    )
-    SERVER_EMAIL = "{name} <{email}>".format(name="Alert", email="info@lektprojekt.com")
 
     EMAIL_BACKEND = "django_ses.SESBackend"
     #  TODO 06/03/20 psacawa: recreate aws user credentials and config env. var
-    AWS_ACCESS_KEY_ID = "AKIA44VGLSENF2OVH4YJ"
-    AWS_SECRET_ACCESS_KEY = "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"
+    AWS_ACCESS_KEY_ID = environ.get("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = environ.get("AWS_SECRET_ACCESS_KEY")
     AWS_SES_REGION_NAME = "us-east-2"
     AWS_SES_REGION_ENDPOINT = "email.us-east-2.amazonaws.com"
     ACCOUNT_EMAIL_SUBJECT_PREFIX = ""

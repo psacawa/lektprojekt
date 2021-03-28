@@ -1,5 +1,6 @@
 # settings active only in development environment
 
+ALLOWED_HOSTS += ["lex.quest", "127.0.0.1", "localhost", "l"]
 # next line necessary for django-debug-toolbar
 INTERNAL_IPS = ALLOWED_HOSTS
 

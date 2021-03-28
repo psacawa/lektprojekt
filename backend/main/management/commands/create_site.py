@@ -5,14 +5,14 @@ from django.db.utils import IntegrityError
 
 
 class Command(BaseCommand):
-    help = """Add www.lektprojekt.com to the sites table"""
+    help = f"""Add {settings.DOMAIN} to the sites table"""
 
     def handle(self, **kwargs):
         site, created = Site.objects.get_or_create(id=100)
         if site.domain != settings.DOMAIN:
             created = True
         site.domain = settings.DOMAIN
-        site.name = "LektProjekt"
+        site.name = settings.SITE_NAME
         site.save()
         if created:
             print(f"{settings.DOMAIN} added to Sites table")

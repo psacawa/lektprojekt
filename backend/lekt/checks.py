@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.contrib.sites.models import Site
 from django.core.checks import Tags, Warning, register
 from django.db import close_old_connections, connection
 
@@ -45,9 +47,29 @@ def language_data_check(app_configs, **kwargs):
         warnings.append(
             Warning(
                 "No data for Language, Voice models detected",
-                hint="Use the load_languages command to load data for the Language and Voice"
-                "models. These data will also be loaded automatically by laod_corpus.",
+                hint="Use the load_languages command to load data for the Language and Voice "
+                "models. These data will also be loaded automatically by load_corpus",
                 id="lekt.W002",
+            )
+        )
+    close_old_connections()
+    return warnings
+
+
+#  this is only necessary for the transactional email templates
+@register(Tags.models)
+def site_check(app_configs, **kwargs):
+    warnings = []
+    if not initial_migration_available():
+        return []
+    try:
+        site = Site.objects.get(domain=settings.DOMAIN)
+    except Exception as e:
+        warnings.append(
+            Warning(
+                f"{settings.SITE_NAME} not in Site table",
+                hint="Use the create_site command to create the site domain",
+                id="lekt.W003",
             )
         )
     close_old_connections()

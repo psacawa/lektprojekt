@@ -1,0 +1,5 @@
+assets/*
+!assets/voices.json
+logs
+__pycache__
+

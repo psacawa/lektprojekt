@@ -9,30 +9,33 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-from os import environ, mkdir
+from os import environ, mkdir, remove
 from os.path import abspath, dirname, isdir, join
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = "/".join(abspath(__file__).split("/")[:-3])
 ASSET_DIR = join(BASE_DIR, "assets")
 LOGS_DIR = join(BASE_DIR, "logs")
+#  TODO 27/03/20 psacawa: somehow this is causing an error in docker build, investigate
 if not isdir(LOGS_DIR):
-    mkdir(LOGS_DIR)
+    try:
+        mkdir(LOGS_DIR)
+    except Exception as e:
+        pass
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "dzif4vpy6wc-y3nmon9eexcgz39-*wq1ew)csp7*u18s8g)m#5"
+SECRET_KEY = environ.get("SECRET_KEY", "fake-key")
 
 # the DEBUG variable is interpreted by django to turn on the server in development mode
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = ENVIRONMENT == "dev"
 
-DOMAIN = "www.lektprojekt.com"
+SITE_NAME = "LexQuest"
+DOMAIN = "lex.quest"
 ALLOWED_HOSTS = [DOMAIN]
-if DEBUG:
-    ALLOWED_HOSTS += ["lektprojekt.com", "127.0.0.1", "localhost", "l"]
 
 LEKTPROJEKT_APPS = [
     # first party applications
