@@ -63,7 +63,7 @@ const Home = () => {
   return (
     <div className={classes.center}>
       <h3>
-        Welcome to <b>LektProjekt</b>
+        Welcome to <b>{process.env.REACT_APP_NAME}</b>
       </h3>
       <p>which aims to let you practice your</p>
       <ul className={classes.list}>

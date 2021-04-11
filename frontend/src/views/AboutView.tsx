@@ -13,9 +13,10 @@ const AboutView = () => {
     <>
       <h3 className={classes.title}>What is this?</h3>
       <p>
-        <b>LektProjekt</b> is a project to address a lot of the frustrations one
-        of our felt with software help language learning. We want to provide an
-        approach that cuts out the <i>bullshit</i> from the process.
+        <b>{process.env.REACT_APP_NAME}</b> is a project to address a lot of the
+        frustrations one of our felt with software help language learning. We
+        want to provide an approach that cuts out the <i>bullshit</i> from the
+        process.
       </p>
       <p>
         We have amassed a large database of examples from a number of languages,
