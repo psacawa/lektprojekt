@@ -69,9 +69,8 @@ class Command(BaseCommand):
                 help=f"Model of {lang} to work with",
             )
         parser.add_argument(
-            "--compute-weights",
-            type=bool,
-            default=True,
+            "--skip-weights",
+            action="store_true",
             help="wether to run SQL script to refresh search weights",
         )
         parser.add_argument(
@@ -93,7 +92,7 @@ class Command(BaseCommand):
         lang1_model=None,
         lang2_size=None,
         lang2_model=None,
-        compute_weights=None,
+        skip_weights=None,
         gpu=None,
         **kwargs,
     ):
@@ -126,7 +125,7 @@ class Command(BaseCommand):
             )
             corpus_manager.load(limit=limit, reload=reload)
 
-        if compute_weights:
+        if not skip_weights:
             print("Recomputing search weights...")
             call_command("compute_search_weights")
 

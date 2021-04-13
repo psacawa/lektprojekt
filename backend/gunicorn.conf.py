@@ -11,5 +11,5 @@ accesslog = "access.log"
 
 reload = True
 
-raw_env = open(".env.secret").read().split("\n")
+raw_env = [s for s in open(".env.secret").read().split("\n") if "=" in s]
 raw_env += ["DJANGO_ENV=prod"]
