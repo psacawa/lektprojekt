@@ -100,7 +100,12 @@ class LanguageParser(object):
         return self.nlp.pipe(phrases)
 
     def process_phrase(self, doc: Doc) -> Tuple[Model, ValidationData]:
-        phrase = Phrase.objects.create(text=doc.text, lang=self.lang)
+        try:
+            phrase = Phrase.objects.create(text=doc.text, lang=self.lang)
+        except Exception as e:
+            logger.error(e)
+            raise PhraseRejectException
+
         validation_data = self.get_validation_data(doc)
         cur_phrase_words = []
         for i, token in enumerate(doc):
@@ -246,7 +251,11 @@ class LanguageParser(object):
         """
         doc = [t for t in doc if t.pos_ != "PUNCT"]
         propx = list((filter(lambda t: t.pos_ == "PROPN" or t.pos_ == "X", doc)))
-        return ValidationData(propriety=len(propx) / len(doc), length=len(doc))
+        try:
+            #  NOTE: length of doc could be zero
+            return ValidationData(propriety=len(propx) / len(doc), length=len(doc))
+        except ZeroDivisionError:
+            raise PhraseRejectException
 
     def compute_occurences(self):
         """
@@ -339,4 +348,8 @@ feature_description_dict = {
 
 
 class NLPModelLoadError(Exception):
+    pass
+
+
+class PhraseRejectException(Exception):
     pass

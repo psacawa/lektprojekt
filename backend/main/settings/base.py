@@ -63,6 +63,8 @@ INSTALLED_APPS = [
     "allauth.socialaccount",
     "dj_rest_auth",
     "dj_rest_auth.registration",
+    #  ad hoc administration in production
+    "django_extensions",
 ] + LEKTPROJEKT_APPS
 
 MIDDLEWARE = [

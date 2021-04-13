@@ -12,7 +12,11 @@ from django.db import IntegrityError, connection, transaction
 from progress.bar import Bar
 
 from lekt import models
-from lekt.loaders.language import LanguageParser, NLPModelLoadError
+from lekt.loaders.language import (
+    LanguageParser,
+    NLPModelLoadError,
+    PhraseRejectException,
+)
 from lekt.models import Corpus, Language, Phrase, PhrasePair, Voice, Word
 
 logger = logging.getLogger(__name__)
@@ -111,26 +115,32 @@ class CorpusManager(object):
             with transaction.atomic():
                 phrases = []
                 for i, doc in enumerate(doc_pair):
-                    phrases.append(self.parsers[i].process_phrase(doc))
+                    try:
+                        phrases.append(self.parsers[i].process_phrase(doc))
+                    except PhraseRejectException as e:
+                        logger.error(e)
+                        break
 
-                active = self.valid_phrase_pair(*phrases)
-                PhrasePair.objects.bulk_create(
-                    [
-                        PhrasePair(
-                            base=phrases[0],
-                            target=phrases[1],
-                            source=self.corpus,
-                            active=active,
-                        ),
-                        PhrasePair(
-                            base=phrases[1],
-                            target=phrases[0],
-                            source=self.corpus,
-                            active=active,
-                        ),
-                    ]
-                )
-                progress.next()
+                #  skip if an exception was raised in process_phrase,
+                if len(phrases) == 2:
+                    active = self.valid_phrase_pair(*phrases)
+                    PhrasePair.objects.bulk_create(
+                        [
+                            PhrasePair(
+                                base=phrases[0],
+                                target=phrases[1],
+                                source=self.corpus,
+                                active=active,
+                            ),
+                            PhrasePair(
+                                base=phrases[1],
+                                target=phrases[0],
+                                source=self.corpus,
+                                active=active,
+                            ),
+                        ]
+                    )
+                    progress.next()
 
         progress.finish()
 

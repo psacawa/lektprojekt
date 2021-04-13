@@ -8,7 +8,6 @@ INTERNAL_IPS = ALLOWED_HOSTS
 if DEBUG:
     INSTALLED_APPS += [
         "drf_yasg",
-        "django_extensions",
         "debug_toolbar",
     ]
     #  debug toolbar middleware needs to be before GzipMiddleware
