@@ -7,7 +7,7 @@ from collections import namedtuple
 from functools import lru_cache
 from inspect import isclass
 from string import Template
-from typing import Tuple
+from typing import Optional, Tuple
 
 import spacy
 from django.core.exceptions import MultipleObjectsReturned
@@ -17,7 +17,7 @@ from progress.bar import Bar
 from spacy.language import Language as SpacyLanguage
 from spacy.tokens import Doc
 
-from lekt.models import Feature, Language, Lexeme, Phrase, PhraseWord, Word
+from ..models import Feature, Language, Lexeme, Phrase, PhraseWord, Word
 
 ValidationData = namedtuple("ValidationData", ["length", "propriety"])
 logger = logging.getLogger(__name__)
@@ -42,9 +42,9 @@ class LanguageParser(object):
     The optional parameter test_only prevents model loading,
     """
 
-    lid: str = None
-    model: str = None
-    model_template: Template = None
+    lid: Optional[str] = None
+    model: Optional[str] = None
+    model_template: Optional[Template] = None
     nlp: SpacyLanguage
 
     def __init__(self, lid, size=None, model=None, test_only=False, **kwargs):
@@ -134,6 +134,7 @@ class LanguageParser(object):
                 logger.error(
                     "Lexeme get_or create returned multiple objects on {lemma}, {pos}"
                 )
+                raise PhraseRejectException
 
             try:
                 cur_word = self.get_word(
@@ -150,6 +151,7 @@ class LanguageParser(object):
                     "Word get_or create returned multiple objects "
                     f"on {lemma},{norm},{pos}, {tag} "
                 )
+                raise PhraseRejectException
 
             # this is an ad hoc means to determine if the word hase been processed before
             if cur_word.word_created:

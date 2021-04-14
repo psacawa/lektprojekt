@@ -1,3 +1,4 @@
+from argparse import ArgumentParser
 from os.path import join
 
 from django.conf import settings
@@ -11,7 +12,11 @@ class Command(BaseCommand):
     searching phrase pairs for a large number of features prenent in them.
     """
 
-    def handle(self, *args, **kwargs):
+    def add_arguments(self, parser: ArgumentParser):
+        parser.add_argument("-a", "--all", action="store_true")
+        parser.add_argument("-c", "--corpus", type=str)
+
+    def handle(self, *args, all=None, corpus=None, **kwargs):
         script_file = join(settings.BASE_DIR, "lekt", "sql", "search.sql")
         script = open(script_file).read()
         with connection.cursor() as cursor:

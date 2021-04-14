@@ -11,13 +11,9 @@ from django.conf import settings
 from django.db import IntegrityError, connection, transaction
 from progress.bar import Bar
 
-from lekt import models
-from lekt.loaders.language import (
-    LanguageParser,
-    NLPModelLoadError,
-    PhraseRejectException,
-)
-from lekt.models import Corpus, Language, Phrase, PhrasePair, Voice, Word
+from .. import models
+from ..models import Corpus, Language, Phrase, PhrasePair, Voice, Word
+from .language import LanguageParser, NLPModelLoadError, PhraseRejectException
 
 logger = logging.getLogger(__name__)
 

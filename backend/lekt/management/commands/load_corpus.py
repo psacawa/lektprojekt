@@ -10,8 +10,9 @@ from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.db import transaction
 
-from lekt.loaders import CorpusManager
-from lekt.models import Corpus, Language, Phrase, PhrasePair, Voice
+#  from lekt.loaders import CorpusManager
+from ...loaders import CorpusManager
+from ...models import Corpus, Language, Phrase, PhrasePair, Voice
 
 logger = logging.getLogger(__name__)
 
