@@ -97,7 +97,7 @@ const PhrasePairListView = () => {
                 lexemes,
                 features,
                 onChangeRowsPerPage: handleChangeRowsPerPage,
-                onChangePage: handleChangePage,
+                onPageChange: handleChangePage,
               }}
             />
           </>

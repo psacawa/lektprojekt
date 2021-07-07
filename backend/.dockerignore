@@ -1,5 +1,9 @@
-assets/*
+*
+!pyproject.toml
+!poetry.lock
+!*.py
+!lekt
+!main
+!utils
+!uwsgi.ini
 !assets/voices.json
-logs
-__pycache__
-

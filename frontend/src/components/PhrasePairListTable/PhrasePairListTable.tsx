@@ -78,7 +78,7 @@ interface Props {
   phrasePairQuery: QueryObserverResult<Paginate<PhrasePair>>;
   lexemes: Coloured<Lexeme>[];
   features: Coloured<Feature>[];
-  onChangePage: (event: any, page: number) => void;
+  onPageChange: (event: any, page: number) => void;
   pageNumber: number;
   rowsPerPage: number;
   onChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -101,7 +101,7 @@ const PhrasePairTable = ({
   targetLanguage,
   lexemes,
   features,
-  onChangePage,
+  onPageChange,
   pageNumber,
   rowsPerPage,
   onChangeRowsPerPage,
@@ -150,7 +150,7 @@ const PhrasePairTable = ({
             component="div"
             count={data!.count}
             page={pageNumber}
-            onChangePage={onChangePage}
+            onPageChange={onPageChange}
             onChangeRowsPerPage={onChangeRowsPerPage}
           />
         </>

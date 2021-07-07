@@ -24,7 +24,8 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer
 
-from ..main.decorators import generate_lazy_user
+from main.decorators import generate_lazy_user
+
 from . import filters, serializers
 from .models import (
     Feature,
