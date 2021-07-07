@@ -1,6 +1,6 @@
-# LektProjekt
+# LexQuest/LektProjekt
 
-This is the monorepo for _LektProjekt_. See `docs/` for general documentation.
+This is the monorepo for _LektProjekt_, which for business/marketing reasons is known publicly as _LexQuest_ and is available to demo at the address [www.lex.quest](https://lex.quest). See `docs/` for general documentation.
 
 ## Hooks
 
