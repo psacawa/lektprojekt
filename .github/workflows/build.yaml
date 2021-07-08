@@ -3,7 +3,10 @@ name: Build and push docker images to AWS
 on:
   push:
     branches:
-      - "master"
+      - master
+    paths:
+      - frontend
+      - backend
   workflow_dispatch:
 
 jobs:
