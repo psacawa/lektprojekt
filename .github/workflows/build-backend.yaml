@@ -1,20 +1,15 @@
-name: Build and push docker images to AWS
+name: Build and push backend docker image to AWS
 
 on:
   push:
     branches:
       - master
     paths:
-      - frontend
       - backend
   workflow_dispatch:
 
 jobs:
   build:
-    strategy:
-      fail-fast: true
-      matrix:
-        context: [frontend, backend]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -28,6 +23,6 @@ jobs:
       - name: Build and push image
         uses: docker/build-push-action@v2
         with:
-          context: ./${{ matrix.context }}
+          context: ./backend
           push: true
-          tags: 886185890074.dkr.ecr.us-east-2.amazonaws.com/lektprojekt-${{ matrix.context}}-image:latest
+          tags: 886185890074.dkr.ecr.us-east-2.amazonaws.com/lektprojekt-backend-image:latest
