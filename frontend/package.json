@@ -92,7 +92,8 @@
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
-    "docker-build": "docker build -t lektprojekt-frontend-image ."
+    "docker-build": "bash scripts/docker-build.sh",
+    "docker-push": "bash scripts/docker-push.sh"
   },
   "eslintConfig": {
     "plugins": [
