@@ -1,4 +1,4 @@
-import "assets/scss/base.scss?v=1.9.0";
+import "assets/css/base.css";
 
 import { createBrowserHistory } from "history";
 import { AuthProvider } from "hooks/auth";
