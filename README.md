@@ -1,5 +1,7 @@
 # LexQuest/LektProjekt
 
+![docker build](https://github.com/psacawa/lektprojekt/actions/workflows/build.yaml/badge.svg)
+
 This is the monorepo for _LektProjekt_, which for business/marketing reasons is known publicly as _LexQuest_ and is available to demo at the address [www.lex.quest](https://lex.quest). See `docs/` for general documentation.
 
 ## Hooks
