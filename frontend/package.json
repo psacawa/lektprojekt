@@ -54,7 +54,6 @@
     "jest-watch-typeahead": "0.6.1",
     "lodash": "^4.17.20",
     "mini-css-extract-plugin": "0.11.3",
-    "node-sass": "^4.14.1",
     "optimize-css-assets-webpack-plugin": "5.0.4",
     "perfect-scrollbar": "^1.5.0",
     "pnp-webpack-plugin": "1.6.4",
@@ -92,7 +91,8 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "docker-build": "docker build -t lektprojekt-frontend-image ."
   },
   "eslintConfig": {
     "plugins": [
@@ -128,7 +128,6 @@
     "@types/fs-extra": "^9.0.5",
     "@types/lodash": "^4.14.165",
     "@types/mini-css-extract-plugin": "1.2.2",
-    "@types/node-sass": "^4.11.1",
     "@types/optimize-css-assets-webpack-plugin": "5.0.1",
     "@types/prompts": "2.4.0",
     "@types/react-dev-utils": "^9.0.4",
