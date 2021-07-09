@@ -56,4 +56,7 @@ spec:
             httpGet:
               path: /healthz
               port: 8000
+              httpHeaders:
+                - name: Host
+                  value: lex.quest
             initialDelaySeconds: 10
