@@ -1,3 +1,4 @@
+# type: ignore
 DB_HOST = environ.get("DJANGO_POSTGRES_HOST", "localhost")
 DB_PASS = environ.get("DJANGO_POSTGRES_PASSWORD", "django-pass")
 

@@ -1,3 +1,4 @@
+# type: ignore
 # settings active only in development environment
 
 ALLOWED_HOSTS += ["lex.quest", "127.0.0.1", "localhost", "l"]

@@ -1,3 +1,4 @@
+# type: ignore
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         #  token auth has to be first otherwise the lazy signup mechanism will take

@@ -1,3 +1,4 @@
+# type: ignore
 # default loggers in production
 if DEBUG:
     # for every module listed here, there will be a logger made with a file handler with level

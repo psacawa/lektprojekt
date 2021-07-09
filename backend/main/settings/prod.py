@@ -1,3 +1,4 @@
+# type: ignore
 # settings active only in production environment
 
 #  TODO 28/03/20 psacawa: reactivate once ssl certs in docker container are figured out

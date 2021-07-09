@@ -1,3 +1,4 @@
+# type: ignore
 # Django Extensions settings
 #  needed in prod for adhoc DB admin tasks
 SHELL_PLUS = "ipython"
