@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: django
-          image: 886185890074.dkr.ecr.us-east-2.amazonaws.com/lektprojekt-backend-image
+          image: 886185890074.dkr.ecr.us-east-2.amazonaws.com/lekt-backend-image
           imagePullPolicy: Always
           env:
             - name: DJANGO_ENV

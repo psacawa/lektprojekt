@@ -25,4 +25,4 @@ jobs:
         with:
           context: ./frontend
           push: true
-          tags: 886185890074.dkr.ecr.us-east-2.amazonaws.com/lektprojekt-frontend-image:latest
+          tags: 886185890074.dkr.ecr.us-east-2.amazonaws.com/lekt-frontend-image:latest
