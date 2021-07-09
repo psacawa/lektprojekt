@@ -25,6 +25,20 @@ spec:
           env:
             - name: DJANGO_ENV
               value: prod
+            - name: DJANGO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: django-creds
+                  key: SecretKey
+            - name: DJANGO_POSTGRES_HOST
+              value: rdb
+            - name: DJANGO_POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-creds
+                  key: RootPassword
+            - name: DJANGO_REDIS_HOST
+              value: cache
             - name: DJANGO_AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
@@ -35,20 +49,6 @@ spec:
                 secretKeyRef:
                   name: aws-ses-creds
                   key: AwsSecretAccessKey
-            - name: DJANGO_POSTGRES_HOST
-              value: rdb
-            - name: DJANGO_POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-creds
-                  key: RootPassword
-            - name: DJANGO_REDIS_HOST
-              value: cache
-            - name: DJANGO_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: django-creds
-                  key: SecretKey
           ports:
             - name: http
               containerPort: 8000
