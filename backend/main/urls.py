@@ -20,6 +20,8 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.generic.base import RedirectView
 
+from .views import healthz
+
 urlpatterns = [
     path(r"admin/doc/", include("django.contrib.admindocs.urls")),
     path(r"admin/", admin.site.urls),
@@ -41,6 +43,7 @@ urlpatterns = [
         EmailVerificationSentView.as_view(),
         name="account_email_verification_sent",
     ),
+    path(r"healthz", healthz),
 ]
 
 if settings.DEBUG:
