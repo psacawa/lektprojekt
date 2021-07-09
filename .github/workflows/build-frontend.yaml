@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - frontend
+      - frontend/**
   workflow_dispatch:
 
 jobs:

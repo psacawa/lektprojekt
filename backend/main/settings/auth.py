@@ -48,8 +48,8 @@ else:
 
     EMAIL_BACKEND = "django_ses.SESBackend"
     #  TODO 06/03/20 psacawa: recreate aws user credentials and config env. var
-    AWS_ACCESS_KEY_ID = environ.get("AWS_ACCESS_KEY_ID")
-    AWS_SECRET_ACCESS_KEY = environ.get("AWS_SECRET_ACCESS_KEY")
+    AWS_ACCESS_KEY_ID = environ.get("DJANGO_AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = environ.get("DJANGO_AWS_SECRET_ACCESS_KEY")
     AWS_SES_REGION_NAME = "us-east-2"
     AWS_SES_REGION_ENDPOINT = "email.us-east-2.amazonaws.com"
     ACCOUNT_EMAIL_SUBJECT_PREFIX = ""

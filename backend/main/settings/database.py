@@ -1,5 +1,5 @@
-DB_HOST = environ.get("POSTGRES_HOST", "localhost")
-DB_PASS = environ.get("POSTGRES_PASSWORD", "django-pass")
+DB_HOST = environ.get("DJANGO_POSTGRES_HOST", "localhost")
+DB_PASS = environ.get("DJANGO_POSTGRES_PASSWORD", "django-pass")
 
 
 def _get_database_config(mode="main"):
@@ -22,7 +22,7 @@ default_database = environ.get("DJANGO_DATABASE", "main")
 DATABASES = {}
 DATABASES["default"] = _get_database_config(default_database)
 
-REDIS_HOST = environ.get("REDIS_HOST", "localhost")
+REDIS_HOST = environ.get("DJANGO_REDIS_HOST", "localhost")
 
 # caching in development makes tests flaky
 if DEBUG:

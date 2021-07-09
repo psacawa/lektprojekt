@@ -27,7 +27,7 @@ if not isdir(LOGS_DIR):
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = environ.get("SECRET_KEY", "fake-key")
+SECRET_KEY = environ.get("DJANGO_SECRET_KEY", "fake-key")
 
 # the DEBUG variable is interpreted by django to turn on the server in development mode
 # SECURITY WARNING: don't run with debug turned on in production!
