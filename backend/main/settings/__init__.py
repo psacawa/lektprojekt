@@ -2,9 +2,9 @@ from os import environ
 
 from split_settings.tools import include
 
-ENVIRONMENT = environ.get("DJANGO_ENV", "dev")
-assert ENVIRONMENT in ("dev", "test", "prod",), (
-    f'Unsupported value of DJANGO_ENV: "{ENVIRONMENT}". '
+DJANGO_ENV = environ.get("DJANGO_ENV", "dev")
+assert DJANGO_ENV in ("dev", "test", "prod"), (
+    f'Unsupported value of DJANGO_ENV: "{DJANGO_ENV}". '
     'Supported values are "dev", "test", "prod"'
 )
 #  dev: all the bells and whistles for debugging
@@ -21,7 +21,7 @@ base_patterns = [
     "database.py",
     "logging.py",
     "extra.py",
-    f"{ENVIRONMENT}.py",
+    f"{DJANGO_ENV}.py",
 ]
 
 include(*base_patterns)

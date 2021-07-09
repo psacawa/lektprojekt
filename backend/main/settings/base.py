@@ -31,7 +31,7 @@ SECRET_KEY = environ.get("DJANGO_SECRET_KEY", "fake-key")
 
 # the DEBUG variable is interpreted by django to turn on the server in development mode
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = ENVIRONMENT == "dev"
+DEBUG = DJANGO_ENV == "dev"
 
 SITE_NAME = "LexQuest"
 DOMAIN = "lex.quest"

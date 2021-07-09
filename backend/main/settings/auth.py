@@ -42,7 +42,7 @@ ACCOUNT_ADAPTER = "main.adapter.AccountAdapter"
 DEFAULT_FROM_EMAIL = "{name} <{email}>".format(name=SITE_NAME, email=f"info@{DOMAIN}")
 SERVER_EMAIL = "{name} <{email}>".format(name="Alert", email=f"info@{DOMAIN}")
 
-if ENVIRONMENT in ["dev", "test"]:
+if DJANGO_ENV in ["dev", "test"]:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 else:
 

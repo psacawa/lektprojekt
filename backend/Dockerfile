@@ -10,5 +10,6 @@ RUN pip install -r requirements.txt
 # RUN pip install -r requirements.txt
 
 COPY . .
-cmd gunicorn main.wsgi --bind 0.0.0.0:8080 --workers 4 --threads 4
-# cmd python3 manage.py runserver
+
+ENV DJANGO_ENV=prod
+CMD gunicorn -c gunicorn.conf.py
