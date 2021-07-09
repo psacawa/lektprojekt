@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lekt-backend
+  labels:
+    app: lekt
+    component: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lekt
+      component: backend
+  template:
+    metadata:
+      name: lekt-backend
+      labels:
+        app: lekt
+        component: backend
+    spec:
+      containers:
+        - name: django
+          image: 886185890074.dkr.ecr.us-east-2.amazonaws.com/lektprojekt-backend-image
+          imagePullPolicy: Always
+          env:
+            - name: DJANGO_ENV
+              value: prod
+            - name: DJANGO_AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-ses-creds
+                  key: AwsAccessKeyId
+            - name: DJANGO_AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-ses-creds
+                  key: AwsSecretAccessKey
+            - name: DJANGO_POSTGRES_HOST
+              value: rdb
+            - name: DJANGO_POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-creds
+                  key: RootPassword
+            - name: DJANGO_REDIS_HOST
+              value: cache
+            - name: DJANGO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: django-creds
+                  key: SecretKey
+          ports:
+            - name: http
+              containerPort: 8000

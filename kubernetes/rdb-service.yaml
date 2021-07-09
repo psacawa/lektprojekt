@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rdb
+  labels:
+    app: lekt
+    component: rdb
+spec:
+  type: ExternalName
+  externalName: lekt.cd1r4lz70ymb.us-east-2.rds.amazonaws.com

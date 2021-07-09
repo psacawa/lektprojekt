@@ -8,6 +8,7 @@ metadata:
 nodeGroups:
   - name: ng-1
     instanceType: t2.medium
+    # niestandardowy ami powoduje problemy
     # ami: ami-00399ec92321828f5
     desiredCapacity: 2
     volumeSize: 10
