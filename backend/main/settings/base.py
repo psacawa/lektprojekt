@@ -35,7 +35,7 @@ SECRET_KEY = environ.get("DJANGO_SECRET_KEY", "fake-key")
 DEBUG = DJANGO_ENV == "dev"
 
 SITE_NAME = "LexQuest"
-DOMAIN = "lex.quest"
+DOMAIN = environ.get("DJANGO_DOMAIN", "www.lex.quest")
 ALLOWED_HOSTS = [DOMAIN]
 
 LEKTPROJEKT_APPS = [
