@@ -6,12 +6,14 @@ metadata:
   region: us-east-2
 
 nodeGroups:
-  - name: ng-1
+  - name: ng-us-east-2c
     instanceType: t2.medium
     # niestandardowy ami powoduje problemy
     # ami: ami-00399ec92321828f5
-    desiredCapacity: 2
+    desiredCapacity: 1
     volumeSize: 10
     ssh:
       allow: True
       publicKeyPath: ~/.ssh/lektprojekt-cluster-key.pub
+    availabilityZones:
+      - us-east-2c
