@@ -1,0 +1,47 @@
+# naked pod for ad hoc backend admin tasks
+apiVersion: apps/v1
+kind: Pod
+metadata:
+  name: lekt-admin
+  labels:
+    app: lekt
+    component: admin
+spec:
+  containers:
+    - name: django
+      image: 886185890074.dkr.ecr.us-east-2.amazonaws.com/lekt-backend-image
+      imagePullPolicy: IfNotPresent
+      env:
+        - name: DJANGO_ENV
+          value: prod
+        - name: DJANGO_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: django-creds
+              key: SecretKey
+        - name: DJANGO_POSTGRES_HOST
+          value: rdb
+        - name: DJANGO_POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-creds
+              key: LektUserPassword
+        - name: DJANGO_REDIS_HOST
+          value: cache
+        - name: DJANGO_AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: aws-ses-creds
+              key: AwsAccessKeyId
+        - name: DJANGO_AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aws-ses-creds
+              key: AwsSecretAccessKey
+      volumeMounts:
+        - name: lektprojekt-assets
+          mountPath: /data/lektprojekt-assets
+  volumes:
+    - name: lektprojekt-assets
+      persistentVolumeClaim:
+        claimName: lektprojekt-assets

@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: lekt
+  labels:
+    app: lekt
+  annotations:
+    # alb.ingress.kubernetes.io/load-balancer-name: todos-alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:886185890074:certificate/5e84032c-34b0-4bc2-9469-78424abd235b
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    kubernetes.io/ingress.class: alb
+    # external-dns.alpha.kubernetes.io/hostname: www.lex.quest
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: backend
+                port:
+                  number: 8000
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
+      host: www.lex.quest

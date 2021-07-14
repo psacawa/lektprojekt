@@ -25,6 +25,8 @@ spec:
           env:
             - name: DJANGO_ENV
               value: prod
+            - name: DJANGO_DOMAIN
+              value: www.lex.quest
             - name: DJANGO_SECRET_KEY
               valueFrom:
                 secretKeyRef:
@@ -36,7 +38,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: postgres-creds
-                  key: RootPassword
+                  key: LektUserPassword
             - name: DJANGO_REDIS_HOST
               value: cache
             - name: DJANGO_AWS_ACCESS_KEY_ID
@@ -58,5 +60,5 @@ spec:
               port: 8000
               httpHeaders:
                 - name: Host
-                  value: lex.quest
+                  value: www.lex.quest
             initialDelaySeconds: 10

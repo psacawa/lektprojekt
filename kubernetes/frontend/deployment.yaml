@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lekt-frontend
+  labels:
+    app: lekt
+    component: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lekt
+      component: frontend
+  template:
+    metadata:
+      name: lekt-frontend
+      labels:
+        app: lekt
+        component: frontend
+    spec:
+      containers:
+        - name: django
+          image: 886185890074.dkr.ecr.us-east-2.amazonaws.com/lekt-frontend-image
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80

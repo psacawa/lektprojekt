@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  labels:
+    app: lekt
+    component: frontend
+spec:
+  selector:
+    app: lekt
+    component: frontend
+  ports:
+    - name: frontend-http
+      port: 80
