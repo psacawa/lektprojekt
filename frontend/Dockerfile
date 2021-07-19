@@ -8,4 +8,5 @@ run yarn build
 
 from nginx:1.21 
 
-copy --from=builder /app/build /usr/share/nginx/html
+copy --from=builder /app/build /var/www/html/
+copy default.conf /etc/nginx/conf.d/

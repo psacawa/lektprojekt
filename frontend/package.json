@@ -93,6 +93,7 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "docker-build": "bash scripts/docker-build.sh",
+    "docker-run": "bash scripts/docker-run.sh",
     "docker-push": "bash scripts/docker-push.sh"
   },
   "eslintConfig": {
