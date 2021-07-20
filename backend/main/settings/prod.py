@@ -10,3 +10,9 @@
 
 #  TODO 09/03/20 psacawa: profile the effect of this parameter
 CONN_MAX_AGE = 60
+
+# AWS ELB sends a health check with Host header equal to its private IP address:
+# 192.168.x.x. With host header checking, these checks fail.
+#  TODO 20/07/20 psacawa: figure out a better way... perhaps a health check middleware
+#  before the the SecurityMiddleware?
+ALLOWED_HOSTS = "*"
