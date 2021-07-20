@@ -4,7 +4,7 @@ import os
 import sys
 
 #  adding this import causes tracebacks to be rendered in colour
-if os.environ.get("DJANGO_ENV", None) == "prod":
+if os.environ.get("DJANGO_ENV", None) == "dev":
     import colored_traceback.auto
 
 
