@@ -1,5 +1,5 @@
 # naked pod for ad hoc backend admin tasks
-apiVersion: apps/v1
+apiVersion: v1
 kind: Pod
 metadata:
   name: lekt-admin

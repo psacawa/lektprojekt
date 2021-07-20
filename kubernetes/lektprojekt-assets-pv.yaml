@@ -4,7 +4,7 @@ metadata:
   name: lektprojekt-assets
 spec:
   capacity:
-    storage: 10Gi
+    storage: 30Gi
   accessModes:
     - ReadWriteOnce
   storageClassName: ""

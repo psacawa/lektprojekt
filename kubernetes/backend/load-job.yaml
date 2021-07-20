@@ -1,0 +1,66 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: load-phrases
+  labels:
+    app: lekt
+    comp: backend
+spec:
+  template:
+    metadata:
+      labels:
+        app: lekt
+        comp: backend
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: django
+          image: 886185890074.dkr.ecr.us-east-2.amazonaws.com/lekt-backend-image
+          command:
+            - "bash"
+            - "-c"
+            - |
+              export PYTHONPATH=/data/lektprojekt-assets/venv/lib/python3.9/site-packages 
+              for f in /data/lektprojekt-assets/corpora/*; do
+                ./manage.py load_corpus $f --limit 50000
+              done
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: DJANGO_ENV
+              value: prod
+            - name: DJANGO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: django-creds
+                  key: SecretKey
+            - name: DJANGO_POSTGRES_HOST
+              value: rdb
+            - name: DJANGO_POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-creds
+                  key: LektUserPassword
+            - name: DJANGO_REDIS_HOST
+              value: cache
+            - name: DJANGO_AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-ses-creds
+                  key: AwsAccessKeyId
+            - name: DJANGO_AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-ses-creds
+                  key: AwsSecretAccessKey
+          resources:
+            requests:
+              memory: "3Gi"
+            limits:
+              memory: "4Gi"
+          volumeMounts:
+            - name: lektprojekt-assets
+              mountPath: /data/lektprojekt-assets
+      volumes:
+        - name: lektprojekt-assets
+          persistentVolumeClaim:
+            claimName: lektprojekt-assets
