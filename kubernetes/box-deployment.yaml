@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: box
+  labels:
+    app: box
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: box
+  template:
+    metadata:
+      name: box
+      labels:
+        app: box
+    spec:
+      containers:
+        - image: 886185890074.dkr.ecr.us-east-2.amazonaws.com/box
+          imagePullPolicy: IfNotPresent
+          name: box
+          command: ["tail", "-f", "/dev/null"]
+          volumeMounts:
+            - name: lektprojekt-assets
+              mountPath: /var/lektprojekt-assets
+      nodeSelector:
+        topology.kubernetes.io/zone: us-east-2c
+
+      volumes:
+        - name: lektprojekt-assets
+          persistentVolumeClaim:
+            claimName: lektprojekt-assets

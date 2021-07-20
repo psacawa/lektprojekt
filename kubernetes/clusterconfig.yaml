@@ -5,12 +5,15 @@ metadata:
   name: lekt
   region: us-east-2
 
-nodeGroups:
-  - name: ng-us-east-2c
+managedNodeGroups:
+  - name: ng-spot
     instanceType: t2.medium
+    spot: true
     # niestandardowy ami powoduje problemy
     # ami: ami-00399ec92321828f5
-    desiredCapacity: 1
+    minSize: 1
+    maxSize: 5
+    desiredCapacity: 2
     volumeSize: 10
     ssh:
       allow: True
