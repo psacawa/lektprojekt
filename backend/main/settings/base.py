@@ -16,13 +16,6 @@ from os.path import abspath, dirname, isdir, join
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = "/".join(abspath(__file__).split("/")[:-3])
 ASSET_DIR = join(BASE_DIR, "assets")
-LOGS_DIR = join(BASE_DIR, "logs")
-#  TODO 27/03/20 psacawa: somehow this is causing an error in docker build, investigate
-if not isdir(LOGS_DIR):
-    try:
-        mkdir(LOGS_DIR)
-    except Exception as e:
-        pass
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/

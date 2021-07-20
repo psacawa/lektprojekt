@@ -54,3 +54,14 @@ else:
     AWS_SES_REGION_NAME = "us-east-2"
     AWS_SES_REGION_ENDPOINT = "email.us-east-2.amazonaws.com"
     ACCOUNT_EMAIL_SUBJECT_PREFIX = ""
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    "github": {
+        "SCOPE": [
+            "user",
+            "repo",
+            "read:org",
+        ],
+    }
+}

@@ -1,3 +1,4 @@
+#  type: ignore
 import sys
 from pprint import pprint
 
