@@ -1,4 +1,5 @@
 import {
+  AttachMoney,
   CreateOutlined,
   HelpOutline,
   HomeOutlined as MuiHome,
@@ -20,6 +21,7 @@ import LogoutView from "views/LogoutView";
 import PhrasePairDetailView from "views/PhrasePairDetailView";
 import PhrasePairListView from "views/PhrasePairListView";
 import { ListPracticeView, PracticeView } from "views/PracticeView";
+import PricingView from "views/PricingView";
 import ProfileView from "views/ProfileView";
 import ResetPasswordView from "views/ResetPasswordView";
 
@@ -81,6 +83,13 @@ const baseDrawerRoutes: AppRoute[] = [
     exact: false,
     component: AboutView,
     icon: HelpOutline,
+  },
+  {
+    path: "/pricing/",
+    name: "Pricing",
+    exact: false,
+    component: PricingView,
+    icon: AttachMoney,
   },
 ];
 

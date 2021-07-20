@@ -20,7 +20,7 @@ import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import { useAuth } from "hooks/auth";
 import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
 import { CreateAccountServerErrors, CreateAccountValues } from "types";
 import * as yup from "yup";
 
@@ -105,6 +105,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CreateAccountView = () => {
+  const { user, login } = useAuth();
   const { createAccount } = useAuth();
   const classes = useStyles();
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
@@ -112,116 +113,124 @@ const CreateAccountView = () => {
     {}
   );
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlined />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign up
-        </Typography>
-        <Formik
-          initialValues={{
-            username: "",
-            email: "",
-            password1: "",
-            password2: "",
-          }}
-          validationSchema={validationSchema}
-          onSubmit={async (values, bag) => {
-            bag.setSubmitting(true);
-            await createAccount.mutateAsync(values, {
-              onSuccess: () => {
-                setSuccessDialogOpen(true);
-              },
-              onError: (data: CreateAccountServerErrors) => {
-                setClientErrors(data);
-              },
-            });
-            bag.setSubmitting(false);
-          }}
-        >
-          <Form className={classes.form} noValidate>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Field
-                  component={TextField}
-                  autoComplete="username"
-                  name="username"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="username"
-                  label="Username"
-                  autoFocus
-                />
-                <ClientErrorHelper errors={clientErrors.username} />
-              </Grid>
-              <Grid item xs={12}>
-                <Field
-                  component={TextField}
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                />
-                <ClientErrorHelper errors={clientErrors.email} />
-              </Grid>
-              <Grid item xs={12}>
-                <Field
-                  component={TextField}
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="password1"
-                  label="Password"
-                  type="password"
-                  id="password1"
-                  autoComplete="current-password"
-                />
-                <ClientErrorHelper errors={clientErrors.password1} />
-              </Grid>
-              <Grid item xs={12}>
-                <Field
-                  component={TextField}
-                  variant="outlined"
-                  required
-                  fullWidth
-                  name="password2"
-                  label="Confirm Password"
-                  type="password"
-                  id="password2"
-                  autoComplete="current-password"
-                />
-                <ClientErrorHelper errors={clientErrors.password2} />
-              </Grid>
-              <ClientErrorHelper errors={clientErrors.non_field_errors} />
-              <Grid item xs={12}></Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              className={classes.submit}
+    <>
+      {!user ? (
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlined />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign up
+            </Typography>
+            <Formik
+              initialValues={{
+                username: "",
+                email: "",
+                password1: "",
+                password2: "",
+              }}
+              validationSchema={validationSchema}
+              onSubmit={async (values, bag) => {
+                bag.setSubmitting(true);
+                await createAccount.mutateAsync(values, {
+                  onSuccess: () => {
+                    setSuccessDialogOpen(true);
+                  },
+                  onError: (data: CreateAccountServerErrors) => {
+                    setClientErrors(data);
+                  },
+                });
+                bag.setSubmitting(false);
+              }}
             >
-              Sign Up
-            </Button>
-            <Grid container justify="flex-end">
-              <Grid item>
-                <MuiLink component={Link} to="/login" variant="body2">
-                  Already have an account? Sign in
-                </MuiLink>
-              </Grid>
-            </Grid>
-          </Form>
-        </Formik>
-      </div>
-      <SuccessDialog open={successDialogOpen} />
-    </Container>
+              <Form className={classes.form} noValidate>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Field
+                      component={TextField}
+                      autoComplete="username"
+                      name="username"
+                      variant="outlined"
+                      required
+                      fullWidth
+                      id="username"
+                      label="Username"
+                      autoFocus
+                    />
+                    <ClientErrorHelper errors={clientErrors.username} />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Field
+                      component={TextField}
+                      variant="outlined"
+                      required
+                      fullWidth
+                      id="email"
+                      label="Email Address"
+                      name="email"
+                      autoComplete="email"
+                    />
+                    <ClientErrorHelper errors={clientErrors.email} />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Field
+                      component={TextField}
+                      variant="outlined"
+                      required
+                      fullWidth
+                      name="password1"
+                      label="Password"
+                      type="password"
+                      id="password1"
+                      autoComplete="current-password"
+                    />
+                    <ClientErrorHelper errors={clientErrors.password1} />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Field
+                      component={TextField}
+                      variant="outlined"
+                      required
+                      fullWidth
+                      name="password2"
+                      label="Confirm Password"
+                      type="password"
+                      id="password2"
+                      autoComplete="current-password"
+                    />
+                    <ClientErrorHelper errors={clientErrors.password2} />
+                  </Grid>
+                  <ClientErrorHelper errors={clientErrors.non_field_errors} />
+                  <Grid item xs={12}></Grid>
+                </Grid>
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  className={classes.submit}
+                >
+                  Sign Up
+                </Button>
+                <Grid container justify="flex-end">
+                  <Grid item>
+                    <MuiLink component={Link} to="/login" variant="body2">
+                      Already have an account? Sign in
+                    </MuiLink>
+                  </Grid>
+                </Grid>
+              </Form>
+            </Formik>
+          </div>
+          <SuccessDialog open={successDialogOpen} />
+        </Container>
+      ) : (
+        <>
+          <Redirect to="/" />
+        </>
+      )}
+    </>
   );
 };
 export default CreateAccountView;
