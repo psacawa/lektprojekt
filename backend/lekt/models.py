@@ -24,9 +24,6 @@ class TimestampedModel(models.Model):
 
     class Meta:
         abstract = True
-        # Any model that inherits from `TimestampedModel` should is ordered in
-        #  reverse-chronological order. This can be overriden on a per-model basis
-        ordering = ["-created_at", "-updated_at"]
 
 
 class Language(TimestampedModel):
