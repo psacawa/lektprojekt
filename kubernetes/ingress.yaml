@@ -11,11 +11,14 @@ metadata:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:886185890074:certificate/5e84032c-34b0-4bc2-9469-78424abd235b
     alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/load-balancer-attributes: access_logs.s3.enabled=true,access_logs.s3.bucket=lektprojekt-logs,access_logs.s3.prefix=lekt-backend
+    alb.ingress.kubernetes.io/healthcheck-path: /healthz
     kubernetes.io/ingress.class: alb
     # external-dns.alpha.kubernetes.io/hostname: www.lex.quest
 spec:
   rules:
-    - http:
+    - host: www.lex.quest
+      http:
         paths:
           - path: /api
             pathType: Prefix
@@ -31,4 +34,3 @@ spec:
                 name: frontend
                 port:
                   number: 80
-      host: www.lex.quest

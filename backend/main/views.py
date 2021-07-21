@@ -2,5 +2,5 @@ from django.http import HttpRequest, HttpResponse
 
 
 def healthz(request: HttpRequest):
-    """Health check. Empty response."""
-    return HttpResponse()
+    """Health check."""
+    return HttpResponse("ok", status=200)
