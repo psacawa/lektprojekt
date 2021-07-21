@@ -40,8 +40,10 @@ ACCOUNT_ADAPTER = "main.adapter.AccountAdapter"
 
 # email is relevant primarily for email-bases auth flow
 # in development it's printed to the console
-DEFAULT_FROM_EMAIL = "{name} <{email}>".format(name=SITE_NAME, email=f"info@{DOMAIN}")
-SERVER_EMAIL = "{name} <{email}>".format(name="Alert", email=f"info@{DOMAIN}")
+DEFAULT_FROM_EMAIL = "{name} <{email}>".format(
+    name=SITE_NAME, email=f"info@{BASE_DOMAIN}"
+)
+SERVER_EMAIL = "{name} <{email}>".format(name="Alert", email=f"info@{BASE_DOMAIN}")
 
 if DJANGO_ENV in ["dev", "test"]:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
