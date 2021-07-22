@@ -25,7 +25,7 @@ spec:
           env:
             - name: DJANGO_ENV
               value: prod
-            - name: DJANGO_BASE_DOMAIN
+            - name: DJANGO_DOMAIN
               value: lex.quest
             - name: DJANGO_SECRET_KEY
               valueFrom:

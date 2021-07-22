@@ -28,9 +28,10 @@ SECRET_KEY = environ.get("DJANGO_SECRET_KEY", "fake-key")
 DEBUG = DJANGO_ENV == "dev"
 
 SITE_NAME = "LexQuest"
-BASE_DOMAIN = environ.get("DJANGO_BASE_DOMAIN", "lex.quest")
-DOMAIN = environ.get("DJANGO_DOMAIN", f"www.{BASE_DOMAIN}")
-ALLOWED_HOSTS = [DOMAIN]
+DOMAIN = environ.get("DJANGO_DOMAIN", "lex.quest")
+WEB_DOMAIN = environ.get("DJANGO_WWW_DOMAIN", f"www.{DOMAIN}")
+ADMIN_DOMAIN = environ.get("DJANGO_ADMIN_DOMAIN", f"admin.{DOMAIN}")
+ALLOWED_HOSTS = [DOMAIN, WEB_DOMAIN, ADMIN_DOMAIN]
 
 LEKTPROJEKT_APPS = [
     # first party applications

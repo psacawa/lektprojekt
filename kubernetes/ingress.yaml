@@ -34,13 +34,6 @@ spec:
                 name: backend
                 port:
                   number: 8000
-          - path: /admin
-            pathType: Prefix
-            backend:
-              service:
-                name: backend
-                port:
-                  number: 8000
           - path: /
             pathType: Prefix
             backend:
@@ -48,3 +41,13 @@ spec:
                 name: frontend
                 port:
                   number: 80
+    - host: admin.lex.quest
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: backend
+                port:
+                  number: 8000
