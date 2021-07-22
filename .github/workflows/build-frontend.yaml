@@ -1,4 +1,4 @@
-name: Build and push frontend docker image to AWS
+name: build-frontend
 
 on:
   push:
