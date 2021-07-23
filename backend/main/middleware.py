@@ -11,9 +11,9 @@ def HealtCheckMiddleware(get_response):
     Because the ALB uses Host: 192.168.x.x, this has to be before SecurityMiddleware"""
 
     def middleware(request: HttpRequest):
-        response = get_response(request)
         if request.path == "/healthz":
             return HttpResponse("ok", status=200)
+        response = get_response(request)
         return response
 
     return middleware
