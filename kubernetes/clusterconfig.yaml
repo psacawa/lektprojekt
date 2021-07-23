@@ -14,7 +14,7 @@ managedNodeGroups:
     minSize: 1
     maxSize: 5
     desiredCapacity: 2
-    volumeSize: 10
+    volumeSize: 20
     ssh:
       allow: True
       publicKeyPath: ~/.ssh/lektprojekt-cluster-key.pub

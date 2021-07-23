@@ -1,5 +1,7 @@
 import "assets/css/base.css";
 
+import * as Sentry from "@sentry/react";
+import { Integrations } from "@sentry/tracing";
 import { createBrowserHistory } from "history";
 import { AuthProvider } from "hooks/auth";
 import { SessionProvider } from "hooks/session";
@@ -21,6 +23,16 @@ const queryClient = new QueryClient({
       refetchOnMount: false,
     },
   },
+});
+
+Sentry.init({
+  dsn: process.env.REACT_APP_SENTRY_DSN,
+  integrations: [new Integrations.BrowserTracing()],
+
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+  tracesSampleRate: 1.0,
 });
 
 ReactDOM.render(
