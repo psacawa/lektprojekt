@@ -24,7 +24,7 @@ spec:
           imagePullPolicy: Always
           env:
             - name: DJANGO_ENV
-              value: prod
+              value: production
             - name: DJANGO_DOMAIN
               value: lex.quest
             - name: DJANGO_SECRET_KEY

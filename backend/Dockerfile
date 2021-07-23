@@ -11,5 +11,5 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-ENV DJANGO_ENV=prod
+ENV DJANGO_ENV=production
 CMD gunicorn -c gunicorn.conf.py

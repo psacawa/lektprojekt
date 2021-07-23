@@ -10,3 +10,4 @@ LektProjekt
     contributing
     proposal
     principle
+    authentication

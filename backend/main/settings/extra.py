@@ -1,6 +1,6 @@
 # type: ignore
 # Django Extensions settings
-#  needed in prod for adhoc DB admin tasks
+#  needed in production for adhoc DB admin tasks
 SHELL_PLUS = "ipython"
 SHELL_PLUS_IMPORTS = [
     "from django.db.models import Window",

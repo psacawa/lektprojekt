@@ -125,15 +125,6 @@ const baseRoutes: AppRoute[] = [
     component: ResetPasswordView,
     icon: VpnKey,
   },
-  {
-    path: "/error",
-    name: "Error",
-    exact: false,
-    component: () => {
-      throw Error();
-    },
-    icon: undefined,
-  },
 ];
 
 const loggedInRoutes: AppRoute[] = [
