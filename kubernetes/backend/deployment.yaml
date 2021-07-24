@@ -56,6 +56,16 @@ spec:
                 secretKeyRef:
                   name: sentry
                   key: dsn
+            - name: STRIPE_LIVE_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: stripe-creds
+                  key: LiveSecretKey
+            - name: STRIPE_TEST_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: stripe-creds
+                  key: TestSecretKey
           ports:
             - name: http
               containerPort: 8000

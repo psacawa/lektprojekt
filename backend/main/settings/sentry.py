@@ -36,5 +36,5 @@ sentry_sdk.init(
     # something more human-readable.
     # release="myapp@1.0.0",
     environment=DJANGO_ENV,
-    before_send=before_send,
+    before_send=before_send if DEBUG else None,
 )
