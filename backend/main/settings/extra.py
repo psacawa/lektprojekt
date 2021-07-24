@@ -31,11 +31,12 @@ if DJANGO_ENV in ["development", "test"]:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 else:
     EMAIL_BACKEND = "django_ses.SESBackend"
-    AWS_ACCESS_KEY_ID = environ.get("DJANGO_AWS_ACCESS_KEY_ID")
-    AWS_SECRET_ACCESS_KEY = environ.get("DJANGO_AWS_SECRET_ACCESS_KEY")
+    AWS_ACCESS_KEY_ID = environ.get("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = environ.get("AWS_SECRET_ACCESS_KEY")
     AWS_SES_REGION_NAME = "us-east-2"
     AWS_SES_REGION_ENDPOINT = "email.us-east-2.amazonaws.com"
     ACCOUNT_EMAIL_SUBJECT_PREFIX = ""
+    AWS_SES_CONFIGURATION_SET = environ.get("AWS_SES_CONFIGURATION_SET")
 
     #  drop these once upstream djanog-ses drops dependency on m2crypto
     AWS_SES_VERIFY_EVENT_SIGNATURES = False
