@@ -19,6 +19,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.generic.base import RedirectView
+from django_ses.views import SESEventWebhookView
 
 from .views import healthz
 
@@ -48,6 +49,11 @@ urlpatterns = [
     # third-party integrations
     path("stripe/", include("djstripe.urls", namespace="djstripe")),
     re_path(r"^admin/django-ses/", include("django_ses.urls")),
+    re_path(
+        r"^ses/nictuniema/$",
+        SESEventWebhookView.as_view(),
+        name="handle-event-webhook",
+    ),
 ]
 
 if settings.DEBUG:
