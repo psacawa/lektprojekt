@@ -21,7 +21,6 @@ base_patterns = [
     "api.py",
     "database.py",
     "logging.py",
-    "sentry.py",
     "extra.py",
     f"{DJANGO_ENV}.py",
 ]

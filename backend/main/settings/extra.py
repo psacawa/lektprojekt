@@ -1,5 +1,8 @@
 # type: ignore
-# Django Extensions settings
+
+#####################
+# DJANGO EXTENSIONS
+#####################
 #  needed in production for adhoc DB admin tasks
 SHELL_PLUS = "ipython"
 SHELL_PLUS_IMPORTS = [
@@ -14,7 +17,9 @@ IPYTHON_ARGUMENTS = [
 # for ORM nastiness
 #  SHELL_PLUS_PRINT_SQL_TRUNCATE = None
 
+#####################
 #  STRIPE
+#####################
 STRIPE_LIVE_SECRET_KEY = environ.get("STRIPE_LIVE_SECRET_KEY", None)
 STRIPE_TEST_SECRET_KEY = environ.get("STRIPE_TEST_SECRET_KEY", None)
 STRIPE_LIVE_MODE = DJANGO_ENV == "production"
@@ -41,3 +46,49 @@ else:
     #  drop these once upstream djanog-ses drops dependency on m2crypto
     AWS_SES_VERIFY_EVENT_SIGNATURES = False
     AWS_SES_VERIFY_BOUNCE_SIGNATURES = False
+
+#####################
+# SENTRY
+#####################
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
+
+
+def before_send(event, hint):
+    if "exc_info" in hint:
+        exc_type, exc_value, tb = hint["exc_info"]
+        if any(
+            map(
+                lambda e: isinstance(exc_value, e),
+                [
+                    KeyboardInterrupt,
+                    SystemCheckError,
+                ],
+            )
+        ):
+            return None
+    return event
+
+
+DJANGO_SENTRY_TRACE_SAMPLE_RATE = (
+    1.0 if DEBUG else float(environ.get("DJANGO_SENTRY_TRACE_SAMPLE_RATE"))
+)
+sentry_sdk.init(
+    dsn=environ.get("DJANGO_SENTRY_DSN", None),
+    integrations=[DjangoIntegration(), RedisIntegration()],
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production,
+    traces_sample_rate=DJANGO_SENTRY_TRACE_SAMPLE_RATE,
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True,
+    # By default the SDK will try to use the SENTRY_RELEASE
+    # environment variable, or infer a git commit
+    # SHA as release, however you may want to set
+    # something more human-readable.
+    # release="myapp@1.0.0",
+    environment=DJANGO_ENV,
+    before_send=before_send if DEBUG else None,
+)
