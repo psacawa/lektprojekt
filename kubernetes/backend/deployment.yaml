@@ -51,6 +51,11 @@ spec:
                 secretKeyRef:
                   name: aws-ses-creds
                   key: AwsSecretAccessKey
+            - name: DJANGO_SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: sentry
+                  key: dsn
           ports:
             - name: http
               containerPort: 8000

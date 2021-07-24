@@ -340,6 +340,22 @@ djangorestframework = ">=3.7.0"
 with_social = ["django-allauth (>=0.40.0,<0.45.0)"]
 
 [[package]]
+name = "dj-stripe"
+version = "2.5.1"
+description = "Django + Stripe made easy"
+category = "main"
+optional = false
+python-versions = ">=3.6.2,<4.0.0"
+
+[package.dependencies]
+Django = ">=2.2"
+jsonfield = ">=3.0"
+stripe = ">=2.48.0"
+
+[package.extras]
+docs = ["mkdocs (>=1.1.2,<2.0.0)", "mkautodoc (>=0.1.0,<0.2.0)"]
+
+[[package]]
 name = "django"
 version = "3.2.5"
 description = "A high-level Python Web framework that encourages rapid development and clean, pragmatic design."
@@ -743,6 +759,17 @@ description = "jq is a lightweight and flexible JSON processor."
 category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[[package]]
+name = "jsonfield"
+version = "3.1.0"
+description = "A reusable Django field that allows you to store validated JSON in your model."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+Django = ">=2.2"
 
 [[package]]
 name = "lazy-object-proxy"
@@ -1152,6 +1179,17 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
 six = ">=1.5"
 
 [[package]]
+name = "python-dotenv"
+version = "0.18.0"
+description = "Read key-value pairs from a .env file and set them as environment variables"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.extras]
+cli = ["click (>=5.0)"]
+
+[[package]]
 name = "python3-openid"
 version = "3.2.0"
 description = "OpenID support for modern servers and consumers."
@@ -1537,6 +1575,17 @@ python-versions = ">=3.6"
 catalogue = ">=2.0.1,<2.1.0"
 
 [[package]]
+name = "stripe"
+version = "2.60.0"
+description = "Python bindings for the Stripe API"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[package.dependencies]
+requests = {version = ">=2.20", markers = "python_version >= \"3.0\""}
+
+[[package]]
 name = "tabulate"
 version = "0.8.9"
 description = "Pretty-print tabular data"
@@ -1738,7 +1787,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "4207f5d6f66374be4a8a13aebc187cf14f4e4a9a4ab6146135cd7c5192cdbcad"
+content-hash = "6371eb7c09c5c3773924879988ae728f0ce6d6605ecc9d6ebf125ac0fbc6aef4"
 
 [metadata.files]
 alabaster = [
@@ -1983,6 +2032,10 @@ distlib = [
 dj-rest-auth = [
     {file = "dj-rest-auth-2.1.7.tar.gz", hash = "sha256:45f95fa982c41ae7ba5dee041de5dbb6e3724347796e718cf2bb5c0b681b2d10"},
 ]
+dj-stripe = [
+    {file = "dj-stripe-2.5.1.tar.gz", hash = "sha256:e6e55919a5f1790c0c6003f6d182b14a09f7c4b6b5361b92c86055fc26427fb9"},
+    {file = "dj_stripe-2.5.1-py3-none-any.whl", hash = "sha256:31e01fa175f60ab76a166e1628c9beebff8f129910b86283977a4d9ca9528277"},
+]
 django = [
     {file = "Django-3.2.5-py3-none-any.whl", hash = "sha256:c58b5f19c5ae0afe6d75cbdd7df561e6eb929339985dbbda2565e1cabb19a62e"},
     {file = "Django-3.2.5.tar.gz", hash = "sha256:3da05fea54fdec2315b54a563d5b59f3b4e2b1e69c3a5841dda35019c01855cd"},
@@ -2156,6 +2209,10 @@ jq = [
     {file = "jq-1.1.3-pp37-pypy37_pp73-manylinux1_x86_64.whl", hash = "sha256:5efccce1c9653ef8893b4b9cdbfe8049dbe8b0c80fc143eb3cd3503056dbc9a0"},
     {file = "jq-1.1.3-pp37-pypy37_pp73-manylinux2010_x86_64.whl", hash = "sha256:bae856359ad00306424c026767fef6843dc680ce5c1d3352f762bb2432e49513"},
     {file = "jq-1.1.3.tar.gz", hash = "sha256:f9ec1dfa7f9875b04495f3e08e85ee96f37a3b843e5bca738a3300732865dde7"},
+]
+jsonfield = [
+    {file = "jsonfield-3.1.0-py3-none-any.whl", hash = "sha256:df857811587f252b97bafba42e02805e70a398a7a47870bc6358a0308dd689ed"},
+    {file = "jsonfield-3.1.0.tar.gz", hash = "sha256:7e4e84597de21eeaeeaaa7cc5da08c61c48a9b64d0c446b2d71255d01812887a"},
 ]
 lazy-object-proxy = [
     {file = "lazy-object-proxy-1.6.0.tar.gz", hash = "sha256:489000d368377571c6f982fba6497f2aa13c6d1facc40660963da62f5c379726"},
@@ -2445,6 +2502,10 @@ python-dateutil = [
     {file = "python-dateutil-2.8.1.tar.gz", hash = "sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c"},
     {file = "python_dateutil-2.8.1-py2.py3-none-any.whl", hash = "sha256:75bb3f31ea686f1197762692a9ee6a7550b59fc6ca3a1f4b5d7e32fb98e2da2a"},
 ]
+python-dotenv = [
+    {file = "python-dotenv-0.18.0.tar.gz", hash = "sha256:effaac3c1e58d89b3ccb4d04a40dc7ad6e0275fda25fd75ae9d323e2465e202d"},
+    {file = "python_dotenv-0.18.0-py2.py3-none-any.whl", hash = "sha256:dd8fe852847f4fbfadabf6183ddd4c824a9651f02d51714fa075c95561959c7d"},
+]
 python3-openid = [
     {file = "python3-openid-3.2.0.tar.gz", hash = "sha256:33fbf6928f401e0b790151ed2b5290b02545e8775f982485205a066f874aaeaf"},
     {file = "python3_openid-3.2.0-py3-none-any.whl", hash = "sha256:6626f771e0417486701e0b4daff762e7212e820ca5b29fcc0d05f6f8736dfa6b"},
@@ -2660,6 +2721,10 @@ srsly = [
     {file = "srsly-2.4.1-cp39-cp39-manylinux2014_x86_64.whl", hash = "sha256:178aa6d350c9cfedb8adadb5e1f96b7aadde203d088917063415fcd689eb6e42"},
     {file = "srsly-2.4.1-cp39-cp39-win_amd64.whl", hash = "sha256:869fdcf664edf20cd374cf1add869d67960061276478025a5887e080d8f99e1c"},
     {file = "srsly-2.4.1.tar.gz", hash = "sha256:b0f2aec0a329e6e7e742a0a60e99a74968ca29be71f35c5c4de221e328176926"},
+]
+stripe = [
+    {file = "stripe-2.60.0-py2.py3-none-any.whl", hash = "sha256:0050763cb67df6745973bd9757f7a765bed1b82b5d5261fb8908cfc6ec9e5200"},
+    {file = "stripe-2.60.0.tar.gz", hash = "sha256:8966b7793014380f60c6f121ba333d6f333a55818edaf79c8d70464ce0a7a808"},
 ]
 tabulate = [
     {file = "tabulate-0.8.9-py3-none-any.whl", hash = "sha256:d7c013fe7abbc5e491394e10fa845f8f32fe54f8dc60c6622c6cf482d25d47e4"},

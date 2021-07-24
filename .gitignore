@@ -79,3 +79,4 @@ dmypy.json
 !.elasticbeanstalk/*.global.yml
 
 .envrc
+.env.local
