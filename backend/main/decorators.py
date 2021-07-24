@@ -3,7 +3,7 @@ from functools import wraps
 from uuid import uuid4
 
 from django.conf import settings
-from django.contrib.auth import SESSION_KEY, authenticate, get_user, login
+from django.contrib.auth import SESSION_KEY, authenticate, login
 from django.contrib.auth.models import User
 from rest_framework.request import Request
 

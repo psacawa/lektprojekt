@@ -17,7 +17,7 @@ def transfer_anonymous_profile(
     the ambient authority of their session, and the anonymous user attached to it. This
     signal receiver will then transfer the UserProfile to the new User account and delete
     the old."""
-    if request.user:
+    if request.user.is_authenticated:
         try:
             with transaction.atomic():
                 old_user = request.user

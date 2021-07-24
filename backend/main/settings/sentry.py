@@ -7,7 +7,15 @@ from sentry_sdk.integrations.redis import RedisIntegration
 def before_send(event, hint):
     if "exc_info" in hint:
         exc_type, exc_value, tb = hint["exc_info"]
-        if isinstance(exc_value, KeyboardInterrupt):
+        if any(
+            map(
+                lambda e: isinstance(exc_value, e),
+                [
+                    KeyboardInterrupt,
+                    SystemCheckError,
+                ],
+            )
+        ):
             return None
     return event
 
