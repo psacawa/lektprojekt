@@ -55,7 +55,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: sentry
-                  key: dsn
+                  key: DSN
             - name: STRIPE_LIVE_SECRET_KEY
               valueFrom:
                 secretKeyRef:
@@ -66,6 +66,11 @@ spec:
                 secretKeyRef:
                   name: stripe-creds
                   key: TestSecretKey
+            - name: DJSTRIPE_WEBHOOK_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: stripe-creds
+                  key: WebhookSecret
           ports:
             - name: http
               containerPort: 8000

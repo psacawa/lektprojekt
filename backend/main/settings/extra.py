@@ -24,3 +24,19 @@ DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
 DJSTRIPE_USE_NATIVE_JSONFIELD = True
 # just a bit of security by obscurity against replay attacks
 DJSTRIPE_WEBHOOK_URL = r"^nictuniema/$"
+
+
+# AWS SES
+if DJANGO_ENV in ["development", "test"]:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+else:
+    EMAIL_BACKEND = "django_ses.SESBackend"
+    AWS_ACCESS_KEY_ID = environ.get("DJANGO_AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = environ.get("DJANGO_AWS_SECRET_ACCESS_KEY")
+    AWS_SES_REGION_NAME = "us-east-2"
+    AWS_SES_REGION_ENDPOINT = "email.us-east-2.amazonaws.com"
+    ACCOUNT_EMAIL_SUBJECT_PREFIX = ""
+
+    #  drop these once upstream djanog-ses drops dependency on m2crypto
+    AWS_SES_VERIFY_EVENT_SIGNATURES = False
+    AWS_SES_VERIFY_BOUNCE_SIGNATURES = False

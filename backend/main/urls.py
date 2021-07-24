@@ -27,7 +27,6 @@ urlpatterns = [
     path(r"admin/", admin.site.urls),
     path(r"api/", include("lekt.urls")),
     path(r"healthz", healthz),
-    path("stripe/", include("djstripe.urls", namespace="djstripe")),
     #  auth
     path(r"auth/", include("dj_rest_auth.urls")),
     path(r"auth/registration/", include("dj_rest_auth.registration.urls")),
@@ -46,6 +45,9 @@ urlpatterns = [
         EmailVerificationSentView.as_view(),
         name="account_email_verification_sent",
     ),
+    # third-party integrations
+    path("stripe/", include("djstripe.urls", namespace="djstripe")),
+    re_path(r"^admin/django-ses/", include("django_ses.urls")),
 ]
 
 if settings.DEBUG:

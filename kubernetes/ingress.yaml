@@ -20,6 +20,7 @@ spec:
     - host: www.lex.quest
       http:
         paths:
+          # main app
           - path: /api
             pathType: Prefix
             backend:
@@ -27,6 +28,7 @@ spec:
                 name: backend
                 port:
                   number: 8000
+          # accounts/auth
           - path: /auth
             pathType: Prefix
             backend:
@@ -34,6 +36,22 @@ spec:
                 name: backend
                 port:
                   number: 8000
+          # third-party integratons
+          - path: /stripe
+            pathType: Prefix
+            backend:
+              service:
+                name: backend
+                port:
+                  number: 8000
+          - path: /ses
+            pathType: Prefix
+            backend:
+              service:
+                name: backend
+                port:
+                  number: 8000
+          # fallback to frontend
           - path: /
             pathType: Prefix
             backend:
