@@ -61,6 +61,8 @@ INSTALLED_APPS = [
     "dj_rest_auth.registration",
     #  ad hoc administration in production
     "django_extensions",
+    # other
+    "djstripe",
 ] + LEKTPROJEKT_APPS
 
 MIDDLEWARE = [

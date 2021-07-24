@@ -589,6 +589,25 @@ class UserProfile(TimestampedModel):
         verbose_name="User",
         help_text="User account attached to the profile",
     )
+    USER_LEVEL_CHOICES = [("free", "free"), ("premium", "premium"), ("test", "test")]
+
+    # for payment processing
+    level = models.CharField(max_length=10, default="free", choices=USER_LEVEL_CHOICES)
+    customer = models.ForeignKey(
+        "djstripe.Customer",
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name="Customer",
+        help_text="Stripe Customer attached to UserProfile",
+    )
+    plan = models.ForeignKey(
+        #  "djstripe.Price",
+        "djstripe.Price",
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name="Plan",
+        help_text="Stripe Plan (really newer API Price) at to UserProfile",
+    )
 
     objects = managers.LektManager()
 

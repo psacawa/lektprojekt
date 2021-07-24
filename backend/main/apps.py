@@ -9,6 +9,6 @@ class MainConfig(AppConfig):
     name = "main"
 
     def ready(self):
-        from . import signals
+        from . import signals, webhooks
 
         logger.info(f"Application {self.name} ready.")

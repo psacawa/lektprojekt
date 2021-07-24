@@ -21,11 +21,7 @@ def before_send(event, hint):
 
 
 sentry_sdk.init(
-    dsn=environ.get(
-        #  "DJANGO_SENTRY_DSN", "https://examplePublicKey@o0.ingest.sentry.io/0"
-        "DJANGO_SENTRY_DSN",
-        "https://049a9389380446ef9ef2764676041ae1@o493812.ingest.sentry.io/5563785",
-    ),
+    dsn=environ.get("DJANGO_SENTRY_DSN", None),
     integrations=[DjangoIntegration(), RedisIntegration()],
     # Set traces_sample_rate to 1.0 to capture 100%
     # of transactions for performance monitoring.

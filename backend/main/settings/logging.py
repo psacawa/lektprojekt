@@ -20,6 +20,7 @@ FORMATTERS = {
 
 LEKTPROJEKT_LOGGED_MODULES = [
     "django.db.backends",
+    "lekt.apps",
     "lekt.decorators",
     "lekt.filters",
     "lekt.loaders.language",
@@ -29,12 +30,12 @@ LEKTPROJEKT_LOGGED_MODULES = [
     "lekt.serializers",
     "lekt.signals",
     "lekt.views",
+    "main.apps",
     "main.middleware",
     "main.models",
-    "main.apps",
-    "lekt.apps",
     "main.signals",
     "main.views",
+    "main.webhooks",
 ]
 HANDLERS = {
     f"file/{module}": {
