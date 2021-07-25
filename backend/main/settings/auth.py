@@ -37,6 +37,7 @@ ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_ADAPTER = "main.adapter.AccountAdapter"
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https" if DJANGO_ENV == "production" else "http"
 
 # email is relevant primarily for email-bases auth flow
 # in development it's printed to the console

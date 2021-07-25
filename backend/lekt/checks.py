@@ -63,7 +63,7 @@ def site_check(app_configs, **kwargs):
     if not initial_migration_available():
         return []
     try:
-        site = Site.objects.get(domain=settings.DOMAIN)
+        site = Site.objects.get(domain=settings.WEB_DOMAIN)
     except Exception as e:
         warnings.append(
             Warning(

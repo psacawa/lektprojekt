@@ -102,9 +102,9 @@ class Command(BaseCommand):
             spacy.require_gpu()
 
         try:
-            Site.objects.get(domain=f"{settings.DOMAIN}")
+            Site.objects.get(domain=f"{settings.WEB_DOMAIN}")
         except:
-            print(f"{settings.DOMAIN} site absent...Automatically loading")
+            print(f"{settings.WEB_DOMAIN} site absent...Automatically loading")
             call_command("create_site")
 
         if Language.objects.count() == 0 or Voice.objects.count() == 0:
