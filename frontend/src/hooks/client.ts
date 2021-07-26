@@ -26,10 +26,11 @@ import {
   User,
 } from "../types";
 
+const origin = `https://${process.env.REACT_API_DOMAIN}/`;
 const apiRoot =
-  process.env.NODE_ENV == "production"
-    ? `https://${process.env.REACT_API_DOMAIN}/api/`
-    : "/api/";
+  process.env.NODE_ENV == "production" ? `${origin}api/` : "/api/";
+const authRoot =
+  process.env.NODE_ENV == "production" ? `${origin}auth/` : "/auth/";
 const HOUR = 60 * 60 * 1000;
 
 // TODO 05/03/20 psacawa: find solution to handle server errors
@@ -218,7 +219,7 @@ export const usePair = (
 export const useUser = (options?: UseQueryOptions<User>) =>
   useQuery(["user"], () =>
     axios
-      .get("/auth/user/")
+      .get(`${authRoot}auth/user/`)
       .then((response: AxiosResponse<User>) => response.data)
   );
 
@@ -228,7 +229,7 @@ export const useCreateSubscription = (
   useMutation(
     (params: CreateSubscriptionValues) =>
       axios
-        .post("/api/subs/", params)
+        .post(`${apiRoot}subs/`, params)
         .then((response: AxiosResponse<Subscription>) => response.data),
     { ...options }
   );
@@ -237,7 +238,8 @@ export const useDeleteSubscription = (
   options?: UseMutationOptions<any, any, { sub_id: number }>
 ) =>
   useMutation(
-    (params: { sub_id: number }) => axios.delete(`/api/subs/${params.sub_id}/`),
+    (params: { sub_id: number }) =>
+      axios.delete(`${apiRoot}subs/${params.sub_id}/`),
     { ...options }
   );
 
@@ -248,7 +250,7 @@ export const useTrackedList = (
 ) =>
   useQuery(["lists", params.id], () =>
     axios
-      .get(`/api/lists/${params.id}/?expand=subscription`)
+      .get(`${apiRoot}lists/${params.id}/?expand=subscription`)
       .then((response: AxiosResponse<TrackedList<true>>) => response.data)
   );
 
@@ -258,7 +260,7 @@ export const useCreateTrackedList = (
   useMutation(
     (params: CreateTrackedListValues) =>
       axios
-        .post("/api/lists/", params)
+        .post(`${apiRoot}/lists/`, params)
         .then((response: AxiosResponse<TrackedList>) => response.data),
     options
   );
@@ -269,7 +271,7 @@ export const useUpdateTrackedList = (
   useMutation(
     (params) =>
       axios
-        .patch(`/api/lists/${params.id}/`, params)
+        .patch(`${apiRoot}lists/${params.id}/`, params)
         .then((response: AxiosResponse<TrackedList>) => response.data),
     options
   );
@@ -278,7 +280,7 @@ export const useDeleteTrackedList = (
   options?: UseMutationOptions<void, any, { list_id: number }>
 ) =>
   useMutation(
-    (params) => axios.delete(`/api/lists/${params.list_id}/`),
+    (params) => axios.delete(`${apiRoot}lists/${params.list_id}/`),
     options
   );
 
@@ -294,7 +296,7 @@ export const useSubs = (
     ["subs"],
     () =>
       axios
-        .get("/api/subs/")
+        .get(`${apiRoot}subs/`)
         .then(
           (response: AxiosResponse<Paginate<Subscription<true>>>) =>
             response.data
@@ -310,7 +312,7 @@ export const useSub = (
     ["sub", params.id],
     () =>
       axios
-        .get(`/api/subs/${params.id}`)
+        .get(`${apiRoot}subs/${params.id}`)
         .then((response: AxiosResponse<Subscription>) => response.data),
     options
   );
@@ -323,7 +325,7 @@ export const useTrackedLexemes = (
 ) =>
   useQuery(["tracked-lexemes", { ...params }], () =>
     axios
-      .get(`/api/lists/${params.id}/lexemes/`)
+      .get(`${apiRoot}lists/${params.id}/lexemes/`)
       .then(
         (response: AxiosResponse<Paginate<Tracked<Lexeme>>>) => response.data
       )
@@ -337,7 +339,7 @@ export const useTrackedFeatures = (
 ) =>
   useQuery(["tracked-features", { ...params }], () =>
     axios
-      .get(`/api/lists/${params.id}/features/`)
+      .get(`${apiRoot}lists/${params.id}/features/`)
       .then(
         (response: AxiosResponse<Paginate<Tracked<Feature>>>) => response.data
       )
@@ -352,7 +354,7 @@ export const useTrackObservable = (
 ) =>
   useMutation(
     (params: { id: number; observable_id: number }) =>
-      axios.post(`/api/lists/${params.id}/obs/`, {
+      axios.post(`${apiRoot}lists/${params.id}/obs/`, {
         observable: params.observable_id,
       }),
     { ...options }
@@ -363,7 +365,7 @@ export const useUntrackObservable = (
 ) =>
   useMutation(
     (params: { id: number; observable_id: number }) =>
-      axios.delete(`/api/lists/${params.id}/obs/${params.observable_id}/`),
+      axios.delete(`${apiRoot}lists/${params.id}/obs/${params.observable_id}/`),
     { ...options }
   );
 
@@ -375,7 +377,7 @@ export const useTrainingPlan = (
     ["plan", { ...params }],
     () =>
       axios
-        .get(`/api/lists/${params.list_id}/plan/`, {
+        .get(`${apiRoot}lists/${params.list_id}/plan/`, {
           params: { page_size: params.page_size },
         })
         .then(
@@ -387,7 +389,7 @@ export const useTrainingPlan = (
 
 export const useScoreQuestion = (option?: UseMutationOptions<any, any>) =>
   useMutation((params: { list_id: number; phrase_id: number; grade: number }) =>
-    axios.post(`/api/lists/${params.list_id}/score/`, {
+    axios.post(`${apiRoot}lists/${params.list_id}/score/`, {
       phrase: params.phrase_id,
       grade: params.grade,
     })
