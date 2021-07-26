@@ -9,6 +9,9 @@ REST_FRAMEWORK = {
         #  this is the same as rest_framework SessionAuthentication, but it does not have
         #  the csrf check. It promotes the django HttpRequest user to the rest_framework
         #  Request user
+        #  NOTE 25/07/20 psacawa: wiem że niezalogowany klient będzie korzystał ze sesji,
+        #  ale jeśli to nadal działa dla zalogowanego użytkownika, to po co w ogóle się tym
+        #  trudzić?
         "main.authentication.SessionAuthentication",
     ],
     "DEFAULT_PAGINATION_CLASS": "lekt.pagination.NormalPageNumberPagination",

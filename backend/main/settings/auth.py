@@ -22,9 +22,8 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
-LOGIN_REDIRECT_URL = "/"
-ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "/"
-ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "/"
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = WEB_DOMAIN
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = WEB_DOMAIN
 
 REST_AUTH_SERIALIZERS = {
     "USER_DETAILS_SERIALIZER": "main.serializers.UserDetailsSerializer"
@@ -38,6 +37,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_ADAPTER = "main.adapter.AccountAdapter"
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https" if DJANGO_ENV == "production" else "http"
+LOGIN_REDIRECT_URL = f"{WEB_DOMAIN}/login"
 
 # email is relevant primarily for email-bases auth flow
 # in development it's printed to the console
