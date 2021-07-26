@@ -53,7 +53,7 @@ export default function Footer({ fluid, white }: Props) {
         <p className={classes.right}>
           &copy; {new Date().getFullYear()}{" "}
           <a href="/" className={anchor} target="_blank">
-            {process.env.REACT_APP_NAME}
+            {process.env.REACT_NAME}
           </a>
         </p>
       </div>

@@ -13,7 +13,7 @@ const AboutView = () => {
     <>
       <h3 className={classes.title}>What is this?</h3>
       <p>
-        <b>{process.env.REACT_APP_NAME}</b> is a project to address a lot of the
+        <b>{process.env.REACT_NAME}</b> is a project to address a lot of the
         frustrations one of our felt with software help language learning. We
         want to provide an approach that cuts out the <i>bullshit</i> from the
         process.

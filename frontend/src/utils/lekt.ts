@@ -15,7 +15,7 @@ const diacriticMap: Record<string, string> = {
 };
 
 export function getAudioUrl(voice: Voice, phrase: Phrase) {
-  const domain = process.env.REACT_APP_AUDIO_CDN_DOMAIN;
+  const domain = process.env.REACT_AUDIO_CDN_DOMAIN;
   const lid = voice.aid.slice(0, 2);
   console.log(`lid=${lid}`);
   const diacritics = diacriticMap[lid];

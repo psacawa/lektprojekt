@@ -74,7 +74,7 @@ export default function App(
   return (
     <div className={classes.wrapper}>
       <Sidebar
-        logoText={process.env.REACT_APP_NAME}
+        logoText={process.env.REACT_NAME}
         logo={logo}
         // image={bgImage}
         handleDrawerToggle={handleDrawerToggle}

@@ -25,14 +25,14 @@ const queryClient = new QueryClient({
   },
 });
 
+// in development trace everything, in production, read from var, fallback to 0.2
 Sentry.init({
-  dsn: process.env.REACT_APP_SENTRY_DSN,
+  dsn: process.env.REACT_SENTRY_DSN,
   integrations: [new Integrations.BrowserTracing()],
-
-  // Set tracesSampleRate to 1.0 to capture 100%
-  // of transactions for performance monitoring.
-  // We recommend adjusting this value in production
-  tracesSampleRate: (process.env.NODE_ENV == "development" && 1.0) || 0.2,
+  tracesSampleRate:
+    process.env.NODE_ENV == "development"
+      ? 1.0
+      : parseInt(process.env.REACT_SENTRY_SAMPLING_RATE) || 0.2,
   environment: process.env.NODE_ENV,
 });
 
@@ -50,7 +50,4 @@ ReactDOM.render(
   document.getElementById("root")
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
