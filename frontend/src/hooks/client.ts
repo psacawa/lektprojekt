@@ -6,6 +6,7 @@ import {
   UseQueryOptions,
 } from "react-query";
 
+import { apiRoot, authRoot, HOUR } from "../constants";
 import {
   CreateAccountServerErrors,
   CreateAccountValues,
@@ -25,13 +26,6 @@ import {
   TrackedList,
   User,
 } from "../types";
-
-const origin = `https://${process.env.REACT_API_DOMAIN}/`;
-const apiRoot =
-  process.env.NODE_ENV == "production" ? `${origin}api/` : "/api/";
-const authRoot =
-  process.env.NODE_ENV == "production" ? `${origin}auth/` : "/auth/";
-const HOUR = 60 * 60 * 1000;
 
 // TODO 05/03/20 psacawa: find solution to handle server errors
 

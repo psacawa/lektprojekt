@@ -9,6 +9,7 @@ import {
   UseQueryOptions,
 } from "react-query";
 
+import { apiRoot, authRoot, HOUR } from "../constants";
 import {
   CreateAccountServerErrors,
   CreateAccountValues,
@@ -17,7 +18,6 @@ import {
   LoginValues,
   User,
 } from "../types";
-
 interface AuthContextContent {
   login: ReturnType<typeof useLogin>;
   logout: ReturnType<typeof useLogout>;
@@ -95,7 +95,7 @@ const useLogin = (
 ) =>
   useMutation((params: LoginValues) => {
     return axios
-      .post("/auth/login/", { ...params })
+      .post(`${authRoot}login/`, { ...params })
       .then((response: AxiosResponse<any>) => response.data)
       .catch((error: AxiosError<any>) => Promise.reject(error.response?.data));
   }, options);
@@ -103,7 +103,7 @@ const useLogin = (
 const useLogout = (options?: UseMutationOptions) =>
   useMutation(() => {
     return axios
-      .post("/auth/logout/")
+      .post(`${authRoot}logout/`)
       .then((response: AxiosResponse<any>) => response.data);
   }, options);
 
@@ -120,7 +120,7 @@ const useCreateAccount = (
     CreateAccountValues
   >((params: CreateAccountValues) => {
     return axios
-      .post("/auth/registration/", { ...params })
+      .post(`${authRoot}registration/`, { ...params })
       .then((response: AxiosResponse<{ detail: string }>) => response.data)
       .catch((error: AxiosError<any>) => Promise.reject(error.response?.data));
   }, options);
@@ -129,7 +129,7 @@ export const useResetPassword = (options?: UseMutationOptions<{}, any, any>) =>
   useMutation(
     (params: { email: string }) =>
       axios
-        .post("/auth/password/reset/", { ...params })
+        .post(`${authRoot}password/reset/`, { ...params })
         .then((response: AxiosResponse<any>) => response.data),
     options
   );
@@ -143,7 +143,7 @@ const useUser = (options?: UseQueryOptions<User | null>) =>
     () => {
       if (authLoaded()) {
         return axios
-          .get("/auth/user/")
+          .get(`${authRoot}/user/`)
           .then((response: AxiosResponse<User>) => response.data)
           .catch((error: AxiosError<any>) => {
             if (error.response!.status < 500) {
