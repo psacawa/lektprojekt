@@ -143,7 +143,7 @@ const useUser = (options?: UseQueryOptions<User | null>) =>
     () => {
       if (authLoaded()) {
         return axios
-          .get(`${authRoot}/user/`)
+          .get(`${authRoot}user/`)
           .then((response: AxiosResponse<User>) => response.data)
           .catch((error: AxiosError<any>) => {
             if (error.response!.status < 500) {

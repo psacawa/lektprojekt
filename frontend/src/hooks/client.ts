@@ -254,7 +254,7 @@ export const useCreateTrackedList = (
   useMutation(
     (params: CreateTrackedListValues) =>
       axios
-        .post(`${apiRoot}/lists/`, params)
+        .post(`${apiRoot}lists/`, params)
         .then((response: AxiosResponse<TrackedList>) => response.data),
     options
   );
