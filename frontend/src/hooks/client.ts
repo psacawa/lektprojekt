@@ -26,7 +26,10 @@ import {
   User,
 } from "../types";
 
-const apiRoot = "/api/";
+const apiRoot =
+  process.env.NODE_ENV == "production"
+    ? `https://${process.env.REACT_API_DOMAIN}/api/`
+    : "/api/";
 const HOUR = 60 * 60 * 1000;
 
 // TODO 05/03/20 psacawa: find solution to handle server errors

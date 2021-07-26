@@ -316,7 +316,7 @@ function Sidebar(props: SidebarProps) {
     <div className={logoClasses}>
       {/* TODO 21/03/20 psacawa: change to Link */}
       <a
-        href={`https://${process.env.REACT_DOMAIN}`}
+        href={`https://${process.env.REACT_WEB_DOMAIN}`}
         target="_blank"
         className={logoMini}
         rel="noreferrer"
@@ -324,7 +324,7 @@ function Sidebar(props: SidebarProps) {
         <img src={logo} alt="logo" className={classes.img} />
       </a>
       <a
-        href={`https://${process.env.REACT_DOMAIN}`}
+        href={`https://${process.env.REACT_WEB_DOMAIN}`}
         target="_blank"
         className={logoNormal}
         rel="noreferrer"

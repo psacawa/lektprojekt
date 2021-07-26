@@ -30,8 +30,8 @@ DEBUG = DJANGO_ENV == "development"
 SITE_NAME = "LexQuest"
 DOMAIN = environ.get("DJANGO_DOMAIN", "lex.quest")
 WEB_DOMAIN = environ.get("DJANGO_WWW_DOMAIN", f"www.{DOMAIN}")
-ADMIN_DOMAIN = environ.get("DJANGO_ADMIN_DOMAIN", f"admin.{DOMAIN}")
-ALLOWED_HOSTS = [DOMAIN, WEB_DOMAIN, ADMIN_DOMAIN]
+API_DOMAIN = environ.get("DJANGO_API_DOMAIN", f"api.{DOMAIN}")
+ALLOWED_HOSTS = [DOMAIN, WEB_DOMAIN, API_DOMAIN]
 
 LEKTPROJEKT_APPS = [
     # first party applications
@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "django_filters",
+    "corsheaders",
     # accounts
     "allauth",
     "allauth.account",
@@ -68,6 +69,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "main.middleware.HealtCheckMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",

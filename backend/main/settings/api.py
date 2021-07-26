@@ -23,6 +23,9 @@ REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
 }
 
+if DJANGO_ENV == "production":
+    CORS_ALLOWED_ORIGINS = [f"https://{WEB_DOMAIN}"]
+
 if DEBUG:
     REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"] += [
         "rest_framework.renderers.BrowsableAPIRenderer"

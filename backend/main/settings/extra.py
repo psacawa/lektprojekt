@@ -10,10 +10,14 @@ SHELL_PLUS_IMPORTS = [
     "from django.db.models.functions import Length, Rank",
     "from django.db.models.expressions import RawSQL",
 ]
+
 IPYTHON_ARGUMENTS = [
     "--TerminalInteractiveShell.prompts_class=IPython.terminal.prompts.ClassicPrompts",
     "--TerminalInteractiveShell.editing_mode=vi",
 ]
+#  basic protection from accidental dangerous ORM commands
+if DJANGO_ENV == "production":
+    IPYTHON_ARGUMENTS += ["--colors=Linux"]
 # for ORM nastiness
 #  SHELL_PLUS_PRINT_SQL_TRUNCATE = None
 
@@ -72,7 +76,7 @@ def before_send(event, hint):
 
 
 DJANGO_SENTRY_TRACE_SAMPLE_RATE = (
-    1.0 if DEBUG else float(environ.get("DJANGO_SENTRY_TRACE_SAMPLE_RATE"))
+    1.0 if DEBUG else float(environ.get("DJANGO_SENTRY_TRACE_SAMPLE_RATE", 0.2))
 )
 sentry_sdk.init(
     dsn=environ.get("DJANGO_SENTRY_DSN", None),

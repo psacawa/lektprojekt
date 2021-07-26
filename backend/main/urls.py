@@ -62,5 +62,5 @@ if settings.DEBUG:
 
     urlpatterns = urlpatterns + [
         path("__debug__", include(debug_toolbar.urls)),
-        path(r"", RedirectView.as_view(url="/docs"), name="redirect-to-dox"),
+        path(r"", RedirectView.as_view(url="/api/docs"), name="redirect-to-dox"),
     ]

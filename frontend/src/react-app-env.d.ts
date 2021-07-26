@@ -7,11 +7,12 @@ declare namespace NodeJS {
     readonly GA_MEASUREMENT_ID: string;
     readonly NODE_ENV: "development" | "production" | "test";
     readonly PUBLIC_URL: string;
+    readonly REACT_API_DOMAIN: string;
     readonly REACT_AUDIO_CDN_DOMAIN: string;
-    readonly REACT_DOMAIN: string;
     readonly REACT_NAME: string;
     readonly REACT_SENTRY_DSN: string;
     readonly REACT_SENTRY_SAMPLING_RATE: string;
+    readonly REACT_WEB_DOMAIN: string;
   }
 }
 
