@@ -56,6 +56,11 @@ urlpatterns = [
     ),
 ]
 
+#  TODO 26/07/20 psacawa: Figure out a production solution for serving this static content
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+
+urlpatterns += staticfiles_urlpatterns()
+
 if settings.DEBUG:
     import debug_toolbar
     from django.views.generic import RedirectView

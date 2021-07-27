@@ -35,7 +35,9 @@ DJSTRIPE_USE_NATIVE_JSONFIELD = True
 DJSTRIPE_WEBHOOK_URL = r"^nictuniema/$"
 
 
+#####################
 # AWS SES
+#####################
 if DJANGO_ENV in ["development", "test"]:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 else:
