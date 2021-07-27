@@ -14,28 +14,37 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from allauth.account.views import ConfirmEmailView, EmailVerificationSentView
+from allauth.account.views import (
+    ConfirmEmailView,
+    EmailVerificationSentView,
+    password_reset_from_key,
+)
 from django.conf import settings
 from django.contrib import admin
+from django.contrib.auth.views import PasswordResetConfirmView
 from django.urls import include, path, re_path
-from django.views.generic.base import RedirectView
+from django.views.generic import RedirectView, TemplateView
 from django_ses.views import SESEventWebhookView
 
-from .views import healthz
+from .views import GithubLoginView, healthz
 
 urlpatterns = [
     path(r"admin/doc/", include("django.contrib.admindocs.urls")),
     path(r"admin/", admin.site.urls),
     path(r"api/", include("lekt.urls")),
     path(r"healthz", healthz),
-    #  auth
+    #  dj_rest_auth
+    #  eventually indvidually set the paths
     path(r"auth/", include("dj_rest_auth.urls")),
     path(r"auth/registration/", include("dj_rest_auth.registration.urls")),
+    #  what dj-rest-auth wants you to do
+    # TODO: i'm going to implement the frontend view with react router routing
     re_path(
-        r"^auth/password-reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,32})/$",
-        RedirectView.as_view(url="/"),
+        r"^password-reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,32})/$",
+        TemplateView.as_view(template_name="password_reset_confirm.html"),
         name="password_reset_confirm",
     ),
+    #  allauth is secondary, all paths must by manually set
     re_path(
         r"^auth/confirm-email/(?P<key>[-:\w]+)/$",
         ConfirmEmailView.as_view(),

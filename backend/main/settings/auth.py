@@ -16,16 +16,22 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
+#####################
+#  DJ_REST_AUTH
+#####################
 REST_AUTH_SERIALIZERS = {
     "USER_DETAILS_SERIALIZER": "main.serializers.UserDetailsSerializer"
+    #  "PASSWORD_RESET_CONFIRM_SERIALIZER":  "main.serializers.UserDetailsSerializer"
 }
 
+#####################
+#  DJANGO_ALLAUTH
+#####################
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
