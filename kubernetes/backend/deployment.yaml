@@ -23,6 +23,7 @@ spec:
           image: 886185890074.dkr.ecr.us-east-2.amazonaws.com/lekt-backend-image
           imagePullPolicy: Always
           env:
+            # core application parameters
             - name: DJANGO_ENV
               value: production
             - name: DJANGO_DOMAIN
@@ -41,21 +42,34 @@ spec:
                   key: LektUserPassword
             - name: DJANGO_REDIS_HOST
               value: cache
-            - name: DJANGO_AWS_ACCESS_KEY_ID
+            # aws services
+            - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
                   name: aws-ses-creds
                   key: AwsAccessKeyId
-            - name: DJANGO_AWS_SECRET_ACCESS_KEY
+            - name: AWS_SECRET_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
                   name: aws-ses-creds
                   key: AwsSecretAccessKey
-            - name: DJANGO_SENTRY_DSN
+            - name: AWS_SES_CONFIGURATION_SET
               valueFrom:
                 secretKeyRef:
+                  name: aws-ses-creds
+                  key: AwsSESConfigurationSet
+            # sentry
+            - name: DJANGO_SENTRY_DSN
+              valueFrom:
+                configMapKeyRef:
                   name: sentry
                   key: DSN
+            - name: DJANGO_SENTRY_TRACE_SAMPLE_RATE
+              valueFrom:
+                configMapKeyRef:
+                  name: sentry
+                  key: TraceSampleRate
+            # stripe
             - name: STRIPE_LIVE_SECRET_KEY
               valueFrom:
                 secretKeyRef:

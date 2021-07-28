@@ -21,36 +21,6 @@ spec:
       http:
         paths:
           # main app
-          - path: /api
-            pathType: Prefix
-            backend:
-              service:
-                name: backend
-                port:
-                  number: 8000
-          # accounts/auth
-          - path: /auth
-            pathType: Prefix
-            backend:
-              service:
-                name: backend
-                port:
-                  number: 8000
-          # third-party integratons
-          - path: /stripe
-            pathType: Prefix
-            backend:
-              service:
-                name: backend
-                port:
-                  number: 8000
-          - path: /ses
-            pathType: Prefix
-            backend:
-              service:
-                name: backend
-                port:
-                  number: 8000
           # fallback to frontend
           - path: /
             pathType: Prefix
@@ -59,7 +29,7 @@ spec:
                 name: frontend
                 port:
                   number: 80
-    - host: admin.lex.quest
+    - host: api.lex.quest
       http:
         paths:
           - path: /
