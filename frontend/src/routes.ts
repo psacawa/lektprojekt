@@ -44,6 +44,9 @@ interface CollapsibleRoute extends BaseRoute {
 
 export type AppRoute = BaseRoute | CollapsibleRoute;
 
+// NOTE 26/07/20 psacawa: rememinder: these routes must not collide with  those of the api
+// backend, at least until we aren't proxying frontend => backend in development
+
 // TODO 05/03/20 psacawa: there are several binary attributes here, which vary independently:
 // whether the route is displayed for (un)authed users, whether it should be in the drawer, etc
 // figure out a robust policy for this

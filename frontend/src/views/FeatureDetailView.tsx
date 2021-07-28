@@ -7,7 +7,7 @@ const LexemeDetailView = () => {
   const { id } = useParams<any>();
   const { isSuccess, data: feature } = useFeature({ id });
   return (
-    <Grid container justify="center">
+    <Grid container justifyContent="center">
       {isSuccess ? (
         <>
           <Typography variant="h5">{feature?.description}</Typography>

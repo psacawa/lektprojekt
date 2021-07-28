@@ -53,7 +53,7 @@ document.querySelector("form").onsubmit = (event) => {
       if (success) {
         output.innerText = "Successfully changed password. Redirecting...";
         setTimeout(() => {
-          window.location = "https://www.lex.quest";
+          window.location = "https://{{ WEB_DOMAIN }}";
         }, 2000);
       } else {
         errors = JSON.stringify(body);

@@ -81,7 +81,7 @@ interface Props {
   onPageChange: (event: any, page: number) => void;
   pageNumber: number;
   rowsPerPage: number;
-  onChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onRowsPerPageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 // TODO 17/03/20 psacawa: figure out how to present the PhrasePairTable on xs
@@ -104,7 +104,7 @@ const PhrasePairTable = ({
   onPageChange,
   pageNumber,
   rowsPerPage,
-  onChangeRowsPerPage,
+  onRowsPerPageChange,
 }: Props) => {
   const classes = useStyles();
   const featureColourMap: Record<number, string | undefined> = _(features)
@@ -151,7 +151,7 @@ const PhrasePairTable = ({
             count={data!.count}
             page={pageNumber}
             onPageChange={onPageChange}
-            onChangeRowsPerPage={onChangeRowsPerPage}
+            onRowsPerPageChange={onRowsPerPageChange}
           />
         </>
       ) : isFetching ? (

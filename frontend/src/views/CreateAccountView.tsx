@@ -213,7 +213,7 @@ const CreateAccountView = () => {
                 >
                   Sign Up
                 </Button>
-                <Grid container justify="flex-end">
+                <Grid container justifyContent="flex-end">
                   <Grid item>
                     <MuiLink component={Link} to="/login" variant="body2">
                       Already have an account? Sign in

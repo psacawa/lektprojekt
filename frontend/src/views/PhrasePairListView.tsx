@@ -52,7 +52,7 @@ const PhrasePairListView = () => {
   const handleChangePage = (event: React.ChangeEvent<{}>, page: number) => {
     setPageNumber(page);
   };
-  const handleChangeRowsPerPage = (
+  const handleRowsPerPageChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => setRowsPerPage(parseInt(event.currentTarget.value));
   return (
@@ -61,7 +61,7 @@ const PhrasePairListView = () => {
         Welcome to{" "}
         <span style={{ color: "blue" }}>Semantically Enhanced Search</span> Mode
       </Typography>
-      <Grid container justify="center" spacing={4}>
+      <Grid container justifyContent="center" spacing={4}>
         {languageQuery.isFetching ? (
           <Grid item>
             <CircularProgress />
@@ -96,7 +96,7 @@ const PhrasePairListView = () => {
                 phrasePairQuery,
                 lexemes,
                 features,
-                onChangeRowsPerPage: handleChangeRowsPerPage,
+                onRowsPerPageChange: handleRowsPerPageChange,
                 onPageChange: handleChangePage,
               }}
             />
