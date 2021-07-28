@@ -87,13 +87,13 @@ const baseDrawerRoutes: AppRoute[] = [
     component: AboutView,
     icon: HelpOutline,
   },
-  {
-    path: "/pricing/",
-    name: "Pricing",
-    exact: false,
-    component: PricingView,
-    icon: AttachMoney,
-  },
+  // {
+  //   path: "/pricing/",
+  //   name: "Pricing",
+  //   exact: false,
+  //   component: PricingView,
+  //   icon: AttachMoney,
+  // },
 ];
 
 const baseRoutes: AppRoute[] = [
