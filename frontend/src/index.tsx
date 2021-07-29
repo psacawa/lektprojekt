@@ -3,11 +3,12 @@ import "assets/css/base.css";
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 import { createBrowserHistory } from "history";
+import { queryClient } from "hooks";
 import { AuthProvider } from "hooks/auth";
 import { SessionProvider } from "hooks/session";
 import React from "react";
 import ReactDOM from "react-dom";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { Router } from "react-router-dom";
 
@@ -15,15 +16,6 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
 const history = createBrowserHistory();
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      // TODO 21/03/20 psacawa: investigate whether this can be safely added
-      refetchOnMount: false,
-    },
-  },
-});
 
 // in development trace everything, in production, read from var, fallback to 0.2
 Sentry.init({

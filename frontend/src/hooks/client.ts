@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import {
+  QueryClient,
   useMutation,
   UseMutationOptions,
   useQuery,
@@ -30,6 +31,16 @@ import {
 
 // TODO 05/03/20 psacawa: find solution to handle server errors
 
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      // TODO 21/03/20 psacawa: investigate whether this can be safely added
+      refetchOnMount: false,
+    },
+  },
+});
+
 export const useLanguages = (options?: UseQueryOptions<Language[]>) =>
   useQuery(
     "languages",
@@ -43,19 +54,25 @@ export const useLanguages = (options?: UseQueryOptions<Language[]>) =>
   );
 
 export const usePairCounts = (options?: UseQueryOptions<PairCount[]>) =>
-  useQuery("pair-count", () =>
-    axios
-      .get(`${apiRoot}pair-counts/`)
-      .then((response: AxiosResponse<PairCount[]>) => response.data)
+  useQuery(
+    "pair-count",
+    () =>
+      axios
+        .get(`${apiRoot}pair-counts/`)
+        .then((response: AxiosResponse<PairCount[]>) => response.data),
+    { staleTime: HOUR, ...options }
   );
 
 export const useSupportedLanguagePairs = (
   options?: UseQueryOptions<LanguagePair[]>
 ) =>
-  useQuery(`${apiRoot}supported-language-pairs/`, () =>
-    axios
-      .get(`${apiRoot}supported-language-pairs/`)
-      .then((response: AxiosResponse<LanguagePair[]>) => response.data)
+  useQuery(
+    "supported-language-pairs",
+    () =>
+      axios
+        .get(`${apiRoot}supported-language-pairs/`)
+        .then((response: AxiosResponse<LanguagePair[]>) => response.data),
+    { staleTime: HOUR, ...options }
   );
 
 export const useLexeme = (
@@ -235,7 +252,12 @@ export const useCreateSubscription = (
       axios
         .post(`${apiRoot}subs/`, params)
         .then((response: AxiosResponse<Subscription>) => response.data),
-    { ...options }
+    {
+      onSuccess: (result) => {
+        queryClient.invalidateQueries("subs");
+      },
+      ...options,
+    }
   );
 
 export const useDeleteSubscription = (
