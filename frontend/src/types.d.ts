@@ -150,6 +150,12 @@ export interface PairCount {
   count: number;
 }
 
+export interface LanguagePair {
+  base_lang: number;
+  target_lang: number;
+  count: number;
+}
+
 // the below types hold some information about the application UI, such as the "active"
 // list, and the active practice session, for the purpose of providing a user friendly
 // flow. In a separate architecture, this would be the content of some react context

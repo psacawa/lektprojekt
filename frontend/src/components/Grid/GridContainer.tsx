@@ -1,4 +1,5 @@
 import Grid from "@material-ui/core/Grid";
+import { GridProps } from "@material-ui/core/Grid";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import React from "react";
 
@@ -16,7 +17,7 @@ const styles = createStyles({
   },
 });
 
-interface Props {
+interface Props extends GridProps {
   className?: string;
   children: React.ReactNode;
 }

@@ -14,6 +14,7 @@ import {
   CreateTrackedListValues,
   Feature,
   Language,
+  LanguagePair,
   Lexeme,
   LoginServerErrors,
   LoginSuccessPayload,
@@ -41,11 +42,20 @@ export const useLanguages = (options?: UseQueryOptions<Language[]>) =>
     { staleTime: HOUR, ...options }
   );
 
-export const usePairCounts = (options?: UseQueryOptions<Paginate<PairCount>>) =>
+export const usePairCounts = (options?: UseQueryOptions<PairCount[]>) =>
   useQuery("pair-count", () =>
     axios
       .get(`${apiRoot}pair-counts/`)
-      .then((response: AxiosResponse<Paginate<PairCount>>) => response.data)
+      .then((response: AxiosResponse<PairCount[]>) => response.data)
+  );
+
+export const useSupportedLanguagePairs = (
+  options?: UseQueryOptions<LanguagePair[]>
+) =>
+  useQuery(`${apiRoot}supported-language-pairs/`, () =>
+    axios
+      .get(`${apiRoot}supported-language-pairs/`)
+      .then((response: AxiosResponse<LanguagePair[]>) => response.data)
   );
 
 export const useLexeme = (

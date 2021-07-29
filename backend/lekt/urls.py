@@ -42,6 +42,7 @@ urlpatterns = [
     ),
     path(r"pairs/", views.PhrasePairListView.as_view(), name="pair-list"),
     path(r"pair-counts/", views.PairCountsView.as_view(), name="pair-stats"),
+    path(r"supported-language-pairs/", views.SupportedLanguagePairsView.as_view()),
 ]
 
 if settings.DEBUG:

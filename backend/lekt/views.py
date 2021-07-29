@@ -17,7 +17,7 @@ from django_filters.rest_framework import DjangoFilterBackend, FilterSet
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import generics, mixins, permissions, status, viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.exceptions import ParseError, ValidationError
 from rest_framework.filters import OrderingFilter
 from rest_framework.request import Request
@@ -50,10 +50,12 @@ from .permissions import (
     IsTrackedObservableOwner,
 )
 
+HOUR = 60 * 60
+
 logger = logging.getLogger(__name__)
 
 
-@method_decorator(cache_page(60 * 60), name="dispatch")
+@method_decorator(cache_page(HOUR), name="dispatch")
 class LanguageViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API view set to for listing `Language` models and their associated `Voice` models.
@@ -71,7 +73,7 @@ class LanguageViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = LargePageNumberPagination
 
 
-@method_decorator(cache_page(60 * 60), name="dispatch")
+@method_decorator(cache_page(HOUR), name="dispatch")
 class LexemeViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API view for querying `Lexeme` models based on their associated `Language` and an
@@ -86,7 +88,7 @@ class LexemeViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = LargePageNumberPagination
 
 
-@method_decorator(cache_page(60 * 60), name="dispatch")
+@method_decorator(cache_page(HOUR), name="dispatch")
 class FeatureViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API view for querying `Feature` models based on their associated `Language` and an
@@ -101,7 +103,7 @@ class FeatureViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = None
 
 
-@method_decorator(cache_page(60 * 60), name="dispatch")
+@method_decorator(cache_page(HOUR), name="dispatch")
 class WordCompletionView(generics.ListAPIView):
     """
     API view for querying `Word` models based on the associated `Language` and a initial
@@ -115,7 +117,7 @@ class WordCompletionView(generics.ListAPIView):
     ordering = ["id"]
 
 
-@method_decorator(cache_page(60 * 60), name="dispatch")
+@method_decorator(cache_page(HOUR), name="dispatch")
 class PhraseCompletionView(generics.ListAPIView):
     """API View to list phrases containing a given substring."""
 
@@ -125,7 +127,7 @@ class PhraseCompletionView(generics.ListAPIView):
     ordering = ["id"]
 
 
-@method_decorator(cache_page(60 * 60), name="dispatch")
+@method_decorator(cache_page(HOUR), name="dispatch")
 class PhrasePairDetailView(generics.RetrieveAPIView):
 
     queryset = (
@@ -138,7 +140,7 @@ class PhrasePairDetailView(generics.RetrieveAPIView):
     serializer_class = serializers.PhrasePairDetailSerializer
 
 
-@method_decorator(cache_page(60 * 60), name="dispatch")
+@method_decorator(cache_page(HOUR), name="dispatch")
 class PhrasePairListView(generics.ListAPIView):
     """
     This endpoint just shows `PhrasePair` models for a give `Language` pair such
@@ -217,7 +219,7 @@ class ValidateFilterListMixin:
         return Response(serializer.data)
 
 
-@method_decorator(cache_page(60 * 60), name="dispatch")
+@method_decorator(cache_page(HOUR), name="dispatch")
 class PhrasePairLexemeSearchView(ValidateFilterListMixin, generics.ListAPIView):
     """
     View for relevance search of PhrasePair objects where only related `Lexeme` objects
@@ -258,7 +260,7 @@ class PhrasePairLexemeSearchView(ValidateFilterListMixin, generics.ListAPIView):
         return queryset
 
 
-@method_decorator(cache_page(60 * 60), name="dispatch")
+@method_decorator(cache_page(HOUR), name="dispatch")
 class PhrasePairFeatureSearchView(ValidateFilterListMixin, generics.ListAPIView):
     """
     View for relevance search of PhrasePair objects where only related `Feature`
@@ -301,7 +303,7 @@ class PhrasePairFeatureSearchView(ValidateFilterListMixin, generics.ListAPIView)
         return queryset
 
 
-@method_decorator(cache_page(60 * 60), name="dispatch")
+@method_decorator(cache_page(HOUR), name="dispatch")
 class PhrasePairObservableSearchView(ValidateFilterListMixin, generics.ListAPIView):
     """
     View for relevance search of PhrasePair objects where `Lexeme` and `Feature`
@@ -473,10 +475,6 @@ class TrainingPlanView(mixins.ListModelMixin, viewsets.GenericViewSet):
         subscription: LanguageSubscription = LanguageSubscription.objects.get(
             lists__id=list_pk
         )
-        #  observables = [
-        #      obs.observable_id
-        #      for obs in TrackedObservable.objects.filter(tracked_list_id=list_pk)
-        #  ]
         observables = Observable.objects.filter(
             trackedobservable__tracked_list_id=list_pk
         )
@@ -569,13 +567,14 @@ class TrackedFeatureViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         )
 
 
-@method_decorator(cache_page(60 * 60), name="dispatch")
+@method_decorator(cache_page(HOUR), name="dispatch")
 class PairCountsView(generics.ListAPIView):
     """
     Some silly temporary view that reports on the counts of particular phrase pairs in
     particular language pairs for users' benefit
     """
 
+    pagination_class = None
     serializer_class = serializers.PairCountsSerializer
     queryset = (
         PhrasePair.objects.filter(base__lang__active=True, target__lang__active=True)
@@ -583,6 +582,22 @@ class PairCountsView(generics.ListAPIView):
         .annotate(count=Count("*"))
         .order_by("-count")
     )
+
+
+@method_decorator(cache_page(HOUR), name="dispatch")
+class SupportedLanguagePairsView(generics.ListAPIView):
+    #  @cache_page(HOUR)
+    #  @api_view(["GET"])
+    #  def supported_language_pairs_view(request: Request):
+    """
+    List of supported pairs of languages for the purpose of onboarding. Basically a
+    stripped down view of Corpora.
+    """
+    pagination_class = None
+    queryset = PhrasePair.objects.values("base__lang", "target__lang").annotate(
+        count=Count("id")
+    )
+    serializer_class = serializers.LanguagePairSerializer
 
 
 docs_schema_view = get_schema_view(

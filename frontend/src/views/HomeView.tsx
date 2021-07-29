@@ -1,4 +1,5 @@
 import {
+  CircularProgress,
   IconButton,
   ListItem,
   makeStyles,
@@ -14,8 +15,13 @@ import { Card, CardContent } from "@material-ui/core";
 import cardBodyStyles from "assets/jss/styles/components/cardBodyStyle";
 import cardStyles from "assets/jss/styles/components/cardStyle";
 import { GridContainer, GridItem } from "components/Grid";
-import { useCreateSubscription, useLanguages, usePairCounts } from "hooks";
-import { find } from "lodash";
+import {
+  useCreateSubscription,
+  useLanguages,
+  usePairCounts,
+  useSupportedLanguagePairs,
+} from "hooks";
+import { find, includes, uniq } from "lodash";
 import React from "react";
 import { useHistory } from "react-router";
 import { Language } from "types";
@@ -38,28 +44,8 @@ const useStyles = makeStyles({
   },
 });
 
-const getLanguages = (data: Language[]) =>
-  data.map((language, idx) => {
-    const defaultVoice = find(
-      language.voice_set,
-      (voice, idx) => voice.id === language.default_voice
-    );
-    const flagCode = defaultVoice!.aid.slice(3);
-    return {
-      flagCode,
-      ...language,
-    };
-  });
-
 const Home = () => {
   const classes = useStyles();
-  const history = useHistory();
-  const languageQuery = useLanguages();
-  const createSubscription = useCreateSubscription({
-    onSettled: (data) => {
-      history.push("/profile/");
-    },
-  });
   return (
     <div className={classes.center}>
       <h3>
@@ -78,10 +64,61 @@ const Home = () => {
         </li>
       </ul>
       ...in the context of actual phrases in the language of your choice
+      <LanguagePairSelectWidget />
+      <PhrasePairCountsTable />
+    </div>
+  );
+};
+
+// just extract the flag code from the default voice's locale and return it
+// alongside the language itself
+// {"id": 3, "lid": "en", ...} =>  {"flagCode": "US", "id": 3, "lid": "en", ... }
+const getDefaultLocaleCode = (data: Language[]) =>
+  data.map((language, idx) => {
+    const defaultVoice = find(
+      language.voice_set,
+      (voice, idx) => voice.id === language.default_voice
+    );
+    const flagCode = defaultVoice!.aid.slice(3);
+    return {
+      flagCode,
+      ...language,
+    };
+  });
+
+const LanguagePairSelectWidget = () => {
+  const classes = useStyles();
+  const history = useHistory();
+  const languageQuery = useLanguages();
+  const supportedLanguagePairQuery = useSupportedLanguagePairs();
+
+  // extract the base languages from the supportedLanguagePairQuery response
+  // these are taken as the id of the supportedLanguages
+  const supportedLanguageIds: number[] = uniq(
+    supportedLanguagePairQuery.data?.map(
+      (languagePair) => languagePair.base_lang
+    )
+  );
+  console.log(supportedLanguagePairQuery.data, supportedLanguageIds);
+  const supportedLanguages = languageQuery.data?.filter((lang) =>
+    includes(supportedLanguageIds, lang.id)
+  );
+  const createSubscription = useCreateSubscription({
+    onSettled: (data) => {
+      history.push("/profile/");
+    },
+  });
+  return (
+    <>
       <h4>I'm learning...</h4>
-      <GridContainer className={classes.container}>
+      <GridContainer
+        justifyContent="space-around"
+        className={classes.container}
+      >
         {languageQuery.data &&
-          getLanguages(languageQuery.data).map((lang, idx) => (
+        supportedLanguagePairQuery.data &&
+        supportedLanguages ? (
+          getDefaultLocaleCode(supportedLanguages).map((lang, idx) => (
             <GridItem key={idx} xs={6} sm={4} md={3}>
               <Card
                 className={`${classes.card} ${classes.center}`}
@@ -107,10 +144,12 @@ const Home = () => {
                 />
               </Card>
             </GridItem>
-          ))}
+          ))
+        ) : (
+          <CircularProgress />
+        )}
       </GridContainer>
-      <PhrasePairCountsTable />
-    </div>
+    </>
   );
 };
 
@@ -132,7 +171,7 @@ const PhrasePairCountsTable = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {pairCountsQuery.data!.results.map((stat, idx) => (
+                {pairCountsQuery.data.map((stat, idx) => (
                   <TableRow key={idx}>
                     <TableCell>{stat.base_lang}</TableCell>
                     <TableCell>{stat.target_lang}</TableCell>

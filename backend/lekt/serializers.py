@@ -40,6 +40,12 @@ class LanguageSerializer(serializers.ModelSerializer):
         exclude = ["created_at", "updated_at"]
 
 
+class LanguagePairSerializer(serializers.Serializer):
+    base_lang = serializers.IntegerField(source="base__lang")
+    target_lang = serializers.IntegerField(source="target__lang")
+    count = serializers.IntegerField()
+
+
 class LanguageVoiceSerializer(LanguageSerializer):
     voice_set = VoiceSerializer(many=True)
 
