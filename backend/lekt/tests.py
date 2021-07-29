@@ -56,7 +56,7 @@ class LanguageViewTest:
             assert response.status_code == 200
         assert "results" in response.data
         results = response.data["results"]
-        assert_that(results).is_length(20)
+        assert_that(results).extracting("lid").contains("en", "es", "fr", "de")
 
 
 @pytest.mark.django_db
@@ -336,9 +336,3 @@ class TrackedObservableViewTest:
         assert jq(".results[].observable|[.name, .value]", response.data) == [
             ["Mood", "Cnd"]
         ]
-
-
-@pytest.mark.django_db
-class SignalsTest:
-    def tracked_list_signal_test(test_user):
-        assert TrackedList.objects.count() == 1

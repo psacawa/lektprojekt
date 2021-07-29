@@ -50,7 +50,9 @@ from .permissions import (
     IsTrackedObservableOwner,
 )
 
-HOUR = 60 * 60
+MIN = 60
+HOUR = 60 * MIN
+FIVE_MIN = 5 * MIN
 
 logger = logging.getLogger(__name__)
 
@@ -260,7 +262,7 @@ class PhrasePairLexemeSearchView(ValidateFilterListMixin, generics.ListAPIView):
         return queryset
 
 
-@method_decorator(cache_page(HOUR), name="dispatch")
+@method_decorator(cache_page(FIVE_MIN), name="dispatch")
 class PhrasePairFeatureSearchView(ValidateFilterListMixin, generics.ListAPIView):
     """
     View for relevance search of PhrasePair objects where only related `Feature`
@@ -303,7 +305,7 @@ class PhrasePairFeatureSearchView(ValidateFilterListMixin, generics.ListAPIView)
         return queryset
 
 
-@method_decorator(cache_page(HOUR), name="dispatch")
+@method_decorator(cache_page(FIVE_MIN), name="dispatch")
 class PhrasePairObservableSearchView(ValidateFilterListMixin, generics.ListAPIView):
     """
     View for relevance search of PhrasePair objects where `Lexeme` and `Feature`
@@ -567,7 +569,7 @@ class TrackedFeatureViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         )
 
 
-@method_decorator(cache_page(HOUR), name="dispatch")
+@method_decorator(cache_page(FIVE_MIN), name="dispatch")
 class PairCountsView(generics.ListAPIView):
     """
     Some silly temporary view that reports on the counts of particular phrase pairs in
@@ -584,15 +586,13 @@ class PairCountsView(generics.ListAPIView):
     )
 
 
-@method_decorator(cache_page(HOUR), name="dispatch")
+@method_decorator(cache_page(FIVE_MIN), name="dispatch")
 class SupportedLanguagePairsView(generics.ListAPIView):
-    #  @cache_page(HOUR)
-    #  @api_view(["GET"])
-    #  def supported_language_pairs_view(request: Request):
     """
     List of supported pairs of languages for the purpose of onboarding. Basically a
     stripped down view of Corpora.
     """
+
     pagination_class = None
     queryset = PhrasePair.objects.values("base__lang", "target__lang").annotate(
         count=Count("id")

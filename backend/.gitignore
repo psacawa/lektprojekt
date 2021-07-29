@@ -1,3 +1,5 @@
 assets
 # configuration stems from the pyproject.toml file
 requirements.txt
+
+.hypothesis
