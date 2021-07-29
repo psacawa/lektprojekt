@@ -288,7 +288,12 @@ export const useCreateTrackedList = (
       axios
         .post(`${apiRoot}lists/`, params)
         .then((response: AxiosResponse<TrackedList>) => response.data),
-    options
+    {
+      onSuccess: (result) => {
+        queryClient.invalidateQueries(["sub", result.subscription]);
+      },
+      ...options,
+    }
   );
 
 export const useUpdateTrackedList = (
