@@ -1,4 +1,7 @@
-assets
+assets/*
+# for now this is whitelisted to git so it can appear in CI
+!assets/test_fixture.json
+
 # configuration stems from the pyproject.toml file
 requirements.txt
 

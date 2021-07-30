@@ -96,21 +96,29 @@ The test suite can run with ``pytest-watch``. This runs it in "watch mode", just
 
 .. code-block:: shell
 
-  DJANGO_DATABASE=test python3 manage.py load_corpus assets/spanishdict.sqlite --limit 100
+  createdb test_lekt_db
+  DJANGO_ENV=test python3 manage.py migrate
+  DJANGO_ENV=test python3 manage.py load_corpus \
+    assets/spanishdict.sqlite \
+    --limit 100 \ 
+    --size sm
 
-Of course you have to create the database and migrate first.
-You can run this command and then run in ``psql``:
+To reset:
 
-.. code-block:: sql
-
-  ALTER DATABASE lektprojekt_db RENAME TO test_lektprojekt_db;
-
-This will set ``test_lektprojekt_db`` in the required state. You can request django use the test database(for the purpose of examining it to write new tests) by means of an environmental variable:
+This uses spacy models `en_core_web_sm` and `es_core_news_sm` for the loading. These
+models are versioned as well in sync with spacy, the results are reproducible as of 
+spacy 3.1.0. 
 
 .. code-block:: shell
 
-  DJANGO_DATABASE=test ./manage.py runserverDJANGO_DATABASE=test ./manage.py runserver
-  DJANGO_DATABASE=test ./manage.py runserverDJANGO_DATABASE=test ./manage.py shell_plus
+  DJANGO_ENV=test python3 manage.py reset_db --noinput
+
+You can request django use the test database(for the purpose of examining it to write new tests) by means of an environmental variable:
+
+.. code-block:: shell
+
+  DJANGO_ENV=test ./manage.py runserver
+  DJANGO_ENV=test ./manage.py shell_plus
 
 
 
@@ -139,8 +147,7 @@ Technologies Used
 -  **django-debug-toolbar** (``debug_toolbar``) - adds a widget to HTML
    response pages that shows you what the application did while serving
    the request: SQL queries, timing, etc..
--  **django-split-settings** - lets you split your configs into multiple files. Need to
-  get rid of this
+-  **django-split-settings** - lets you split your configs into multiple files. Need to get rid of this
 -  **ipython** - better Python shell
 
 -  **pytest** - python test framework more flexible than ``unittest``

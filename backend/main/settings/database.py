@@ -3,25 +3,21 @@ DB_HOST = environ.get("DJANGO_POSTGRES_HOST", "localhost")
 DB_PASS = environ.get("DJANGO_POSTGRES_PASSWORD", "django-pass")
 
 
-def _get_database_config(mode="main"):
-    """Get the DB config for either main or test database"""
-    return {
+#  controlling the database from an environmental variable enables
+#  DJANGO_ENV=test ./manage.py shell_plus
+#  in order the directly examine the test database
+DATABASES = {
+    "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "{}lekt_db".format("test_" if mode == "test" else ""),
+        "NAME": "{}lekt_db".format("test_" if DJANGO_ENV == "test" else ""),
         # In development mode a database superuser is used
         # who can delete and recrete the database
-        "USER": "lekt_admin" if DEBUG else "lekt_user",
+        "USER": "lekt_admin" if DJANGO_ENV == "production" else "lekt_user",
         "HOST": DB_HOST,
         "PASSWORD": DB_PASS,
     }
+}
 
-
-#  controlling the database from an environmental variable enables
-#  DJANGO_DATABASE=test ./manage.py runserver
-#  in order the directly examine the test database
-default_database = environ.get("DJANGO_DATABASE", "main")
-DATABASES = {}
-DATABASES["default"] = _get_database_config(default_database)
 
 REDIS_HOST = environ.get("DJANGO_REDIS_HOST", "localhost")
 

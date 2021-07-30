@@ -78,7 +78,9 @@ def before_send(event, hint):
 
 
 DJANGO_SENTRY_TRACE_SAMPLE_RATE = (
-    1.0 if DEBUG else float(environ.get("DJANGO_SENTRY_TRACE_SAMPLE_RATE", 0.2))
+    1.0
+    if DJANGO_SENTRY_ENV != "production"
+    else float(environ.get("DJANGO_SENTRY_TRACE_SAMPLE_RATE", 0.2))
 )
 sentry_sdk.init(
     dsn=environ.get("DJANGO_SENTRY_DSN", None),
@@ -95,6 +97,6 @@ sentry_sdk.init(
     # SHA as release, however you may want to set
     # something more human-readable.
     # release="myapp@1.0.0",
-    environment=DJANGO_ENV,
-    before_send=before_send if DEBUG else None,
+    environment=DJANGO_SENTRY_ENV,
+    before_send=before_send if DJANGO_SENTRY_ENV != "production" else None,
 )

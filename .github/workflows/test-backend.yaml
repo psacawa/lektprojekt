@@ -1,0 +1,41 @@
+name: test-backend
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - backend/**
+  workflow_dispatch:
+
+jobs:
+  test:
+    env:
+      DJANGO_ENV: test
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: lekt_admin
+          POSTGRES_PASSWORD: django-pass
+          POSTGRES_DB: test_lekt_db
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: abatilo/actions-poetry@v2.0.0
+      - name: Install dependencies
+        run: poetry install
+        working-directory: ./backend
+      - name: Prepare database
+        run: |
+          python3 manage.py migrate
+          python3 manage.py loaddata assets/test_fixture.json
+        working-directory: backend
+      - name: Pytest
+        run: pytest
+        working-directory: backend
