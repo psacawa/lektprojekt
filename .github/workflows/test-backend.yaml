@@ -36,9 +36,18 @@ jobs:
           key: backend-${{ hashFiles('backend/poetry.lock') }}
       - name: Setup poetry
         uses: abatilo/actions-poetry@v2.0.0
-      - name: Install dependencies
+      - name: Install project dependencies
         run: |
           poetry export --without-hashes -o requirements.txt -f requirements.txt
+          pip install -r requirements.txt
+        working-directory: backend
+      - name: Install test dependencies
+        # you have a better idea?
+        run: |
+          pip install pytest pytest-django pytest-cov assertpy jq
+          wget https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 \
+            -O /usr/local/bin/jq
+          chmod +x /usr/local/bin/jq
           pip install -r requirements.txt
         working-directory: backend
       - name: Prepare database
@@ -47,5 +56,5 @@ jobs:
           python3 manage.py loaddata assets/test_fixture.json
         working-directory: backend
       - name: Pytest
-        run: pytest
+        run: python3 -m pytest .
         working-directory: backend

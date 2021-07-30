@@ -1,6 +1,6 @@
 # type: ignore
-DB_HOST = environ.get("DJANGO_POSTGRES_HOST", "localhost")
-DB_PASS = environ.get("DJANGO_POSTGRES_PASSWORD", "django-pass")
+DJANGO_POSTGRES_HOST = environ.get("DJANGO_POSTGRES_HOST", "localhost")
+DJANGO_POSTGRES_PASSWORD = environ.get("DJANGO_POSTGRES_PASSWORD", "django-pass")
 
 
 #  controlling the database from an environmental variable enables
@@ -13,8 +13,8 @@ DATABASES = {
         # In development mode a database superuser is used
         # who can delete and recrete the database
         "USER": "lekt_admin" if DJANGO_ENV != "production" else "lekt_user",
-        "HOST": DB_HOST,
-        "PASSWORD": DB_PASS,
+        "HOST": DJANGO_POSTGRES_HOST,
+        "PASSWORD": DJANGO_POSTGRES_PASSWORD,
     }
 }
 

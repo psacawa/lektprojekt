@@ -68,6 +68,6 @@ addopts = "--reuse-db"
 python_files = ["*_test.py", "tests.py"]
 python_classes = "*Test"
 python_functions = "*_test"
-required_plugins = ["pytest-django==4.1.0", "pytest-cov==2.10.1"]
+required_plugins = ["pytest-django>=4.1.0", "pytest-cov>=2.10.1"]
 
 filterwarnings = "ignore::Warning"

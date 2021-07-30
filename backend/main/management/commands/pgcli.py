@@ -20,7 +20,7 @@ class Command(BaseCommand):
         os.environ["PGPASSWORD"] = settings.DATABASES[database]["PASSWORD"]
         subprocess.run(
             "pgcli -h {host} -U {user} {db}".format(
-                host=settings.DB_HOST,
+                host=settings.DATABASES[database]["HOST"],
                 user=settings.DATABASES[database]["USER"],
                 db=settings.DATABASES[database]["NAME"],
             ).split(" ")
