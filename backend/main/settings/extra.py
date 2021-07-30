@@ -24,15 +24,14 @@ if DJANGO_ENV == "production":
 #####################
 #  STRIPE
 #####################
-STRIPE_LIVE_SECRET_KEY = environ.get("STRIPE_LIVE_SECRET_KEY", None)
-STRIPE_TEST_SECRET_KEY = environ.get("STRIPE_TEST_SECRET_KEY", None)
-STRIPE_LIVE_MODE = DJANGO_STRIPE_ENV == "production"
-
-DJSTRIPE_WEBHOOK_SECRET = environ.get("DJSTRIPE_WEBHOOK_SECRET", None)
+STRIPE_TEST_SECRET_KEY = environ.get("STRIPE_TEST_SECRET_KEY", "sk_test_fake")
+STRIPE_LIVE_SECRET_KEY = environ.get("STRIPE_LIVE_SECRET_KEY", "sk_live_fake")
+DJSTRIPE_WEBHOOK_SECRET = environ.get("DJSTRIPE_WEBHOOK_SECRET", "whsec_fake")
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
 DJSTRIPE_USE_NATIVE_JSONFIELD = True
 # just a bit of security by obscurity against replay attacks
 DJSTRIPE_WEBHOOK_URL = r"^nictuniema/$"
+STRIPE_LIVE_MODE = DJANGO_STRIPE_ENV == "production"
 
 
 #####################
