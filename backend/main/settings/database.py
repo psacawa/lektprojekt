@@ -26,7 +26,7 @@ DATABASES["default"] = _get_database_config(default_database)
 REDIS_HOST = environ.get("DJANGO_REDIS_HOST", "localhost")
 
 # caching in development makes tests flaky
-if DJANGO_ENV != "production":
+if DJANGO_CACHE_ENV != "production":
     CACHES = {
         "default": {
             "BACKEND": "django.core.cache.backends.dummy.DummyCache",

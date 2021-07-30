@@ -26,7 +26,7 @@ if DJANGO_ENV == "production":
 #####################
 STRIPE_LIVE_SECRET_KEY = environ.get("STRIPE_LIVE_SECRET_KEY", None)
 STRIPE_TEST_SECRET_KEY = environ.get("STRIPE_TEST_SECRET_KEY", None)
-STRIPE_LIVE_MODE = DJANGO_ENV == "production"
+STRIPE_LIVE_MODE = DJANGO_STRIPE_ENV == "production"
 
 DJSTRIPE_WEBHOOK_SECRET = environ.get("DJSTRIPE_WEBHOOK_SECRET", None)
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
@@ -38,7 +38,7 @@ DJSTRIPE_WEBHOOK_URL = r"^nictuniema/$"
 #####################
 # AWS SES
 #####################
-if DJANGO_ENV in ["development", "test"]:
+if DJANGO_SES_ENV in ["development", "test"]:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 else:
     EMAIL_BACKEND = "django_ses.SESBackend"

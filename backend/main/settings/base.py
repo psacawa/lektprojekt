@@ -27,6 +27,11 @@ SECRET_KEY = environ.get("DJANGO_SECRET_KEY", "fake-key")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = DJANGO_ENV == "development"
 
+DJANGO_SENTRY_ENV = environ.get("DJANGO_SENTRY_ENV", DJANGO_ENV)
+DJANGO_SES_ENV = environ.get("DJANGO_SES_ENV", DJANGO_ENV)
+DJANGO_STRIPE_ENV = environ.get("DJANGO_STRIPE_ENV", DJANGO_ENV)
+DJANGO_CACHE_ENV = environ.get("DJANGO_CACHE_ENV", DJANGO_ENV)
+
 SITE_NAME = "LexQuest"
 DOMAIN = environ.get("DJANGO_DOMAIN", "lex.quest")
 WEB_DOMAIN = environ.get("DJANGO_WWW_DOMAIN", f"www.{DOMAIN}")
