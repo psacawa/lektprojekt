@@ -12,7 +12,7 @@ DATABASES = {
         "NAME": "{}lekt_db".format("test_" if DJANGO_ENV == "test" else ""),
         # In development mode a database superuser is used
         # who can delete and recrete the database
-        "USER": "lekt_admin" if DJANGO_ENV == "production" else "lekt_user",
+        "USER": "lekt_admin" if DJANGO_ENV != "production" else "lekt_user",
         "HOST": DB_HOST,
         "PASSWORD": DB_PASS,
     }

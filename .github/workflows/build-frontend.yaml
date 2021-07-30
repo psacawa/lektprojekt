@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - frontend/**
+      - .github/workflows/build-frontend.yaml
   workflow_dispatch:
 
 jobs:
