@@ -1012,7 +1012,7 @@ murmurhash = ">=0.28.0,<1.1.0"
 
 [[package]]
 name = "progress"
-version = "1.5"
+version = "1.6"
 description = "Easy to use progress bars"
 category = "main"
 optional = false
@@ -1824,7 +1824,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "727f1bd8dd9ff06cd026c59c85b604d1c3f8f585d8134dab0c6691f076005530"
+content-hash = "a325e8346ca1c1172792f22ac4ef084c3bbbc9b56a18b431d0d60318d3665671"
 
 [metadata.files]
 alabaster = [
@@ -2478,7 +2478,7 @@ preshed = [
     {file = "preshed-3.0.5.tar.gz", hash = "sha256:c6d3dba39ed5059aaf99767017b9568c75b2d0780c3481e204b1daecde00360e"},
 ]
 progress = [
-    {file = "progress-1.5.tar.gz", hash = "sha256:69ecedd1d1bbe71bf6313d88d1e6c4d2957b7f1d4f71312c211257f7dae64372"},
+    {file = "progress-1.6.tar.gz", hash = "sha256:c9c86e98b5c03fa1fe11e3b67c1feda4788b8d0fe7336c2ff7d5644ccfba34cd"},
 ]
 prompt-toolkit = [
     {file = "prompt_toolkit-3.0.19-py3-none-any.whl", hash = "sha256:7089d8d2938043508aa9420ec18ce0922885304cddae87fb96eebca942299f88"},
