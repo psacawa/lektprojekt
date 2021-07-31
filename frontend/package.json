@@ -145,7 +145,7 @@
     "@types/webpack": "5.28.0",
     "@types/webpack-dev-server": "3.11.0",
     "@types/webpack-manifest-plugin": "3.0.1",
-    "@types/workbox-webpack-plugin": "5.1.4",
+    "@types/workbox-webpack-plugin": "5.1.8",
     "@types/yup": "^0.29.11",
     "eslint": "^7.17.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
