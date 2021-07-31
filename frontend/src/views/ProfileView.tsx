@@ -45,7 +45,7 @@ import {
   useDeleteSubscription,
   useDeleteTrackedList,
   useLanguages,
-  useSubs,
+  useSubscriptions,
 } from "../hooks";
 
 const useStyles = makeStyles(styles);
@@ -107,7 +107,7 @@ const ProfileView = () => {
   const { session, setSession } = useSession();
   const [activeTab, setActiveTab] = useState(0);
   const queryClient = useQueryClient();
-  const subscriptionQuery = useSubs();
+  const subscriptionQuery = useSubscriptions();
   const { user } = useAuth();
   const deleteSubscription = useDeleteSubscription({
     onSuccess: (data, variables) => {
@@ -143,7 +143,6 @@ const ProfileView = () => {
           tabContent: (
             <>
               <Table
-                // tableHead={["name", "name", "name"]}
                 tableData={sub.lists.map((list, idx) => [
                   list.name,
                   <Button

@@ -41,6 +41,10 @@ export const queryClient = new QueryClient({
   },
 });
 
+////////////////////
+// Languages
+////////////////////
+
 export const useLanguages = (options?: UseQueryOptions<Language[]>) =>
   useQuery(
     "languages",
@@ -75,20 +79,9 @@ export const useSupportedLanguagePairs = (
     { staleTime: HOUR, ...options }
   );
 
-export const useLexeme = (
-  params: {
-    id: number;
-  },
-  options?: UseQueryOptions<Lexeme>
-) =>
-  useQuery(
-    ["lexeme", { ...params }],
-    () =>
-      axios
-        .get(`${apiRoot}lexemes/${params.id}/`)
-        .then((response: AxiosResponse<Lexeme>) => response.data),
-    { ...options }
-  );
+////////////////////
+// Lexemes
+////////////////////
 
 export const useLexemes = (
   params: {
@@ -111,20 +104,24 @@ export const useLexemes = (
     { ...options }
   );
 
-export const useFeature = (
+export const useLexeme = (
   params: {
     id: number;
   },
-  options?: UseQueryOptions<Feature>
+  options?: UseQueryOptions<Lexeme>
 ) =>
   useQuery(
-    ["feature", { ...params }],
+    ["lexeme", { ...params }],
     () =>
       axios
-        .get(`${apiRoot}features/${params.id}/`)
-        .then((response: AxiosResponse<Feature>) => response.data),
+        .get(`${apiRoot}lexemes/${params.id}/`)
+        .then((response: AxiosResponse<Lexeme>) => response.data),
     { ...options }
   );
+
+////////////////////
+// Lexemes
+////////////////////
 
 export const useFeatures = (
   params: {
@@ -142,6 +139,27 @@ export const useFeatures = (
         .then((response: AxiosResponse<Feature[]>) => response.data),
     { ...options }
   );
+
+export const useFeature = (
+  params: {
+    id: number;
+  },
+  options?: UseQueryOptions<Feature>
+) =>
+  useQuery(
+    ["feature", { ...params }],
+    () =>
+      axios
+        .get(`${apiRoot}features/${params.id}/`)
+        .then((response: AxiosResponse<Feature>) => response.data),
+    { ...options }
+  );
+
+//////////////////////////////
+// Pair Lexeme Search
+// Pair Feature Search
+// Pair Observable Search
+//////////////////////////////
 
 export const usePairObservableSearch = (
   params: {
@@ -244,6 +262,25 @@ export const useUser = (options?: UseQueryOptions<User>) =>
       .then((response: AxiosResponse<User>) => response.data)
   );
 
+////////////////////
+// Subscriptions
+////////////////////
+
+export const useSubscriptions = (
+  options?: UseQueryOptions<Paginate<Subscription<true>>>
+) =>
+  useQuery(
+    ["subs"],
+    () =>
+      axios
+        .get(`${apiRoot}subs/`)
+        .then(
+          (response: AxiosResponse<Paginate<Subscription<true>>>) =>
+            response.data
+        ),
+    options
+  );
+
 export const useCreateSubscription = (
   options?: UseMutationOptions<Subscription, any, CreateSubscriptionValues>
 ) =>
@@ -266,8 +303,17 @@ export const useDeleteSubscription = (
   useMutation(
     (params: { sub_id: number }) =>
       axios.delete(`${apiRoot}subs/${params.sub_id}/`),
-    { ...options }
+    {
+      onSuccess: (result) => {
+        queryClient.invalidateQueries("subs");
+      },
+      ...options,
+    }
   );
+
+////////////////////
+// TrackedList
+////////////////////
 
 export const useTrackedList = (
   params: { id: number },
@@ -297,14 +343,19 @@ export const useCreateTrackedList = (
   );
 
 export const useUpdateTrackedList = (
-  options?: UseMutationOptions<any, any, { id: number; name?: string }>
+  options?: UseMutationOptions<TrackedList, any, { id: number; name?: string }>
 ) =>
   useMutation(
     (params) =>
       axios
         .patch(`${apiRoot}lists/${params.id}/`, params)
         .then((response: AxiosResponse<TrackedList>) => response.data),
-    options
+    {
+      onSuccess: (result) => {
+        queryClient.invalidateQueries(["lists", result.id]);
+      },
+      ...options,
+    }
   );
 
 export const useDeleteTrackedList = (
@@ -315,38 +366,11 @@ export const useDeleteTrackedList = (
     options
   );
 
-export const useSubs = (
-  options?: UseQueryOptions<Paginate<Subscription<true>>>
-  // options?: UseQueryOptions<
-  //   Paginate<Subscription<true>>,
-  //   unknown,
-  //   Paginate<Subscription<true>> | Subscription<true>
-  // >
-) =>
-  useQuery(
-    ["subs"],
-    () =>
-      axios
-        .get(`${apiRoot}subs/`)
-        .then(
-          (response: AxiosResponse<Paginate<Subscription<true>>>) =>
-            response.data
-        ),
-    options
-  );
-
-export const useSub = (
-  params: { id: number },
-  options?: UseQueryOptions<Subscription>
-) =>
-  useQuery(
-    ["sub", params.id],
-    () =>
-      axios
-        .get(`${apiRoot}subs/${params.id}`)
-        .then((response: AxiosResponse<Subscription>) => response.data),
-    options
-  );
+////////////////////
+// TrackedObservable
+// TrackedLexemes
+// TrackedFeatures
+////////////////////
 
 export const useTrackedLexemes = (
   params: {
@@ -376,6 +400,22 @@ export const useTrackedFeatures = (
       )
   );
 
+const invalidateTrackedList = (result: any) => {
+  queryClient.invalidateQueries([
+    "tracked-lexemes",
+    { id: result.tracked_list },
+  ]);
+  queryClient.invalidateQueries([
+    "tracked-features",
+    { id: result.tracked_list },
+  ]);
+  queryClient.invalidateQueries([
+    "tracked-observables",
+    { id: result.tracked_list },
+  ]);
+  return;
+};
+
 export const useTrackObservable = (
   options?: UseMutationOptions<
     any,
@@ -388,7 +428,10 @@ export const useTrackObservable = (
       axios.post(`${apiRoot}lists/${params.id}/obs/`, {
         observable: params.observable_id,
       }),
-    { ...options }
+    {
+      onSuccess: invalidateTrackedList,
+      ...options,
+    }
   );
 
 export const useUntrackObservable = (
@@ -397,8 +440,15 @@ export const useUntrackObservable = (
   useMutation(
     (params: { id: number; observable_id: number }) =>
       axios.delete(`${apiRoot}lists/${params.id}/obs/${params.observable_id}/`),
-    { ...options }
+    {
+      onSuccess: invalidateTrackedList,
+      ...options,
+    }
   );
+
+///////////////////////////
+// TrainingPlans/Scoring
+///////////////////////////
 
 export const useTrainingPlan = (
   params: { list_id: number; page_size: number },
@@ -415,10 +465,13 @@ export const useTrainingPlan = (
           (response: AxiosResponse<Paginate<PhrasePair>>) =>
             response.data.results
         ),
-    { ...options }
+    {
+      onSuccess: invalidateTrackedList,
+      ...options,
+    }
   );
 
-export const useScoreQuestion = (option?: UseMutationOptions<any, any>) =>
+export const useScoreQuestion = (options?: UseMutationOptions<any, any>) =>
   useMutation((params: { list_id: number; phrase_id: number; grade: number }) =>
     axios.post(`${apiRoot}lists/${params.list_id}/score/`, {
       phrase: params.phrase_id,

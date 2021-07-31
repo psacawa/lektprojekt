@@ -6,7 +6,12 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import { usePair, useScoreQuestion, useSubs, useTrainingPlan } from "hooks";
+import {
+  usePair,
+  useScoreQuestion,
+  useSubscriptions,
+  useTrainingPlan,
+} from "hooks";
 import { useSession } from "hooks/session";
 import { find } from "lodash";
 import React, { useEffect, useReducer, useState } from "react";
@@ -131,7 +136,7 @@ const ListPracticeView = () => {
   const classes = useStyles();
   // TODO 21/03/20 psacawa: figure out how to gracefully type selector so this data can be
   // moved out of component state
-  const subsQuery = useSubs();
+  const subsQuery = useSubscriptions();
 
   const subscription =
     subsQuery.data &&
