@@ -9,6 +9,8 @@ SHELL_PLUS_IMPORTS = [
     "from django.db.models import Window",
     "from django.db.models.functions import Length, Rank",
     "from django.db.models.expressions import RawSQL",
+    #  shadowed by djstripe.models.checkout.Session
+    "from django.contrib.sessions.models import Session as AuthSession",
 ]
 
 IPYTHON_ARGUMENTS = [

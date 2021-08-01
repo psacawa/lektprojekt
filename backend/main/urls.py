@@ -25,8 +25,18 @@ from django.contrib.auth.views import PasswordResetConfirmView
 from django.urls import include, path, re_path
 from django.views.generic import RedirectView, TemplateView
 from django_ses.views import SESEventWebhookView
+from rest_framework.routers import SimpleRouter
 
-from .views import GithubLoginView, healthz
+from .views import (
+    CheckoutSessionView,
+    GithubLoginView,
+    PriceViewSet,
+    create_checkout_session,
+    healthz,
+)
+
+stripe_router = SimpleRouter()
+stripe_router.register("prices", PriceViewSet, basename="prices")
 
 urlpatterns = [
     path(r"admin/doc/", include("django.contrib.admindocs.urls")),
@@ -40,7 +50,7 @@ urlpatterns = [
     #  what dj-rest-auth wants you to do
     # TODO: i'm going to implement the frontend view with react router routing
     re_path(
-        r"^password-reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,32})/$",
+        r"^auth/password/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,32})/$",
         TemplateView.as_view(template_name="password_reset_confirm.html"),
         name="password_reset_confirm",
     ),
@@ -55,9 +65,21 @@ urlpatterns = [
         EmailVerificationSentView.as_view(),
         name="account_email_verification_sent",
     ),
-    # third-party integrations
+    # STRIPE
+    path("stripe/", include(stripe_router.urls)),
+    path(
+        "stripe/create-checkout-session/",
+        create_checkout_session,
+        name="create-checkout-session",
+    ),
+    path(
+        "stripe/checkout-session/",
+        CheckoutSessionView.as_view(),
+        name="create-checkout-session",
+    ),
     path("stripe/", include("djstripe.urls", namespace="djstripe")),
     re_path(r"^admin/django-ses/", include("django_ses.urls")),
+    # EMAILS
     re_path(
         r"^ses/nictuniema/$",
         SESEventWebhookView.as_view(),
