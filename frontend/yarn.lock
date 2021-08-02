@@ -2183,12 +2183,14 @@
   resolved "https://registry.yarnpkg.com/@types/mime/-/mime-1.3.2.tgz#93e25bf9ee75fe0fd80b594bc4feb0e862111b5a"
   integrity sha512-YATxVxgRqNH6nHEIsvg6k2Boc1JHI9ZbH5iWFFv/MTkchz3b1ieGDa5T0a9RznNdI0KhVbdbWSN+KWWrQZRxTw==
 
-"@types/mini-css-extract-plugin@1.2.2":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@types/mini-css-extract-plugin/-/mini-css-extract-plugin-1.2.2.tgz#e6031da8d60777b3da3f5b4daf285437d7b6580b"
-  integrity sha512-EoHBJ4rcrd5j7weAFE4yU1gxedx53EFCWKso03G7DW0h2YvtwjKYz/NnuFHudcQDI1HpTLqoQFTwEgfJxygYCw==
+"@types/mini-css-extract-plugin@2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@types/mini-css-extract-plugin/-/mini-css-extract-plugin-2.0.1.tgz#948993b77f6e87da9f691c873759b187fd5cb948"
+  integrity sha512-U70+fNjmBCioVLDe4OZohLERHTTbrhvNJxLqr5qpkykyMOpvmTp0xzcdAaFQ51X/ROHDgD5BqsEeVzcYy/kFig==
   dependencies:
-    "@types/webpack" "*"
+    "@types/node" "*"
+    tapable "^2.2.0"
+    webpack "^5"
 
 "@types/minimatch@*":
   version "3.0.5"

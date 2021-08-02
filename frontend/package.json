@@ -131,7 +131,7 @@
     "@types/file-loader": "4.2.0",
     "@types/fs-extra": "^9.0.5",
     "@types/lodash": "^4.14.165",
-    "@types/mini-css-extract-plugin": "1.2.2",
+    "@types/mini-css-extract-plugin": "2.0.1",
     "@types/optimize-css-assets-webpack-plugin": "5.0.1",
     "@types/prompts": "2.4.0",
     "@types/react-dev-utils": "^9.0.4",
