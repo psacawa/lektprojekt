@@ -2364,13 +2364,6 @@
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-2.0.1.tgz#20f18294f797f2209b5f65c8e3b5c8e8261d127c"
   integrity sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==
 
-"@types/tapable@*":
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-2.2.2.tgz#1d324b524190954a5700d86b6328bfc57e1fda48"
-  integrity sha512-ujqOVJEeLcwpDVJPnp/k3u1UXmTKq5urJq9fO8aUKg8Vlel5RNOFbVKEfqfh6wGfF/M+HiTJlBJMLC1aDfyf0Q==
-  dependencies:
-    tapable "^2.2.0"
-
 "@types/tapable@^1", "@types/tapable@^1.0.5":
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-1.0.8.tgz#b94a4391c85666c7b73299fd3ad79d4faa435310"
@@ -2420,13 +2413,13 @@
     "@types/serve-static" "*"
     "@types/webpack" "*"
 
-"@types/webpack-manifest-plugin@3.0.1":
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/@types/webpack-manifest-plugin/-/webpack-manifest-plugin-3.0.1.tgz#3460a672c0fd3ffc6d39ef681f6a1625911a67ae"
-  integrity sha512-K/AOmUxL9FKgai+lOwCdMhk0lDImMS2LDAfvLQlDB199zdjtekx+JR/mWxlo9LNFQSfOFs2ZsxxUdh+O76Rqrw==
+"@types/webpack-manifest-plugin@3.0.5":
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/@types/webpack-manifest-plugin/-/webpack-manifest-plugin-3.0.5.tgz#8689ad893f2db38be78666fdb3e1fe0fa52df9c4"
+  integrity sha512-p6uyaflgqXaWH0Y7lczikaRuzrk+h2JfV7Fy86WrhYI2r2UNGyetFwPBKl1r5RnnhEpB/P6VaJJNzMaMSwe3oA==
   dependencies:
-    "@types/tapable" "*"
-    "@types/webpack" "*"
+    "@types/tapable" "^1"
+    "@types/webpack" "^4"
 
 "@types/webpack-sources@*":
   version "2.1.1"
