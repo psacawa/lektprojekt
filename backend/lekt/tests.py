@@ -352,3 +352,17 @@ class TrackedObservableViewTest:
         assert jq(".results[].observable|[.name, .value]", response.data) == [
             ["Mood", "Cnd"]
         ]
+
+
+@pytest.mark.django_db
+class PairCountViewTest:
+    def list_test(self):
+        response = client.get("/api/pair-counts/")
+        assert response.status_code == 200
+
+
+@pytest.mark.django_db
+class SupportedLanguagesTest:
+    def list_test(self):
+        response = client.get("/api/supported-language-pairs/")
+        assert response.status_code == 200
