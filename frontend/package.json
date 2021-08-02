@@ -124,7 +124,7 @@
     ]
   },
   "devDependencies": {
-    "@types/babel__core": "7.1.12",
+    "@types/babel__core": "7.1.15",
     "@types/case-sensitive-paths-webpack-plugin": "2.1.4",
     "@types/classnames": "^2.2.11",
     "@types/eslint": "^7.2.6",
