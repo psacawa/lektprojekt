@@ -2,8 +2,6 @@ import logging
 
 from django.contrib.auth.models import User
 from django.db import models
-from django.db.models import Lookup
-from django.db.models.fields import Field
 from django.db.models.manager import Manager
 from model_utils.managers import InheritanceManager
 from polymorphic.managers import PolymorphicManager
@@ -787,15 +785,3 @@ class WordFeature(models.Model):
 
     def __repr__(self):
         return f"<WordFeature norm={self.word.norm} feature={self.feature.value}>"
-
-
-# custom lookup to implement SQL's LIKE clause
-@Field.register_lookup
-class Like(Lookup):
-    lookup_name = "like"
-
-    def as_sql(self, compiler, connection):
-        lhs, lhs_params = self.process_lhs(compiler, connection)
-        rhs, rhs_params = self.process_rhs(compiler, connection)
-        params = lhs_params + rhs_params
-        return "%s LIKE %s" % (lhs, rhs), params
