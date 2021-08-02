@@ -591,16 +591,9 @@ class UserProfile(TimestampedModel):
 
     # for payment processing
     level = models.CharField(max_length=10, default="free", choices=USER_LEVEL_CHOICES)
-    customer = models.ForeignKey(
-        "djstripe.Customer",
-        on_delete=models.SET_NULL,
-        null=True,
-        verbose_name="Customer",
-        help_text="Stripe Customer attached to UserProfile",
-    )
-    plan = models.ForeignKey(
-        #  "djstripe.Price",
-        "djstripe.Price",
+    #  TODO 02/08/20 psacawa: checkout_sessions unused; delete
+    plan_subscription = models.ForeignKey(
+        "djstripe.Subscription",
         on_delete=models.SET_NULL,
         null=True,
         verbose_name="Plan",

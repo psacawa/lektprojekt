@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 from os import environ, mkdir, remove
 from os.path import abspath, dirname, isdir, join
 
+VERSION = "0.2.0"
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = "/".join(abspath(__file__).split("/")[:-3])
 ASSET_DIR = join(BASE_DIR, "assets")
@@ -36,6 +38,9 @@ SITE_NAME = "LexQuest"
 DOMAIN = environ.get("DJANGO_DOMAIN", "lex.quest")
 WEB_DOMAIN = environ.get("DJANGO_WWW_DOMAIN", f"www.{DOMAIN}")
 API_DOMAIN = environ.get("DJANGO_API_DOMAIN", f"api.{DOMAIN}")
+#  for now this is made exclusive to the needs of the stripe integration
+#  perhaps make more robust in future
+API_ORIGIN = f"https://localhost:8000" if DEBUG else f"https://{API_DOMAIN}/"
 ALLOWED_HOSTS = [DOMAIN, WEB_DOMAIN, API_DOMAIN]
 
 LEKTPROJEKT_APPS = [

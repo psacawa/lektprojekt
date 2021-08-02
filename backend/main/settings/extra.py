@@ -35,6 +35,18 @@ DJSTRIPE_USE_NATIVE_JSONFIELD = True
 DJSTRIPE_WEBHOOK_URL = r"^nictuniema/$"
 STRIPE_LIVE_MODE = DJANGO_STRIPE_ENV == "production"
 
+STRIPE_CHECKOUT_REDIRECT = f"{API_ORIGIN}/payments?" "session_id={CHECKOUT_SESSION_ID}"
+
+import stripe
+
+stripe.set_app_info(
+    "psacawa/lektprojekt",
+    version=VERSION,
+    url="www.lex.quest",
+)
+stripe.api_version = "2020-08-27"
+stripe.api_key = STRIPE_TEST_SECRET_KEY
+
 
 #####################
 # AWS SES

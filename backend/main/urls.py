@@ -28,7 +28,7 @@ from django_ses.views import SESEventWebhookView
 from rest_framework.routers import SimpleRouter
 
 from .views import (
-    CheckoutSessionView,
+    CheckoutSessionViewSet,
     GithubLoginView,
     PriceViewSet,
     create_checkout_session,
@@ -37,6 +37,9 @@ from .views import (
 
 stripe_router = SimpleRouter()
 stripe_router.register("prices", PriceViewSet, basename="prices")
+stripe_router.register(
+    "checkout-sessions", CheckoutSessionViewSet, basename="checkout-session"
+)
 
 urlpatterns = [
     path(r"admin/doc/", include("django.contrib.admindocs.urls")),
@@ -70,11 +73,6 @@ urlpatterns = [
     path(
         "stripe/create-checkout-session/",
         create_checkout_session,
-        name="create-checkout-session",
-    ),
-    path(
-        "stripe/checkout-session/",
-        CheckoutSessionView.as_view(),
         name="create-checkout-session",
     ),
     path("stripe/", include("djstripe.urls", namespace="djstripe")),
