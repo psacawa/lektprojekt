@@ -35,7 +35,7 @@ jobs:
           path: ~/.cache/pip
           key: backend-${{ hashFiles('backend/poetry.lock') }}
       - name: Setup poetry
-        uses: abatilo/actions-poetry@v2.0.0
+        uses: abatilo/actions-poetry@v2.1.2
       - name: Install project dependencies
         run: |
           poetry export --without-hashes -o requirements.txt -f requirements.txt
