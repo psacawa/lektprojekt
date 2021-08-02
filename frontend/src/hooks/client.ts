@@ -7,8 +7,9 @@ import {
   UseQueryOptions,
 } from "react-query";
 
-import { apiRoot, authRoot, HOUR } from "../constants";
+import { apiRoot, authRoot, HOUR, paymentRoot } from "../constants";
 import {
+  CheckoutSession,
   CreateAccountServerErrors,
   CreateAccountValues,
   CreateSubscriptionValues,
@@ -23,6 +24,7 @@ import {
   Paginate,
   PairCount,
   PhrasePair,
+  Price,
   Subscription,
   Tracked,
   TrackedList,
@@ -478,3 +480,29 @@ export const useScoreQuestion = (options?: UseMutationOptions<any, any>) =>
       grade: params.grade,
     })
   );
+
+///////////////////////////
+// Paymentss
+///////////////////////////
+
+export const usePrices = (options?: UseQueryOptions<Price[]>) =>
+  useQuery(
+    "prices",
+    () =>
+      axios
+        .get(`${paymentRoot}prices/`)
+        .then((response: AxiosResponse<Price[]>) => response.data),
+    { ...options }
+  );
+
+export const useCheckoutSession = (
+  params: { session_id: string },
+  options?: UseQueryOptions<CheckoutSession>
+) =>
+  useQuery(["checkout-session", { ...params }], () =>
+    axios.get(`${paymentRoot}checkout-session/${params.session_id}`)
+  );
+
+export const useCreateCheckoutSession = (
+  options?: UseMutationOptions<any, any>
+) => useMutation((params: {}) => axios.post(`${paymentRoot}checkout-sessions`));

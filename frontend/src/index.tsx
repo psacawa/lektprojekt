@@ -1,4 +1,5 @@
 import "assets/css/base.css";
+import "@sweetalert2/theme-material-ui";
 
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
@@ -22,7 +23,7 @@ Sentry.init({
   dsn: process.env.REACT_SENTRY_DSN,
   integrations: [new Integrations.BrowserTracing()],
   tracesSampleRate:
-    process.env.NODE_ENV == "development"
+    process.env.NODE_ENV === "development"
       ? 1.0
       : parseInt(process.env.REACT_SENTRY_SAMPLING_RATE) || 0.2,
   environment: process.env.NODE_ENV,

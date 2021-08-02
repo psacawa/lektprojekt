@@ -15,9 +15,11 @@ import React from "react";
 import AboutView from "views/AboutView";
 import CreateAccountView from "views/CreateAccountView";
 import HomeView from "views/HomeView";
+import LandingPageView from "views/LandingPageView";
 import LexemeDetailView from "views/LexemeDetailView";
 import LoginView from "views/LoginView";
 import LogoutView from "views/LogoutView";
+import PaymentsView from "views/PaymentsView";
 import PhrasePairDetailView from "views/PhrasePairDetailView";
 import PhrasePairListView from "views/PhrasePairListView";
 import { ListPracticeView, PracticeView } from "views/PracticeView";
@@ -84,19 +86,27 @@ const baseDrawerRoutes: AppRoute[] = [
     path: "/about/",
     name: "About",
     exact: false,
-    component: AboutView,
+    // component: AboutView,
+    component: LandingPageView,
     icon: HelpOutline,
   },
-  // {
-  //   path: "/pricing/",
-  //   name: "Pricing",
-  //   exact: false,
-  //   component: PricingView,
-  //   icon: AttachMoney,
-  // },
 ];
 
 const baseRoutes: AppRoute[] = [
+  {
+    path: "/pricing/",
+    name: "Pricing",
+    exact: false,
+    component: PricingView,
+    icon: AttachMoney,
+  },
+  {
+    path: "/payments/",
+    name: "Payments",
+    exact: false,
+    component: PaymentsView,
+    icon: AttachMoney,
+  },
   {
     path: "/pairs/:id/",
     name: "PhrasePair Detail View",
