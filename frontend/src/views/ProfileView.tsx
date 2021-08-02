@@ -1,27 +1,10 @@
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   CircularProgress,
-  Divider,
-  Grid,
   IconButton,
-  Link as TableCell,
-  List,
-  ListItem,
-  ListItemSecondaryAction,
   makeStyles,
-  Paper,
-  Tab,
-  TableBody,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Tabs,
   TextField,
-  Typography,
 } from "@material-ui/core";
-import { Add, Clear, ExpandMore, Home } from "@material-ui/icons";
+import { Add, Clear } from "@material-ui/icons";
 import { Autocomplete } from "@material-ui/lab";
 import flags from "assets/img/flags";
 import styles from "assets/jss/styles/components/buttonStyle";
@@ -29,7 +12,6 @@ import { Button } from "components/CustomButtons";
 import { CustomTabs } from "components/CustomTabs";
 import { GridContainer, GridItem } from "components/Grid";
 import { Table } from "components/Table";
-import TrackedListView from "components/TrackedListView";
 import { useAuth } from "hooks/auth";
 import { useSession } from "hooks/session";
 import { find } from "lodash";

@@ -1,3 +1,5 @@
+import { CircularProgress } from "@material-ui/core";
+import { FormGroup } from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
 import Box from "@material-ui/core/Box";
 import Button from "@material-ui/core/Button";
@@ -8,26 +10,17 @@ import CardHeader from "@material-ui/core/CardHeader";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@material-ui/core/Grid";
-import Link from "@material-ui/core/Link";
 import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import StarIcon from "@material-ui/icons/StarBorder";
+import { useAuth, usePrices } from "hooks";
 import React from "react";
 import { useHistory } from "react-router";
+import { Link as RouterLink, useLocation } from "react-router-dom";
+import { Price } from "types";
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import { pricingPlans } from "../constants";
 
 const useStyles = makeStyles((theme) => ({
   "@global": {
@@ -76,34 +69,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const tiers = [
-  {
-    title: "Free",
-    price: "0",
-    description: ["100 conversations per month"],
-    buttonText: "Sign up for free",
-    buttonVariant: "outlined",
-  },
-  {
-    title: "Test",
-    price: "1",
-    description: ["100 conversations per month"],
-    buttonText: "Get started",
-    buttonVariant: "contained",
-  },
-  {
-    title: "Premium",
-    subheader: "Most popular",
-    price: "10",
-    description: ["100 conversations per month"],
-    buttonText: "Contact us",
-    buttonVariant: "outlined",
-  },
-];
-
 const PricingView = () => {
   const classes = useStyles();
-
+  const auth = useAuth();
+  const location = useLocation();
   const history = useHistory();
   return (
     <>
@@ -118,63 +87,81 @@ const PricingView = () => {
           Pricing
         </Typography>
       </Container>
-      {/* End hero unit */}
       <Container maxWidth="md" component="main">
         <Grid container spacing={5} alignItems="flex-end">
-          {tiers.map((tier) => (
-            // Enterprise card is full width at sm breakpoint
-            <Grid
-              item
-              key={tier.title}
-              xs={12}
-              sm={tier.title === "Enterprise" ? 12 : 6}
-              md={4}
-            >
-              <Card>
-                <CardHeader
-                  title={tier.title}
-                  subheader={tier.subheader}
-                  titleTypographyProps={{ align: "center" }}
-                  subheaderTypographyProps={{ align: "center" }}
-                  action={tier.title === "Pro" ? <StarIcon /> : null}
-                  className={classes.cardHeader}
-                />
-                <CardContent>
-                  <div className={classes.cardPricing}>
-                    <Typography component="h2" variant="h3" color="textPrimary">
-                      ${tier.price}
-                    </Typography>
-                    <Typography variant="h6" color="textSecondary">
-                      /mo
-                    </Typography>
-                  </div>
-                  <ul>
-                    {tier.description.map((line) => (
+          <>
+            {pricingPlans.map((plan, idx) => (
+              // Enterprise card is full width at sm breakpoint
+              <Grid item key={idx} xs={12} sm={6} md={4}>
+                <Card>
+                  <CardHeader
+                    title={plan.name}
+                    subheader={plan.description}
+                    titleTypographyProps={{ align: "center" }}
+                    subheaderTypographyProps={{ align: "center" }}
+                    action={plan.name === "Pro" ? <StarIcon /> : null}
+                    className={classes.cardHeader}
+                  />
+                  <CardContent>
+                    <div className={classes.cardPricing}>
                       <Typography
-                        component="li"
-                        variant="subtitle1"
-                        align="center"
-                        key={line}
+                        component="h2"
+                        variant="h3"
+                        color="textPrimary"
                       >
-                        {line}
+                        {plan.price}
                       </Typography>
-                    ))}
-                  </ul>
-                </CardContent>
-                <CardActions>
-                  <Button
-                    fullWidth
-                    onClick={(ev: React.MouseEvent<{}>) => {
-                      history.push("/create-account/");
-                    }}
-                    color="primary"
-                  >
-                    {tier.buttonText}
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
+                      <Typography
+                        variant="h6"
+                        color="textSecondary"
+                      ></Typography>
+                    </div>
+                    <ul>
+                      {plan.description.map((line, idx) => (
+                        <Typography
+                          component="li"
+                          variant="subtitle1"
+                          align="center"
+                          key={idx}
+                        >
+                          {line}
+                        </Typography>
+                      ))}
+                    </ul>
+                  </CardContent>
+                  <CardActions>
+                    {plan.name === "Free" || !auth.user ? (
+                      <Button fullWidth component={RouterLink} to="/login">
+                        Log In
+                      </Button>
+                    ) : (
+                      <form
+                        action="/stripe/create-checkout-session/"
+                        method="post"
+                        accept-charset="utf-8"
+                      >
+                        <input
+                          // style={{ display: "none" }}
+                          type="hidden"
+                          value={plan.priceId!}
+                          name="price_id"
+                          id="price_id"
+                        />
+                        <Button
+                          // style={{ margin: "0 auto" }}
+                          fullWidth
+                          type="submit"
+                          color="primary"
+                        >
+                          Order Now!
+                        </Button>
+                      </form>
+                    )}
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </>
         </Grid>
       </Container>
     </>

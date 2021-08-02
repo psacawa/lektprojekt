@@ -1,5 +1,4 @@
 import { ReportHandler } from "web-vitals";
-import { getCLS, getFID, getLCP } from "web-vitals";
 
 declare let gtag: Function;
 // from https://github.com/GoogleChrome/web-vitals#using-gtagjs-google-analytics-4
@@ -16,7 +15,7 @@ function sendToGoogleAnalytics({ name, delta, value, id }: any) {
 
 // in production user gtag, else just use console.log
 const reportWebVitals =
-  process.env.NODE_ENV == "production"
+  process.env.NODE_ENV === "production"
     ? () => reportWebVitalsWithHandler(sendToGoogleAnalytics)
     : () => reportWebVitalsWithHandler(console.log);
 

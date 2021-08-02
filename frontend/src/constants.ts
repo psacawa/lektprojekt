@@ -2,7 +2,37 @@ export const drawerWidth = 260;
 // Cross-origin requests on localhost don't work... a security feature of browsers perhaps?
 export const origin = `https://${process.env.REACT_API_DOMAIN}/`;
 export const apiRoot =
-  process.env.NODE_ENV == "production" ? `${origin}api/` : "/api/";
+  process.env.NODE_ENV === "production" ? `${origin}api/` : "/api/";
 export const authRoot =
-  process.env.NODE_ENV == "production" ? `${origin}auth/` : "/auth/";
+  process.env.NODE_ENV === "production" ? `${origin}auth/` : "/auth/";
+export const paymentRoot =
+  process.env.NODE_ENV === "production" ? `${origin}stripe/` : "/stripe/";
 export const HOUR = 60 * 60 * 1000;
+
+// needs to be updated manually
+export const pricingPlans = [
+  {
+    name: "Free",
+    price: "0",
+    description: ["100 conversations per month"],
+    buttonText: "Sign up for free",
+    buttonVariant: "outlined",
+    priceId: null,
+  },
+  {
+    name: "Test",
+    price: "$0.5/mo",
+    description: ["100 conversations per month"],
+    buttonText: "Get started",
+    buttonVariant: "contained",
+    priceId: "price_1JFM3iHSwS5HmDGtjiJIQo8q",
+  },
+  {
+    name: "Premium",
+    price: "$10/mo",
+    description: ["100 conversations per month"],
+    buttonText: "Get started",
+    buttonVariant: "contained",
+    priceId: "price_1JFU8gHSwS5HmDGt6NhnkILh",
+  },
+];

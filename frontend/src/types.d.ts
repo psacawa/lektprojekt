@@ -1,3 +1,25 @@
+// payments
+
+export interface Product {
+  id: string;
+  description: string;
+  name: string;
+}
+
+export interface Price {
+  id: string;
+  product: Product;
+  currency: string;
+  // this is in "cents" | denominowane w groszach
+  unit_amount: number;
+}
+
+export interface CheckoutSession {
+  id: string;
+}
+
+// lekt
+
 export interface Voice {
   id: number;
   lang: number;
