@@ -23,8 +23,10 @@ class PriceSerializer(serializers.ModelSerializer):
         fields = ["id", "product", "currency", "unit_amount", "recurring"]
 
 
-class CreateCheckoutSessionSerializer(serializers.Serializer):
-    pass
+class CheckoutSessionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Session
+        fields = ["id", "djstripe_id"]
 
 
 class UserDetailsSerializer(serializers.ModelSerializer):

@@ -9,7 +9,7 @@ import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import StarIcon from "@material-ui/icons/StarBorder";
-import { useAuth, usePrices } from "hooks";
+import { useAuth, useCreateCheckoutSession, usePrices } from "hooks";
 import { useHistory } from "react-router";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 
@@ -83,6 +83,7 @@ const PricingView = () => {
   const classes = useStyles();
   const auth = useAuth();
   const pricesQuery = usePrices();
+  const createCheckoutSession = useCreateCheckoutSession();
 
   // if the query param "gyp" is passed, so the daily price option for $0.5
   // for live testing purposes
@@ -166,21 +167,18 @@ const PricingView = () => {
                           Login
                         </Button>
                       ) : (
-                        <form
-                          action={`${origin}stripe/create-checkout-session/`}
-                          method="post"
-                          accept-charset="utf-8"
+                        <Button
+                          fullWidth
+                          type="submit"
+                          color="primary"
+                          onClick={(_: React.MouseEvent<{}>) => {
+                            createCheckoutSession.mutate({
+                              price_id: price.id,
+                            });
+                          }}
                         >
-                          <input
-                            type="hidden"
-                            value={price.id}
-                            name="price_id"
-                            id="price_id"
-                          />
-                          <Button fullWidth type="submit" color="primary">
-                            Order Now!
-                          </Button>
-                        </form>
+                          Order Now!
+                        </Button>
                       )}
                     </CardActions>
                   </Card>

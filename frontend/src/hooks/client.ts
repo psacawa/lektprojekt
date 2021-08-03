@@ -500,4 +500,19 @@ export const useCheckoutSession = (
 
 export const useCreateCheckoutSession = (
   options?: UseMutationOptions<any, any>
-) => useMutation((params: {}) => axios.post(`${paymentRoot}checkout-sessions`));
+) =>
+  useMutation<{ redirect_url: string }, any, any>(
+    (params: { price_id: string }) =>
+      axios
+        .post(`${paymentRoot}checkout-sessions/`, params)
+        .then(
+          (response: AxiosResponse<{ redirect_url: string }>) => response.data
+        ),
+    {
+      onSuccess: (result) => {
+        console.log(result.redirect_url);
+        window.location.href = result.redirect_url;
+      },
+      ...options,
+    }
+  );

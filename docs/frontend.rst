@@ -102,6 +102,45 @@ The style is based off of the pro version of the Material UI Dashboard template 
 Creative Time, significantly modified so that it would work well with Typescript. Styles
 and images are contained in `assets`
 
+ReactQuery Typescript
+---------------------
+
+**WIP**
+
+- `useQuery`
+
+  - ...
+
+- `UseQueryOptions`
+
+  - `TQueryFnData`
+
+  - `TError`
+
+  - `TData = TQueryFnData`: you'll 
+
+  - `TQueryKey`: I don't know what it is really
+
+- `useMutation<reponse, ?, **type of parameters**>`
+
+  - type of response: typically `AxiosReponse<T>`
+
+  - type of Error response??
+
+  - type of fetch function params; what you `POST`
+
+- `UseMutationOptions`
+
+  - `TData`
+
+  - `TError`
+
+  - `TVariables`
+
+  - `TContent`
+
+**TODO** 03/08/20 psacawa: What depends on what, though?
+
 Miscellaneous Notes
 -------------------
 
