@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useAuth } from "hooks/auth";
 import { useEffect } from "react";
 import { Redirect } from "react-router";

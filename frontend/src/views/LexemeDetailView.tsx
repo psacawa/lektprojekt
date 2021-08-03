@@ -1,7 +1,6 @@
 import { Grid } from "@material-ui/core";
 import { CircularProgress, Typography } from "@material-ui/core";
 import { useLexeme } from "hooks";
-import React from "react";
 import { useParams } from "react-router";
 
 const LexemeDetailView = () => {

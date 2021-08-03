@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 import {
   QueryClient,
   useMutation,
@@ -10,17 +10,12 @@ import {
 import { apiRoot, authRoot, HOUR, paymentRoot } from "../constants";
 import {
   CheckoutSession,
-  CreateAccountServerErrors,
-  CreateAccountValues,
   CreateSubscriptionValues,
   CreateTrackedListValues,
   Feature,
   Language,
   LanguagePair,
   Lexeme,
-  LoginServerErrors,
-  LoginSuccessPayload,
-  LoginValues,
   Paginate,
   PairCount,
   PhrasePair,

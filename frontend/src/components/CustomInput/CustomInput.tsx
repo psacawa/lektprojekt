@@ -8,7 +8,6 @@ import styles from "assets/jss/styles/components/customInputStyle";
 // nodejs library that concatenates classes
 import classNames from "classnames";
 // nodejs library to set properties for components
-import React from "react";
 
 const useStyles = makeStyles(styles as any);
 
@@ -35,7 +34,7 @@ export default function CustomInput(props: Props) {
     inputProps,
     error,
     white,
-    inputRootCustomClasses,
+    // inputRootCustomClasses,
     success,
     helperText,
   } = props;

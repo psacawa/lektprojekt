@@ -19,7 +19,7 @@ import React, { useState } from "react";
 import SweetAlert from "react-bootstrap-sweetalert";
 import { useQueryClient } from "react-query";
 import { Link, useHistory } from "react-router-dom";
-import { Language, Subscription, TrackedList } from "types";
+import { Language, Subscription } from "types";
 
 import {
   useCreateSubscription,

@@ -6,7 +6,6 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import styles from "assets/jss/styles/components/tableStyle";
 import cx from "classnames";
-import React from "react";
 
 const useStyles = makeStyles(styles);
 

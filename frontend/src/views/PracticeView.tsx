@@ -6,19 +6,13 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import {
-  usePair,
-  useScoreQuestion,
-  useSubscriptions,
-  useTrainingPlan,
-} from "hooks";
+import { useScoreQuestion, useSubscriptions, useTrainingPlan } from "hooks";
 import { useSession } from "hooks/session";
-import { find } from "lodash";
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useState } from "react";
 import SweetAlert from "react-bootstrap-sweetalert";
 import { useQueryClient } from "react-query";
 import { Redirect, useHistory, useParams } from "react-router-dom";
-import { Phrase, PhrasePair, Subscription, Voice } from "types";
+import { PhrasePair, Subscription } from "types";
 import { getAudioUrl } from "utils";
 
 const grades = ["Wrong", "Hard", "OK", "Good", "Easy"];

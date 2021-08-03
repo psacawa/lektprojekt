@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 
 // This view does is just the traget of the redirection from the Stripe payment page.
 // It has no function except to show an alert and make the corresponding redirect
-const PaymentsView = (...props: any) => {
+const PaymentsView = () => {
   const location = useLocation();
   const history = useHistory();
   const params = new URLSearchParams(location.search);

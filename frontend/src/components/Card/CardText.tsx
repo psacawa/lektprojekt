@@ -4,6 +4,7 @@ import classNames from "classnames";
 import React from "react";
 
 const useStyles = makeStyles(styles);
+
 interface Props {
   className?: string;
   color?: "warning" | "success" | "danger" | "info" | "primary" | "rose";

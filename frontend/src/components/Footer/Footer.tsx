@@ -1,13 +1,9 @@
-/*eslint-disable*/
-import React from "react";
-import cx from "classnames";
-
-// @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-
+// @material-ui/core components
+import { makeStyles } from "@material-ui/core/styles";
 import styles from "assets/jss/styles/components/footerStyle";
+import cx from "classnames";
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(styles);
@@ -29,10 +25,6 @@ export default function Footer({ fluid, white }: Props) {
     cx({
       [" " + classes.whiteColor]: white,
     });
-  let block = cx({
-    [classes.block]: true,
-    [classes.whiteColor]: white,
-  });
   return (
     <footer className={classes.footer}>
       <div className={container}>

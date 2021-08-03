@@ -35,7 +35,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const FeatureSelect = ({ language, value, setValue, onChange }: Props) => {
-  const [options, setOptions] = useState<Feature[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const classes = useStyles();
 

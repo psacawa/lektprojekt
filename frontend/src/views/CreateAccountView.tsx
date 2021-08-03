@@ -8,7 +8,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  FormHelperText,
   Grid,
   Link as MuiLink,
   makeStyles,
@@ -19,7 +18,7 @@ import ClientErrorHelper from "components/ClientErrorHelper";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import { useAuth } from "hooks/auth";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, Redirect, useHistory } from "react-router-dom";
 import { CreateAccountServerErrors, CreateAccountValues } from "types";
 import * as yup from "yup";

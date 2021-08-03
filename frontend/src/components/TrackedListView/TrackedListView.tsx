@@ -24,8 +24,8 @@ import { Field, Form, Formik } from "formik";
 import { TextField as FormikTextField } from "formik-material-ui";
 import { useSession } from "hooks/session";
 import { isEqual, uniqWith } from "lodash";
-import React, { Component, useEffect, useState } from "react";
-import { QueryObserverResult, useQuery, useQueryClient } from "react-query";
+import React, { useEffect, useState } from "react";
+import { QueryObserverResult, useQueryClient } from "react-query";
 import { Link, useHistory, useParams } from "react-router-dom";
 import * as yup from "yup";
 

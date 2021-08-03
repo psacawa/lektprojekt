@@ -1,9 +1,6 @@
 import {
   CircularProgress,
-  IconButton,
-  ListItem,
   makeStyles,
-  Snackbar,
   Table,
   TableBody,
   TableCell,
@@ -21,7 +18,7 @@ import {
   usePairCounts,
   useSupportedLanguagePairs,
 } from "hooks";
-import { find, includes, uniq } from "lodash";
+import { find, includes } from "lodash";
 import _ from "lodash";
 import React from "react";
 import { Redirect, useHistory } from "react-router";

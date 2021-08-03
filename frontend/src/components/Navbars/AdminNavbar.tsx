@@ -12,8 +12,6 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { AppRoute, routes } from "routes";
 
-import AdminNavbarLinks from "./AdminNavbarLinks";
-
 const useStyles = makeStyles(styles);
 
 interface Props {

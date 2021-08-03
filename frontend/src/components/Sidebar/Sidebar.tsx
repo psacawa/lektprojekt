@@ -9,7 +9,6 @@ import ListItemText from "@material-ui/core/ListItemText";
 import { Person } from "@material-ui/icons";
 import sidebarStyle from "assets/jss/styles/components/sidebarStyle";
 import cx from "classnames";
-import { AdminNavbarLinks } from "components/Navbars";
 import { useAuth } from "hooks/auth";
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
@@ -95,7 +94,6 @@ function Sidebar(props: SidebarProps) {
     return false;
   }
 
-  const [openAvatar, setOpenAvatar] = useState(false);
   const [miniActive, setMiniActive] = useState(true);
   const [routeCollapse, setRouteCollapse] = useState(
     getCollapseStates(drawerRoutesToDisplay)
@@ -103,9 +101,6 @@ function Sidebar(props: SidebarProps) {
   const mainPanel = React.useRef<any>();
 
   // verifies if routeName is the one active (in browser input)
-  const activeRoute = (routeName: string) => {
-    return window.location.href.indexOf(routeName) > -1 ? "active" : "";
-  };
   // this function creates the links and collapses that appear in the sidebar (left menu)
   const createLinks = (routes: AppRoute[]) => {
     const { color } = props;

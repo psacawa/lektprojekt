@@ -13,7 +13,7 @@ import ClientErrorHelper from "components/ClientErrorHelper";
 import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import { useAuth } from "hooks/auth";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, Redirect, useHistory } from "react-router-dom";
 import { LoginServerErrors, LoginValues } from "types";
 import * as yup from "yup";
