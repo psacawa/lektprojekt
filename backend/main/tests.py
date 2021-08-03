@@ -19,3 +19,18 @@ class PriceViewTest:
         with assertNumQueries(1):
             response: Response = client.get("/stripe/prices/")
             assert response.status_code == 200
+
+
+@pytest.mark.django_db
+class CheckoutSessionsTest:
+    def unauthenticated_test(self):
+        response: Response = client.get("/stripe/checkout-sessions/")
+        assert response.status_code in AUTH_FAILURE_CODES
+
+    def create_list_test(self, test_user):
+        client.force_login(user=test_user)
+        #  TODO 03/08/20 psacawa: create checkout_session
+        #  ...
+        response: Response = client.get("/stripe/checkout-sessions/")
+        assert response.status_code == 200
+        assert_that(response.data["results"])

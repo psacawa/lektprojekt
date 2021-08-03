@@ -62,46 +62,44 @@ class CheckoutSessionViewSet(
         view of it."""
         try:
             price_id = request.data["price_id"]
-            price = Price.objects.get(id=price_id)
-            #  TODO 02/08/20 psacawa: perhaps worthy of further abstraction?
-            WEB_ORIGIN = (
-                "http://localhost:3000" if settings.DEBUG else "https://www.lex.quest"
-            )
-            stripe_session = stripe.checkout.Session.create(
-                success_url=(
-                    f"{WEB_ORIGIN}/payments?"
-                    "session_id={CHECKOUT_SESSION_ID}&status=success"
-                ),
-                cancel_url=(
-                    f"{WEB_ORIGIN}/payments?"
-                    "session_id={CHECKOUT_SESSION_ID}&status=cancelled"
-                ),
-                payment_method_types=["card"],
-                mode="subscription",
-                metadata={},
-                line_items=[{"price": price, "quantity": 1}],
-            )
-
-            #  the webhook syncing can't have arrived yet, so we must manually write to DB
-            #  this is an SQL INSERT when the webhook arrived, it will do an SQL UPDATE
-            django_session = Session.sync_from_stripe_data(stripe_session)
-            logger.info(f"Session {django_session.id} created/synced for {price_id}")
-            userprofile: UserProfile = request.user.userprofile
-            userprofile.checkout_sessions.add(django_session.djstripe_id)
-            logger.info(f"Session {django_session.id} attached to {userprofile}")
-
-            return JsonResponse(
-                {
-                    "redirect_url": stripe_session.url,
-                }
-            )
         except KeyError as e:
             raise APIException("No price_id passed")
+        try:
+            price = Price.objects.get(id=price_id)
         except Price.DoesNotExist as e:
             return APIException("Unsupported price_id")
-        except Exception as e:
-            logger.error(f"Creating checkout session for {price_id} failed")
-            raise e
+        #  TODO 02/08/20 psacawa: perhaps worthy of further abstraction?
+        WEB_ORIGIN = (
+            "http://localhost:3000" if settings.DEBUG else "https://www.lex.quest"
+        )
+        stripe_session = stripe.checkout.Session.create(
+            success_url=(
+                f"{WEB_ORIGIN}/payments?"
+                "session_id={CHECKOUT_SESSION_ID}&status=success"
+            ),
+            cancel_url=(
+                f"{WEB_ORIGIN}/payments?"
+                "session_id={CHECKOUT_SESSION_ID}&status=cancelled"
+            ),
+            payment_method_types=["card"],
+            mode="subscription",
+            metadata={},
+            line_items=[{"price": price, "quantity": 1}],
+        )
+
+        #  the webhook syncing can't have arrived yet, so we must manually write to DB
+        #  this is an SQL INSERT when the webhook arrived, it will do an SQL UPDATE
+        django_session = Session.sync_from_stripe_data(stripe_session)
+        logger.info(f"Session {django_session.id} created/synced for {price_id}")
+        userprofile: UserProfile = request.user.userprofile
+        userprofile.checkout_sessions.add(django_session.djstripe_id)
+        logger.info(f"Session {django_session.id} attached to {userprofile}")
+
+        return JsonResponse(
+            {
+                "redirect_url": stripe_session.url,
+            }
+        )
 
     class Meta:
         models = Session
