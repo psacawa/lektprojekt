@@ -45,7 +45,6 @@ class PriceViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 #  TODO 31/07/20 psacawa: make this rest instead?
-@login_required
 @csrf_exempt
 @require_http_methods(["POST"])
 def create_checkout_session(request: HttpRequest):
