@@ -37,9 +37,13 @@ def healthz(request: HttpRequest):
 #  STRIPE
 
 
-@method_decorator(cache_page(HOUR), name="dispatch")
+@method_decorator(cache_page(60), name="dispatch")
 class PriceViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Price.objects.all().select_related("product").filter(active=True)
+    queryset = (
+        Price.objects.all()
+        .select_related("product")
+        .filter(active=True, livemode=settings.DJANGO_ENV == "production")
+    )
     serializer_class = PriceSerializer
     pagination_class = None
 

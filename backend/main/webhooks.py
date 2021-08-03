@@ -34,7 +34,7 @@ def session_completed_handler(event: Event, **kwargs):
     This approach helps you avoid hitting rate limits.
     """
     try:
-        logger.info(f"Event {event.id}, type {event.data['type']}")
+        logger.info(f"Event {event.id}, type {event.type}")
         session_id = event.data["object"]["id"]
         userprofile: UserProfile = UserProfile.objects.filter(
             checkout_sessions__id=session_id
@@ -52,6 +52,7 @@ def session_completed_handler(event: Event, **kwargs):
             f"Subscription for event {session_id} didn't exist after checkout completion"
         )
     except Exception as e:
+        session_id = event.data["object"]["id"]
         logger.error(f"Checkout completion for {session_id} failed.")
         raise e
 
@@ -65,3 +66,4 @@ def payment_failed_handler(event: Event, **kwargs):
     """
     print("We should probably notify the user at this point")
     logger.info(f"Event {event.id}: type {event.data['type']}")
+    #  TODO 03/08/20 psacawa: send email

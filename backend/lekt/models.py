@@ -592,6 +592,15 @@ class UserProfile(TimestampedModel):
     # for payment processing
     level = models.CharField(max_length=10, default="free", choices=USER_LEVEL_CHOICES)
     #  TODO 02/08/20 psacawa: checkout_sessions unused; delete
+    checkout_sessions = models.ManyToManyField(
+        "djstripe.Session",
+        verbose_name="Open checkout sessions",
+        help_text=(
+            "Currently open checkout sessions for the user. Necessary for the view "
+            "confirning the checkout to be able to affiliate a subscription with the user "
+            "attached to the corresponding session."
+        ),
+    )
     plan_subscription = models.ForeignKey(
         "djstripe.Subscription",
         on_delete=models.SET_NULL,

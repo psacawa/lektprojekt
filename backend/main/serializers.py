@@ -20,7 +20,7 @@ class PriceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Price
-        fields = ["id", "product", "currency", "unit_amount"]
+        fields = ["id", "product", "currency", "unit_amount", "recurring"]
 
 
 class CreateCheckoutSessionSerializer(serializers.Serializer):
