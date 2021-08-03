@@ -45,7 +45,9 @@ stripe.set_app_info(
     url="www.lex.quest",
 )
 stripe.api_version = "2020-08-27"
-stripe.api_key = STRIPE_TEST_SECRET_KEY
+stripe.api_key = (
+    STRIPE_LIVE_SECRET_KEY if DJANGO_ENV == "production" else STRIPE_TEST_SECRET_KEY
+)
 
 
 #####################
