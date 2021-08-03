@@ -482,7 +482,7 @@ export const useScoreQuestion = (options?: UseMutationOptions<any, any>) =>
   );
 
 ///////////////////////////
-// Paymentss
+// Payments
 ///////////////////////////
 
 export const usePrices = (options?: UseQueryOptions<Price[]>) =>

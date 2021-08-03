@@ -12,6 +12,19 @@ export interface Price {
   currency: string;
   // this is in "cents" | denominowane w groszach
   unit_amount: number;
+  recurring: {
+    interval: "day" | "month" | "year";
+    interval_count: number;
+  };
+}
+
+export interface FreePrice {
+  id: null;
+  currency: string;
+  product: {
+    name: string;
+  };
+  unit_amount: 0;
 }
 
 export interface CheckoutSession {
