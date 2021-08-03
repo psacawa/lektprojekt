@@ -1,12 +1,12 @@
 export const drawerWidth = 260;
 // Cross-origin requests on localhost don't work... a security feature of browsers perhaps?
-export const origin = `https://${process.env.REACT_API_DOMAIN}/`;
-export const apiRoot =
-  process.env.NODE_ENV === "production" ? `${origin}api/` : "/api/";
-export const authRoot =
-  process.env.NODE_ENV === "production" ? `${origin}auth/` : "/auth/";
-export const paymentRoot =
-  process.env.NODE_ENV === "production" ? `${origin}stripe/` : "/stripe/";
+export const origin =
+  process.env.NODE_ENV === "production"
+    ? `https://${process.env.REACT_API_DOMAIN}/`
+    : `http://localhost:3000/`;
+export const apiRoot = `${origin}api/`;
+export const authRoot = `${origin}auth/`;
+export const paymentRoot = `${origin}stripe/`;
 export const HOUR = 60 * 60 * 1000;
 
 // needs to be updated manually

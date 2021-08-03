@@ -20,6 +20,7 @@ import { useHistory } from "react-router";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import { Price } from "types";
 
+import { origin } from "../constants";
 import { pricingPlans } from "../constants";
 
 const useStyles = makeStyles((theme) => ({
@@ -136,7 +137,7 @@ const PricingView = () => {
                       </Button>
                     ) : (
                       <form
-                        action="/stripe/create-checkout-session/"
+                        action={`${origin}stripe/create-checkout-session/`}
                         method="post"
                         accept-charset="utf-8"
                       >
