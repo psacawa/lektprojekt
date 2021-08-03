@@ -341,7 +341,7 @@ python-versions = "*"
 
 [[package]]
 name = "dj-rest-auth"
-version = "2.1.9"
+version = "2.1.10"
 description = "Authentication and Registration in Django Rest Framework"
 category = "main"
 optional = false
@@ -1827,7 +1827,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "eaa1a140256de915fb1260f8c806f2cd162b2d518d85b026005af901a5ff3e7c"
+content-hash = "e44cbd1bab42ef6993c5aa025947423e47adab684f6d4bea4a0456c119a5dd2c"
 
 [metadata.files]
 alabaster = [
@@ -2083,7 +2083,7 @@ distlib = [
     {file = "distlib-0.3.2.zip", hash = "sha256:106fef6dc37dd8c0e2c0a60d3fca3e77460a48907f335fa28420463a6f799736"},
 ]
 dj-rest-auth = [
-    {file = "dj-rest-auth-2.1.9.tar.gz", hash = "sha256:b4809f4839095cebc37bcdfb6408a0e1b6150f591907cefd98081c231f62203b"},
+    {file = "dj-rest-auth-2.1.10.tar.gz", hash = "sha256:afd77c21ad55f5ad2c44895b63e533fce8a962009759bd02094435751c6e9f31"},
 ]
 dj-stripe = [
     {file = "dj-stripe-2.5.1.tar.gz", hash = "sha256:e6e55919a5f1790c0c6003f6d182b14a09f7c4b6b5361b92c86055fc26427fb9"},
