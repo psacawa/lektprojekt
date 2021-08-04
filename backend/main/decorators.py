@@ -4,8 +4,9 @@ from uuid import uuid4
 
 from django.conf import settings
 from django.contrib.auth import SESSION_KEY, authenticate, login
-from django.contrib.auth.models import User
 from rest_framework.request import Request
+
+from main.models import User
 
 logger = logging.getLogger(__name__)
 

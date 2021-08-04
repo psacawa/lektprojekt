@@ -1,6 +1,5 @@
 import logging
 
-from django.contrib.auth.models import User
 from rest_flex_fields import FlexFieldsModelSerializer
 from rest_framework import serializers
 from rest_framework.fields import CharField
@@ -8,11 +7,13 @@ from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_polymorphic.serializers import PolymorphicSerializer
 
+from main.models import User
+
 from .constants import verb_description_dict
 from .models import (
     Feature,
     Language,
-    LanguageSubscription,
+    LanguageCourse,
     Lexeme,
     Observable,
     Phrase,
@@ -20,7 +21,6 @@ from .models import (
     PhraseWord,
     TrackedList,
     TrackedObservable,
-    UserProfile,
     Voice,
     Word,
 )
@@ -185,17 +185,17 @@ class TrackedObservablePostSerializer(serializers.ModelSerializer):
         }
 
 
-class LanguageSubscriptionSerializer(serializers.ModelSerializer):
+class LanguageCourseSerializer(serializers.ModelSerializer):
     class Meta:
-        model = LanguageSubscription
+        model = LanguageCourse
         exclude = ["created_at", "updated_at", "owner"]
 
 
 class TrackedListSerializer(FlexFieldsModelSerializer):
     class Meta:
         model = TrackedList
-        fields = ["id", "name", "subscription"]
-        expandable_fields = {"subscription": LanguageSubscriptionSerializer}
+        fields = ["id", "name", "course"]
+        expandable_fields = {"course": LanguageCourseSerializer}
 
 
 class ScoreResponseSerializer(serializers.Serializer):
@@ -203,8 +203,8 @@ class ScoreResponseSerializer(serializers.Serializer):
     grade = serializers.IntegerField(min_value=1, max_value=5)
 
 
-class LanguageSubscriptionGetSerializer(serializers.ModelSerializer):
-    """ Serialize the data for a language subscription."""
+class LanguageCourseGetSerializer(serializers.ModelSerializer):
+    """ Serialize the data for a language course."""
 
     base_lang = LanguageSerializer()
     target_lang = LanguageSerializer()
@@ -213,15 +213,15 @@ class LanguageSubscriptionGetSerializer(serializers.ModelSerializer):
     lists = TrackedListSerializer(many=True)
 
     class Meta:
-        model = LanguageSubscription
+        model = LanguageCourse
         exclude = ["created_at", "updated_at", "owner"]
 
 
-class LanguageSubscriptionPostSerializer(serializers.ModelSerializer):
-    """ Serialize the data for a language subscription."""
+class LanguageCoursePostSerializer(serializers.ModelSerializer):
+    """ Serialize the data for a language course."""
 
     class Meta:
-        model = LanguageSubscription
+        model = LanguageCourse
         fields = [
             "id",
             "base_lang",
@@ -230,16 +230,6 @@ class LanguageSubscriptionPostSerializer(serializers.ModelSerializer):
             "target_voice",
             "owner",
         ]
-
-
-class UserProfileSerializer(serializers.ModelSerializer):
-    """Serializes user's language subsriptions and User object."""
-
-    subscriptions = LanguageSubscriptionGetSerializer(many=True)
-
-    class Meta:
-        model = UserProfile
-        exclude = ["created_at", "updated_at"]
 
 
 class PairCountsSerializer(serializers.Serializer):

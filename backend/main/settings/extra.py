@@ -23,6 +23,11 @@ if DJANGO_ENV == "production":
 # for ORM nastiness
 #  SHELL_PLUS_PRINT_SQL_TRUNCATE = None
 
+######################
+# DJANGO DEBUG TOOLBAR
+######################
+RESULTS_CACHE_SIZE = 50
+
 #####################
 #  STRIPE
 #####################

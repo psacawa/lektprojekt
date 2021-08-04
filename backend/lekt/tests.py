@@ -14,7 +14,7 @@ from conftest import jq
 from .models import (
     Feature,
     Language,
-    LanguageSubscription,
+    LanguageCourse,
     Lexeme,
     Observable,
     Phrase,
@@ -226,21 +226,33 @@ class PhrasePairObservableSearchViewTest:
 
 
 @pytest.mark.django_db
-class SubscriptionViewTest:
-    def subscription_crud_test(self, test_user):
+class CourseViewTest:
+    def course_crud_test(self, test_user):
+        assert LanguageCourse.objects.count() == 0
         client.force_login(user=test_user)
-        #  TODO 28/02/20 psacawa: finish this
+
+        #  CREATE
+        response: Response = client.post(
+            "/api/courses/", {"base_lang": 3, "target_lang": 4}
+        )
+        assert response.status_code == 201
+        assert LanguageCourse.objects.count() == 1
+
+        #  READ
+        response = client.get("/api/courses/")
+        assert response.status_code == 200
+        assert_that(response.data["results"]).is_length(1)
 
 
 @pytest.mark.django_db
 class TrackedListViewTest:
-    def tracked_list_crud_test(self, test_subscription, test_user):
+    def tracked_list_crud_test(self, test_course, test_user):
         client.force_login(user=test_user)
 
         #  CREATE
         with assertNumQueries(5):
             response: Response = client.post(
-                "/api/lists/", {"name": "mylist", "subscription": test_subscription.id}
+                "/api/lists/", {"name": "mylist", "course": test_course.id}
             )
         output = response.data
         assert response.status_code == 201

@@ -1,12 +1,12 @@
 from dj_rest_auth.serializers import (
     PasswordResetSerializer as BasePasswordResetSerializer,
 )
-from django.contrib.auth.models import User
 from djstripe.models import Price, Product
 from djstripe.models.checkout import Session
 from rest_framework import serializers
 
 from . import forms
+from .models import User
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -32,7 +32,7 @@ class CheckoutSessionSerializer(serializers.ModelSerializer):
 class UserDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["email", "username", "userprofile", "id"]
+        fields = ["email", "username", "level", "id"]
 
 
 class PasswordResetSerializer(BasePasswordResetSerializer):

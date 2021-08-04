@@ -16,19 +16,12 @@ from rest_framework.exceptions import APIException
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 
-from lekt.models import UserProfile
-
+from .models import User
 from .serializers import CheckoutSessionSerializer, PriceSerializer
 
 logger = logging.getLogger(__name__)
 
 HOUR = 60 * 60
-
-
-def healthz(request: HttpRequest):
-    """Health check."""
-    return HttpResponse("ok", status=200)
-
 
 #  STRIPE
 
@@ -55,7 +48,8 @@ class CheckoutSessionViewSet(
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return self.request.user.userprofile.checkout_sessions.all().order_by("created")
+        user: User = self.request.user
+        return user.checkout_sessions.all().order_by("created")
 
     def create(self, request: Request, **kwargs):
         """Create a CheckoutSession object in the Stripe API, redirect the user to the  web
@@ -91,9 +85,9 @@ class CheckoutSessionViewSet(
         #  this is an SQL INSERT when the webhook arrived, it will do an SQL UPDATE
         django_session = Session.sync_from_stripe_data(stripe_session)
         logger.info(f"Session {django_session.id} created/synced for {price_id}")
-        userprofile: UserProfile = request.user.userprofile
-        userprofile.checkout_sessions.add(django_session.djstripe_id)
-        logger.info(f"Session {django_session.id} attached to {userprofile}")
+        user: User = request.user
+        user.checkout_sessions.add(django_session.djstripe_id)
+        logger.info(f"Session {django_session.id} attached to {user}")
 
         return JsonResponse(
             {
@@ -113,3 +107,11 @@ class GithubLoginView(SocialLoginView):
     adapter_class = GitHubOAuth2Adapter
     callback_url = "http://localhost:8000/accounts/github/login/callback/"
     client_class = OAuth2Client
+
+
+#  HEALTH CHECK
+
+
+def healthz(request: HttpRequest):
+    """Health check."""
+    return HttpResponse("ok", status=200)

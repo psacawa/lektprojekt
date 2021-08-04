@@ -3,11 +3,11 @@ from typing import Dict
 
 import pytest
 from assertpy import add_extension
-from django.contrib.auth.models import User
 from jq import jq as jq_base
 from rest_framework.test import APIClient
 
-from lekt.models import Feature, Language, LanguageSubscription, Lexeme, TrackedList
+from lekt.models import Feature, Language, LanguageCourse, Lexeme, TrackedList
+from main.models import User
 
 
 def pytest_configure(*args):
@@ -41,24 +41,24 @@ def test_user():
 
 
 @pytest.fixture()
-def test_subscription(test_user):
-    """ get en-es subscription for test_user """
+def test_course(test_user):
+    """ get en-es course for test_user """
     en = Language.objects.get(lid="en")
     es = Language.objects.get(lid="es")
-    sub = LanguageSubscription.objects.create(
-        owner_id=test_user.userprofile.id,
+    course = LanguageCourse.objects.create(
+        owner_id=test_user.id,
         base_lang=es,
         base_voice_id=es.default_voice_id,
         target_lang=en,
         target_voice_id=en.default_voice_id,
     )
-    return sub
+    return course
 
 
 @pytest.fixture
-def test_tracked_list(test_subscription):
-    """ get a tracked list for test_subscription """
-    tlist = TrackedList.objects.create(subscription=test_subscription, name="Test List")
+def test_tracked_list(test_course):
+    """ get a tracked list for test_course """
+    tlist = TrackedList.objects.create(course=test_course, name="Test List")
     return tlist
 
 

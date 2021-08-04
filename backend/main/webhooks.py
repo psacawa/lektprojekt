@@ -4,7 +4,7 @@ import stripe
 from djstripe import webhooks
 from djstripe.models import Event, Subscription
 
-from lekt.models import UserProfile
+from main.models import User
 
 logger = logging.getLogger(__name__)
 
@@ -36,17 +36,15 @@ def session_completed_handler(event: Event, **kwargs):
     try:
         logger.info(f"Event {event.id}, type {event.type}")
         session_id = event.data["object"]["id"]
-        userprofile: UserProfile = UserProfile.objects.filter(
-            checkout_sessions__id=session_id
-        ).first()
+        user: User = User.objects.filter(checkout_sessions__id=session_id).first()
 
-        #  provision access for userprofile
+        #  provision access for user
         sub_id = event.data["object"]["subscription"]
         stripe_sub = stripe.Subscription.retrieve(id=sub_id)
         django_sub = Subscription.sync_from_stripe_data(stripe_sub)
-        userprofile.plan_subscription = django_sub
-        userprofile.save()
-        logger.info(f"Assigned subscription={django_sub} to {userprofile=}")
+        user.subscription = django_sub
+        user.save()
+        logger.info(f"Assigned subscription={django_sub} to {user=}")
     except Subscription.DoesNotExist as e:
         logger.error(
             f"Subscription for event {session_id} didn't exist after checkout completion"

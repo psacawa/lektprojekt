@@ -15,17 +15,16 @@ def transfer_anonymous_profile(
 ):
     """When a user confirms their email, that HTTP GET fired from their email will carry
     the ambient authority of their session, and the anonymous user attached to it. This
-    signal receiver will then transfer the UserProfile to the new User account and delete
-    the old."""
+    signal receiver will then transfer the courses of the uses to the new User account
+    and delete the old."""
     if request.user.is_authenticated:
         try:
             with transaction.atomic():
                 old_user = request.user
-                profile = old_user.userprofile
                 new_user = email_address.user
-                new_user.userprofile.delete()
-                profile.user = new_user
-                profile.save()
+                for course in old_user.courses.all():
+                    course.owner = new_user
+                    course.save()
                 old_user.delete()
                 logger.info(
                     f"Email address {email_address} confirmed: "

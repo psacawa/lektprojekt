@@ -3,7 +3,6 @@ from datetime import datetime
 from functools import reduce
 from operator import __or__, itemgetter
 
-from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 from django.db.models import Count, F, Func, Prefetch, Q, Subquery
 from django.db.models.aggregates import Sum
@@ -25,12 +24,13 @@ from rest_framework.response import Response
 from rest_framework.serializers import Serializer
 
 from main.decorators import generate_lazy_user
+from main.models import User
 
 from . import filters, serializers
 from .models import (
     Feature,
     Language,
-    LanguageSubscription,
+    LanguageCourse,
     Lexeme,
     LexemeWeight,
     Observable,
@@ -39,16 +39,11 @@ from .models import (
     PhraseWord,
     TrackedList,
     TrackedObservable,
-    UserProfile,
     Voice,
     Word,
 )
 from .pagination import LargePageNumberPagination
-from .permissions import (
-    IsSubscriptionOwner,
-    IsTrackedListOwner,
-    IsTrackedObservableOwner,
-)
+from .permissions import IsCourseOwner, IsTrackedListOwner, IsTrackedObservableOwner
 
 MIN = 60
 HOUR = 60 * MIN
@@ -73,6 +68,20 @@ class LanguageViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = serializers.LanguageVoiceSerializer
     ordering = ["id"]
     pagination_class = LargePageNumberPagination
+
+
+@method_decorator(cache_page(FIVE_MIN), name="dispatch")
+class SupportedLanguagePairsView(generics.ListAPIView):
+    """
+    List of supported pairs of languages for the purpose of onboarding. Basically a
+    stripped down view of Corpora.
+    """
+
+    pagination_class = None
+    queryset = PhrasePair.objects.values("base__lang", "target__lang").annotate(
+        count=Count("id")
+    )
+    serializer_class = serializers.LanguagePairSerializer
 
 
 @method_decorator(cache_page(HOUR), name="dispatch")
@@ -363,33 +372,20 @@ class PhrasePairObservableSearchView(ValidateFilterListMixin, generics.ListAPIVi
         return queryset
 
 
-class UserProfileView(generics.RetrieveAPIView):
-    """ API view for retrieving a logged in user's list of `LanguageSubscription`s."""
-
-    serializer_class = serializers.UserProfileSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_object(self):
-        user = self.request.user
-        logger.debug(f"{self.__class__.__name__}: User {user.username} seeks profile")
-        return user.userprofile
-
-
 @method_decorator(generate_lazy_user, name="dispatch")
-class LanguageSubscriptionViewSet(viewsets.ModelViewSet):
+class LanguageCourseViewSet(viewsets.ModelViewSet):
     """
     API view set for performing create, read, update, delete and list operations on the
-    `LanguageSubscription` models attachsed to the `UserProfile` of the currently logged in
-    `User`.
+    `LanguageCourse` models attachsed to the currently logged in `User`.
     """
 
-    permission_classes = [permissions.IsAuthenticated, IsSubscriptionOwner]
+    permission_classes = [permissions.IsAuthenticated, IsCourseOwner]
     filter_backends = [OrderingFilter]
     ordering = ["id"]
 
     def create(self, request: Request, *args, **kwargs):
         user = request.user
-        request.data["owner"] = user.userprofile.id
+        request.data["owner"] = user.id
 
         #  assign default voices
         for s in ["base", "target"]:
@@ -403,13 +399,14 @@ class LanguageSubscriptionViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         # WARNING: this failed under generateschema
         if self.action in ["list", "retrieve"]:
-            return serializers.LanguageSubscriptionGetSerializer
+            return serializers.LanguageCoursePostSerializer
         else:
-            return serializers.LanguageSubscriptionPostSerializer
+            return serializers.LanguageCoursePostSerializer
 
     def get_queryset(self):
         user = self.request.user
-        return user.userprofile.subscriptions.select_related(
+        logger.info(f"{user=}")
+        return user.courses.select_related(
             "base_lang", "target_lang", "base_voice", "target_voice"
         ).prefetch_related(
             Prefetch(
@@ -431,7 +428,7 @@ class TrackedListViewSet(
 
     def get_queryset(self):
         return TrackedList.objects.filter(
-            subscription__owner__user_id=self.request.user.id
+            course__owner__id=self.request.user.id
         ).annotate(count=Count("observables"))
 
     @action(detail=True, methods=["post"])
@@ -474,9 +471,7 @@ class TrainingPlanView(mixins.ListModelMixin, viewsets.GenericViewSet):
 
     def get_queryset(self):
         list_pk = self.kwargs.get("list_pk")
-        subscription: LanguageSubscription = LanguageSubscription.objects.get(
-            lists__id=list_pk
-        )
+        course: LanguageCourse = LanguageCourse.objects.get(lists__id=list_pk)
         observables = Observable.objects.filter(
             trackedobservable__tracked_list_id=list_pk
         )
@@ -487,8 +482,8 @@ class TrainingPlanView(mixins.ListModelMixin, viewsets.GenericViewSet):
             raise ParseError("At least one search term is needed in the training list.")
         queryset = (
             PhrasePair.objects.filter(
-                observable_weights__base_lang=subscription.base_lang,
-                observable_weights__target_lang=subscription.target_lang,
+                observable_weights__base_lang=course.base_lang,
+                observable_weights__target_lang=course.target_lang,
                 observable_weights__observable__in=observables,
             )
             #  We use Random() to implement some kind of basic randomization
@@ -584,20 +579,6 @@ class PairCountsView(generics.ListAPIView):
         .annotate(count=Count("*"))
         .order_by("-count")
     )
-
-
-@method_decorator(cache_page(FIVE_MIN), name="dispatch")
-class SupportedLanguagePairsView(generics.ListAPIView):
-    """
-    List of supported pairs of languages for the purpose of onboarding. Basically a
-    stripped down view of Corpora.
-    """
-
-    pagination_class = None
-    queryset = PhrasePair.objects.values("base__lang", "target__lang").annotate(
-        count=Count("id")
-    )
-    serializer_class = serializers.LanguagePairSerializer
 
 
 docs_schema_view = get_schema_view(

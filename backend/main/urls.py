@@ -21,7 +21,6 @@ from allauth.account.views import (
 )
 from django.conf import settings
 from django.contrib import admin
-from django.contrib.auth.views import PasswordResetConfirmView
 from django.urls import include, path, re_path
 from django.views.generic import RedirectView, TemplateView
 from django_ses.views import SESEventWebhookView

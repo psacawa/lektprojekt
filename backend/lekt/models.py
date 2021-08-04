@@ -1,12 +1,14 @@
 import logging
 
-from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.manager import Manager
 from model_utils.managers import InheritanceManager
 from polymorphic.managers import PolymorphicManager
 from polymorphic.models import PolymorphicModel
 from tabulate import tabulate
+
+from main.managers import LektManager
+from main.models import User
 
 from . import managers
 from .constants import lexeme_pos_choices
@@ -569,56 +571,7 @@ class PhrasePair(TimestampedModel):
         return f"<{self.base.text} {self.target.text}>"
 
 
-class UserProfile(TimestampedModel):
-    """
-    User profiles internal to Lekt application.
-
-    Proxy model for User. In accordance with Django best practices, applications will
-    leave the User model for auth purposes, and UserProfile will be used for
-    application-specific purpses.
-
-    These models exists in one-to-many relationship with :model:`lekt.LanguageSubscription`.
-    """
-
-    id = models.AutoField(primary_key=True, db_column="userprofile_id")
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE,
-        verbose_name="User",
-        help_text="User account attached to the profile",
-    )
-    USER_LEVEL_CHOICES = [("free", "free"), ("premium", "premium"), ("test", "test")]
-
-    # for payment processing
-    level = models.CharField(max_length=10, default="free", choices=USER_LEVEL_CHOICES)
-    #  TODO 02/08/20 psacawa: checkout_sessions unused; delete
-    checkout_sessions = models.ManyToManyField(
-        "djstripe.Session",
-        verbose_name="Open checkout sessions",
-        help_text=(
-            "Currently open checkout sessions for the user. Necessary for the view "
-            "confirning the checkout to be able to affiliate a subscription with the user "
-            "attached to the corresponding session."
-        ),
-    )
-    plan_subscription = models.ForeignKey(
-        "djstripe.Subscription",
-        on_delete=models.SET_NULL,
-        null=True,
-        verbose_name="Plan",
-        help_text="Stripe Plan (really newer API Price) at to UserProfile",
-    )
-
-    objects = managers.LektManager()
-
-    def __repr__(self):
-        return f"<UserProfile user={self.user.username}>"
-
-    def __str__(self):
-        return self.user.username
-
-
-class LanguageSubscription(TimestampedModel):
+class LanguageCourse(TimestampedModel):
     """
     Represents the configuration data for a single language pair tracked by a single user.
 
@@ -627,13 +580,13 @@ class LanguageSubscription(TimestampedModel):
     by this object.
     """
 
-    id = models.AutoField(primary_key=True, db_column="sub_id")
+    id = models.AutoField(primary_key=True, db_column="course_id")
     owner = models.ForeignKey(
-        UserProfile,
+        "main.User",
         on_delete=models.CASCADE,
-        verbose_name="Owner's profile",
-        related_name="subscriptions",
-        help_text="UserProfile of the account owning the subscription",
+        verbose_name="Owner account",
+        related_name="courses",
+        help_text="Account owning the course",
     )
 
     base_lang = models.ForeignKey(
@@ -671,7 +624,7 @@ class LanguageSubscription(TimestampedModel):
         unique_together = ("owner", "base_lang", "target_lang")
 
     def __repr__(self):
-        return "<LanguageLanguageSubscription owner={} base={} target={}>".format(
+        return "<LanguageCourse owner={} base={} target={}>".format(
             self.owner, self.base_lang.lid, self.target_lang.lid
         )
 
@@ -687,10 +640,10 @@ class TrackedList(TimestampedModel):
     """
 
     name = models.CharField(max_length=100, blank=True)
-    subscription = models.ForeignKey(
-        LanguageSubscription,
+    course = models.ForeignKey(
+        LanguageCourse,
         on_delete=models.CASCADE,
-        verbose_name="Language Subscription",
+        verbose_name="Language Course",
         related_name="lists",
     )
 
@@ -705,10 +658,10 @@ class TrackedList(TimestampedModel):
     objects = Manager()
 
     class Meta:
-        unique_together = ["subscription", "name"]
+        unique_together = ["course", "name"]
 
     def __repr__(self):
-        return f"<TrackedList name={self.name} sub={str(self.subscription)}>"
+        return f"<TrackedList name={self.name} course={str(self.course)}>"
 
     __str__ = __repr__
 

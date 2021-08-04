@@ -5,7 +5,9 @@ from rest_framework.permissions import BasePermission
 from rest_framework.request import Request
 from rest_framework.views import APIView
 
-from .models import LanguageSubscription, TrackedList, TrackedObservable, UserProfile
+from main.models import User
+
+from .models import LanguageCourse, TrackedList, TrackedObservable
 
 logger = logging.getLogger(__name__)
 
@@ -19,12 +21,13 @@ logger = logging.getLogger(__name__)
 #  TODO 27/02/20 psacawa: fix these
 
 
-class IsSubscriptionOwner(BasePermission):
+class IsCourseOwner(BasePermission):
     def has_object_permission(
-        self, request: Request, view: APIView, sub: LanguageSubscription
+        self, request: Request, view: APIView, course: LanguageCourse
     ):
-        profile: UserProfile = sub.owner
-        return request.user.id == profile.user_id
+        #  TODO 03/08/20 psacawa: save a query here
+        user: User = course.owner
+        return request.user == user
 
 
 class IsTrackedListOwner(BasePermission):
@@ -38,16 +41,16 @@ class IsTrackedListOwner(BasePermission):
         if list_pk is None:
             return True
         try:
-            profile = UserProfile.objects.get(subscriptions__lists__id=list_pk)
-        except UserProfile.DoesNotExist as e:
+            user = User.objects.get(courses__lists__id=list_pk)
+        except User.DoesNotExist as e:
             raise Http404
-        return request.user.id == profile.user_id
+        return request.user == user
 
     def has_object_permission(
         self, request: Request, view: APIView, tracked_list: TrackedList
     ):
-        profile: UserProfile = tracked_list.subscription.owner
-        return request.user.id == profile.user_id
+        user: User = tracked_list.course.owner
+        return request.user == user
 
 
 class IsTrackedObservableOwner(BasePermission):
@@ -57,12 +60,12 @@ class IsTrackedObservableOwner(BasePermission):
             self._tracked_list: TrackedList = TrackedList.objects.get(id=list_pk)
         except TrackedList.DoesNotExist as e:
             raise Http404
-        self._subscription: LanguageSubscription = self._tracked_list.subscription
-        self._profile: UserProfile = self._subscription.owner
-        return request.user.id == self._profile.user_id
+        self._course: LanguageCourse = self._tracked_list.course
+        self._user: User = self._course.owner
+        return request.user == self._user
 
     def has_object_permission(
         self, request: Request, view: APIView, tracked_obs: TrackedObservable
     ):
-        profile: UserProfile = tracked_obs.tracked_list.subscription.owner
-        return request.user.id == profile.user_id
+        user: User = tracked_obs.tracked_list.course.owner
+        return request.user == user
