@@ -13,7 +13,7 @@ import cardBodyStyles from "assets/jss/styles/components/cardBodyStyle";
 import cardStyles from "assets/jss/styles/components/cardStyle";
 import { GridContainer, GridItem } from "components/Grid";
 import {
-  useCreateSubscription,
+  useCreateCourse,
   useLanguages,
   usePairCounts,
   useSupportedLanguagePairs,
@@ -119,7 +119,7 @@ const LanguagePairSelectWidget = () => {
     ?.filter((lang) => includes(languageIdOptions, lang.id))
     .map(addDefaultLocaleCode);
 
-  const createSubscription = useCreateSubscription();
+  const createCourse = useCreateCourse();
   return (
     <>
       {!languageOptions || !languageQuery.data ? (
@@ -168,7 +168,7 @@ const LanguagePairSelectWidget = () => {
                 <Card
                   className={`${classes.card} ${classes.center}`}
                   onClick={async (event: React.MouseEvent) => {
-                    createSubscription.mutate({
+                    createCourse.mutate({
                       base_lang: lang.id,
                       base_voice: lang.default_voice,
                       target_lang: targetLanguage!.id,

@@ -10,17 +10,17 @@ import {
 import { apiRoot, authRoot, HOUR, paymentRoot } from "../constants";
 import {
   CheckoutSession,
-  CreateSubscriptionValues,
+  CreateLanguageCourseValues,
   CreateTrackedListValues,
   Feature,
   Language,
+  LanguageCourse,
   LanguagePair,
   Lexeme,
   Paginate,
   PairCount,
   PhrasePair,
   Price,
-  Subscription,
   Tracked,
   TrackedList,
   User,
@@ -56,7 +56,7 @@ export const useLanguages = (options?: UseQueryOptions<Language[]>) =>
 
 export const usePairCounts = (options?: UseQueryOptions<PairCount[]>) =>
   useQuery(
-    "pair-count",
+    "pair-counts",
     () =>
       axios
         .get(`${apiRoot}pair-counts/`)
@@ -117,7 +117,7 @@ export const useLexeme = (
   );
 
 ////////////////////
-// Lexemes
+// Features
 ////////////////////
 
 export const useFeatures = (
@@ -260,49 +260,49 @@ export const useUser = (options?: UseQueryOptions<User>) =>
   );
 
 ////////////////////
-// Subscriptions
+// Language Courses
 ////////////////////
 
-export const useSubscriptions = (
-  options?: UseQueryOptions<Paginate<Subscription<true>>>
+export const useCourses = (
+  options?: UseQueryOptions<Paginate<LanguageCourse<true>>>
 ) =>
   useQuery(
-    ["subs"],
+    ["courses"],
     () =>
       axios
-        .get(`${apiRoot}subs/`)
+        .get(`${apiRoot}courses/`)
         .then(
-          (response: AxiosResponse<Paginate<Subscription<true>>>) =>
+          (response: AxiosResponse<Paginate<LanguageCourse<true>>>) =>
             response.data
         ),
     options
   );
 
-export const useCreateSubscription = (
-  options?: UseMutationOptions<Subscription, any, CreateSubscriptionValues>
+export const useCreateCourse = (
+  options?: UseMutationOptions<LanguageCourse, any, CreateLanguageCourseValues>
 ) =>
   useMutation(
-    (params: CreateSubscriptionValues) =>
+    (params: CreateLanguageCourseValues) =>
       axios
-        .post(`${apiRoot}subs/`, params)
-        .then((response: AxiosResponse<Subscription>) => response.data),
+        .post(`${apiRoot}courses/`, params)
+        .then((response: AxiosResponse<LanguageCourse>) => response.data),
     {
       onSuccess: (result) => {
-        queryClient.invalidateQueries("subs");
+        queryClient.invalidateQueries("courses");
       },
       ...options,
     }
   );
 
-export const useDeleteSubscription = (
-  options?: UseMutationOptions<any, any, { sub_id: number }>
+export const useDeleteCourse = (
+  options?: UseMutationOptions<any, any, { course_id: number }>
 ) =>
   useMutation(
-    (params: { sub_id: number }) =>
-      axios.delete(`${apiRoot}subs/${params.sub_id}/`),
+    (params: { course_id: number }) =>
+      axios.delete(`${apiRoot}courses/${params.course_id}/`),
     {
       onSuccess: (result) => {
-        queryClient.invalidateQueries("subs");
+        queryClient.invalidateQueries("courses");
       },
       ...options,
     }
@@ -319,7 +319,7 @@ export const useTrackedList = (
 ) =>
   useQuery(["lists", params.id], () =>
     axios
-      .get(`${apiRoot}lists/${params.id}/?expand=subscription`)
+      .get(`${apiRoot}lists/${params.id}/?expand=course`)
       .then((response: AxiosResponse<TrackedList<true>>) => response.data)
   );
 
@@ -333,7 +333,7 @@ export const useCreateTrackedList = (
         .then((response: AxiosResponse<TrackedList>) => response.data),
     {
       onSuccess: (result) => {
-        queryClient.invalidateQueries(["sub", result.subscription]);
+        queryClient.invalidateQueries(["courses", result.course]);
       },
       ...options,
     }

@@ -152,18 +152,18 @@ type ServerErrors<T> = Partial<Record<keyof T | "non_field_errors", string[]>>;
 type CreateAccountServerErrors = ServerErrors<CreateAccountValues>;
 type LoginServerErrors = ServerErrors<LoginValues>;
 
-interface TrackedList<ExpandSub extends boolean = false> {
+interface TrackedList<ExpandCourse extends boolean = false> {
   id: number;
   name: string;
-  subscription: ExpandSub extends true ? Subscription : number;
+  course: ExpandCourse extends true ? LanguageCourse : number;
 }
 
 interface CreateTrackedListValues {
   name: string;
-  subscription: number;
+  course: number;
 }
 
-export interface Subscription<ExpandLang extends boolean = false> {
+export interface LanguageCourse<ExpandLang extends boolean = false> {
   id: number;
   lists: TrackedList[];
   base_lang: ExpandLang extends true ? Language : number;
@@ -172,7 +172,7 @@ export interface Subscription<ExpandLang extends boolean = false> {
   target_voice: Voice;
 }
 
-export interface CreateSubscriptionValues {
+export interface CreateLanguageCourseValues {
   base_lang: number;
   base_voice: number;
   target_lang: number;
@@ -201,7 +201,7 @@ interface PracticeState {
 }
 
 interface RootState {
-  activeSubscriptionId?: number;
+  activeCourseId?: number;
   activeTrackedListId?: number;
   practice?: PracticeState;
 }

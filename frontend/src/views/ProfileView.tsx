@@ -19,26 +19,26 @@ import React, { useState } from "react";
 import SweetAlert from "react-bootstrap-sweetalert";
 import { useQueryClient } from "react-query";
 import { Link, useHistory } from "react-router-dom";
-import { Language, Subscription } from "types";
+import { Language, LanguageCourse } from "types";
 
 import {
-  useCreateSubscription,
+  useCourses,
+  useCreateCourse,
   useCreateTrackedList,
-  useDeleteSubscription,
+  useDeleteCourse,
   useDeleteTrackedList,
   useLanguages,
-  useSubscriptions,
 } from "../hooks";
 
 const useStyles = makeStyles(styles);
 
-const NewSubscriptionForm = () => {
+const NewCourseForm = () => {
   const languageQuery = useLanguages();
   const queryClient = useQueryClient();
   const [value, setValue] = useState<Language | null>(null);
-  const createSubscription = useCreateSubscription({
+  const createCourse = useCreateCourse({
     onSuccess: (data, variables) => {
-      queryClient.refetchQueries(["subs"]);
+      queryClient.refetchQueries(["courses"]);
     },
   });
   return (
@@ -63,7 +63,7 @@ const NewSubscriptionForm = () => {
                   let enLang = find(languageQuery.data!, {
                     lid: "en",
                   }) as Language;
-                  await createSubscription.mutateAsync({
+                  await createCourse.mutateAsync({
                     base_lang: enLang.id,
                     base_voice: enLang.default_voice,
                     target_lang: value.id,
@@ -89,15 +89,15 @@ const ProfileView = () => {
   const { session, setSession } = useSession();
   const [activeTab, setActiveTab] = useState(0);
   const queryClient = useQueryClient();
-  const subscriptionQuery = useSubscriptions();
+  const courseQuery = useCourses();
   const { user } = useAuth();
-  const deleteSubscription = useDeleteSubscription({
+  const deleteCourse = useDeleteCourse({
     onSuccess: (data, variables) => {
-      queryClient.refetchQueries(["subs"]);
+      queryClient.refetchQueries(["courses"]);
     },
   });
-  const subscription: Subscription<true> | undefined =
-    subscriptionQuery.data?.results[activeTab];
+  const course: LanguageCourse<true> | undefined =
+    courseQuery.data?.results[activeTab];
   const [listNameInputValue, setListNameInputValue] = useState("");
   const [createNewListOpen, setCreateNewListOpen] = useState(false);
   const createListMutation = useCreateTrackedList({
@@ -106,26 +106,23 @@ const ProfileView = () => {
     },
   });
   const deleteListMutation = useDeleteTrackedList();
-  const [addingNewSubscription, setAddingNewSubscription] = useState(false);
-  const [
-    deleteSubscriptionModalOpen,
-    setDeleteSubscriptionModalOpen,
-  ] = useState(false);
-  const subscriptionTabs:
+  const [addingNewCourse, setAddingNewCourse] = useState(false);
+  const [deleteCourseModalOpen, setDeleteCourseModalOpen] = useState(false);
+  const courseTabs:
     | {
         tabName: string;
         tabIcon?: any;
         tabContent: React.ReactNode;
       }[]
-    | undefined = subscriptionQuery.isSuccess
-    ? subscriptionQuery.data.results
-        .map((sub, idx) => ({
-          tabName: sub.target_lang.name,
-          tabIcon: <img src={flags[sub.target_voice.aid.slice(3)]} />,
+    | undefined = courseQuery.isSuccess
+    ? courseQuery.data.results
+        .map((course, idx) => ({
+          tabName: course.target_lang.name,
+          tabIcon: <img src={flags[course.target_voice.aid.slice(3)]} />,
           tabContent: (
             <>
               <Table
-                tableData={sub.lists.map((list, idx) => [
+                tableData={course.lists.map((list, idx) => [
                   list.name,
                   <Button
                     size="sm"
@@ -155,7 +152,7 @@ const ProfileView = () => {
                       await deleteListMutation.mutateAsync({
                         list_id: list.id,
                       });
-                      await queryClient.refetchQueries(["subs"]);
+                      await queryClient.refetchQueries(["courses"]);
                     }}
                   >
                     <Clear />
@@ -176,11 +173,11 @@ const ProfileView = () => {
                   style={{ marginLeft: "20px" }}
                   onClick={async (ev: React.MouseEvent<{}>) => {
                     await createListMutation.mutateAsync({
-                      subscription: sub.id,
+                      course: course.id,
                       name: listNameInputValue,
                     });
                     setListNameInputValue("");
-                    queryClient.refetchQueries(["subs"]);
+                    queryClient.refetchQueries(["courses"]);
                   }}
                 >
                   Create
@@ -189,7 +186,7 @@ const ProfileView = () => {
               <Button
                 color="danger"
                 onClick={(ev: React.MouseEvent<{}>) => {
-                  setDeleteSubscriptionModalOpen(true);
+                  setDeleteCourseModalOpen(true);
                 }}
               >
                 Delete all lists
@@ -200,18 +197,18 @@ const ProfileView = () => {
                   make an account to persist it.
                 </p>
               )}
-              {deleteSubscriptionModalOpen && (
+              {deleteCourseModalOpen && (
                 <SweetAlert
                   warning
                   style={{ display: "block", marginTop: "-100px" }}
                   title="Are you sure?"
                   onConfirm={async () => {
-                    await deleteSubscription.mutateAsync({ sub_id: sub.id });
-                    setDeleteSubscriptionModalOpen(false);
-                    queryClient.refetchQueries(["subs"]);
+                    await deleteCourse.mutateAsync({ course_id: course.id });
+                    setDeleteCourseModalOpen(false);
+                    queryClient.refetchQueries(["couses"]);
                   }}
                   onCancel={() => {
-                    setDeleteSubscriptionModalOpen(false);
+                    setDeleteCourseModalOpen(false);
                   }}
                   confirmBtnCssClass={classes.button + " " + classes.success}
                   cancelBtnCssClass={classes.button + " " + classes.danger}
@@ -229,31 +226,31 @@ const ProfileView = () => {
           {
             tabName: "Add New Language",
             tabIcon: <Add />,
-            tabContent: <NewSubscriptionForm />,
+            tabContent: <NewCourseForm />,
           },
         ])
     : undefined;
 
   return (
     <>
-      {subscriptionQuery.isSuccess && subscriptionTabs !== undefined ? (
+      {courseQuery.isSuccess && courseTabs !== undefined ? (
         <GridContainer>
           <GridItem xs={12}>
             <CustomTabs
               value={activeTab}
               changeValue={(ev, newValue: number) => {
                 setActiveTab(newValue);
-                const subs = subscriptionQuery.data.results;
-                if (newValue in subs) {
+                const courses = courseQuery.data.results;
+                if (newValue in courses) {
                   console.log(`new value: ${newValue}`);
                   setSession({
-                    currentSubscription: subs[newValue].id,
+                    currentCourse: courses[newValue].id,
                   });
                 }
               }}
               title="Languages"
               headerColor="primary"
-              tabs={subscriptionTabs}
+              tabs={courseTabs}
             />
           </GridItem>
         </GridContainer>

@@ -22,6 +22,7 @@ from .models import (
     TrackedList,
     TrackedObservable,
     User,
+    Voice,
 )
 
 #  different apps represent auth(entication|orization) differently
@@ -226,22 +227,43 @@ class PhrasePairObservableSearchViewTest:
 
 
 @pytest.mark.django_db
-class CourseViewTest:
+class LanguageCourseViewTest:
     def course_crud_test(self, test_user):
         assert LanguageCourse.objects.count() == 0
+        en: Language = Language.objects.get(lid="en")
+        es: Language = Language.objects.get(lid="es")
         client.force_login(user=test_user)
 
         #  CREATE
         response: Response = client.post(
-            "/api/courses/", {"base_lang": 3, "target_lang": 4}
+            "/api/courses/", {"base_lang": en.id, "target_lang": es.id}
         )
         assert response.status_code == 201
         assert LanguageCourse.objects.count() == 1
+        course: LanguageCourse = LanguageCourse.objects.get()
+        assert course.base_voice_id == en.default_voice_id, "Default voice wrong"
+        assert course.target_voice_id == es.default_voice_id, "Default voice wrong"
 
         #  READ
         response = client.get("/api/courses/")
         assert response.status_code == 200
         assert_that(response.data["results"]).is_length(1)
+        course_json = response.data["results"][0]
+        assert_that(course_json["base_lang"]).is_instance_of(dict)
+        assert_that(course_json["base_voice"]).is_instance_of(dict)
+
+        #  UPDATE
+        mx_voice: Voice = Voice.objects.get(aid="es-MX")
+        response = client.patch(
+            f"/api/courses/{course.id}/", {"target_voice": mx_voice.id}
+        )
+        assert response.status_code == 200
+        assert response.data["target_voice"] == mx_voice.id
+
+        #  DELETE
+        response = client.delete(f"/api/courses/{course.id}/")
+        assert response.status_code == 204
+        assert LanguageCourse.objects.count() == 0
 
 
 @pytest.mark.django_db
@@ -252,7 +274,9 @@ class TrackedListViewTest:
         #  CREATE
         with assertNumQueries(5):
             response: Response = client.post(
-                "/api/lists/", {"name": "mylist", "course": test_course.id}
+                "/api/lists/",
+                {"name": "mylist", "course": test_course.id},
+                format="json",
             )
         output = response.data
         assert response.status_code == 201

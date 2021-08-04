@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 interface SessionState {
-  currentSubscription?: number;
+  currentCourse?: number;
   currentTrackedList?: number;
 }
 
@@ -12,14 +12,14 @@ interface SessionContext {
 
 const SessionContext = React.createContext<SessionContext>({
   session: {
-    currentSubscription: undefined,
+    currentCourse: undefined,
     currentTrackedList: undefined,
   },
 } as SessionContext);
 
 const SessionProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<SessionState>({
-    currentSubscription: undefined,
+    currentCourse: undefined,
     currentTrackedList: undefined,
   });
   // NOTE 19/03/20 psacawa: immutable only for shallow state

@@ -6,13 +6,13 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import { useScoreQuestion, useSubscriptions, useTrainingPlan } from "hooks";
+import { useCourses, useScoreQuestion, useTrainingPlan } from "hooks";
 import { useSession } from "hooks/session";
 import React, { useEffect, useState } from "react";
 import SweetAlert from "react-bootstrap-sweetalert";
 import { useQueryClient } from "react-query";
 import { Redirect, useHistory, useParams } from "react-router-dom";
-import { PhrasePair, Subscription } from "types";
+import { LanguageCourse, PhrasePair } from "types";
 import { getAudioUrl } from "utils";
 
 const grades = ["Wrong", "Hard", "OK", "Good", "Easy"];
@@ -51,13 +51,13 @@ const PracticeView = () => {
 
 interface PromptProps {
   pair: PhrasePair;
-  subscription: Subscription<true>;
+  course: LanguageCourse<true>;
   listId: number;
 }
 
-const PracticePrompt = ({ subscription, pair }: PromptProps) => {
+const PracticePrompt = ({ course, pair }: PromptProps) => {
   const classes = useStyles();
-  const audioUrl = getAudioUrl(subscription.base_voice, pair.base);
+  const audioUrl = getAudioUrl(course.base_voice, pair.base);
   return (
     <>
       <audio controls autoPlay src={audioUrl}>
@@ -77,13 +77,13 @@ interface AnswerProps extends PromptProps {
 
 const PracticeAnswer = ({
   pair,
-  subscription,
+  course,
   listId,
   setCurrentPairIdx,
   setQuestionAnswered,
 }: AnswerProps) => {
   const classes = useStyles();
-  const audioUrl = getAudioUrl(subscription.target_voice, pair.target);
+  const audioUrl = getAudioUrl(course.target_voice, pair.target);
   const scoreQuestion = useScoreQuestion();
   return (
     <>
@@ -130,12 +130,12 @@ const ListPracticeView = () => {
   const classes = useStyles();
   // TODO 21/03/20 psacawa: figure out how to gracefully type selector so this data can be
   // moved out of component state
-  const subsQuery = useSubscriptions();
+  const coursesQuery = useCourses();
 
-  const subscription =
-    subsQuery.data &&
-    subsQuery.data.results.find((sub) =>
-      sub.lists.find((list) => list.id === listId)
+  const course =
+    coursesQuery.data &&
+    coursesQuery.data.results.find((course) =>
+      course.lists.find((list) => list.id === listId)
     );
   const planQuery = useTrainingPlan(
     { list_id: listId, page_size: 20 },
@@ -149,15 +149,14 @@ const ListPracticeView = () => {
   }, [listId]);
   const [currentPairIdx, setCurrentPairIdx] = useState<number>(0);
   const [questionAnswered, setQuestionAnswered] = useState(false);
-  // console.log (subscription)
   return (
     <>
-      {planQuery.isSuccess && subscription ? (
+      {planQuery.isSuccess && course ? (
         <>
           {currentPairIdx in planQuery.data ? (
             <div className={classes.center}>
               <PracticePrompt
-                subscription={subscription}
+                course={course}
                 pair={planQuery.data[currentPairIdx]}
                 listId={listId}
               />
@@ -173,7 +172,7 @@ const ListPracticeView = () => {
                 </div>
               ) : (
                 <PracticeAnswer
-                  subscription={subscription}
+                  course={course}
                   pair={planQuery.data[currentPairIdx]}
                   {...{ listId, setQuestionAnswered, setCurrentPairIdx }}
                 />

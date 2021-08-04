@@ -85,7 +85,7 @@ const TrackedListHeader = ({ list, language }: HeaderProps) => {
             bag.setSubmitting(true);
             await updateList.mutateAsync({ id: list.id, name: values.name });
             await queryClient.refetchQueries(["lists", list.id]);
-            await queryClient.refetchQueries(["subs"]);
+            await queryClient.refetchQueries(["courses"]);
             setEditingTitle(false);
             bag.setSubmitting(false);
           }}
@@ -144,7 +144,7 @@ const TrackedListView = ({ list }: Props) => {
   const [lexemeInputValue, setLexemeInputValue] = useState("");
   const lexemeSearchQuery = useLexemes(
     {
-      lang: listQuery.data?.subscription.target_lang,
+      lang: listQuery.data?.course.target_lang,
       prompt: lexemeInputValue,
     },
     {
@@ -164,7 +164,7 @@ const TrackedListView = ({ list }: Props) => {
   );
   const featureSearchQuery = useFeatures(
     {
-      lang: listQuery.data?.subscription.target_lang,
+      lang: listQuery.data?.course.target_lang,
     },
     {
       onSuccess: (results) => {
@@ -205,7 +205,7 @@ const TrackedListView = ({ list }: Props) => {
           <TrackedListHeader
             list={listQuery.data}
             language={languagesQuery.data.find(
-              (lang) => lang.id === listQuery.data.subscription.target_lang
+              (lang) => lang.id === listQuery.data.course.target_lang
             )}
           />
         </>

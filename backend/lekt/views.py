@@ -8,6 +8,7 @@ from django.db.models import Count, F, Func, Prefetch, Q, Subquery
 from django.db.models.aggregates import Sum
 from django.db.models.expressions import RawSQL, Value
 from django.db.models.fields import FloatField
+from django.http.request import QueryDict
 from django.shortcuts import get_object_or_404
 from django.utils.datastructures import MultiValueDictKeyError
 from django.utils.decorators import method_decorator
@@ -385,6 +386,14 @@ class LanguageCourseViewSet(viewsets.ModelViewSet):
 
     def create(self, request: Request, *args, **kwargs):
         user = request.user
+
+        #  NOTE 04/08/20 psacawa: without this, django complains in the test suite...
+        #  as query dicts are immutable by default
+        #  furthermore, DRF decides whether request.data is QueryDict or dict
+        #  based on a complex parsing criterion which boils down to immuatable QueryDict in
+        #  test environment
+        if isinstance(request.data, QueryDict):
+            request.data._mutable = True
         request.data["owner"] = user.id
 
         #  assign default voices
@@ -399,7 +408,7 @@ class LanguageCourseViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         # WARNING: this failed under generateschema
         if self.action in ["list", "retrieve"]:
-            return serializers.LanguageCoursePostSerializer
+            return serializers.LanguageCourseGetSerializer
         else:
             return serializers.LanguageCoursePostSerializer
 
