@@ -1,6 +1,7 @@
 import logging
 
 import stripe
+from django.db import transaction
 from djstripe import webhooks
 from djstripe.models import Event, Subscription
 
@@ -42,8 +43,10 @@ def session_completed_handler(event: Event, **kwargs):
         sub_id = event.data["object"]["subscription"]
         stripe_sub = stripe.Subscription.retrieve(id=sub_id)
         django_sub = Subscription.sync_from_stripe_data(stripe_sub)
-        user.subscription = django_sub
-        user.save()
+        with transaction.atomic():
+            user.subscription = django_sub
+            user.level = "plus"
+            user.save()
         logger.info(f"Assigned subscription={django_sub} to {user=}")
     except Subscription.DoesNotExist as e:
         logger.error(
