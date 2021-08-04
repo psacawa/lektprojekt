@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
+import { ErrorBoundary } from "@sentry/react";
 import logo from "assets/img/logo192.png";
-import bgImage from "assets/img/sidebar-2.jpg";
 import styles from "assets/jss/styles/layouts/adminStyle";
 import cx from "classnames";
 import Footer from "components/Footer";
@@ -76,7 +76,6 @@ export default function App(
       <Sidebar
         logoText={process.env.REACT_NAME}
         logo={logo}
-        // image={bgImage}
         handleDrawerToggle={handleDrawerToggle}
         open={mobileOpen}
         color={color}
@@ -94,7 +93,15 @@ export default function App(
         <div className={classes.content}>
           <div className={classes.container}>
             <Switch>
-              {getRoutes(routes)}
+              <ErrorBoundary
+                showDialog
+                beforeCapture={(scope) => {
+                  scope.setTag("location", window.location.href);
+                }}
+                fallback={<p>An error occured and has been reported.</p>}
+              >
+                {getRoutes(routes)}
+              </ErrorBoundary>
               <Redirect from="/admin" to="/admin/dashboard" />
             </Switch>
           </div>
