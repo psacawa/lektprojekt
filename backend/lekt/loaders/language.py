@@ -91,7 +91,7 @@ class LanguageParser(object):
     def model_template(lid: str):
         """E.g. en ->  Template("${lid}_core_web_${size}") """
         #  the family of English models uniqely has a different naming scheme
-        if lid == "en":
+        if lid in ["en", "zh"]:
             return Template("${lid}_core_web_${size}")
         else:
             return Template("${lid}_core_news_${size}")

@@ -20,6 +20,7 @@ FORMATTERS = {
 
 LEKTPROJEKT_LOGGED_MODULES = [
     "djstripe",
+    "djstripe.views",
     "django.db.backends",
     "lekt.apps",
     "lekt.decorators",
