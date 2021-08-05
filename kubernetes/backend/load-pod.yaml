@@ -1,0 +1,93 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: load-pod
+  labels:
+    app: lekt
+    component: bastion
+spec:
+  containers:
+    - name: django
+      image: 886185890074.dkr.ecr.us-east-2.amazonaws.com/lekt-backend-image
+      imagePullPolicy: Always
+      env:
+        # core application parameters
+        - name: DJANGO_ENV
+          value: production
+        - name: DJANGO_DOMAIN
+          value: lex.quest
+        - name: DJANGO_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: django-creds
+              key: SecretKey
+        - name: DJANGO_POSTGRES_HOST
+          value: rdb
+        - name: DJANGO_POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-creds
+              key: LektUserPassword
+        - name: DJANGO_REDIS_HOST
+          value: cache
+        # aws services
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: aws-ses-creds
+              key: AwsAccessKeyId
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aws-ses-creds
+              key: AwsSecretAccessKey
+        - name: AWS_SES_CONFIGURATION_SET
+          valueFrom:
+            secretKeyRef:
+              name: aws-ses-creds
+              key: AwsSESConfigurationSet
+        # sentry
+        - name: DJANGO_SENTRY_DSN
+          valueFrom:
+            configMapKeyRef:
+              name: sentry
+              key: DSN
+        - name: DJANGO_SENTRY_TRACE_SAMPLE_RATE
+          valueFrom:
+            configMapKeyRef:
+              name: sentry
+              key: TraceSampleRate
+        # stripe
+        - name: STRIPE_LIVE_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: stripe-creds
+              key: LiveSecretKey
+        - name: STRIPE_TEST_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: stripe-creds
+              key: TestSecretKey
+        - name: DJSTRIPE_WEBHOOK_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: stripe-creds
+              key: WebhookSecret
+      ports:
+        - name: http
+          containerPort: 8000
+      livenessProbe:
+        httpGet:
+          path: /healthz
+          port: 8000
+          httpHeaders:
+            - name: Host
+              value: www.lex.quest
+        initialDelaySeconds: 10
+      volumeMounts:
+        - name: lektprojekt-assets
+          mountPath: /data/lektprojekt-assets
+  volumes:
+    - name: lektprojekt-assets
+      persistentVolumeClaim:
+        claimName: lektprojekt-assets
