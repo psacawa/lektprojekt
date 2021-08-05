@@ -77,22 +77,26 @@ else:
 # SENTRY
 #####################
 import sentry_sdk
+from django.core.checks import Error
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.redis import RedisIntegration
+
+SENTRY_IGNORE_EXCEPTIONS = (
+    [
+        KeyboardInterrupt,
+        Error,
+    ]
+    if DEBUG
+    else [
+        KeyboardInterrupt,
+    ]
+)
 
 
 def before_send(event, hint):
     if "exc_info" in hint:
         exc_type, exc_value, tb = hint["exc_info"]
-        if any(
-            map(
-                lambda e: isinstance(exc_value, e),
-                [
-                    KeyboardInterrupt,
-                    SystemCheckError,
-                ],
-            )
-        ):
+        if any(map(lambda e: isinstance(exc_value, e), SENTRY_IGNORE_EXCEPTIONS)):
             return None
     return event
 
@@ -118,5 +122,5 @@ sentry_sdk.init(
     # something more human-readable.
     # release="myapp@1.0.0",
     environment=DJANGO_SENTRY_ENV,
-    before_send=before_send if DJANGO_SENTRY_ENV != "production" else None,
+    before_send=before_send,
 )
