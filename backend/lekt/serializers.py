@@ -53,7 +53,7 @@ class LanguageVoiceSerializer(LanguageSerializer):
 class FeatureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feature
-        fields = ["id", "name", "value", "description"]
+        fields = ["id", "name", "value", "description", "lang"]
 
 
 class CharDescriptionField(CharField):
@@ -67,7 +67,7 @@ class LexemeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Lexeme
-        fields = ["id", "lemma", "pos"]
+        fields = ["id", "lemma", "pos", "lang"]
 
 
 class WordSerializer(serializers.ModelSerializer):

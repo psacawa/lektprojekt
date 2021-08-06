@@ -4,6 +4,7 @@ import stripe
 from django.db import transaction
 from djstripe import webhooks
 from djstripe.models import Event, Subscription
+from sentry_sdk import capture_exception, capture_message
 
 from main.models import User
 
@@ -49,10 +50,13 @@ def session_completed_handler(event: Event, **kwargs):
             user.save()
         logger.info(f"Assigned subscription={django_sub} to {user=}")
     except Subscription.DoesNotExist as e:
+        capture_exception()
         logger.error(
             f"Subscription for event {session_id} didn't exist after checkout completion"
         )
     except Exception as e:
+        capture_message("Could not complete checkout session")
+        capture_exception()
         session_id = event.data["object"]["id"]
         logger.error(f"Checkout completion for {session_id} failed.")
         raise e
