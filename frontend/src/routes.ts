@@ -22,6 +22,7 @@ import LogoutView from "views/LogoutView";
 import PaymentsView from "views/PaymentsView";
 import PhrasePairDetailView from "views/PhrasePairDetailView";
 import PhrasePairListView from "views/PhrasePairListView";
+import PolicyView from "views/PolicyView";
 import { ListPracticeView, PracticeView } from "views/PracticeView";
 import PricingView from "views/PricingView";
 import ProfileView from "views/ProfileView";
@@ -99,6 +100,12 @@ const baseRoutes: AppRoute[] = [
     exact: false,
     component: PricingView,
     icon: AttachMoney,
+  },
+  {
+    path: "/policies",
+    name: "Policies",
+    exact: false,
+    component: PolicyView,
   },
   {
     path: "/payments/",

@@ -45,6 +45,16 @@ export default function Footer({ fluid, white }: Props) {
                 Pricing
               </Link>
             </ListItem>
+            <ListItem className={classes.inlineBlock}>
+              <Link to="/policies/#tos" className={classes.inlineBlock}>
+                Terms of Service
+              </Link>
+            </ListItem>
+            <ListItem className={classes.inlineBlock}>
+              <Link to="/policies/#privacy" className={classes.inlineBlock}>
+                Privacy Policy
+              </Link>
+            </ListItem>
           </List>
         </div>
         <p className={classes.right}>

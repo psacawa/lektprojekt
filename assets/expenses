@@ -1,0 +1,19 @@
+AWS:
+  - EKS
+  - EC2
+  - RDS
+  - ALB
+  - Elasticache
+  - Cloudfront
+  - SES
+  - SNS
+  - ...?
+CIBC:
+  - business account
+  - USD account
+Stripe:
+  - Base
+  - Checkout
+Fastmail
+  - info@lex.quest
+  - pawel@lex.quest
