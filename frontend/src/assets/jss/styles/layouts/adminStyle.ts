@@ -40,16 +40,10 @@ const appStyle = (theme: Theme) =>
       minHeight: "calc(100vh - 123px)",
     },
     container: { ...containerFluid },
-    map: {
-      marginTop: "70px",
-    },
     mainPanelSidebarMini: {
       [theme.breakpoints.up("md")]: {
         width: `calc(100% - ${drawerMiniWidth}px)`,
       },
-    },
-    mainPanelWithPerfectScrollbar: {
-      overflow: "hidden !important",
     },
   });
 

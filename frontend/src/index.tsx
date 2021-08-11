@@ -7,7 +7,6 @@ import { createBrowserHistory } from "history";
 import { queryClient } from "hooks";
 import { AuthProvider } from "hooks/auth";
 import { SessionProvider } from "hooks/session";
-import React from "react";
 import ReactDOM from "react-dom";
 import { QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";

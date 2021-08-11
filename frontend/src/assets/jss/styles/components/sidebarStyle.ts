@@ -510,8 +510,9 @@ const sidebarStyle = (theme: Theme) =>
       float: "left",
       zIndex: 5,
       marginRight: "11px",
-      borderRadius: "50%",
       marginLeft: "23px",
+      borderRadius: "10%",
+      backgroundColor: "#ccc",
       ...boxShadow,
     },
     photoRTL: {
