@@ -63,8 +63,6 @@ const PhrasePairSearchOptions = ({
     <>
       <LexemeSelect
         language={language}
-        value={lexemes}
-        setValue={setLexemes}
         onChange={(event, newLexemes, reason) => {
           if (newLexemes.length > lexemes.length) {
             let idx = newLexemes.length - 1;
@@ -73,11 +71,11 @@ const PhrasePairSearchOptions = ({
             setPageNumber(0);
           }
         }}
+        setValue={setLexemes}
+        value={lexemes}
       />
       <FeatureSelect
         language={language}
-        value={features}
-        setValue={setFeatures}
         onChange={(event, newFeatures, reason) => {
           if (newFeatures.length > features.length) {
             let idx = newFeatures.length - 1;
@@ -86,6 +84,8 @@ const PhrasePairSearchOptions = ({
             setPageNumber(0);
           }
         }}
+        setValue={setFeatures}
+        value={features}
       />
     </>
   );

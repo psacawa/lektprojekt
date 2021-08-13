@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 import styles from "assets/jss/styles/components/cardIconStyle";
-import classNames from "classnames";
+import clsx from "clsx";
 import React from "react";
 
 const useStyles = makeStyles(styles);
@@ -14,7 +14,7 @@ interface Props {
 export default function CardIcon(props: Props) {
   const classes = useStyles();
   const { className, children, color, ...rest } = props;
-  const cardIconClasses = classNames({
+  const cardIconClasses = clsx({
     [classes.cardIcon]: true,
     [classes[(color + "CardHeader") as keyof typeof classes]]: color,
     [className as string]: className !== undefined,

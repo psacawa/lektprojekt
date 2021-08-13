@@ -1,4 +1,4 @@
-import { Avatar, makeStyles } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import Collapse from "@material-ui/core/Collapse";
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
@@ -8,7 +8,8 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import { Person } from "@material-ui/icons";
 import sidebarStyle from "assets/jss/styles/components/sidebarStyle";
-import cx from "classnames";
+import clsx from "clsx";
+import Avatar from "components/Avatar";
 import { useAuth } from "hooks/auth";
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
@@ -111,44 +112,33 @@ function Sidebar(props: SidebarProps) {
       if ("collapse" in route) {
         let newCollapseState: Record<string, boolean> = {};
         newCollapseState[route["state"]] = routeCollapse[route.state];
-        const navLinkClasses =
-          classes.itemLink +
-          " " +
-          cx({
-            [" " + classes.collapseActive]: getCollapseInitialState(
-              route.views
-            ),
-          });
-        const itemText =
-          classes.itemText +
-          " " +
-          cx({
-            [classes.itemTextMini]: props.miniActive && miniActive,
-          });
-        const collapseItemText =
-          classes.collapseItemText +
-          " " +
-          cx({
-            [classes.collapseItemTextMini]: props.miniActive && miniActive,
-          });
+        const navLinkClasses = clsx(classes.itemLink, {
+          [classes.collapseActive]: getCollapseInitialState(route.views),
+        });
+        const itemText = clsx(classes.itemText, {
+          [classes.itemTextMini]: props.miniActive && miniActive,
+        });
+        const collapseItemText = clsx(classes.collapseItemText, {
+          [classes.collapseItemTextMini]: props.miniActive && miniActive,
+        });
         const itemIcon = classes.itemIcon;
         const caret = classes.caret;
         const collapseItemMini = classes.collapseItemMini;
         return (
           <ListItem
-            key={key}
-            className={cx(
+            className={clsx(
               { [classes.item]: route.icon !== undefined },
               { [classes.collapseItem]: route.icon === undefined }
             )}
+            key={key}
           >
             <NavLink
-              to={"#"}
               className={navLinkClasses}
               onClick={(e) => {
                 e.preventDefault();
                 setRouteCollapse(newCollapseState);
               }}
+              to={"#"}
             >
               {route.icon !== undefined ? (
                 typeof route.icon === "string" ? (
@@ -160,71 +150,58 @@ function Sidebar(props: SidebarProps) {
                 <span className={collapseItemMini}>{route.mini}</span>
               )}
               <ListItemText
-                primary={route.name}
-                secondary={
-                  <b
-                    className={
-                      caret +
-                      " " +
-                      (routeCollapse[route.state] ? classes.caretActive : "")
-                    }
-                  />
-                }
-                disableTypography={true}
-                className={cx(
+                className={clsx(
                   { [itemText]: route.icon !== undefined },
                   { [collapseItemText]: route.icon === undefined }
                 )}
+                disableTypography={true}
+                primary={route.name}
+                secondary={
+                  <b
+                    className={clsx(
+                      caret,
+                      routeCollapse[route.state] && classes.caretActive
+                    )}
+                  />
+                }
               />
             </NavLink>
             <Collapse in={routeCollapse[route.state]} unmountOnExit>
-              <List className={classes.list + " " + classes.collapseList}>
+              <List className={clsx(classes.list, classes.collapseList)}>
                 {createLinks(route.views)}
               </List>
             </Collapse>
           </ListItem>
         );
       }
-      const innerNavLinkClasses =
-        classes.collapseItemLink +
-        " " +
-        cx({
-          [" " + classes[color]]: location.pathname === route.path,
-        });
+      const innerNavLinkClasses = clsx(classes.collapseItemLink, {
+        [classes[color]]: location.pathname === route.path,
+      });
       const collapseItemMini = classes.collapseItemMini;
-      const navLinkClasses =
-        classes.itemLink +
-        " " +
-        cx({
-          [" " + classes[color]]: location.pathname === route.path,
-        });
-      const itemText =
-        classes.itemText +
-        " " +
-        cx({
-          [classes.itemTextMini]: props.miniActive && miniActive,
-        });
-      const collapseItemText =
-        classes.collapseItemText +
-        " " +
-        cx({
-          [classes.collapseItemTextMini]: props.miniActive && miniActive,
-        });
+      const navLinkClasses = clsx(classes.itemLink, {
+        [classes[color]]: location.pathname === route.path,
+      });
+      const itemText = clsx(classes.itemText, {
+        [classes.itemTextMini]: props.miniActive && miniActive,
+      });
+      const collapseItemText = clsx(classes.collapseItemText, {
+        [classes.collapseItemTextMini]: props.miniActive && miniActive,
+      });
       const itemIcon = classes.itemIcon;
       return (
         <ListItem
+          className={clsx({
+            [classes.item]: route.icon !== undefined,
+            [classes.collapseItem]: route.icon === undefined,
+          })}
           key={key}
-          className={cx(
-            { [classes.item]: route.icon !== undefined },
-            { [classes.collapseItem]: route.icon === undefined }
-          )}
         >
           <NavLink
+            className={clsx({
+              [navLinkClasses]: route.icon !== undefined,
+              [innerNavLinkClasses]: route.icon === undefined,
+            })}
             to={route.path}
-            className={cx(
-              { [navLinkClasses]: route.icon !== undefined },
-              { [innerNavLinkClasses]: route.icon === undefined }
-            )}
           >
             {route.icon !== undefined ? (
               typeof route.icon === "string" ? (
@@ -236,54 +213,42 @@ function Sidebar(props: SidebarProps) {
               <span className={collapseItemMini}>{route.mini}</span>
             )}
             <ListItemText
-              primary={route.name}
+              className={clsx({
+                [itemText]: route.icon !== undefined,
+                [collapseItemText]: route.icon === undefined,
+              })}
               disableTypography={true}
-              className={cx(
-                { [itemText]: route.icon !== undefined },
-                { [collapseItemText]: route.icon === undefined }
-              )}
+              primary={route.name}
             />
           </NavLink>
         </ListItem>
       );
     });
   };
-  const itemText =
-    classes.itemText +
-    " " +
-    cx({
-      [classes.itemTextMini]: props.miniActive && miniActive,
-    });
-  const collapseItemText =
-    classes.collapseItemText +
-    " " +
-    cx({
-      [classes.collapseItemTextMini]: props.miniActive && miniActive,
-    });
-  const userWrapperClass =
-    classes.user +
-    " " +
-    cx({
-      [classes.whiteAfter]: bgColor === "white",
-    });
+  const itemText = clsx(classes.itemText, {
+    [classes.itemTextMini]: props.miniActive && miniActive,
+  });
+  const collapseItemText = clsx(classes.collapseItemText, {
+    [classes.collapseItemTextMini]: props.miniActive && miniActive,
+  });
+  const userWrapperClass = clsx(classes.user, {
+    [classes.whiteAfter]: bgColor === "white",
+  });
   const caret = classes.caret;
   const collapseItemMini = classes.collapseItemMini;
-  const photo = classes.photo;
   let userDisplay = user && (
     <div className={userWrapperClass}>
-      <Avatar className={photo} alt="...">
-        <Person />
-      </Avatar>
+      <Avatar />
       <List className={classes.list}>
-        <ListItem className={classes.item + " " + classes.userItem}>
+        <ListItem className={clsx(classes.item, classes.userItem)}>
           <NavLink
+            className={clsx(classes.itemLink, classes.userCollapseButton)}
             to={"#"}
-            className={classes.itemLink + " " + classes.userCollapseButton}
           >
             <ListItemText
-              primary={user.username}
+              className={clsx(itemText, classes.userItemText)}
               disableTypography={true}
-              className={itemText + " " + classes.userItemText}
+              primary={user.username}
             />
           </NavLink>
         </ListItem>
@@ -294,59 +259,48 @@ function Sidebar(props: SidebarProps) {
     <List className={classes.list}>{createLinks(drawerRoutesToDisplay)}</List>
   );
 
-  const logoNormal =
-    classes.logoNormal +
-    " " +
-    cx({
-      [classes.logoNormalSidebarMini]: props.miniActive && miniActive,
-    });
+  const logoNormal = clsx(classes.logoNormal, {
+    [classes.logoNormalSidebarMini]: props.miniActive && miniActive,
+  });
   const logoMini = classes.logoMini;
-  const logoClasses =
-    classes.logo +
-    " " +
-    cx({
-      [classes.whiteAfter]: bgColor === "white",
-    });
+  const logoClasses = clsx(classes.logo, {
+    [classes.whiteAfter]: bgColor === "white",
+  });
   let brand = (
     <div className={logoClasses}>
       {/* TODO 21/03/20 psacawa: change to Link */}
       <a
-        href={`https://${process.env.REACT_WEB_DOMAIN}`}
-        target="_blank"
         className={logoMini}
+        href={`https://${process.env.REACT_WEB_DOMAIN}`}
         rel="noreferrer"
+        target="_blank"
       >
-        <img src={logo} alt="logo" className={classes.img} />
+        <img alt="logo" className={classes.img} src={logo} />
       </a>
       <a
-        href={`https://${process.env.REACT_WEB_DOMAIN}`}
-        target="_blank"
         className={logoNormal}
+        href={`https://${process.env.REACT_WEB_DOMAIN}`}
         rel="noreferrer"
+        target="_blank"
       >
         {logoText}
       </a>
     </div>
   );
-  const drawerPaper =
-    classes.drawerPaper +
-    " " +
-    cx({
-      [classes.drawerPaperMini]: props.miniActive && miniActive,
-    });
-  const sidebarWrapper =
-    classes.sidebarWrapper +
-    " " +
-    cx({
-      [classes.drawerPaperMini]: props.miniActive && miniActive,
-    });
+  const drawerPaper = clsx(classes.drawerPaper, {
+    [classes.drawerPaperMini]: props.miniActive && miniActive,
+  });
+  const sidebarWrapper = clsx(classes.sidebarWrapper, {
+    [classes.drawerPaperMini]: props.miniActive && miniActive,
+  });
   return (
     <div ref={mainPanel}>
-      <Hidden mdUp implementation="css">
+      <Hidden implementation="css" mdUp>
         <Drawer
-          variant="temporary"
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
           anchor="right"
-          open={props.open}
           classes={{
             paper:
               drawerPaper +
@@ -355,49 +309,48 @@ function Sidebar(props: SidebarProps) {
               classes[(bgColor + "Background") as keyof typeof classes],
           }}
           onClose={props.handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
+          open={props.open}
+          variant="temporary"
         >
           {brand}
           <SidebarWrapper
             className={sidebarWrapper}
-            userDisplay={userDisplay}
-            // headerLinks={<AdminNavbarLinks />}
             links={links}
+            // headerLinks={<AdminNavbarLinks />}
+            userDisplay={userDisplay}
           />
           {image !== undefined ? (
             <div
               className={classes.background}
-              style={{ backgroundImage: "url(" + image + ")" }}
+              style={{ backgroundImage: `url(${image})` }}
             />
           ) : null}
         </Drawer>
       </Hidden>
-      <Hidden smDown implementation="css">
+      <Hidden implementation="css" smDown>
         <Drawer
-          onMouseOver={() => setMiniActive(false)}
-          onMouseOut={() => setMiniActive(true)}
           anchor={"left"}
-          variant="permanent"
-          open
           classes={{
             paper:
               drawerPaper +
               " " +
               classes[(bgColor + "Background") as keyof typeof classes],
           }}
+          onMouseOut={() => setMiniActive(true)}
+          onMouseOver={() => setMiniActive(false)}
+          open
+          variant="permanent"
         >
           {brand}
           <SidebarWrapper
             className={sidebarWrapper}
-            userDisplay={userDisplay}
             links={links}
+            userDisplay={userDisplay}
           />
           {image !== undefined ? (
             <div
               className={classes.background}
-              style={{ backgroundImage: "url(" + image + ")" }}
+              style={{ backgroundImage: `url(${image})` }}
             />
           ) : null}
         </Drawer>

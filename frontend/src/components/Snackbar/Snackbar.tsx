@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 // @material-ui/icons
 import Close from "@material-ui/icons/Close";
 import styles from "assets/jss/styles/components/snackbarContentStyle";
-import cx from "classnames";
+import clsx from "clsx";
 import React from "react";
 
 const useStyles = makeStyles(styles);
@@ -24,23 +24,23 @@ export default function Snackbar(props: Props) {
   const classes = useStyles();
   const { message, color = "info", close, icon, place, open } = props;
   let action: React.ReactElement[] = [];
-  const messageClasses = cx({
+  const messageClasses = clsx({
     [classes.iconMessage]: icon !== undefined,
   });
   if (close !== undefined) {
     action = [
       <IconButton
-        className={classes.iconButton}
-        key="close"
         aria-label="Close"
+        className={classes.iconButton}
         color="inherit"
+        key="close"
         onClick={props.handleClose!}
       >
         <Close className={classes.close} />
       </IconButton>,
     ];
   }
-  const iconClasses = cx({
+  const iconClasses = clsx({
     [classes.icon]: classes.icon,
     [classes.infoIcon]: color === "info",
     [classes.successIcon]: color === "success",
@@ -51,11 +51,13 @@ export default function Snackbar(props: Props) {
   });
   return (
     <MuiSnackBar
-      classes={{
-        anchorOriginTopCenter: classes.top20,
-        anchorOriginTopRight: classes.top40,
-        anchorOriginTopLeft: classes.top40,
+      ContentProps={{
+        classes: {
+          root: clsx(classes.root, classes[color]),
+          message: classes.message,
+        },
       }}
+      action={action}
       anchorOrigin={{
         vertical: place?.indexOf("t") === -1 ? "bottom" : "top",
         horizontal:
@@ -65,7 +67,11 @@ export default function Snackbar(props: Props) {
             ? "center"
             : "right",
       }}
-      open={open}
+      classes={{
+        anchorOriginTopCenter: classes.top20,
+        anchorOriginTopRight: classes.top40,
+        anchorOriginTopLeft: classes.top40,
+      }}
       message={
         <div>
           {props.icon !== undefined ? (
@@ -74,13 +80,7 @@ export default function Snackbar(props: Props) {
           <span className={messageClasses}>{message}</span>
         </div>
       }
-      action={action}
-      ContentProps={{
-        classes: {
-          root: classes.root + " " + classes[color],
-          message: classes.message,
-        },
-      }}
+      open={open}
     />
   );
 }

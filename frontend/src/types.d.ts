@@ -122,6 +122,7 @@ export interface AuthData {
 export interface User {
   id: number;
   profile: number;
+  has_profile_image: boolean;
   username: string;
   email: string;
 }

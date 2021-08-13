@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 import styles from "assets/jss/styles/components/cardBodyStyle";
-import classNames from "classnames";
+import clsx from "clsx";
 import React from "react";
 
 const useStyles = makeStyles(styles);
@@ -32,7 +32,7 @@ export default function CardBody(props: Props) {
     calendar,
     ...rest
   } = props;
-  const cardBodyClasses = classNames({
+  const cardBodyClasses = clsx({
     [classes.cardBody]: true,
     [classes.cardBodyBackground]: background,
     [classes.cardBodyPlain]: plain,

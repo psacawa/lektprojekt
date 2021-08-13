@@ -1,5 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 import styles from "assets/jss/styles/components/typographyStyle";
+import clsx from "clsx";
 import React from "react";
 
 const useStyles = makeStyles(styles);
@@ -12,7 +13,7 @@ export default function Danger(props: Props) {
   const classes = useStyles();
   const { children } = props;
   return (
-    <div className={classes.defaultFontStyle + " " + classes.dangerText}>
+    <div className={clsx(classes.defaultFontStyle, classes.dangerText)}>
       {children}
     </div>
   );

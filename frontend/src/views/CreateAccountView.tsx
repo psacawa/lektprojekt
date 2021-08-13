@@ -61,19 +61,19 @@ const SuccessDialog = ({ open }: { open: boolean }) => {
         </DialogContentText>
         <DialogActions>
           <Button
+            color="primary"
             onClick={() => {
               history.push("/login");
             }}
-            color="primary"
           >
             Goto Login Page
           </Button>
           <Button
+            autoFocus
+            color="primary"
             onClick={(event) => {
               history.push("/");
             }}
-            autoFocus
-            color="primary"
           >
             Continue
           </Button>
@@ -104,7 +104,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CreateAccountView = () => {
-  const { user, login } = useAuth();
+  const { user } = useAuth();
   const { createAccount } = useAuth();
   const classes = useStyles();
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
@@ -130,7 +130,6 @@ const CreateAccountView = () => {
                 password1: "",
                 password2: "",
               }}
-              validationSchema={validationSchema}
               onSubmit={async (values, bag) => {
                 bag.setSubmitting(true);
                 await createAccount.mutateAsync(values, {
@@ -143,61 +142,62 @@ const CreateAccountView = () => {
                 });
                 bag.setSubmitting(false);
               }}
+              validationSchema={validationSchema}
             >
               <Form className={classes.form} noValidate>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <Field
-                      component={TextField}
                       autoComplete="username"
-                      name="username"
-                      variant="outlined"
-                      required
+                      autoFocus
+                      component={TextField}
                       fullWidth
                       id="username"
                       label="Username"
-                      autoFocus
+                      name="username"
+                      required
+                      variant="outlined"
                     />
                     <ClientErrorHelper errors={clientErrors.username} />
                   </Grid>
                   <Grid item xs={12}>
                     <Field
+                      autoComplete="email"
                       component={TextField}
-                      variant="outlined"
-                      required
                       fullWidth
                       id="email"
                       label="Email Address"
                       name="email"
-                      autoComplete="email"
+                      required
+                      variant="outlined"
                     />
                     <ClientErrorHelper errors={clientErrors.email} />
                   </Grid>
                   <Grid item xs={12}>
                     <Field
-                      component={TextField}
-                      variant="outlined"
-                      required
-                      fullWidth
-                      name="password1"
-                      label="Password"
-                      type="password"
-                      id="password1"
                       autoComplete="current-password"
+                      component={TextField}
+                      fullWidth
+                      id="password1"
+                      label="Password"
+                      name="password1"
+                      required
+                      type="password"
+                      variant="outlined"
                     />
                     <ClientErrorHelper errors={clientErrors.password1} />
                   </Grid>
                   <Grid item xs={12}>
                     <Field
-                      component={TextField}
-                      variant="outlined"
-                      required
-                      fullWidth
-                      name="password2"
-                      label="Confirm Password"
-                      type="password"
-                      id="password2"
                       autoComplete="current-password"
+                      component={TextField}
+                      fullWidth
+                      id="password2"
+                      label="Confirm Password"
+                      name="password2"
+                      required
+                      type="password"
+                      variant="outlined"
                     />
                     <ClientErrorHelper errors={clientErrors.password2} />
                   </Grid>
@@ -205,10 +205,10 @@ const CreateAccountView = () => {
                   <Grid item xs={12}></Grid>
                 </Grid>
                 <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
                   className={classes.submit}
+                  fullWidth
+                  type="submit"
+                  variant="contained"
                 >
                   Sign Up
                 </Button>

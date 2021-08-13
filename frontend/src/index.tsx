@@ -23,7 +23,7 @@ Sentry.init({
   integrations: [new Integrations.BrowserTracing()],
   tracesSampleRate:
     process.env.NODE_ENV === "development"
-      ? 1.0
+      ? 0.5
       : parseInt(process.env.REACT_SENTRY_SAMPLING_RATE) || 0.2,
   environment: process.env.NODE_ENV,
 });
@@ -42,4 +42,4 @@ ReactDOM.render(
   document.getElementById("root")
 );
 
-reportWebVitals();
+// reportWebVitals();

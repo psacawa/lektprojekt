@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 import styles from "assets/jss/styles/components/cardFooterStyle";
-import classNames from "classnames";
+import clsx from "clsx";
 import React from "react";
 
 const useStyles = makeStyles(styles);
@@ -30,7 +30,7 @@ export default function CardFooter(props: Props) {
     product,
     ...rest
   } = props;
-  const cardFooterClasses = classNames({
+  const cardFooterClasses = clsx({
     [classes.cardFooter]: true,
     [classes.cardFooterPlain]: plain,
     [classes.cardFooterProfile]: profile || testimonial,

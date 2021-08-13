@@ -17,7 +17,6 @@ import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import { useResetPassword } from "hooks/auth";
 import { useState } from "react";
-import { useHistory } from "react-router";
 import * as yup from "yup";
 
 const SuccessDialog = ({
@@ -27,7 +26,6 @@ const SuccessDialog = ({
   open: boolean;
   setOpen: React.Dispatch<boolean>;
 }) => {
-  const history = useHistory();
   return (
     <Dialog open={open}>
       <DialogContent>
@@ -38,11 +36,11 @@ const SuccessDialog = ({
         </DialogContentText>
         <DialogActions>
           <Button
+            autoFocus
+            color="primary"
             onClick={(event) => {
               setOpen(false);
             }}
-            autoFocus
-            color="primary"
           >
             Continue
           </Button>
@@ -106,32 +104,32 @@ const ResetPasswordView = () => {
           initialValues={{
             email: "",
           }}
-          validationSchema={validationSchema}
           onSubmit={async (values, bag) => {
             bag.setSubmitting(true);
             await resetPasswordMutation.mutate(values);
             bag.setSubmitting(false);
           }}
+          validationSchema={validationSchema}
         >
           <Form className={classes.form} noValidate>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <Field
+                  autoComplete="email"
                   component={TextField}
-                  variant="outlined"
-                  required
                   fullWidth
                   id="email"
                   label="Email Address"
                   name="email"
-                  autoComplete="email"
+                  required
+                  variant="outlined"
                 />
               </Grid>
               <Button
-                type="submit"
-                fullWidth
-                variant="contained"
                 className={classes.submit}
+                fullWidth
+                type="submit"
+                variant="contained"
               >
                 Send Password Reset Email
               </Button>

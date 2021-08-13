@@ -2,10 +2,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { ErrorBoundary } from "@sentry/react";
 import logo from "assets/img/logo192.png";
 import styles from "assets/jss/styles/layouts/adminStyle";
-import cx from "classnames";
+import clsx from "clsx";
 import Footer from "components/Footer";
 import { AdminNavbar } from "components/Navbars";
 import Sidebar from "components/Sidebar";
+import { useAuth } from "hooks";
 import React from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import { AppRoute, routes } from "routes";
@@ -17,6 +18,7 @@ export default function App(
   props: any
 ): JSX.Element {
   const { ...rest } = props;
+  const { user } = useAuth();
   // states and functions
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [miniActive, setMiniActive] = React.useState(false);
@@ -26,12 +28,9 @@ export default function App(
   // const [logo, setLogo] = React.useState(require("assets/img/logo-white.svg"));
   // styles
   const classes = useStyles();
-  const mainPanelClasses =
-    classes.mainPanel +
-    " " +
-    cx({
-      [classes.mainPanelSidebarMini]: miniActive,
-    });
+  const mainPanelClasses = clsx(classes.mainPanel, {
+    [classes.mainPanelSidebarMini]: miniActive,
+  });
   // ref for main panel div
   const mainPanel = React.createRef<any>();
   // effect instead of componentDidMount, componentDidUpdate and componentWillUnmount
@@ -54,10 +53,10 @@ export default function App(
       // NOTE 11/03/20 psacawa: here is the attach point for alternate layouts
       return (
         <Route
-          key={key}
-          exact={route.exact}
-          path={route.path}
           component={route.component}
+          exact={route.exact}
+          key={key}
+          path={route.path}
         />
       );
     });
@@ -74,31 +73,34 @@ export default function App(
   return (
     <div className={classes.wrapper}>
       <Sidebar
-        logoText={process.env.REACT_NAME}
-        logo={logo}
-        handleDrawerToggle={handleDrawerToggle}
-        open={mobileOpen}
-        color={color}
         bgColor={bgColor}
+        color={color}
+        handleDrawerToggle={handleDrawerToggle}
+        logo={logo}
+        logoText={process.env.REACT_NAME}
         miniActive={miniActive}
+        open={mobileOpen}
         {...rest}
       />
       <div className={mainPanelClasses} ref={mainPanel}>
         <AdminNavbar
-          sidebarMinimize={sidebarMinimize.bind(this)}
-          miniActive={miniActive}
           handleDrawerToggle={handleDrawerToggle}
+          miniActive={miniActive}
+          sidebarMinimize={sidebarMinimize.bind(this)}
           {...rest}
         />
         <div className={classes.content}>
           <div className={classes.container}>
             <Switch>
               <ErrorBoundary
-                showDialog
                 beforeCapture={(scope) => {
                   scope.setTag("location", window.location.href);
                 }}
+                dialogOptions={{
+                  user: user ? { name: user.username, email: user.email } : {},
+                }}
                 fallback={<p>An error occured and has been reported.</p>}
+                showDialog
               >
                 {getRoutes(routes)}
               </ErrorBoundary>

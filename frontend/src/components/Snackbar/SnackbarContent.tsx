@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 // @material-ui/icons
 import Close from "@material-ui/icons/Close";
 import styles from "assets/jss/styles/components/snackbarContentStyle";
-import cx from "classnames";
+import clsx from "clsx";
 import React from "react";
 
 const useStyles = makeStyles(styles);
@@ -20,22 +20,22 @@ export default function SnackbarContent(props: Props) {
   const classes = useStyles();
   const { message, color = "info", close, icon } = props;
   let action: React.ReactElement[] = [];
-  const messageClasses = cx({
+  const messageClasses = clsx({
     [classes.iconMessage]: icon !== undefined,
   });
   if (close !== undefined) {
     action = [
       <IconButton
-        className={classes.iconButton}
-        key="close"
         aria-label="Close"
+        className={classes.iconButton}
         color="inherit"
+        key="close"
       >
         <Close className={classes.close} />
       </IconButton>,
     ];
   }
-  const iconClasses = cx({
+  const iconClasses = clsx({
     [classes.icon]: classes.icon,
     [classes.infoIcon]: color === "info",
     [classes.successIcon]: color === "success",
@@ -46,6 +46,11 @@ export default function SnackbarContent(props: Props) {
   });
   return (
     <Snack
+      action={action}
+      classes={{
+        root: clsx(classes.root, classes[color]),
+        message: classes.message,
+      }}
       message={
         <div>
           {props.icon !== undefined ? (
@@ -54,11 +59,6 @@ export default function SnackbarContent(props: Props) {
           <span className={messageClasses}>{message}</span>
         </div>
       }
-      classes={{
-        root: classes.root + " " + classes[color],
-        message: classes.message,
-      }}
-      action={action}
     />
   );
 }

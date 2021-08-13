@@ -7,6 +7,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from "@material-ui/core";
 import { Card, CardContent } from "@material-ui/core";
 import cardBodyStyles from "assets/jss/styles/components/cardBodyStyle";
@@ -21,7 +22,7 @@ import {
 import { find, includes } from "lodash";
 import _ from "lodash";
 import React from "react";
-import { Redirect, useHistory } from "react-router";
+import { Redirect } from "react-router";
 import { Language } from "types";
 
 const useStyles = makeStyles({
@@ -37,6 +38,9 @@ const useStyles = makeStyles({
   flagIcon: {
     padding: "20%",
   },
+  cta: {
+    margin: "20px",
+  },
   list: {
     listStyleType: "none",
   },
@@ -46,24 +50,13 @@ const Home = () => {
   const classes = useStyles();
   return (
     <div className={classes.center}>
-      <h3>
+      <Typography variant="h2">
         Welcome to <b>{process.env.REACT_NAME}</b>
-      </h3>
-      <p>which aims to let you practice your</p>
-      <ul className={classes.list}>
-        <li>
-          <b>vocabulary</b>
-        </li>
-        <li>
-          <b>grammar</b>
-        </li>
-        <li>
-          <b>idioms</b> (to be added)
-        </li>
-      </ul>
-      ...in the context of actual phrases in the language of your choice
+      </Typography>
+      <Typography className={classes.cta} variant="h4">
+        Start your language-learning journey!
+      </Typography>
       <LanguagePairSelectWidget />
-      <PhrasePairCountsTable />
     </div>
   );
 };
@@ -87,7 +80,6 @@ const addDefaultLocaleCode = (language: Language) => {
 // Step is stored in selectionStep
 const LanguagePairSelectWidget = () => {
   const classes = useStyles();
-  const history = useHistory();
   const languageQuery = useLanguages();
   const supportedLanguagePairQuery = useSupportedLanguagePairs();
   const [selectionStep, setSelectionStep] = React.useState<
@@ -123,21 +115,19 @@ const LanguagePairSelectWidget = () => {
   return (
     <>
       {!languageOptions || !languageQuery.data ? (
-        <>
-          <CircularProgress />
-        </>
+        <CircularProgress />
       ) : selectionStep === "target" ? (
         <>
           <h4>I'm learning...</h4>
           <GridContainer
-            justifyContent="space-around"
             className={classes.container}
+            justifyContent="space-around"
           >
             {languageOptions.map((lang, idx) => (
-              <GridItem key={idx} xs={6} sm={4} md={3}>
+              <GridItem key={idx} md={3} sm={4} xs={6}>
                 <Card
-                  key={idx}
                   className={`${classes.card} ${classes.center}`}
+                  key={idx}
                   onClick={(event: React.MouseEvent) => {
                     setTargetLanguage(lang);
                     setSelectionStep("base");
@@ -147,9 +137,10 @@ const LanguagePairSelectWidget = () => {
                     {lang.name}
                   </CardContent>
                   <input
+                    alt={lang.flagCode}
                     className={classes.cardBody}
-                    type="image"
                     src={`/flags/${lang.flagCode}.png`}
+                    type="image"
                   />
                 </Card>
               </GridItem>
@@ -160,11 +151,11 @@ const LanguagePairSelectWidget = () => {
         <>
           <h4>I speak...</h4>
           <GridContainer
-            justifyContent="space-around"
             className={classes.container}
+            justifyContent="space-around"
           >
             {languageOptions.map((lang, idx) => (
-              <GridItem key={idx} xs={6} sm={4} md={3}>
+              <GridItem key={idx} md={3} sm={4} xs={6}>
                 <Card
                   className={`${classes.card} ${classes.center}`}
                   onClick={async (event: React.MouseEvent) => {
@@ -181,9 +172,10 @@ const LanguagePairSelectWidget = () => {
                     {lang.name}
                   </CardContent>
                   <input
+                    alt={lang.flagCode}
                     className={classes.cardBody}
-                    type="image"
                     src={`/flags/${lang.flagCode}.png`}
+                    type="image"
                   />
                 </Card>
               </GridItem>
@@ -191,14 +183,13 @@ const LanguagePairSelectWidget = () => {
           </GridContainer>
         </>
       ) : (
-        <>
-          <Redirect to="profile/" />
-        </>
+        <Redirect to="courses/" />
       )}
     </>
   );
 };
 
+// eslint-disable-next-line  @typescript-eslint/no-unused-vars
 const PhrasePairCountsTable = () => {
   const classes = useStyles();
   const pairCountsQuery = usePairCounts();

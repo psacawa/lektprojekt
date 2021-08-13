@@ -51,21 +51,17 @@ const FeatureSelect = ({ language, value, setValue, onChange }: Props) => {
   );
 
   return (
-    <Grid item xs={12} md={6}>
+    <Grid item md={6} xs={12}>
       <Autocomplete
-        multiple
-        renderTags={() => null}
-        value={value}
         getOptionLabel={(option) => option.description}
-        options={featureQuery.data ?? []}
         loading={featureQuery.isFetching}
-        onInputChange={handleInputChange}
+        multiple
         onChange={onChange}
+        onInputChange={handleInputChange}
+        options={featureQuery.data ?? []}
         renderInput={(params) => (
           <TextField
             {...params}
-            label="Select grammatical features"
-            variant="standard"
             InputProps={{
               ...params.InputProps,
               endAdornment: (
@@ -77,6 +73,8 @@ const FeatureSelect = ({ language, value, setValue, onChange }: Props) => {
                 </>
               ),
             }}
+            label="Select grammatical features"
+            variant="standard"
           />
         )}
         renderOption={(option) => (
@@ -86,12 +84,14 @@ const FeatureSelect = ({ language, value, setValue, onChange }: Props) => {
             </Grid>
           </Grid>
         )}
+        renderTags={() => null}
+        value={value}
       />
       <List dense>
         {value.map((feature, idx) => (
           <ListItem
-            key={idx}
             className={classes.listItem}
+            key={idx}
             style={{ backgroundColor: feature.colour! }}
           >
             <ListItemText>

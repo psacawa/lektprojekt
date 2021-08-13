@@ -1,5 +1,4 @@
 import {
-  Box,
   CircularProgress,
   Collapse,
   Grid,
@@ -50,7 +49,7 @@ const PhrasePairTableRow = ({ phrasePair, colourMap }: RowProps) => {
       <TableRow className={classes.root} hover={true}>
         <TableCell key={0}>{phrasePair.base.text}</TableCell>
         <TableCell key={1}>
-          <HighlightedPhrase phrase={phrasePair.target} colourMap={colourMap} />
+          <HighlightedPhrase colourMap={colourMap} phrase={phrasePair.target} />
         </TableCell>
         <TableCell key={2}>
           <IconButton onClick={() => setOpen(!open)}>
@@ -61,9 +60,7 @@ const PhrasePairTableRow = ({ phrasePair, colourMap }: RowProps) => {
       <TableRow>
         <TableCell colSpan={12}>
           <Collapse in={open} timeout="auto" unmountOnExit={true}>
-            <Box>
-              <PhrasePairDetailTable id={phrasePair.id} />
-            </Box>
+            <PhrasePairDetailTable id={phrasePair.id} />
           </Collapse>
         </TableCell>
       </TableRow>
@@ -124,10 +121,10 @@ const PhrasePairTable = ({
             <Table size="small">
               <TableHead>
                 <TableRow>
-                  <TableCell key={0} align="left">
+                  <TableCell align="left" key={0}>
                     {baseLanguage?.name}
                   </TableCell>
-                  <TableCell key={1} align="left">
+                  <TableCell align="left" key={1}>
                     {targetLanguage?.name}
                   </TableCell>
                 </TableRow>
@@ -135,8 +132,8 @@ const PhrasePairTable = ({
               <TableBody>
                 {data?.results.map((phrasePair, idx) => (
                   <PhrasePairTableRow
-                    key={idx}
                     colourMap={colourMap}
+                    key={idx}
                     phrasePair={phrasePair}
                   />
                 ))}
@@ -144,13 +141,13 @@ const PhrasePairTable = ({
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPage={rowsPerPage}
-            rowsPerPageOptions={[10, 20, 30, 40, 50]}
             component="div"
             count={data!.count}
-            page={pageNumber}
             onPageChange={onPageChange}
             onRowsPerPageChange={onRowsPerPageChange}
+            page={pageNumber}
+            rowsPerPage={rowsPerPage}
+            rowsPerPageOptions={[10, 20, 30, 40, 50]}
           />
         </>
       ) : isFetching ? (

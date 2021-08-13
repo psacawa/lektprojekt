@@ -80,7 +80,6 @@ const TrackedListHeader = ({ list, language }: HeaderProps) => {
       ) : (
         <Formik
           initialValues={{ name: "" }}
-          validationSchema={headerSchema}
           onSubmit={async (values, bag) => {
             bag.setSubmitting(true);
             await updateList.mutateAsync({ id: list.id, name: values.name });
@@ -89,18 +88,19 @@ const TrackedListHeader = ({ list, language }: HeaderProps) => {
             setEditingTitle(false);
             bag.setSubmitting(false);
           }}
+          validationSchema={headerSchema}
         >
           <Form>
             <Field
               component={FormikTextField}
-              name="name"
               label="New Training Plan Name"
+              name="name"
             />
           </Form>
         </Formik>
       )}
       {language && <Typography variant="subtitle1">{language.name}</Typography>}
-      <MuiLink to="/profile/" component={Link}>
+      <MuiLink component={Link} to="/profile/">
         back
       </MuiLink>
     </>
@@ -203,33 +203,30 @@ const TrackedListView = ({ list }: Props) => {
       {listQuery.isSuccess && languagesQuery.isSuccess ? (
         <>
           <TrackedListHeader
-            list={listQuery.data}
             language={languagesQuery.data.find(
               (lang) => lang.id === listQuery.data.course.target_lang
             )}
+            list={listQuery.data}
           />
         </>
       ) : (
         <CircularProgress />
       )}
       {trackedLexemeQuery.isSuccess ? (
-        <Grid item className={classes.listContainer}>
+        <Grid className={classes.listContainer} item>
           <Autocomplete
-            renderTags={() => null}
             getOptionLabel={(option) => option.lemma}
-            options={lexemeOptions}
             loading={lexemeSearchQuery.isFetching}
-            onInputChange={debounce((event, newValue) => {
-              setLexemeInputValue(newValue);
-            }, 300)}
             onChange={(event, newValue, reason) => {
               newValue && setLexemeValue(newValue);
             }}
+            onInputChange={debounce((event, newValue) => {
+              setLexemeInputValue(newValue);
+            }, 300)}
+            options={lexemeOptions}
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Add a word to track"
-                variant="standard"
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (
@@ -241,6 +238,8 @@ const TrackedListView = ({ list }: Props) => {
                     </>
                   ),
                 }}
+                label="Add a word to track"
+                variant="standard"
               />
             )}
             renderOption={(option) => (
@@ -253,6 +252,7 @@ const TrackedListView = ({ list }: Props) => {
                 </Grid>
               </Grid>
             )}
+            renderTags={() => null}
           />
           {lexemeValue && (
             <Card className={classes.card}>
@@ -318,16 +318,14 @@ const TrackedListView = ({ list }: Props) => {
         <Grid className={classes.listContainer} item>
           <Autocomplete
             getOptionLabel={(option) => option.description}
-            options={featureOptions}
             loading={featureSearchQuery.isFetching}
             onChange={(event, newValue, reason) => {
               newValue && setFeatureValue(newValue);
             }}
+            options={featureOptions}
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Add a grammatical feature to track"
-                variant="standard"
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (
@@ -339,6 +337,8 @@ const TrackedListView = ({ list }: Props) => {
                     </>
                   ),
                 }}
+                label="Add a grammatical feature to track"
+                variant="standard"
               />
             )}
             renderOption={(option) => (
@@ -408,10 +408,10 @@ const TrackedListView = ({ list }: Props) => {
         <CircularProgress />
       )}
       <Button
-        variant="contained"
         onClick={(event: React.MouseEvent) =>
           history.push(`/lists/${id}/practice/`)
         }
+        variant="contained"
       >
         Practice
       </Button>

@@ -6,7 +6,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import { makeStyles } from "@material-ui/core/styles";
 import styles from "assets/jss/styles/components/customInputStyle";
 // nodejs library that concatenates classes
-import classNames from "classnames";
+import clsx from "clsx";
 // nodejs library to set properties for components
 
 const useStyles = makeStyles(styles as any);
@@ -39,33 +39,30 @@ export default function CustomInput(props: Props) {
     helperText,
   } = props;
 
-  const labelClasses = classNames({
-    [" " + classes.labelRootError]: error,
-    [" " + classes.labelRootSuccess]: success && !error,
+  const labelClasses = clsx({
+    [classes.labelRootError]: error,
+    [classes.labelRootSuccess]: success && !error,
   });
-  const underlineClasses = classNames({
+  const underlineClasses = clsx({
     [classes.underlineError]: error,
     [classes.underlineSuccess]: success && !error,
     [classes.underline]: true,
     [classes.whiteUnderline]: white,
   });
-  // const marginTop = classNames({
+  // const marginTop = clsx({
   //   [inputRootCustomClasses]: inputRootCustomClasses !== undefined,
   // });
-  const inputClasses = classNames({
+  const inputClasses = clsx({
     [classes.input]: true,
     [classes.whiteInput]: white,
   });
   let formControlClasses;
   if (formControlProps !== undefined) {
-    formControlClasses = classNames(
-      formControlProps.className,
-      classes.formControl
-    );
+    formControlClasses = clsx(formControlProps.className, classes.formControl);
   } else {
     formControlClasses = classes.formControl;
   }
-  let helpTextClasses = classNames({
+  let helpTextClasses = clsx({
     [classes.labelRootError]: error,
     [classes.labelRootSuccess]: success && !error,
   });
@@ -79,7 +76,7 @@ export default function CustomInput(props: Props) {
     <FormControl {...formControlProps} className={formControlClasses}>
       {labelText !== undefined ? (
         <InputLabel
-          className={classes.labelRoot + " " + labelClasses}
+          className={clsx(classes.labelRoot, labelClasses)}
           htmlFor={id}
           {...labelProps}
         >
@@ -98,7 +95,7 @@ export default function CustomInput(props: Props) {
         inputProps={newInputProps}
       />
       {helperText !== undefined ? (
-        <FormHelperText id={id + "-text"} className={helpTextClasses}>
+        <FormHelperText className={helpTextClasses} id={id + "-text"}>
           {helperText}
         </FormHelperText>
       ) : null}

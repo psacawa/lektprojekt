@@ -10,10 +10,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import StarIcon from "@material-ui/icons/StarBorder";
 import { useAuth, useCreateCheckoutSession, usePrices } from "hooks";
-import { useHistory } from "react-router";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 
-import { origin } from "../constants";
 import { FreePrice, Price } from "../types";
 
 const useStyles = makeStyles((theme) => ({
@@ -92,19 +90,19 @@ const PricingView = () => {
   const showDaily = params.has("gyp");
   return (
     <>
-      <Container maxWidth="sm" component="main" className={classes.heroContent}>
+      <Container className={classes.heroContent} component="main" maxWidth="sm">
         <Typography
-          component="h1"
-          variant="h2"
           align="center"
           color="textPrimary"
+          component="h1"
           gutterBottom
+          variant="h2"
         >
           Pricing
         </Typography>
       </Container>
-      <Container maxWidth="md" component="main">
-        <Grid container spacing={5} alignItems="flex-end">
+      <Container component="main" maxWidth="md">
+        <Grid alignItems="flex-end" container spacing={5}>
           {pricesQuery.data ? (
             <>
               {[
@@ -114,42 +112,42 @@ const PricingView = () => {
                 ),
               ].map((price, idx) => (
                 // Enterprise card is full width at sm breakpoint
-                <Grid item key={idx} xs={12} sm={6} md={4}>
+                <Grid item key={idx} md={4} sm={6} xs={12}>
                   <Card>
                     <CardHeader
-                      title={price.product.name}
-                      titleTypographyProps={{ align: "center" }}
                       action={
                         price.product.name === "Pro" ? <StarIcon /> : null
                       }
                       className={classes.cardHeader}
+                      title={price.product.name}
+                      titleTypographyProps={{ align: "center" }}
                     />
                     <CardContent>
                       <div className={classes.cardPricing}>
                         <Typography
+                          color="textPrimary"
                           component="h2"
                           variant="h4"
-                          color="textPrimary"
                         >
                           {isFreePrice(price)
                             ? "Free!"
-                            : `\$${price.unit_amount / 100}/${
+                            : `$${price.unit_amount / 100}/${
                                 price.recurring.interval
                               }`}
                         </Typography>
                         <Typography
-                          variant="h6"
                           color="textSecondary"
+                          variant="h6"
                         ></Typography>
                       </div>
                       <ul>
                         {(isFreePrice(price) ? freeFeatures : paidFeatures).map(
                           (line, idx) => (
                             <Typography
-                              component="li"
-                              variant="subtitle1"
                               align="center"
+                              component="li"
                               key={idx}
+                              variant="subtitle1"
                             >
                               {line}
                             </Typography>
@@ -159,23 +157,23 @@ const PricingView = () => {
                     </CardContent>
                     <CardActions>
                       {isFreePrice(price) ? (
-                        <Button fullWidth component={RouterLink} to="/practice">
+                        <Button component={RouterLink} fullWidth to="/practice">
                           Go!
                         </Button>
                       ) : !auth.user ? (
-                        <Button fullWidth component={RouterLink} to="/login">
+                        <Button component={RouterLink} fullWidth to="/login">
                           Login
                         </Button>
                       ) : (
                         <Button
-                          fullWidth
-                          type="submit"
                           color="primary"
+                          fullWidth
                           onClick={(_: React.MouseEvent<{}>) => {
                             createCheckoutSession.mutate({
                               price_id: price.id,
                             });
                           }}
+                          type="submit"
                         >
                           Order Now!
                         </Button>

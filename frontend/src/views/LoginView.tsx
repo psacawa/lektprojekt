@@ -69,7 +69,6 @@ const LoginView = () => {
                 email: "",
                 password: "",
               }}
-              validationSchema={validationSchema}
               onSubmit={async (values, bag) => {
                 bag.setSubmitting(true);
                 await login.mutateAsync(values, {
@@ -82,32 +81,33 @@ const LoginView = () => {
                   },
                 });
               }}
+              validationSchema={validationSchema}
             >
               <Form>
                 <Field
+                  autoComplete="email"
+                  autoFocus
                   component={TextField}
-                  variant="outlined"
-                  margin="normal"
-                  required
                   fullWidth
                   id="email"
                   label="Email Address"
+                  margin="normal"
                   name="email"
-                  autoComplete="email"
-                  autoFocus
+                  required
+                  variant="outlined"
                 />
                 <ClientErrorHelper errors={clientErrors.email} />
                 <Field
-                  component={TextField}
-                  variant="outlined"
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
                   autoComplete="current-password"
+                  component={TextField}
+                  fullWidth
+                  id="password"
+                  label="Password"
+                  margin="normal"
+                  name="password"
+                  required
+                  type="password"
+                  variant="outlined"
                 />
                 <ClientErrorHelper errors={clientErrors.password} />
                 {/*
@@ -120,10 +120,10 @@ const LoginView = () => {
                  */}
                 <ClientErrorHelper errors={clientErrors.non_field_errors} />
                 <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
                   className={classes.submit}
+                  fullWidth
+                  type="submit"
+                  variant="contained"
                 >
                   Sign In
                 </Button>

@@ -109,35 +109,6 @@ const adminNavbarLinksStyle = (theme: Theme) =>
         marginRight: "8px",
       },
     },
-    wrapperRTL: {
-      [theme.breakpoints.up("md")]: {
-        paddingLeft: "16px",
-      },
-    },
-    buttonLinkRTL: {
-      [theme.breakpoints.down("sm")]: {
-        alignItems: "center",
-        justifyContent: "flex-end",
-        width: "-webkit-fill-available",
-        margin: "10px 15px 0",
-        padding: "10px 15px",
-        display: "block",
-        position: "relative",
-      },
-    },
-    labelRTL: {
-      [theme.breakpoints.down("sm")]: {
-        flexDirection: "row-reverse",
-        justifyContent: "initial",
-        display: "flex",
-      },
-    },
-    linksRTL: {
-      [theme.breakpoints.down("sm")]: {
-        marginRight: "-5px !important",
-        marginLeft: "16px !important",
-      },
-    },
     managerClasses: {
       [theme.breakpoints.up("md")]: {
         display: "inline-block",

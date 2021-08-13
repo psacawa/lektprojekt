@@ -21,16 +21,6 @@ import {
 
 const sidebarStyle = (theme: Theme) =>
   createStyles({
-    drawerPaperRTL: {
-      [theme.breakpoints.up("md")]: {
-        left: "auto !important",
-        right: "0 !important",
-      },
-      [theme.breakpoints.down("sm")]: {
-        left: "0  !important",
-        right: "auto !important",
-      },
-    },
     drawerPaper: {
       border: "none",
       position: "fixed",
@@ -137,11 +127,6 @@ const sidebarStyle = (theme: Theme) =>
       marginTop: "7px",
       color: "inherit",
     },
-    logoMiniRTL: {
-      float: "right",
-      marginRight: "30px",
-      marginLeft: "26px",
-    },
     logoNormal: {
       ...defaultFont,
       transition: "all 300ms linear",
@@ -159,15 +144,9 @@ const sidebarStyle = (theme: Theme) =>
         color: "inherit",
       },
     },
-    logoNormalRTL: {
-      textAlign: "right",
-    },
     logoNormalSidebarMini: {
       opacity: "0",
       transform: "translate3d(-25px, 0, 0)",
-    },
-    logoNormalSidebarMiniRTL: {
-      transform: "translate3d(25px, 0, 0)",
     },
     img: {
       width: "35px",
@@ -248,11 +227,6 @@ const sidebarStyle = (theme: Theme) =>
       verticalAlign: "middle",
       opacity: "0.8",
     },
-    itemIconRTL: {
-      float: "right",
-      marginLeft: "15px",
-      marginRight: "1px",
-    },
     itemText: {
       color: "inherit",
       ...defaultFont,
@@ -270,10 +244,6 @@ const sidebarStyle = (theme: Theme) =>
     },
     userItemText: {
       lineHeight: "22px",
-    },
-    itemTextRTL: {
-      marginRight: "45px",
-      textAlign: "right",
     },
     itemTextMini: {
       transform: "translate3d(-25px, 0, 0)",

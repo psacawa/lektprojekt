@@ -1,6 +1,7 @@
 import {
   AttachMoney,
   CreateOutlined,
+  Error as MUIError,
   HelpOutline,
   HomeOutlined as MuiHome,
   InsertEmoticon,
@@ -13,6 +14,7 @@ import {
 import TrackedListView from "components/TrackedListView";
 import React from "react";
 import AboutView from "views/AboutView";
+import CoursesView from "views/CoursesView";
 import CreateAccountView from "views/CreateAccountView";
 import HomeView from "views/HomeView";
 import LandingPageView from "views/LandingPageView";
@@ -70,10 +72,10 @@ const baseDrawerRoutes: AppRoute[] = [
     icon: Search,
   },
   {
-    path: "/profile/",
-    name: "Profile",
+    path: "/courses/",
+    name: "My Lists",
     exact: false,
-    component: ProfileView,
+    component: CoursesView,
     icon: PersonOutline,
   },
   {
@@ -147,7 +149,31 @@ const baseRoutes: AppRoute[] = [
   },
 ];
 
+if (process.env.NODE_ENV !== "development") {
+  console.log("adding debug views");
+  console.log(baseRoutes.length);
+  baseRoutes.push({
+    path: "/throw-error",
+    name: "Fubar",
+    exact: true,
+    component: () => {
+      console.log("error");
+      throw new Error("Manually thrown error");
+    },
+
+    icon: MUIError,
+  });
+  console.log(baseRoutes.length);
+}
+
 const loggedInRoutes: AppRoute[] = [
+  {
+    path: "/profile/",
+    name: "Profile",
+    exact: false,
+    component: ProfileView,
+    icon: PersonOutline,
+  },
   {
     path: "/logout/",
     name: "Logout",
@@ -181,10 +207,4 @@ const routes: AppRoute[] = [
   ...loggedOutRoutes,
 ];
 
-export {
-  baseDrawerRoutes,
-  baseRoutes,
-  loggedInRoutes,
-  loggedOutRoutes,
-  routes,
-};
+export { baseDrawerRoutes, loggedInRoutes, loggedOutRoutes, routes };

@@ -2,7 +2,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import styles from "assets/jss/styles/components/customTabsStyle";
-import classNames from "classnames";
+import clsx from "clsx";
 import { Card, CardBody, CardHeader } from "components/Card";
 import React from "react";
 
@@ -32,7 +32,7 @@ interface Props {
 export default function CustomTabs(props: Props) {
   const classes = useStyles();
   const { headerColor, plainTabs, tabs, title } = props;
-  const cardTitle = classNames({
+  const cardTitle = clsx({
     [classes.cardTitle]: true,
   });
   return (
@@ -40,14 +40,14 @@ export default function CustomTabs(props: Props) {
       <CardHeader color={headerColor} plain={plainTabs}>
         {title !== undefined ? <div className={cardTitle}>{title}</div> : null}
         <Tabs
-          value={props.value}
-          onChange={props.changeValue}
           classes={{
             root: classes.tabsRoot,
             indicator: classes.displayNone,
           }}
-          variant="scrollable"
+          onChange={props.changeValue}
           scrollButtons="auto"
+          value={props.value}
+          variant="scrollable"
         >
           {tabs?.map((tab, idx) => {
             let icon = {};

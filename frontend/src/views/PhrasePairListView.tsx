@@ -1,9 +1,4 @@
-import {
-  Grid,
-  makeStyles,
-  TablePagination,
-  Typography,
-} from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import { CircularProgress } from "@material-ui/core";
 import LanguageSelect from "components/LanguageSelect";
 import PhrasePairListTable from "components/PhrasePairListTable";
@@ -57,7 +52,7 @@ const PhrasePairListView = () => {
   ) => setRowsPerPage(parseInt(event.currentTarget.value));
   return (
     <>
-      <Typography variant="h5" style={{ margin: 30 }}>
+      <Typography style={{ margin: 30 }} variant="h5">
         Welcome to{" "}
         <span style={{ color: "blue" }}>Semantically Enhanced Search</span> Mode
       </Typography>
@@ -73,18 +68,18 @@ const PhrasePairListView = () => {
               handleBaseLanguageChange={(ev, newLang) => {
                 setBaseLanguage(newLang);
               }}
-              targetLanguage={targetLanguage}
               handleTargetLanguageChange={(ev, newLang) => {
                 setTargetLanguage(newLang);
               }}
               languageOptions={languageQuery!.data!}
+              targetLanguage={targetLanguage}
             />
             <PhrasePairSearchOptions
-              lexemes={lexemes}
-              setLexemes={setLexemes}
               features={features}
-              setFeatures={setFeatures}
               language={targetLanguage}
+              lexemes={lexemes}
+              setFeatures={setFeatures}
+              setLexemes={setLexemes}
               setPageNumber={setPageNumber}
             />
             <PhrasePairListTable

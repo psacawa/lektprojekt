@@ -100,7 +100,14 @@ Styling
 
 The style is based off of the pro version of the Material UI Dashboard template from
 Creative Time, significantly modified so that it would work well with Typescript. Styles
-and images are contained in `assets`
+and images are contained in `assets`. Jest do bani!
+
+In ``App.tsx`` and ``adminStyle.ts`` we have the important classes for the overall layout:
+
+- **wrapper** fixed position at origin
+- **mainPanel** - the whole right side of the layout, including header, footer
+- **content** - the part with the content, has ``maxWidth`` set
+- **container** - ``div``  inseide conent, does something weird with margins
 
 ReactQuery Typescript
 ---------------------
@@ -140,6 +147,7 @@ ReactQuery Typescript
   - `TContent`
 
 **TODO** 03/08/20 psacawa: What depends on what, though?
+
 
 Miscellaneous Notes
 -------------------

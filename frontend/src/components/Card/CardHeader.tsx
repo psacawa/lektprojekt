@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 import styles from "assets/jss/styles/components/cardHeaderStyle";
-import classNames from "classnames";
+import clsx from "clsx";
 import React from "react";
 
 const useStyles = makeStyles(styles);
@@ -32,7 +32,7 @@ export default function CardHeader(props: Props) {
     text,
     ...rest
   } = props;
-  const cardHeaderClasses = classNames({
+  const cardHeaderClasses = clsx({
     [classes.cardHeader]: true,
     [classes[(color + "CardHeader") as keyof typeof classes]]: color,
     [classes.cardHeaderPlain]: plain,

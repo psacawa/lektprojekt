@@ -252,12 +252,12 @@ export const usePair = (
     { staleTime: HOUR, ...options }
   );
 
-export const useUser = (options?: UseQueryOptions<User>) =>
-  useQuery(["user"], () =>
-    axios
-      .get(`${authRoot}auth/user/`)
-      .then((response: AxiosResponse<User>) => response.data)
-  );
+// export const useUser = (options?: UseQueryOptions<User>) =>
+//   useQuery(["user"], () =>
+//     axios
+//       .get(`${authRoot}auth/user/`)
+//       .then((response: AxiosResponse<User>) => response.data)
+//   );
 
 ////////////////////
 // Language Courses

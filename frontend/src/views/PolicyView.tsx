@@ -12,14 +12,14 @@ const PolicyView = () => {
         <Typography id="tos" variant="h4">
           Terms of Service
         </Typography>
-        <Typography variant="body1" className={classes.content}>
+        <Typography className={classes.content} variant="body1">
           Use the service, have fun, don't be abusive.
         </Typography>
         <Typography id="policy" variant="h4">
           Privacy Policy
         </Typography>
 
-        <Typography variant="body1" className={classes.content}>
+        <Typography className={classes.content} variant="body1">
           LexQuest doesn't use your data in any way except for transactional
           emails and billing with Stripe (credit card processor).
         </Typography>

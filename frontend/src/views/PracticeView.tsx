@@ -6,6 +6,7 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
+import { drawerWidth } from "assets/jss/base";
 import { useCourses, useScoreQuestion, useTrainingPlan } from "hooks";
 import { useSession } from "hooks/session";
 import React, { useEffect, useState } from "react";
@@ -25,6 +26,9 @@ const useStyles = makeStyles({
     margin: "10px",
   },
   progress: {},
+  alert: {
+    transform: `translate(${drawerWidth}px, 0px)`,
+  },
 });
 
 const PracticeView = () => {
@@ -34,10 +38,10 @@ const PracticeView = () => {
     <>
       {session.currentTrackedList === undefined ? (
         <SweetAlert
-          title="No language/training plan chosen"
           onConfirm={() => {
-            history.push("/profile/");
+            history.push("/courses/");
           }}
+          title="No language/training plan chosen"
         >
           To start practicing, you need to select a langauge and a list of items
           to practice.
@@ -60,10 +64,10 @@ const PracticePrompt = ({ course, pair }: PromptProps) => {
   const audioUrl = getAudioUrl(course.base_voice, pair.base);
   return (
     <>
-      <audio controls autoPlay src={audioUrl}>
+      <audio autoPlay controls src={audioUrl}>
         Audio element not supported.
       </audio>
-      <Typography variant="h4" className={classes.margin}>
+      <Typography className={classes.margin} variant="h4">
         {pair.base.text}
       </Typography>
     </>
@@ -89,7 +93,7 @@ const PracticeAnswer = ({
     <>
       <Divider />
 
-      <audio controls autoPlay src={audioUrl}>
+      <audio autoPlay controls src={audioUrl}>
         Audio element not supported.
       </audio>
       <Typography className={classes.margin} variant="h4">
@@ -146,7 +150,7 @@ const ListPracticeView = () => {
   useEffect(() => {
     setSession({ currentTrackedList: listId });
     return () => {};
-  }, [listId]);
+  }, [listId, setSession]);
   const [currentPairIdx, setCurrentPairIdx] = useState<number>(0);
   const [questionAnswered, setQuestionAnswered] = useState(false);
   return (
@@ -157,8 +161,8 @@ const ListPracticeView = () => {
             <div className={classes.center}>
               <PracticePrompt
                 course={course}
-                pair={planQuery.data[currentPairIdx]}
                 listId={listId}
+                pair={planQuery.data[currentPairIdx]}
               />
               {!questionAnswered ? (
                 <div className={classes.margin}>
@@ -179,13 +183,13 @@ const ListPracticeView = () => {
               )}
               <LinearProgress
                 className={classes.progress}
-                variant="determinate"
                 value={(currentPairIdx / planQuery.data.length) * 100}
+                variant="determinate"
               />
             </div>
           ) : (
             <div className={`${classes.center} `}>
-              <Typography variant="h4" className={classes.margin}>
+              <Typography className={classes.margin} variant="h4">
                 Good job! You reached the end of the session!
               </Typography>
               <Button

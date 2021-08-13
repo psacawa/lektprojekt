@@ -4,7 +4,7 @@ const ClientErrorHelper = ({ errors }: { errors?: string[] }) => (
   <>
     {errors &&
       errors.map((error, idx) => (
-        <FormHelperText key={idx} error>
+        <FormHelperText error key={idx}>
           {error}
         </FormHelperText>
       ))}

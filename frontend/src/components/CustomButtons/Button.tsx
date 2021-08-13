@@ -3,7 +3,7 @@ import Button, { ButtonProps } from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import styles from "assets/jss/styles/components/buttonStyle";
 // nodejs library that concatenates classes
-import classNames from "classnames";
+import clsx from "clsx";
 // nodejs library to set properties for components
 import React from "react";
 
@@ -61,7 +61,7 @@ const RegularButton = React.forwardRef((props: any, ref) => {
     muiClasses,
     ...rest
   } = props;
-  const btnClasses = classNames({
+  const btnClasses = clsx({
     [classes.button]: true,
     // TODO 16/03/20 psacawa: this essentially addes a key "underfined" in the object
     // need to clean house with this MDR prop js nonsense
@@ -79,9 +79,9 @@ const RegularButton = React.forwardRef((props: any, ref) => {
   return (
     <Button
       {...(rest as any)}
-      ref={ref}
-      classes={muiClasses}
       className={btnClasses}
+      classes={muiClasses}
+      ref={ref}
     >
       {children}
     </Button>

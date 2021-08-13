@@ -5,7 +5,7 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import styles from "assets/jss/styles/components/tableStyle";
-import cx from "classnames";
+import clsx from "clsx";
 
 const useStyles = makeStyles(styles);
 
@@ -53,18 +53,17 @@ export default function CustomTable(props: Props) {
       <Table className={classes.table}>
         {tableHead !== undefined ? (
           <TableHead className={classes[tableHeaderColor]}>
-            <TableRow className={classes.tableRow + " " + classes.tableRowHead}>
+            <TableRow className={clsx(classes.tableRow, classes.tableRowHead)}>
               {tableHead.map((prop, key) => {
-                const tableCellClasses =
-                  classes.tableHeadCell +
-                  " " +
-                  classes.tableCell +
-                  " " +
-                  cx({
+                const tableCellClasses = clsx(
+                  classes.tableHeadCell,
+                  classes.tableCell,
+                  {
                     [customHeadCellClasses[
                       customHeadClassesForCells.indexOf(key)
                     ]]: customHeadClassesForCells.indexOf(key) !== -1,
-                  });
+                  }
+                );
                 return (
                   <TableCell className={tableCellClasses} key={key}>
                     {prop}
@@ -83,7 +82,7 @@ export default function CustomTable(props: Props) {
               rowColored = true;
               row = row.data;
             }
-            const tableRowClasses = cx({
+            const tableRowClasses = clsx({
               [classes.tableRowBody]: true,
               [classes.tableRowHover]: hover,
               [classes[(rowColor + "Row") as keyof typeof classes]]: rowColored,
@@ -91,20 +90,17 @@ export default function CustomTable(props: Props) {
             });
             return (
               <TableRow
-                key={key}
+                className={clsx(classes.tableRow, tableRowClasses)}
                 hover={hover}
-                className={classes.tableRow + " " + tableRowClasses}
+                key={key}
               >
                 {row.map((cell: any, key: number) => {
-                  const tableCellClasses =
-                    classes.tableCell +
-                    " " +
-                    cx({
-                      [classes[colorsColls[coloredColls.indexOf(key)]]]:
-                        coloredColls.indexOf(key) !== -1,
-                      [customCellClasses[customClassesForCells.indexOf(key)]]:
-                        customClassesForCells.indexOf(key) !== -1,
-                    });
+                  const tableCellClasses = clsx(classes.tableCell, {
+                    [classes[colorsColls[coloredColls.indexOf(key)]]]:
+                      coloredColls.indexOf(key) !== -1,
+                    [customCellClasses[customClassesForCells.indexOf(key)]]:
+                      customClassesForCells.indexOf(key) !== -1,
+                  });
                   return (
                     <TableCell className={tableCellClasses} key={key}>
                       {cell}

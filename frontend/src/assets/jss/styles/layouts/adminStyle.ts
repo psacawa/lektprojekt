@@ -12,7 +12,8 @@ const appStyle = (theme: Theme) =>
     wrapper: {
       position: "relative",
       top: "0",
-      height: "100vh",
+      // NOTE 11/08/20 psacawa: causing outer scrollbar
+      // height: "100vh",
       "&:after": {
         display: "table",
         clear: "both",
@@ -37,7 +38,12 @@ const appStyle = (theme: Theme) =>
     content: {
       marginTop: "70px",
       padding: "30px 15px",
-      minHeight: "calc(100vh - 123px)",
+      // NOTE 13/08/20 psacawa: global width of the "main area"
+      maxWidth: "1100px",
+      margin: "auto",
+      // NOTE 11/08/20 psacawa: this was causing double scrollbar, why was it ever here?
+      // minHeight: "calc(100vh - 123px)",
+      minHeight: "calc(100vh - 183px)",
     },
     container: { ...containerFluid },
     mainPanelSidebarMini: {

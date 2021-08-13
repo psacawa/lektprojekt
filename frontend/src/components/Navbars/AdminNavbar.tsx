@@ -6,7 +6,7 @@ import Menu from "@material-ui/icons/Menu";
 import MoreVert from "@material-ui/icons/MoreVert";
 import ViewList from "@material-ui/icons/ViewList";
 import styles from "assets/jss/styles/components/adminNavbarStyle";
-import cx from "classnames";
+import clsx from "clsx";
 import { Button } from "components/CustomButtons";
 import React from "react";
 import { useLocation } from "react-router-dom";
@@ -41,30 +41,30 @@ export default function AdminNavbar(props: Props) {
     }
     return activeRoute;
   };
-  const appBarClasses = cx({
-    [" " + classes[color]]: color,
+  const appBarClasses = clsx({
+    [classes[color]]: color,
   });
   const sidebarMinimize = classes.sidebarMinimize;
   return (
     <AppBar className={classes.appBar + appBarClasses}>
       <Toolbar className={classes.container}>
-        <Hidden smDown implementation="css">
+        <Hidden implementation="css" smDown>
           <div className={sidebarMinimize}>
             {props.miniActive ? (
               <Button
-                justIcon
-                round
                 color="white"
+                justIcon
                 onClick={props.sidebarMinimize}
+                round
               >
                 <ViewList className={classes.sidebarMiniIcon} />
               </Button>
             ) : (
               <Button
-                justIcon
-                round
                 color="white"
+                justIcon
                 onClick={props.sidebarMinimize}
+                round
               >
                 <MoreVert className={classes.sidebarMiniIcon} />
               </Button>
@@ -73,16 +73,16 @@ export default function AdminNavbar(props: Props) {
         </Hidden>
         <div className={classes.flex}>
           {/* Here we create navbar brand, based on route name */}
-          <Button href="#" className={classes.title} color="transparent">
+          <Button className={classes.title} color="transparent" href="#">
             {getActiveRoute(routes)}
           </Button>
         </div>
-        <Hidden mdUp implementation="css">
+        <Hidden implementation="css" mdUp>
           <Button
+            aria-label="open drawer"
             className={classes.appResponsive}
             color="transparent"
             justIcon
-            aria-label="open drawer"
             onClick={props.handleDrawerToggle}
           >
             <Menu />

@@ -19,34 +19,34 @@ const LanguageSelect = ({
 }: Props) => {
   return (
     <>
-      <Grid item xs={12} md={6}>
+      <Grid item md={6} xs={12}>
         <Autocomplete
-          value={baseLanguage}
+          getOptionLabel={(lang) => lang.name}
           onChange={handleBaseLanguageChange}
           options={languageOptions}
-          getOptionLabel={(lang) => lang.name}
           renderInput={(params) => (
             <TextField
               {...params}
-              variant="outlined"
               label="Base Language"
+              variant="outlined"
             ></TextField>
           )}
+          value={baseLanguage}
         />
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid item md={6} xs={12}>
         <Autocomplete
-          value={targetLanguage}
+          getOptionLabel={(lang) => lang.name}
           onChange={handleTargetLanguageChange}
           options={languageOptions}
-          getOptionLabel={(lang) => lang.name}
           renderInput={(params) => (
             <TextField
               {...params}
-              variant="outlined"
               label="Target language"
+              variant="outlined"
             ></TextField>
           )}
+          value={targetLanguage}
         />
       </Grid>
     </>

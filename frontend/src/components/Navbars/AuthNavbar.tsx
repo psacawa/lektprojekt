@@ -15,7 +15,7 @@ import Menu from "@material-ui/icons/Menu";
 import MonetizationOn from "@material-ui/icons/MonetizationOn";
 import PersonAdd from "@material-ui/icons/PersonAdd";
 import styles from "assets/jss/styles/components/authNavbarStyle";
-import cx from "classnames";
+import clsx from "clsx";
 // core components
 import { Button } from "components/CustomButtons";
 import React from "react";
@@ -39,96 +39,96 @@ export default function AuthNavbar(props: Props) {
   };
   const classes = useStyles();
   const { color, brandText } = props;
-  const appBarClasses = cx({
-    [" " + classes[color]]: color,
+  const appBarClasses = clsx({
+    [classes[color]]: color,
   });
   let list = (
     <List className={classes.list}>
       <ListItem className={classes.listItem}>
-        <NavLink to={"/admin/dashboard"} className={classes.navLink}>
+        <NavLink className={classes.navLink} to={"/admin/dashboard"}>
           <Dashboard className={classes.listItemIcon} />
           <ListItemText
-            primary={"Dashboard"}
-            disableTypography={true}
             className={classes.listItemText}
+            disableTypography={true}
+            primary={"Dashboard"}
           />
         </NavLink>
       </ListItem>
       <ListItem className={classes.listItem}>
         <NavLink
-          to={"/auth/pricing-page"}
-          className={cx(classes.navLink, {
+          className={clsx(classes.navLink, {
             [classes.navLinkActive]: activeRoute("/auth/pricing-page"),
           })}
+          to={"/auth/pricing-page"}
         >
           <MonetizationOn className={classes.listItemIcon} />
           <ListItemText
-            primary={"Pricing"}
-            disableTypography={true}
             className={classes.listItemText}
+            disableTypography={true}
+            primary={"Pricing"}
           />
         </NavLink>
       </ListItem>
       <ListItem className={classes.listItem}>
         <NavLink
-          to={"/auth/register-page"}
-          className={cx(classes.navLink, {
+          className={clsx(classes.navLink, {
             [classes.navLinkActive]: activeRoute("/auth/register-page"),
           })}
+          to={"/auth/register-page"}
         >
           <PersonAdd className={classes.listItemIcon} />
           <ListItemText
-            primary={"Register"}
-            disableTypography={true}
             className={classes.listItemText}
+            disableTypography={true}
+            primary={"Register"}
           />
         </NavLink>
       </ListItem>
       <ListItem className={classes.listItem}>
         <NavLink
-          to={"/auth/login-page"}
-          className={cx(classes.navLink, {
+          className={clsx(classes.navLink, {
             [classes.navLinkActive]: activeRoute("/auth/login-page"),
           })}
+          to={"/auth/login-page"}
         >
           <Fingerprint className={classes.listItemIcon} />
           <ListItemText
-            primary={"Login"}
-            disableTypography={true}
             className={classes.listItemText}
+            disableTypography={true}
+            primary={"Login"}
           />
         </NavLink>
       </ListItem>
       <ListItem className={classes.listItem}>
         <NavLink
-          to={"/auth/lock-screen-page"}
-          className={cx(classes.navLink, {
+          className={clsx(classes.navLink, {
             [classes.navLinkActive]: activeRoute("/auth/lock-screen-page"),
           })}
+          to={"/auth/lock-screen-page"}
         >
           <LockOpen className={classes.listItemIcon} />
           <ListItemText
-            primary={"Lock"}
-            disableTypography={true}
             className={classes.listItemText}
+            disableTypography={true}
+            primary={"Lock"}
           />
         </NavLink>
       </ListItem>
     </List>
   );
   return (
-    <AppBar position="static" className={classes.appBar + appBarClasses}>
+    <AppBar className={classes.appBar + appBarClasses} position="static">
       <Toolbar className={classes.container}>
         <Hidden smDown>
           <div className={classes.flex}>
-            <Button href="#" className={classes.title} color="transparent">
+            <Button className={classes.title} color="transparent" href="#">
               {brandText}
             </Button>
           </div>
         </Hidden>
         <Hidden mdUp>
           <div className={classes.flex}>
-            <Button href="#" className={classes.title} color="transparent">
+            <Button className={classes.title} color="transparent" href="#">
               MD Pro React
             </Button>
           </div>
@@ -136,10 +136,10 @@ export default function AuthNavbar(props: Props) {
         <Hidden smDown>{list}</Hidden>
         <Hidden mdUp>
           <Button
+            aria-label="open drawer"
             className={classes.sidebarButton}
             color="transparent"
             justIcon
-            aria-label="open drawer"
             onClick={handleDrawerToggle}
           >
             <Menu />
@@ -148,16 +148,16 @@ export default function AuthNavbar(props: Props) {
         <Hidden mdUp>
           <Hidden mdUp>
             <Drawer
-              variant="temporary"
+              ModalProps={{
+                keepMounted: true, // Better open performance on mobile.
+              }}
               anchor={"right"}
-              open={open}
               classes={{
                 paper: classes.drawerPaper,
               }}
               onClose={handleDrawerToggle}
-              ModalProps={{
-                keepMounted: true, // Better open performance on mobile.
-              }}
+              open={open}
+              variant="temporary"
             >
               {list}
             </Drawer>

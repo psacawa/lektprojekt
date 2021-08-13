@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core/styles";
 import styles from "assets/jss/styles/components/cardStyle";
-import classNames from "classnames";
+import clsx from "clsx";
 import React, { ReactNode } from "react";
 
 const useStyles = makeStyles(styles);
@@ -39,7 +39,7 @@ function Card(props: Props) {
     login,
     ...rest
   } = props;
-  const cardClasses = classNames({
+  const cardClasses = clsx({
     [classes.card]: true,
     [classes.cardPlain]: plain,
     [classes.cardProfile]: profile || testimonial,
