@@ -1,5 +1,3 @@
-"use strict";
-
 const fs = require("fs");
 const path = require("path");
 const webpack = require("webpack");
@@ -27,6 +25,7 @@ const ForkTsCheckerWebpackPlugin = require("react-dev-utils/ForkTsCheckerWebpack
 const typescriptFormatter = require("react-dev-utils/typescriptFormatter");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 
+const { generateModuleString } = require("./utils");
 const postcssNormalize = require("postcss-normalize");
 
 const appPackageJson = require(paths.appPackageJson);
@@ -601,7 +600,14 @@ module.exports = function (webpackEnv) {
       // It is absolutely essential that NODE_ENV is set to production
       // during a production build.
       // Otherwise React will be compiled in the very slow development mode.
-      new webpack.DefinePlugin(env.stringified),
+      new webpack.DefinePlugin({
+        // inject some custom variables
+        __filebasename: webpack.DefinePlugin.runtimeValue(
+          (info) => JSON.stringify(path.parse(info.module.resource).name),
+          false // don't recompute ever
+        ),
+        ...env.stringified,
+      }),
       // This is necessary to emit hot updates (CSS and Fast Refresh):
       isEnvDevelopment && new webpack.HotModuleReplacementPlugin(),
       // Experimental hot reloading for React .

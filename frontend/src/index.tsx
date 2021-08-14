@@ -15,6 +15,9 @@ import { Router } from "react-router-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
+// show all `debug` debuggers in browser console
+localStorage.debug = "*";
+
 const history = createBrowserHistory();
 
 // in development trace everything, in production, read from var, fallback to 0.2

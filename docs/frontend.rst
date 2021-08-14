@@ -154,3 +154,5 @@ Miscellaneous Notes
 
 - Material UI CSS Typescript object does not want to accept ``zIndex`` as an attribute
 
+- A customization  to webpack  build pipeline injects the ``__filebasename`` variable,
+  which resolves at buildtime to the name of the file, and is also the name attached to the ``debug`` loggers in the application, providing a logging experience like that of the backend

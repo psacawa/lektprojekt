@@ -32,6 +32,7 @@
     "case-sensitive-paths-webpack-plugin": "2.4.0",
     "clsx": "^1.1.1",
     "css-loader": "4.3.0",
+    "debug": "^4.3.2",
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
     "eslint-config-react-app": "^6.0.0",
@@ -113,8 +114,7 @@
     ],
     "rules": {
       "simple-import-sort/imports": "warn",
-      "simple-import-sort/exports": "warn",
-      "react/jsx-sort-props": "warn"
+      "simple-import-sort/exports": "warn"
     }
   },
   "browserslist": {
@@ -132,6 +132,7 @@
   "devDependencies": {
     "@types/babel__core": "7.1.15",
     "@types/case-sensitive-paths-webpack-plugin": "2.1.4",
+    "@types/debug": "^4.1.7",
     "@types/eslint": "^7.2.6",
     "@types/file-loader": "5.0.1",
     "@types/fs-extra": "^9.0.5",
