@@ -122,6 +122,7 @@ export interface AuthData {
 export interface User {
   id: number;
   profile: number;
+  level: "basic" | "plus";
   has_profile_image: boolean;
   username: string;
   email: string;
@@ -205,4 +206,8 @@ interface RootState {
   activeCourseId?: number;
   activeTrackedListId?: number;
   practice?: PracticeState;
+}
+
+declare global {
+  let __filebasename: string;
 }

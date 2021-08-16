@@ -1,35 +1,101 @@
-import {
-  createGenerateClassName,
-  Grid,
-  makeStyles,
-  Typography,
-} from "@material-ui/core";
+import { Grid, makeStyles, Typography } from "@material-ui/core";
 import Avatar from "components/Avatar";
+import { Card, CardBody, CardHeader } from "components/Card";
+import { Button } from "components/CustomButtons";
 import { useAuth } from "hooks";
-import { toSvg } from "jdenticon";
-import { Redirect } from "react-router";
+import { Redirect, useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
-  main: {
-    maxWidth: "800px",
+  cardCategoryWhite: {
+    color: "rgba(255,255,255,.62)",
+    margin: "0",
+    fontSize: "14px",
+    marginTop: "0",
+    marginBottom: "0",
+  },
+  cardTitleWhite: {
+    color: "#FFFFFF",
+    marginTop: "0px",
+    minHeight: "auto",
+    fontWeight: 300,
+    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+    marginBottom: "3px",
+    textDecoration: "none",
+  },
+  content: {
+    margin: "auto",
+    padding: "20px",
+  },
+  item: {
+    margin: "20px",
+  },
+  field: {
+    margin: "10px",
+  },
+  faint: {
+    fontWeight: "lighter",
+    marginRight: "5px",
   },
 });
 
 const ProfileView = () => {
   const classes = useStyles();
+  const history = useHistory();
   const { user } = useAuth();
-  if (user === null) {
-    return <Redirect to="/login" />;
+  if (!user) {
+    return <Redirect to="/" />;
   }
   return (
     <>
-      <Grid container justifyContent="center" className={classes.main}>
-        <Grid item xs={12} sm={6} md={4}>
-          <Avatar fullSize />
-        </Grid>
-        <Grid item xs={12} sm>
-          <Typography variant="h3">{user.username}</Typography>
-        </Grid>
+      <Grid container justifyContent="center" wrap="nowrap">
+        <Card>
+          <CardHeader color="primary">
+            <h4 className={classes.cardTitleWhite}>Profile</h4>
+            <p className={classes.cardCategoryWhite}>Complete your profile</p>
+          </CardHeader>
+          <CardBody className={classes.content}>
+            <Grid
+              container
+              justifyContent="center"
+              wrap="nowrap"
+              className={classes.content}
+            >
+              <Grid item className={classes.item} xs={12} sm={6}>
+                <Avatar className="" />
+              </Grid>
+              <Grid item className={classes.item} xs={12} sm={6}>
+                <h3 className={classes.field}>{user.username}</h3>
+                <div>
+                  <Typography className={classes.field} variant="body1">
+                    <span className={classes.faint}>Email:</span> {user.email}
+                  </Typography>
+                  <div>
+                    <Typography className={classes.field} variant="body1">
+                      <span className={classes.faint}>Plan:</span> {user.level}
+                    </Typography>
+                    {user.level === "plus" ? (
+                      <Button
+                        component="a"
+                        // href={`http://${process.env.REACT_API_DOMAIN}/stripe/portal/`}
+                        href={`http://localhost:8000/stripe/portal/`}
+                      >
+                        Manage your subscription with stripe
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={(ev: React.MouseEvent<{}>) => {
+                          history.push("/pricing");
+                        }}
+                      >
+                        Order Now!
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </Grid>
+            </Grid>
+          </CardBody>
+        </Card>
       </Grid>
     </>
   );

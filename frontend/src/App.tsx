@@ -3,6 +3,7 @@ import { ErrorBoundary } from "@sentry/react";
 import logo from "assets/img/logo192.png";
 import styles from "assets/jss/styles/layouts/adminStyle";
 import clsx from "clsx";
+import AuthRedirect from "components/AuthRedirect";
 import Footer from "components/Footer";
 import { AdminNavbar } from "components/Navbars";
 import Sidebar from "components/Sidebar";
@@ -25,7 +26,6 @@ export default function App(
   // const [bgColor, setBgColor] = React.useState("black");
   let bgColor = "black";
   let color = "blue";
-  // const [logo, setLogo] = React.useState(require("assets/img/logo-white.svg"));
   // styles
   const classes = useStyles();
   const mainPanelClasses = clsx(classes.mainPanel, {
@@ -45,6 +45,7 @@ export default function App(
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+  // routing
   const getRoutes: (routes: AppRoute[]) => any = (routes: AppRoute[]) => {
     return routes.map((route, key) => {
       if ("collapse" in route) {
@@ -52,12 +53,25 @@ export default function App(
       }
       // NOTE 11/03/20 psacawa: here is the attach point for alternate layouts
       return (
-        <Route
-          component={route.component}
-          exact={route.exact}
-          key={key}
-          path={route.path}
-        />
+        <React.Fragment key={key}>
+          {route.login === "required" ? (
+            <AuthRedirect key={key}>
+              <Route
+                component={route.component}
+                exact={route.exact}
+                key={key}
+                path={route.path}
+              />
+            </AuthRedirect>
+          ) : (
+            <Route
+              component={route.component}
+              exact={route.exact}
+              key={key}
+              path={route.path}
+            />
+          )}
+        </React.Fragment>
       );
     });
   };
@@ -91,6 +105,7 @@ export default function App(
         />
         <div className={classes.content}>
           <div className={classes.container}>
+            {/* routing */}
             <Switch>
               <ErrorBoundary
                 beforeCapture={(scope) => {
@@ -104,7 +119,6 @@ export default function App(
               >
                 {getRoutes(routes)}
               </ErrorBoundary>
-              <Redirect from="/admin" to="/admin/dashboard" />
             </Switch>
           </div>
         </div>

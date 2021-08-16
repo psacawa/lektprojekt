@@ -38,6 +38,8 @@ interface BaseRoute {
   icon?: React.ComponentType<any>;
   redirect?: boolean;
   mini?: any;
+  inDrawer?: boolean;
+  login?: "required" | "disallowed";
 }
 
 // the following attributes add typing to mdr-pro's collapsible views support
@@ -63,6 +65,7 @@ const baseDrawerRoutes: AppRoute[] = [
     exact: true,
     component: HomeView,
     icon: MuiHome,
+    inDrawer: true,
   },
   {
     path: "/search/",
@@ -70,6 +73,7 @@ const baseDrawerRoutes: AppRoute[] = [
     exact: false,
     component: PhrasePairListView,
     icon: Search,
+    inDrawer: true,
   },
   {
     path: "/courses/",
@@ -77,6 +81,7 @@ const baseDrawerRoutes: AppRoute[] = [
     exact: false,
     component: CoursesView,
     icon: PersonOutline,
+    inDrawer: true,
   },
   {
     path: "/practice/",
@@ -84,6 +89,16 @@ const baseDrawerRoutes: AppRoute[] = [
     exact: false,
     component: PracticeView,
     icon: InsertEmoticon,
+    inDrawer: true,
+  },
+  {
+    path: "/profile/",
+    name: "Profile",
+    exact: false,
+    component: ProfileView,
+    icon: PersonOutline,
+    inDrawer: true,
+    login: "required",
   },
   {
     path: "/about/",
@@ -92,6 +107,35 @@ const baseDrawerRoutes: AppRoute[] = [
     // component: AboutView,
     component: AboutView,
     icon: HelpOutline,
+    inDrawer: true,
+  },
+  {
+    path: "/logout/",
+    name: "Logout",
+    exact: false,
+    component: LogoutView,
+    icon: PanTool,
+    inDrawer: true,
+    login: "required",
+  },
+  // login disallowed
+  {
+    path: "/login/",
+    name: "Login",
+    exact: false,
+    component: LoginView,
+    icon: LockOpen,
+    inDrawer: true,
+    login: "disallowed",
+  },
+  {
+    path: "/create-account/",
+    name: "Register",
+    exact: false,
+    component: CreateAccountView,
+    icon: CreateOutlined,
+    inDrawer: true,
+    login: "disallowed",
   },
 ];
 
@@ -166,45 +210,12 @@ if (process.env.NODE_ENV !== "development") {
   console.log(baseRoutes.length);
 }
 
-const loggedInRoutes: AppRoute[] = [
-  {
-    path: "/profile/",
-    name: "Profile",
-    exact: false,
-    component: ProfileView,
-    icon: PersonOutline,
-  },
-  {
-    path: "/logout/",
-    name: "Logout",
-    exact: false,
-    component: LogoutView,
-    icon: PanTool,
-  },
-];
-
-const loggedOutRoutes: AppRoute[] = [
-  {
-    path: "/login/",
-    name: "Login",
-    exact: false,
-    component: LoginView,
-    icon: LockOpen,
-  },
-  {
-    path: "/create-account/",
-    name: "Register",
-    exact: false,
-    component: CreateAccountView,
-    icon: CreateOutlined,
-  },
-];
-
-const routes: AppRoute[] = [
-  ...baseDrawerRoutes,
-  ...baseRoutes,
-  ...loggedInRoutes,
-  ...loggedOutRoutes,
-];
+const loggedInRoutes: AppRoute[] = baseDrawerRoutes.filter(
+  (route) => route.login === "required"
+);
+const loggedOutRoutes: AppRoute[] = baseDrawerRoutes.filter(
+  (route) => route.login === "disallowed"
+);
+const routes: AppRoute[] = [...baseDrawerRoutes, ...baseRoutes];
 
 export { baseDrawerRoutes, loggedInRoutes, loggedOutRoutes, routes };

@@ -40,6 +40,7 @@ class User(AbstractUser):
         verbose_name="Plan",
         help_text="Stripe Plan (really newer API Price) attached to User",
     )
+    has_profile_image = models.BooleanField(default=False)
 
     def __repr__(self):
         return f"<User user={self.username}>"

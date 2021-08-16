@@ -1,3 +1,4 @@
+# type: ignore
 import logging
 
 import stripe
@@ -5,11 +6,13 @@ from allauth.socialaccount.providers.github.views import GitHubOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from dj_rest_auth.registration.views import SocialLoginView
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.http.request import HttpRequest
+from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from djstripe.models import Price
+from djstripe.models import Customer, Price
 from djstripe.models.checkout import Session
 from rest_framework import mixins, viewsets
 from rest_framework.exceptions import APIException
@@ -98,6 +101,27 @@ class CheckoutSessionViewSet(
     class Meta:
         models = Session
         fields = "__all__"
+
+
+@login_required
+def stripe_portal(request: HttpRequest):
+    user: User = request.user
+    try:
+        customer = Customer.objects.get(subscriptions__user=user)
+    except Customer.MultipleObjectsReturned as e:
+        customer_ids = [
+            cus.id for cus in Customer.objects.filter(subscriptions__user=user)
+        ]
+        logger.error(
+            "User {user} has multiple stripe customer attached to him: {ids}".format(
+                user=user, ids=",".join(customer_ids)
+            )
+        )
+        raise e
+    session = stripe.billing_portal.Session.create(
+        customer=customer.id, return_url=f"https://{settings.WEB_DOMAIN}/profile/"
+    )
+    return redirect(session.url)
 
 
 #  THIRD-PARTY AUTH

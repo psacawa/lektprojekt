@@ -77,12 +77,7 @@ const RegularButton = React.forwardRef((props: any, ref) => {
     [className!]: className,
   });
   return (
-    <Button
-      {...(rest as any)}
-      className={btnClasses}
-      classes={muiClasses}
-      ref={ref}
-    >
+    <Button {...rest} className={btnClasses} classes={muiClasses} ref={ref}>
       {children}
     </Button>
   );

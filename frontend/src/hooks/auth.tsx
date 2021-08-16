@@ -51,6 +51,7 @@ export const AuthProvider = (props: any) => {
       window.localStorage.removeItem("authToken");
     },
     onSuccess: (data) => {
+      console.log(`success: ${data!.username}`);
       setUser(data);
     },
     enabled: hasToken.current,
@@ -72,15 +73,14 @@ export const AuthProvider = (props: any) => {
 
   return (
     <>
+      {/* {!userQuery.isFetching ? ( */}
       {!userQuery.isFetching ? (
         <AuthContext.Provider
           value={{ user, login, logout, createAccount }}
           {...props}
         />
       ) : (
-        <>
-          <CircularProgress />
-        </>
+        <CircularProgress />
       )}
     </>
   );
@@ -141,7 +141,7 @@ const useUser = (options?: UseQueryOptions<User | null>) =>
   useQuery(
     ["user"],
     () => {
-      if (authLoaded()) {
+      if (tokenLoaded()) {
         return axios
           .get(`${authRoot}user/`)
           .then((response: AxiosResponse<User>) => response.data)
@@ -186,6 +186,6 @@ function removeToken() {
   axios.defaults.headers["Authorization"] = undefined;
 }
 
-function authLoaded() {
+function tokenLoaded() {
   return axios.defaults.headers["Authorization"] !== undefined;
 }

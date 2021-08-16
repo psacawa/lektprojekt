@@ -15,6 +15,7 @@ import {
 import { KeyboardArrowDown, KeyboardArrowUp } from "@material-ui/icons";
 import HighlightedPhrase from "components/HighlightedPhrase";
 import PhrasePairDetailTable from "components/PhrasePairDetailTable";
+import debug from "debug";
 import _ from "lodash";
 import React, { useState } from "react";
 import { QueryObserverResult } from "react-query";
@@ -27,6 +28,8 @@ import {
   Paginate,
   PhrasePair,
 } from "../../types";
+
+const logger = debug(__filebasename);
 
 const useRowStyles = makeStyles({
   root: {
@@ -102,6 +105,7 @@ const PhrasePairTable = ({
   rowsPerPage,
   onRowsPerPageChange,
 }: Props) => {
+  logger("hello");
   const classes = useStyles();
   const featureColourMap: Record<number, string | undefined> = _(features)
     .keyBy("id")

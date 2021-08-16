@@ -9,10 +9,13 @@ import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import StarIcon from "@material-ui/icons/StarBorder";
+import debug from "debug";
 import { useAuth, useCreateCheckoutSession, usePrices } from "hooks";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 
 import { FreePrice, Price } from "../types";
+
+const logger = debug(__filebasename);
 
 const useStyles = makeStyles((theme) => ({
   "@global": {

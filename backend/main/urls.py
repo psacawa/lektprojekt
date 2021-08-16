@@ -14,11 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from allauth.account.views import (
-    ConfirmEmailView,
-    EmailVerificationSentView,
-    password_reset_from_key,
-)
+from allauth.account.views import ConfirmEmailView, EmailVerificationSentView
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path, re_path
@@ -26,7 +22,13 @@ from django.views.generic import RedirectView, TemplateView
 from django_ses.views import SESEventWebhookView
 from rest_framework.routers import SimpleRouter
 
-from .views import CheckoutSessionViewSet, GithubLoginView, PriceViewSet, healthz
+from .views import (
+    CheckoutSessionViewSet,
+    GithubLoginView,
+    PriceViewSet,
+    healthz,
+    stripe_portal,
+)
 
 stripe_router = SimpleRouter()
 stripe_router.register("prices", PriceViewSet, basename="prices")
@@ -63,6 +65,7 @@ urlpatterns = [
     ),
     # STRIPE
     path("stripe/", include(stripe_router.urls)),
+    path("stripe/portal/", stripe_portal),
     path("stripe/", include("djstripe.urls", namespace="djstripe")),
     re_path(r"^admin/django-ses/", include("django_ses.urls")),
     # EMAILS

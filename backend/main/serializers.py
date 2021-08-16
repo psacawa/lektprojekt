@@ -32,7 +32,7 @@ class CheckoutSessionSerializer(serializers.ModelSerializer):
 class UserDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["email", "username", "level", "id"]
+        fields = ["email", "username", "level", "id", "has_profile_image"]
 
 
 class PasswordResetSerializer(BasePasswordResetSerializer):

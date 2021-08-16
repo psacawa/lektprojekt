@@ -21,7 +21,7 @@ export default function GridContainer(props: Props) {
   const classes = useStyles();
   const { children, className, ...rest } = props;
   return (
-    <Grid container {...rest} className={clsx(classes.grid, className)}>
+    <Grid container className={clsx(classes.grid, className)} {...rest}>
       {children}
     </Grid>
   );

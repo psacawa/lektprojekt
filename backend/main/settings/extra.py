@@ -34,6 +34,7 @@ RESULTS_CACHE_SIZE = 50
 STRIPE_TEST_SECRET_KEY = environ.get("STRIPE_TEST_SECRET_KEY", "sk_test_fake")
 STRIPE_LIVE_SECRET_KEY = environ.get("STRIPE_LIVE_SECRET_KEY", "sk_live_fake")
 DJSTRIPE_WEBHOOK_SECRET = environ.get("DJSTRIPE_WEBHOOK_SECRET", "whsec_fake")
+#  suggested by djstripe dox for new installations
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = "id"
 DJSTRIPE_USE_NATIVE_JSONFIELD = True
 # just a bit of security by obscurity against replay attacks
@@ -121,7 +122,7 @@ sentry_sdk.init(
     # SHA as release, however you may want to set
     # something more human-readable.
     # release="myapp@1.0.0",
-    debug=DJANGO_SENTRY_ENV != "production",
+    debug=environ.get("DJANGO_SENTRY_DEBUG") is not None,
     environment=DJANGO_SENTRY_ENV,
     before_send=before_send,
 )

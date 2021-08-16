@@ -6,7 +6,6 @@ import Icon from "@material-ui/core/Icon";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import { Person } from "@material-ui/icons";
 import sidebarStyle from "assets/jss/styles/components/sidebarStyle";
 import clsx from "clsx";
 import Avatar from "components/Avatar";
@@ -14,12 +13,7 @@ import { useAuth } from "hooks/auth";
 import React, { useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
-import {
-  AppRoute,
-  baseDrawerRoutes,
-  loggedInRoutes,
-  loggedOutRoutes,
-} from "../../routes";
+import { AppRoute, baseDrawerRoutes } from "../../routes";
 
 interface SidebarWrapperProps {
   className: string;
@@ -60,10 +54,11 @@ function Sidebar(props: SidebarProps) {
   const classes = useStyles();
   const location = useLocation();
   const { user } = useAuth();
-  const drawerRoutesToDisplay = [
-    ...baseDrawerRoutes,
-    ...(!!user ? loggedInRoutes : loggedOutRoutes),
-  ];
+  const drawerRoutesToDisplay = baseDrawerRoutes.filter(
+    (route) =>
+      (!!user && route.login !== "disallowed") ||
+      (!user && route.login !== "required")
+  );
   // this creates the intial state of this component based on the collapse routes
   // that it gets through props.routes
   function getCollapseStates(routes: AppRoute[]): Record<string, boolean> {
@@ -238,7 +233,7 @@ function Sidebar(props: SidebarProps) {
   const collapseItemMini = classes.collapseItemMini;
   let userDisplay = user && (
     <div className={userWrapperClass}>
-      <Avatar />
+      <Avatar className={classes.photo} />
       <List className={classes.list}>
         <ListItem className={clsx(classes.item, classes.userItem)}>
           <NavLink
