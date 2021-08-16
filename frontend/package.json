@@ -158,7 +158,7 @@
     "@types/workbox-webpack-plugin": "5.1.8",
     "@types/yup": "^0.29.11"
   },
-  "peerDependencies": {
+  "optionalDependencies": {
     "node-sass": "^4",
     "@types/node-sass": "^4.11.2"
   },

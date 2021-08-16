@@ -2,8 +2,6 @@ name: build-backend
 
 on:
   push:
-    branches:
-      - master
     paths:
       - backend/**
       - .github/workflows/build-backend.yaml

@@ -2,6 +2,9 @@
 DJANGO_POSTGRES_HOST = environ.get("DJANGO_POSTGRES_HOST", "localhost")
 DJANGO_POSTGRES_PASSWORD = environ.get("DJANGO_POSTGRES_PASSWORD", "django-pass")
 
+#  probably won't be set
+DJANGO_POSTGRES_DATABASE = environ.get("DJANGO_POSTGRES_DATABASE", None)
+
 
 #  controlling the database from an environmental variable enables
 #  DJANGO_ENV=test ./manage.py shell_plus
@@ -9,10 +12,10 @@ DJANGO_POSTGRES_PASSWORD = environ.get("DJANGO_POSTGRES_PASSWORD", "django-pass"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "{}lekt_db".format("test_" if DJANGO_ENV == "test" else ""),
+        "NAME": DJANGO_POSTGRES_DATABASE or "lekt_db",
         # In development mode a database superuser is used
         # who can delete and recrete the database
-        "USER": "lekt_admin" if DJANGO_ENV != "production" else "lekt_user",
+        "USER": "lekt_user",
         "HOST": DJANGO_POSTGRES_HOST,
         "PASSWORD": DJANGO_POSTGRES_PASSWORD,
     }

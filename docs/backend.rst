@@ -113,6 +113,13 @@ spacy 3.1.0.
 
   DJANGO_ENV=test python3 manage.py reset_db --noinput
 
+In case of schema change, you need to regenerate ``assets/test_fixture.json`` for Github
+Acitons test_backend  workflow. You can do this as follows:
+
+.. code-block:: shell
+
+  DJANGO_ENV=test python3 manage.py dumpdata > assets/test_fixture.json
+
 You can request django use the test database(for the purpose of examining it to write new tests) by means of an environmental variable:
 
 .. code-block:: shell
@@ -120,6 +127,8 @@ You can request django use the test database(for the purpose of examining it to 
   DJANGO_ENV=test ./manage.py runserver
   DJANGO_ENV=test ./manage.py shell_plus
 
+Note that django automatically  prefixes test databse with *"test_"*. This behaviour is
+replicated by ``pytest`` with ``pytest-django``.
 
 
 Technologies Used

@@ -36,6 +36,7 @@ client = APIClient()
 def db_smoke_test():
     """Is the database correctly configured for this test suite. As documented in
     backend.rst, it runs on a fixed suite of 200 phrases. Check if these are loaded."""
+    print(settings.DATABASES["default"])
     phrase_count = PhrasePair.objects.count()
     assert (
         phrase_count == 200

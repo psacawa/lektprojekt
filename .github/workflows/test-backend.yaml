@@ -1,28 +1,30 @@
 name: test-backend
 
 on:
-  push:
-    branches:
-      - master
+  pull_request:
     paths:
       - backend/**
-      - .github/workflows/test-backend.yaml
   workflow_dispatch:
 
 jobs:
   test:
     env:
+      DJANGO_POSTGRES_PASSWORD: django-pass
       DJANGO_ENV: test
     services:
       postgres:
         image: postgres:13
         env:
-          POSTGRES_USER: lekt_admin
+          POSTGRES_USER: lekt_user
           POSTGRES_PASSWORD: django-pass
           POSTGRES_DB: test_lekt_db
         ports:
           - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+        options: >-
+          --health-cmd pg_isready 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -36,6 +38,7 @@ jobs:
           key: backend-${{ hashFiles('backend/poetry.lock') }}
       - name: Setup poetry
         uses: abatilo/actions-poetry@v2.1.2
+      - run: du -sh ~/.cache/pip/http
       - name: Install project dependencies
         run: |
           poetry export --without-hashes -o requirements.txt -f requirements.txt
@@ -54,7 +57,11 @@ jobs:
         run: |
           python3 manage.py migrate
           python3 manage.py loaddata assets/test_fixture.json
+        env:
+          # this isn't needed elsewhere on account that pytest-django prepends "test_" anyway
+          DJANGO_POSTGRES_DATABASE: test_lekt_db
         working-directory: backend
       - name: Pytest
-        run: python3 -m pytest .
+        # run: python3 -m pytest --capture=sys .
+        run: python3 -m pytest -k smoke -rA
         working-directory: backend
