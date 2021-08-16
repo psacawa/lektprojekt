@@ -5,7 +5,7 @@ REST_FRAMEWORK = {
         #  precedence on the views it's activated on, and the user will be identified as
         #  an anonymous new account if there is no sessionid cookie accompanying the
         #  Authorization header
-        #  "rest_framework.authentication.TokenAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
         #  this is the same as rest_framework SessionAuthentication, but it does not have
         #  the csrf check. It promotes the django HttpRequest user to the rest_framework
         #  Request user
