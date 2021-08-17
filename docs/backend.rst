@@ -1,4 +1,3 @@
-
 =================================
 LektProjekt Backend 
 =================================
@@ -142,7 +141,6 @@ Technologies Used
    API endpoints via query parameters
 -  **django-allauth** (``allauth``) - alternate auth backend to
    django’s, supporting 3rd party auth, JWT, email confirmation flow
-- **django-ses** (``django_ses``) - AWS SES backend for email services
 -  **dj-restauth** (``dj_rest_auth``) - REST endpoints for the above.
    allauth itself only has html template endpoints
 -  **django-polymorphic** (``polymorphic``) - adds a better manager for
@@ -150,30 +148,62 @@ Technologies Used
    of inheritance polymorphism
 -  **django-rest-polymorphic** (``rest_polymorphic``) - adds serializer
    for polymorphic django models
+- **drf-flex-fields** - (``rest_flex_fields``)  Allows client-directed foreign key
+  expansion. Slow, don't use on performance critical endpoints.
 -  **django-extensions** (``django_extensions``) - a set of
    ``manage.py`` commands that are crucial for development,
    e.g. \ ``shell_plus``
+- **django-cors-headers** - ``corsheaders`` CORS implementation
+-  **django-split-settings** - lets you split your configs into multiple files. Need to get rid of this
+- **drf-yasg** - ``drf_yasg`` For automatic API documentation with Swagger
+-  **poetry** - roughly npm for python, supports separation of prod/dev dependencies, deterministic builds
+
 -  **django-debug-toolbar** (``debug_toolbar``) - adds a widget to HTML
    response pages that shows you what the application did while serving
    the request: SQL queries, timing, etc..
--  **django-split-settings** - lets you split your configs into multiple files. Need to get rid of this
 -  **ipython** - better Python shell
+
+-  **pre-commit** - manage pre-commit hooks: ``pre-commit install`` to install
+-  **black** - opinionated code formatter
+-  **sphinx** - generates fancy documenation with search from
+   restructured text and markdown
+
+Third party Integrations
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+- **django-ses** (``django_ses``) - AWS SES backend for transactional emails
+- **python-stripe** (**stripe**)  - Stripe (credit card payment processor client)
+- **django-stripe** (**djstripe**)  - Django app for logical replication of stripe models via webhooks
+-  **django-allauth** (``allauth``) - also implements third-party with Goodle, Fbook, etc. via OAuth2
+
+External Tools
+^^^^^^^^^^^^^^
+-  **postgres** - DB
+-  **redis** - in-memory key-value DB, used for caching
+- **gunicorn** - WSGI server
+
+
+Natural Language Processing
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+-  **spacy** - natural language processing library
+-  **transformers** - Spacy models are occasionally quite limited in the annotations they
+  output, e.g. dla Polskiego. For these, we fallback to HuggingFace transformers.
+
+
+Testing tools
+^^^^^^^^^^^^^^^^^^
+
+Testing occurs in Github Actions  CI via ``test_backend`` workflow.
 
 -  **pytest** - python test framework more flexible than ``unittest``
 -  **pytest-watch** - watches file-system for changes, running tests in
    response. Akin to ``jest`` watch mode
 -  **pytest-sugar** - more compact appearance for pytest
 -  **pytest-django** - pytest fixtures specific to django. Ambivalent.
+- **pytest-cov** - code coverage
+- **jq** - The *jq* JSON query languages is used to query API responses in tests to see whether
+  they match  a pattern. This requires the ``jq`` binary to be available, as well as the
+  python wrapper.
 
--  **postgres** - DB
--  **redis** - in-memory key-value DB, used for caching
 
--  **spacy** - natural language processing library
--  **poetry** - roughly npm for python, supports separation of prod/dev
-   dependencies, deterministic builds
--  **pre-commit** - manage pre-commit hooks: ``pre-commit install`` to
-   install
--  **black** - opinionated code formatter
--  **pip** - package management
--  **sphinx** - generates fancy documenation with search from
-   restructured text and markdown

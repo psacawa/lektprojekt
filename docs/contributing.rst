@@ -1,7 +1,7 @@
-
 Contributing
 ============
 
+To contribute just send a pull request to https://github.com/psacawa/lektprojekt/
 
 Commit Guidelines
 -----------------
@@ -25,3 +25,11 @@ examples. This is a loose guideline.
 -  Format = Change of formatting, e.g. omit whitespace.
 -  Opt = Refactor of performance, e.g. speed up code.
 -  Doc = Write documentation, e.g. help files.
+
+Tests
+-----
+
+For backend, run ``pytest``.
+For frontend, run ``yarn run test``.
+
+

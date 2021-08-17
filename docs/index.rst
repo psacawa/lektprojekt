@@ -7,6 +7,7 @@ LektProjekt
 
     backend
     frontend
+    ops
     contributing
     proposal
     principle

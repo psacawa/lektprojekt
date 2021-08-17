@@ -80,3 +80,5 @@ dmypy.json
 
 .envrc
 .env.local
+
+.hypothesis
