@@ -46,7 +46,7 @@
     "formik": "^2.2.6",
     "formik-material-ui": "^3.0.1",
     "formik-material-ui-lab": "0.0.8",
-    "fs-extra": "^9.0.1",
+    "fs-extra": "^10.0.0",
     "html-webpack-plugin": "4.5.0",
     "identity-obj-proxy": "3.0.0",
     "jdenticon": "^3.1.0",
