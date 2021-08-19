@@ -1,0 +1,431 @@
+{
+  "count": 8,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "id": 3,
+      "voice_set": [
+        {
+          "id": 3,
+          "name": "Salli",
+          "accent": "US English",
+          "aid": "en-US",
+          "gender": "F",
+          "lang": 3
+        },
+        {
+          "id": 4,
+          "name": "Geraint",
+          "accent": "Welsh English",
+          "aid": "en-GB-WLS",
+          "gender": "M",
+          "lang": 3
+        },
+        {
+          "id": 13,
+          "name": "Joanna",
+          "accent": "US English",
+          "aid": "en-US",
+          "gender": "F",
+          "lang": 3
+        },
+        {
+          "id": 21,
+          "name": "Raveena",
+          "accent": "Indian English",
+          "aid": "en-IN",
+          "gender": "F",
+          "lang": 3
+        },
+        {
+          "id": 23,
+          "name": "Amy",
+          "accent": "British English",
+          "aid": "en-GB",
+          "gender": "F",
+          "lang": 3
+        },
+        {
+          "id": 24,
+          "name": "Brian",
+          "accent": "British English",
+          "aid": "en-GB",
+          "gender": "M",
+          "lang": 3
+        },
+        {
+          "id": 25,
+          "name": "Russell",
+          "accent": "Australian English",
+          "aid": "en-AU",
+          "gender": "M",
+          "lang": 3
+        },
+        {
+          "id": 26,
+          "name": "Aditi",
+          "accent": "Indian English",
+          "aid": "en-IN",
+          "gender": "F",
+          "lang": 3
+        },
+        {
+          "id": 27,
+          "name": "Matthew",
+          "accent": "US English",
+          "aid": "en-US",
+          "gender": "M",
+          "lang": 3
+        },
+        {
+          "id": 32,
+          "name": "Ivy",
+          "accent": "US English",
+          "aid": "en-US",
+          "gender": "F",
+          "lang": 3
+        },
+        {
+          "id": 35,
+          "name": "Nicole",
+          "accent": "Australian English",
+          "aid": "en-AU",
+          "gender": "F",
+          "lang": 3
+        },
+        {
+          "id": 39,
+          "name": "Justin",
+          "accent": "US English",
+          "aid": "en-US",
+          "gender": "M",
+          "lang": 3
+        },
+        {
+          "id": 41,
+          "name": "Kendra",
+          "accent": "US English",
+          "aid": "en-US",
+          "gender": "F",
+          "lang": 3
+        },
+        {
+          "id": 54,
+          "name": "Kimberly",
+          "accent": "US English",
+          "aid": "en-US",
+          "gender": "F",
+          "lang": 3
+        },
+        {
+          "id": 57,
+          "name": "Joey",
+          "accent": "US English",
+          "aid": "en-US",
+          "gender": "M",
+          "lang": 3
+        },
+        {
+          "id": 60,
+          "name": "Emma",
+          "accent": "British English",
+          "aid": "en-GB",
+          "gender": "F",
+          "lang": 3
+        }
+      ],
+      "lid": "en",
+      "name": "English",
+      "active": true,
+      "default_voice": 13
+    },
+    {
+      "id": 13,
+      "voice_set": [
+        {
+          "id": 22,
+          "name": "Chantal",
+          "accent": "Canadian French",
+          "aid": "fr-CA",
+          "gender": "F",
+          "lang": 13
+        },
+        {
+          "id": 40,
+          "name": "Celine",
+          "accent": "French",
+          "aid": "fr-FR",
+          "gender": "F",
+          "lang": 13
+        },
+        {
+          "id": 44,
+          "name": "Mathieu",
+          "accent": "French",
+          "aid": "fr-FR",
+          "gender": "M",
+          "lang": 13
+        },
+        {
+          "id": 45,
+          "name": "Lea",
+          "accent": "French",
+          "aid": "fr-FR",
+          "gender": "F",
+          "lang": 13
+        }
+      ],
+      "lid": "fr",
+      "name": "French",
+      "active": true,
+      "default_voice": 40
+    },
+    {
+      "id": 5,
+      "voice_set": [
+        {
+          "id": 6,
+          "name": "Marlene",
+          "accent": "German",
+          "aid": "de-DE",
+          "gender": "F",
+          "lang": 5
+        },
+        {
+          "id": 17,
+          "name": "Vicki",
+          "accent": "German",
+          "aid": "de-DE",
+          "gender": "F",
+          "lang": 5
+        },
+        {
+          "id": 30,
+          "name": "Hans",
+          "accent": "German",
+          "aid": "de-DE",
+          "gender": "M",
+          "lang": 5
+        }
+      ],
+      "lid": "de",
+      "name": "German",
+      "active": true,
+      "default_voice": 6
+    },
+    {
+      "id": 6,
+      "voice_set": [
+        {
+          "id": 7,
+          "name": "Giorgio",
+          "accent": "Italian",
+          "aid": "it-IT",
+          "gender": "M",
+          "lang": 6
+        },
+        {
+          "id": 19,
+          "name": "Bianca",
+          "accent": "Italian",
+          "aid": "it-IT",
+          "gender": "F",
+          "lang": 6
+        },
+        {
+          "id": 53,
+          "name": "Carla",
+          "accent": "Italian",
+          "aid": "it-IT",
+          "gender": "F",
+          "lang": 6
+        }
+      ],
+      "lid": "it",
+      "name": "Italian",
+      "active": true,
+      "default_voice": 7
+    },
+    {
+      "id": 15,
+      "voice_set": [
+        {
+          "id": 33,
+          "name": "Ewa",
+          "accent": "Polish",
+          "aid": "pl-PL",
+          "gender": "F",
+          "lang": 15
+        },
+        {
+          "id": 34,
+          "name": "Maja",
+          "accent": "Polish",
+          "aid": "pl-PL",
+          "gender": "F",
+          "lang": 15
+        },
+        {
+          "id": 38,
+          "name": "Jacek",
+          "accent": "Polish",
+          "aid": "pl-PL",
+          "gender": "M",
+          "lang": 15
+        },
+        {
+          "id": 55,
+          "name": "Jan",
+          "accent": "Polish",
+          "aid": "pl-PL",
+          "gender": "M",
+          "lang": 15
+        }
+      ],
+      "lid": "pl",
+      "name": "Polish",
+      "active": true,
+      "default_voice": 33
+    },
+    {
+      "id": 7,
+      "voice_set": [
+        {
+          "id": 8,
+          "name": "Ines",
+          "accent": "Portuguese",
+          "aid": "pt-PT",
+          "gender": "F",
+          "lang": 7
+        },
+        {
+          "id": 15,
+          "name": "Cristiano",
+          "accent": "Portuguese",
+          "aid": "pt-PT",
+          "gender": "M",
+          "lang": 7
+        },
+        {
+          "id": 20,
+          "name": "Vitoria",
+          "accent": "Brazilian Portuguese",
+          "aid": "pt-BR",
+          "gender": "F",
+          "lang": 7
+        },
+        {
+          "id": 36,
+          "name": "Camila",
+          "accent": "Brazilian Portuguese",
+          "aid": "pt-BR",
+          "gender": "F",
+          "lang": 7
+        },
+        {
+          "id": 42,
+          "name": "Ricardo",
+          "accent": "Brazilian Portuguese",
+          "aid": "pt-BR",
+          "gender": "M",
+          "lang": 7
+        }
+      ],
+      "lid": "pt",
+      "name": "Portuguese",
+      "active": true,
+      "default_voice": 42
+    },
+    {
+      "id": 2,
+      "voice_set": [
+        {
+          "id": 2,
+          "name": "Maxim",
+          "accent": "Russian",
+          "aid": "ru-RU",
+          "gender": "M",
+          "lang": 2
+        },
+        {
+          "id": 48,
+          "name": "Tatyana",
+          "accent": "Russian",
+          "aid": "ru-RU",
+          "gender": "F",
+          "lang": 2
+        }
+      ],
+      "lid": "ru",
+      "name": "Russian",
+      "active": true,
+      "default_voice": 2
+    },
+    {
+      "id": 4,
+      "voice_set": [
+        {
+          "id": 5,
+          "name": "Miguel",
+          "accent": "US Spanish",
+          "aid": "es-US",
+          "gender": "M",
+          "lang": 4
+        },
+        {
+          "id": 14,
+          "name": "Lucia",
+          "accent": "Castilian Spanish",
+          "aid": "es-ES",
+          "gender": "F",
+          "lang": 4
+        },
+        {
+          "id": 18,
+          "name": "Mia",
+          "accent": "Mexican Spanish",
+          "aid": "es-MX",
+          "gender": "F",
+          "lang": 4
+        },
+        {
+          "id": 29,
+          "name": "Enrique",
+          "accent": "Castilian Spanish",
+          "aid": "es-ES",
+          "gender": "M",
+          "lang": 4
+        },
+        {
+          "id": 47,
+          "name": "Penelope",
+          "accent": "US Spanish",
+          "aid": "es-US",
+          "gender": "F",
+          "lang": 4
+        },
+        {
+          "id": 52,
+          "name": "Conchita",
+          "accent": "Castilian Spanish",
+          "aid": "es-ES",
+          "gender": "F",
+          "lang": 4
+        },
+        {
+          "id": 58,
+          "name": "Lupe",
+          "accent": "US Spanish",
+          "aid": "es-US",
+          "gender": "F",
+          "lang": 4
+        }
+      ],
+      "lid": "es",
+      "name": "Spanish",
+      "active": true,
+      "default_voice": 14
+    }
+  ]
+}

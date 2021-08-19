@@ -26,8 +26,10 @@ REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
 }
 
-if DJANGO_ENV == "production":
-    CORS_ALLOWED_ORIGINS = [f"https://{WEB_DOMAIN}"]
+from corsheaders.defaults import default_headers
+
+CORS_ALLOWED_ORIGINS = [f"https://{WEB_DOMAIN}"]
+CORS_ALLOW_ALL_ORIGINS = DJANGO_ENV != "production"
 
 if DEBUG:
     REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"] += [

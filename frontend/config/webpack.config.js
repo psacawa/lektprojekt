@@ -154,7 +154,11 @@ module.exports = function (webpackEnv) {
     return loaders;
   };
 
-  return {
+  /**
+   * @typedef { import('@types/webpack').Configuration } Configuration
+   * @type Configuration
+   */
+  let config = {
     mode: isEnvProduction ? "production" : isEnvDevelopment && "development",
     // Stop compilation early in production
     bail: isEnvProduction,
@@ -752,4 +756,5 @@ module.exports = function (webpackEnv) {
     // our own hints via the FileSizeReporter
     performance: false,
   };
+  return config;
 };

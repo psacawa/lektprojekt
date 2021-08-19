@@ -46,7 +46,7 @@ const useStyles = makeStyles({
   },
 });
 
-const Home = () => {
+const HomeView = () => {
   const classes = useStyles();
   return (
     <div className={classes.center}>
@@ -78,7 +78,7 @@ const addDefaultLocaleCode = (language: Language) => {
 
 // This component implements a two-step select of 1. target, 2. base language.
 // Step is stored in selectionStep
-const LanguagePairSelectWidget = () => {
+export const LanguagePairSelectWidget = () => {
   const classes = useStyles();
   const languageQuery = useLanguages();
   const supportedLanguagePairQuery = useSupportedLanguagePairs();
@@ -190,7 +190,7 @@ const LanguagePairSelectWidget = () => {
 };
 
 // eslint-disable-next-line  @typescript-eslint/no-unused-vars
-const PhrasePairCountsTable = () => {
+export const PhrasePairCountsTable = () => {
   const classes = useStyles();
   const pairCountsQuery = usePairCounts();
   return (
@@ -224,4 +224,4 @@ const PhrasePairCountsTable = () => {
   );
 };
 
-export default Home;
+export default HomeView;

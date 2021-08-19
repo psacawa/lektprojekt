@@ -1,0 +1,8 @@
+[
+  { "base_lang": 4, "target_lang": 3, "count": 1000 },
+  { "base_lang": 3, "target_lang": 15, "count": 1000 },
+  { "base_lang": 13, "target_lang": 3, "count": 1000 },
+  { "base_lang": 15, "target_lang": 3, "count": 1000 },
+  { "base_lang": 3, "target_lang": 13, "count": 1000 },
+  { "base_lang": 3, "target_lang": 4, "count": 1000 }
+]

@@ -1,5 +1,5 @@
 import { sortBy } from "lodash";
-import { Fragment } from "react";
+import React, { Fragment } from "react";
 import { Phrase, TokenSpan } from "types";
 
 interface Props {

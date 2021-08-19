@@ -1,6 +1,8 @@
 import { render, screen } from "@testing-library/react";
-import HighlightedPhrase from "components/HighlightedPhrase";
+import React from "react";
 import { Phrase } from "types";
+
+import HighlightedPhrase from "./HighlightedPhrase";
 
 const phrase: Phrase = {
   id: 264,
@@ -13,16 +15,20 @@ const phrase: Phrase = {
     },
   ],
 } as Phrase;
-const match = phrase.lexeme_matches![0];
 
-describe("HighlightedPhrase", () =>
-  it("highlights multiple spans", async () => {
-    const result = render(<HighlightedPhrase phrase={phrase} />);
+const colourMap = { "264": "red" };
+
+describe("HighlightedPhrase", () => {
+  it("renders", () => {
+    const result = render(
+      <HighlightedPhrase phrase={phrase} colourMap={colourMap} />
+    );
     expect(result.container.textContent).toInclude(phrase.text);
+
     const charSpan = phrase.text.slice(
       phrase.lexeme_matches![0].start,
       phrase.lexeme_matches![0].end
     );
-    expect(screen.queryByText(charSpan));
-    expect(screen.queryByText(charSpan)?.style.color).toBe("red");
-  }));
+    expect(screen.queryByText(charSpan)).toHaveTextContent("pero");
+  });
+});

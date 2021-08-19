@@ -193,21 +193,18 @@ const baseRoutes: AppRoute[] = [
   },
 ];
 
-if (process.env.NODE_ENV !== "development") {
-  console.log("adding debug views");
-  console.log(baseRoutes.length);
+if (process.env.NODE_ENV === "development") {
   baseRoutes.push({
     path: "/throw-error",
     name: "Fubar",
     exact: true,
     component: () => {
-      console.log("error");
+      console.error("error");
       throw new Error("Manually thrown error");
     },
 
     icon: MUIError,
   });
-  console.log(baseRoutes.length);
 }
 
 const loggedInRoutes: AppRoute[] = baseDrawerRoutes.filter(

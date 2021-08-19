@@ -242,7 +242,6 @@ const ProfileView = () => {
                 setActiveTab(newValue);
                 const courses = courseQuery.data.results;
                 if (newValue in courses) {
-                  console.log(`new value: ${newValue}`);
                   setSession({
                     currentCourse: courses[newValue].id,
                   });

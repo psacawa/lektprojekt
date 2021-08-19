@@ -2,6 +2,7 @@
   "name": "lekt-frontend",
   "version": "0.1.0",
   "private": true,
+  "license": "Copyright Paweł Sacawa 2021",
   "dependencies": {
     "@babel/core": "7.12.3",
     "@material-ui/core": "^4.11.2",
@@ -12,9 +13,6 @@
     "@sentry/tracing": "^6.10.0",
     "@svgr/webpack": "5.4.0",
     "@sweetalert2/theme-material-ui": "^5.0.2",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
     "@types/jest": "^26.0.15",
     "@types/node": "^16.4.10",
     "@types/react": "^16.9.53",
@@ -105,11 +103,13 @@
   },
   "eslintConfig": {
     "plugins": [
-      "simple-import-sort"
+      "simple-import-sort",
+      "testing-library"
     ],
     "extends": [
       "react-app",
-      "react-app/jest"
+      "react-app/jest",
+      "plugin:testing-library/react"
     ],
     "rules": {
       "simple-import-sort/imports": "warn",
@@ -129,11 +129,9 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^7.17.0",
-    "eslint-plugin-simple-import-sort": "^7.0.0",
-    "http-proxy-middleware": "^1.0.6",
-    "jest-chain": "^1.1.5",
-    "jest-extended": "^0.11.5",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
     "@types/babel__core": "7.1.15",
     "@types/case-sensitive-paths-webpack-plugin": "2.1.4",
     "@types/debug": "^4.1.7",
@@ -156,11 +154,17 @@
     "@types/webpack-dev-server": "3.11.0",
     "@types/webpack-manifest-plugin": "3.0.5",
     "@types/workbox-webpack-plugin": "5.1.8",
-    "@types/yup": "^0.29.11"
+    "@types/yup": "^0.29.11",
+    "eslint": "^7.17.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "http-proxy-middleware": "^1.0.6",
+    "jest-chain": "^1.1.5",
+    "jest-extended": "^0.11.5",
+    "msw": "^0.34.0"
   },
   "optionalDependencies": {
-    "node-sass": "^4",
-    "@types/node-sass": "^4.11.2"
+    "@types/node-sass": "^4.11.2",
+    "node-sass": "^4"
   },
   "jest": {
     "roots": [
@@ -174,7 +178,7 @@
       "react-app-polyfill/jsdom"
     ],
     "setupFilesAfterEnv": [
-      "<rootDir>/src/setupTests.ts"
+      "<rootDir>/src/setupTests.js"
     ],
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
@@ -191,7 +195,9 @@
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$",
       "^.+\\.module\\.(css|sass|scss)$"
     ],
-    "modulePaths": [],
+    "modulePaths": [
+      "src"
+    ],
     "moduleNameMapper": {
       "^react-native$": "react-native-web",
       "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
