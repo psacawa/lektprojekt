@@ -3,7 +3,6 @@ import "@sweetalert2/theme-material-ui";
 
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
-import debug from "debug";
 import { createBrowserHistory } from "history";
 import { queryClient } from "hooks";
 import { AuthProvider } from "hooks/auth";
@@ -12,13 +11,15 @@ import ReactDOM from "react-dom";
 import { QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { Router } from "react-router-dom";
+// import { getLogger, setupInfo } from "utils";
+import { setupInfo } from "utils";
 
 import App from "./App";
-import reportWebVitals from "./reportWebVitals";
+// import reportWebVitals from "./reportWebVitals";
 
 // show all `debug` debuggers in browser console
 localStorage.debug = "*";
-const logger = debug(__filebasename);
+// const logger = getLogger(__filebasename);
 
 const history = createBrowserHistory();
 
@@ -32,6 +33,8 @@ Sentry.init({
       : parseInt(process.env.REACT_SENTRY_SAMPLING_RATE) || 0.2,
   environment: process.env.NODE_ENV,
 });
+
+setupInfo();
 
 ReactDOM.render(
   <QueryClientProvider client={queryClient}>
@@ -47,6 +50,6 @@ ReactDOM.render(
   document.getElementById("root")
 );
 
-logger("App loaded");
+// logger("App loaded");
 
 // reportWebVitals();

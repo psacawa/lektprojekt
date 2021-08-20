@@ -13,6 +13,7 @@ declare namespace NodeJS {
     readonly REACT_SENTRY_DSN: string;
     readonly REACT_SENTRY_SAMPLING_RATE: string;
     readonly REACT_WEB_DOMAIN: string;
+    readonly REACT_GIT_HASH: string;
   }
 }
 

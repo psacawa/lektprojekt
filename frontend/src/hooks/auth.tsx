@@ -1,6 +1,5 @@
 import { CircularProgress } from "@material-ui/core";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { debug } from "debug";
 import React, { useLayoutEffect, useRef, useState } from "react";
 import {
   useMutation,
@@ -19,8 +18,9 @@ import {
   LoginValues,
   User,
 } from "../types";
+// import { getLogger } from "utils";
 
-const logger = debug(__filebasename);
+// const logger = getLogger(__filebasename);
 
 interface AuthContextContent {
   login: ReturnType<typeof useLogin>;
@@ -55,7 +55,7 @@ export const AuthProvider = (props: any) => {
       window.localStorage.removeItem("authToken");
     },
     onSuccess: (data) => {
-      logger("success:", data ? data.username : "no user");
+      // logger("success:", data ? data.username : "no user");
       setUser(data);
     },
     enabled: hasToken.current,
