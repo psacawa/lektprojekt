@@ -1,11 +1,8 @@
-import debug from "debug";
-import process from "process";
-
 export const getLogger = (name: string) => {
   if (process.env.NODE_ENV === "production") {
     return console.log;
   } else {
-    return debug(name);
+    return console.log;
   }
 };
 

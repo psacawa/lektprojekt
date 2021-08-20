@@ -9,7 +9,7 @@ import {
   UseQueryOptions,
 } from "react-query";
 
-import { apiRoot, authRoot, HOUR } from "../constants";
+import { authRoot } from "../constants";
 import {
   CreateAccountServerErrors,
   CreateAccountValues,

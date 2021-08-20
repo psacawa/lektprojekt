@@ -5,6 +5,8 @@ on:
     paths:
       - backend/**
       - .github/workflows/build-backend.yaml
+    branches:
+      - master
   workflow_dispatch:
 
 jobs:
@@ -13,6 +15,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - run: echo DJANGO_GIT_HASH=${{ github.sha }} >> backend/.env.production
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
       - name: Login to AWS

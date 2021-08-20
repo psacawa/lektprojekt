@@ -11,15 +11,14 @@ import ReactDOM from "react-dom";
 import { QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { Router } from "react-router-dom";
-// import { getLogger, setupInfo } from "utils";
-import { setupInfo } from "utils";
+import { getLogger, setupInfo } from "utils";
 
 import App from "./App";
 // import reportWebVitals from "./reportWebVitals";
 
 // show all `debug` debuggers in browser console
 localStorage.debug = "*";
-// const logger = getLogger(__filebasename);
+const logger = getLogger(__filebasename);
 
 const history = createBrowserHistory();
 
@@ -50,6 +49,6 @@ ReactDOM.render(
   document.getElementById("root")
 );
 
-// logger("App loaded");
+logger("App loaded");
 
 // reportWebVitals();

@@ -183,7 +183,7 @@ export const LanguagePairSelectWidget = () => {
           </GridContainer>
         </>
       ) : (
-        <Redirect to="courses/" />
+        <Redirect push to="courses/" />
       )}
     </>
   );

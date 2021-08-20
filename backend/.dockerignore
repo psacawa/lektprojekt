@@ -8,3 +8,5 @@
 !uwsgi.ini
 !assets/voices.json
 !templates
+!.env.production
+!.env
