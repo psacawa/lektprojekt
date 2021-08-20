@@ -1,5 +1,6 @@
 import { CircularProgress } from "@material-ui/core";
 import axios, { AxiosError, AxiosResponse } from "axios";
+import { debug } from "debug";
 import React, { useLayoutEffect, useRef, useState } from "react";
 import {
   useMutation,
@@ -18,6 +19,9 @@ import {
   LoginValues,
   User,
 } from "../types";
+
+const logger = debug(__filebasename);
+
 interface AuthContextContent {
   login: ReturnType<typeof useLogin>;
   logout: ReturnType<typeof useLogout>;
@@ -51,7 +55,7 @@ export const AuthProvider = (props: any) => {
       window.localStorage.removeItem("authToken");
     },
     onSuccess: (data) => {
-      console.log(`success: ${data!.username}`);
+      logger("success:", data ? data.username : "no user");
       setUser(data);
     },
     enabled: hasToken.current,
@@ -63,9 +67,9 @@ export const AuthProvider = (props: any) => {
     },
   });
   const logout = useLogout({
-    onMutate: (variables) => {
+    onMutate: async (variables) => {
       removeToken();
-      queryClient.refetchQueries(["user"]);
+      await queryClient.refetchQueries(["user"]);
       hasToken.current = false;
     },
   });

@@ -606,10 +606,12 @@ module.exports = function (webpackEnv) {
       // Otherwise React will be compiled in the very slow development mode.
       new webpack.DefinePlugin({
         // inject some custom variables
-        __filebasename: webpack.DefinePlugin.runtimeValue(
-          (info) => JSON.stringify(path.parse(info.module.resource).name),
-          false // don't recompute ever
-        ),
+        __filebasename: isEnvDevelopment
+          ? webpack.DefinePlugin.runtimeValue(
+              (info) => JSON.stringify(path.parse(info.module.resource).name),
+              false
+            )
+          : "logger", // don't recompute ever
         ...env.stringified,
       }),
       // This is necessary to emit hot updates (CSS and Fast Refresh):

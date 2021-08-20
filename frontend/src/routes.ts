@@ -11,11 +11,11 @@ import {
   Search,
   VpnKey,
 } from "@material-ui/icons";
-import TrackedListView from "components/TrackedListView";
 import React from "react";
 import AboutView from "views/AboutView";
 import CoursesView from "views/CoursesView";
 import CreateAccountView from "views/CreateAccountView";
+import FallbackView from "views/FallbackView";
 import HomeView from "views/HomeView";
 import LandingPageView from "views/LandingPageView";
 import LexemeDetailView from "views/LexemeDetailView";
@@ -29,6 +29,7 @@ import { ListPracticeView, PracticeView } from "views/PracticeView";
 import PricingView from "views/PricingView";
 import ProfileView from "views/ProfileView";
 import ResetPasswordView from "views/ResetPasswordView";
+import TrackedListView from "views/TrackedListView";
 
 interface BaseRoute {
   path: string;
@@ -139,6 +140,8 @@ const baseDrawerRoutes: AppRoute[] = [
   },
 ];
 
+// NOTE 19/08/20 psacawa: as these routes are not displayed in the drawer, the icons can
+// be removed once the direction is clearer
 const baseRoutes: AppRoute[] = [
   {
     path: "/pricing/",
@@ -190,6 +193,13 @@ const baseRoutes: AppRoute[] = [
     exact: false,
     component: ResetPasswordView,
     icon: VpnKey,
+  },
+  {
+    path: "/",
+    name: "404",
+    exact: false,
+    component: FallbackView,
+    icon: MUIError,
   },
 ];
 

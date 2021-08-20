@@ -3,6 +3,7 @@ import "@sweetalert2/theme-material-ui";
 
 import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
+import debug from "debug";
 import { createBrowserHistory } from "history";
 import { queryClient } from "hooks";
 import { AuthProvider } from "hooks/auth";
@@ -17,6 +18,7 @@ import reportWebVitals from "./reportWebVitals";
 
 // show all `debug` debuggers in browser console
 localStorage.debug = "*";
+const logger = debug(__filebasename);
 
 const history = createBrowserHistory();
 
@@ -44,5 +46,7 @@ ReactDOM.render(
   </QueryClientProvider>,
   document.getElementById("root")
 );
+
+logger("App loaded");
 
 // reportWebVitals();

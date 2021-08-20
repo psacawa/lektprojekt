@@ -9,7 +9,7 @@ import { AdminNavbar } from "components/Navbars";
 import Sidebar from "components/Sidebar";
 import { useAuth } from "hooks";
 import React from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import { AppRoute, routes } from "routes";
 
 const useStyles = makeStyles(styles);

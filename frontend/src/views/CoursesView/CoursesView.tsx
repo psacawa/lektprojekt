@@ -13,6 +13,14 @@ import { Button } from "components/CustomButtons";
 import { CustomTabs } from "components/CustomTabs";
 import { GridContainer, GridItem } from "components/Grid";
 import { Table } from "components/Table";
+import {
+  useCourses,
+  useCreateCourse,
+  useCreateTrackedList,
+  useDeleteCourse,
+  useDeleteTrackedList,
+  useLanguages,
+} from "hooks";
 import { useAuth } from "hooks/auth";
 import { useSession } from "hooks/session";
 import { find } from "lodash";
@@ -21,15 +29,6 @@ import SweetAlert from "react-bootstrap-sweetalert";
 import { useQueryClient } from "react-query";
 import { Link, useHistory } from "react-router-dom";
 import { Language, LanguageCourse } from "types";
-
-import {
-  useCourses,
-  useCreateCourse,
-  useCreateTrackedList,
-  useDeleteCourse,
-  useDeleteTrackedList,
-  useLanguages,
-} from "../hooks";
 
 const useStyles = makeStyles(styles);
 
@@ -84,7 +83,7 @@ const NewCourseForm = () => {
   );
 };
 
-const ProfileView = () => {
+const CoursesView = () => {
   const classes = useStyles();
   const history = useHistory();
   const { session, setSession } = useSession();
@@ -261,4 +260,4 @@ const ProfileView = () => {
   );
 };
 
-export default ProfileView;
+export default CoursesView;

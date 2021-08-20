@@ -71,7 +71,7 @@ class LanguageViewSet(viewsets.ReadOnlyModelViewSet):
     pagination_class = LargePageNumberPagination
 
 
-@method_decorator(cache_page(FIVE_MIN), name="dispatch")
+@method_decorator(cache_page(HOUR), name="dispatch")
 class SupportedLanguagePairsView(generics.ListAPIView):
     """
     List of supported pairs of languages for the purpose of onboarding. Basically a
@@ -272,7 +272,7 @@ class PhrasePairLexemeSearchView(ValidateFilterListMixin, generics.ListAPIView):
         return queryset
 
 
-@method_decorator(cache_page(FIVE_MIN), name="dispatch")
+@method_decorator(cache_page(HOUR), name="dispatch")
 class PhrasePairFeatureSearchView(ValidateFilterListMixin, generics.ListAPIView):
     """
     View for relevance search of PhrasePair objects where only related `Feature`
@@ -315,7 +315,7 @@ class PhrasePairFeatureSearchView(ValidateFilterListMixin, generics.ListAPIView)
         return queryset
 
 
-@method_decorator(cache_page(FIVE_MIN), name="dispatch")
+@method_decorator(cache_page(HOUR), name="dispatch")
 class PhrasePairObservableSearchView(ValidateFilterListMixin, generics.ListAPIView):
     """
     View for relevance search of PhrasePair objects where `Lexeme` and `Feature`
@@ -573,7 +573,7 @@ class TrackedFeatureViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         )
 
 
-@method_decorator(cache_page(FIVE_MIN), name="dispatch")
+@method_decorator(cache_page(HOUR), name="dispatch")
 class PairCountsView(generics.ListAPIView):
     """
     Some silly temporary view that reports on the counts of particular phrase pairs in

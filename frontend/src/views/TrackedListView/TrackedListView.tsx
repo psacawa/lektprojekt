@@ -22,13 +22,6 @@ import { Clear, Edit } from "@material-ui/icons";
 import { Autocomplete } from "@material-ui/lab";
 import { Field, Form, Formik } from "formik";
 import { TextField as FormikTextField } from "formik-material-ui";
-import { useSession } from "hooks/session";
-import { isEqual, uniqWith } from "lodash";
-import React, { useEffect, useState } from "react";
-import { QueryObserverResult, useQueryClient } from "react-query";
-import { Link, useHistory, useParams } from "react-router-dom";
-import * as yup from "yup";
-
 import {
   useFeatures,
   useLanguages,
@@ -39,7 +32,12 @@ import {
   useTrackObservable,
   useUntrackObservable,
   useUpdateTrackedList,
-} from "../../hooks";
+} from "hooks";
+import { useSession } from "hooks/session";
+import { isEqual, uniqWith } from "lodash";
+import React, { useEffect, useState } from "react";
+import { QueryObserverResult, useQueryClient } from "react-query";
+import { Link, useHistory, useParams } from "react-router-dom";
 import {
   Feature,
   Language,
@@ -48,7 +46,8 @@ import {
   Paginate,
   Tracked,
   TrackedList,
-} from "../../types";
+} from "types";
+import * as yup from "yup";
 
 interface HeaderProps {
   list: TrackedList<true>;
