@@ -5,6 +5,8 @@ on:
     paths:
       - backend/**
       - .github/workflows/build-backend.yaml
+    branches:
+      - master
   workflow_dispatch:
 
 jobs:
