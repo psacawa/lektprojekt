@@ -40,7 +40,9 @@ WEB_DOMAIN = environ.get("DJANGO_WWW_DOMAIN", f"www.{DOMAIN}")
 API_DOMAIN = environ.get("DJANGO_API_DOMAIN", f"api.{DOMAIN}")
 #  for now this is made exclusive to the needs of the stripe integration
 #  perhaps make more robust in future
-API_ORIGIN = f"https://localhost:8000" if DEBUG else f"https://{API_DOMAIN}/"
+API_ORIGIN = f"http://localhost:8000" if DEBUG else f"https://{API_DOMAIN}"
+WEB_ORIGIN = f"http://localhost:3000" if DEBUG else f"https://{WEB_DOMAIN}"
+
 ALLOWED_HOSTS = [DOMAIN, WEB_DOMAIN, API_DOMAIN]
 
 LEKTPROJEKT_APPS = [

@@ -48,7 +48,7 @@ import stripe
 stripe.set_app_info(
     "psacawa/lektprojekt",
     version=VERSION,
-    url="www.lex.quest",
+    url=WEB_DOMAIN,
 )
 stripe.api_version = "2020-08-27"
 stripe.api_key = (

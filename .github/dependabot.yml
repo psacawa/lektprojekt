@@ -5,20 +5,20 @@ updates:
     labels:
       - actions-dependencies
     schedule:
-      interval: daily
+      interval: weekly
 
   - package-ecosystem: "pip"
     directory: "/backend"
     labels:
       - backend-dependencies
     schedule:
-      interval: daily
+      interval: weekly
     open-pull-requests-limit: 10
 
   - package-ecosystem: npm
     directory: "/frontend"
     schedule:
-      interval: daily
+      interval: weekly
     open-pull-requests-limit: 10
     labels:
       - frontend-dependencies

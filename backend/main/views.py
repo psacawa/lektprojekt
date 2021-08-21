@@ -66,16 +66,13 @@ class CheckoutSessionViewSet(
         except Price.DoesNotExist as e:
             return APIException("Unsupported price_id")
         #  TODO 02/08/20 psacawa: perhaps worthy of further abstraction?
-        WEB_ORIGIN = (
-            "http://localhost:3000" if settings.DEBUG else "https://www.lex.quest"
-        )
         stripe_session = stripe.checkout.Session.create(
             success_url=(
-                f"{WEB_ORIGIN}/payments?"
+                f"{settings.WEB_ORIGIN}/payments?"
                 "session_id={CHECKOUT_SESSION_ID}&status=success"
             ),
             cancel_url=(
-                f"{WEB_ORIGIN}/payments?"
+                f"{settings.WEB_ORIGIN}/payments?"
                 "session_id={CHECKOUT_SESSION_ID}&status=cancelled"
             ),
             payment_method_types=["card"],
