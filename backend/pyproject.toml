@@ -52,7 +52,7 @@ pytest-sugar = "^0.9.4"
 pytest-cov = "^2.10.1"
 pytest-django = "^4.1.0"
 assertpy = "^1.1"
-jq = "^1.1.1"
+jq = "^1.2.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
