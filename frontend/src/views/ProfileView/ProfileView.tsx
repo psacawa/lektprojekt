@@ -77,7 +77,7 @@ const ProfileView = () => {
                     {user.level === "plus" ? (
                       <Button
                         component="a"
-                        // href={`http://${process.env.REACT_API_DOMAIN}/stripe/portal/`}
+                        // TODO 21/08/20 psacawa: finish this
                         href={`http://localhost:8000/stripe/portal/`}
                       >
                         Manage your subscription with stripe

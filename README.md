@@ -1,7 +1,7 @@
 # LexQuest/LektProjekt
 
-![docker build frontend](https://github.com/psacawa/lektprojekt/actions/workflows/build-frontend.yaml/badge.svg)
-![docker build backend](https://github.com/psacawa/lektprojekt/actions/workflows/build-backend.yaml/badge.svg)
+![docker build frontend](https://github.com/psacawa/lektprojekt/actions/workflows/build-frontend.yml/badge.svg)
+![docker build backend](https://github.com/psacawa/lektprojekt/actions/workflows/build-backend.yml/badge.svg)
 
 This is the monorepo for _LektProjekt_, which for business/marketing reasons is known publicly as _LexQuest_ and is available to demo at the address [www.lex.quest](https://lex.quest). See `docs/` for general documentation.
 
