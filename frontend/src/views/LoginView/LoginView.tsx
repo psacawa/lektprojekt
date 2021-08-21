@@ -14,7 +14,7 @@ import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import { useAuth } from "hooks/auth";
 import { useState } from "react";
-import { Link, Redirect, useHistory } from "react-router-dom";
+import { Link, Redirect, useHistory, useParams } from "react-router-dom";
 import { LoginServerErrors, LoginValues } from "types";
 import * as yup from "yup";
 
@@ -49,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
 
 const LoginView = () => {
   const classes = useStyles();
+  const { next } = useParams<{ next: string | undefined }>();
   const history = useHistory();
   const [clientErrors, setClientErrors] = useState<LoginServerErrors>({});
   const { user, login } = useAuth();
@@ -77,7 +78,7 @@ const LoginView = () => {
                     bag.setSubmitting(false);
                   },
                   onSuccess: () => {
-                    history.push("/");
+                    history.push(next || "/");
                   },
                 });
               }}

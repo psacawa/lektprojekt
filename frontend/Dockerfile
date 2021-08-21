@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.2
 # lekt-frontend-image
 from node:16 as builder
 workdir /app

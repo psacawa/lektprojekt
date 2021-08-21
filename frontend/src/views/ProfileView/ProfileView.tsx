@@ -3,7 +3,7 @@ import Avatar from "components/Avatar";
 import { Card, CardBody, CardHeader } from "components/Card";
 import { Button } from "components/CustomButtons";
 import { useAuth } from "hooks";
-import { Redirect, useHistory } from "react-router-dom";
+import { Redirect, useHistory, useLocation } from "react-router-dom";
 
 const useStyles = makeStyles({
   cardCategoryWhite: {
@@ -41,9 +41,10 @@ const useStyles = makeStyles({
 const ProfileView = () => {
   const classes = useStyles();
   const history = useHistory();
+  const location = useLocation();
   const { user } = useAuth();
   if (!user) {
-    return <Redirect to="/" />;
+    return <Redirect to={`/?next=${location.pathname}`} />;
   }
   return (
     <>

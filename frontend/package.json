@@ -4,6 +4,9 @@
   "private": true,
   "license": "Copyright Paweł Sacawa 2021",
   "dependencies": {
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
     "@babel/core": "7.12.3",
     "@material-ui/core": "^4.11.2",
     "@material-ui/icons": "^4.11.2",
@@ -88,7 +91,11 @@
     "webpack-dev-server": "3.11.0",
     "webpack-manifest-plugin": "2.2.0",
     "workbox-webpack-plugin": "6.1.5",
-    "yup": "^0.32.8"
+    "yup": "^0.32.8",
+    "http-proxy-middleware": "^1.0.6",
+    "jest-chain": "^1.1.5",
+    "jest-extended": "^0.11.5",
+    "msw": "^0.34.0"
   },
   "scripts": {
     "start": "node scripts/start.js",
@@ -130,9 +137,6 @@
     ]
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
     "@types/babel__core": "7.1.15",
     "@types/case-sensitive-paths-webpack-plugin": "2.1.4",
     "@types/debug": "^4.1.7",
@@ -158,15 +162,7 @@
     "@types/yup": "^0.29.11",
     "eslint": "^7.17.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
-    "http-proxy-middleware": "^1.0.6",
-    "jest-chain": "^1.1.5",
-    "jest-extended": "^0.11.5",
-    "msw": "^0.34.0",
     "source-map-explorer": "^2.5.2"
-  },
-  "optionalDependencies": {
-    "@types/node-sass": "^4.11.2",
-    "node-sass": "^4"
   },
   "jest": {
     "roots": [
