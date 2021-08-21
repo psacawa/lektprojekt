@@ -533,7 +533,7 @@ events = ["requests (<3)", "m2crypto"]
 
 [[package]]
 name = "django-split-settings"
-version = "1.0.1"
+version = "1.1.0"
 description = "Organize Django settings into multiple files and directories. Easily override and modify settings. Use wildcards and optional settings files."
 category = "main"
 optional = false
@@ -1828,7 +1828,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "00de0b676cfb24bb4b52eca536c731e9a9ca6c50c96ddb58e3d222960f964f90"
+content-hash = "5bbefb98e21cbbee81cbc663da501d692d6e325a5a3272b552aafe43f55564b0"
 
 [metadata.files]
 alabaster = [
@@ -2140,8 +2140,8 @@ django-ses = [
     {file = "django_ses-2.2.0-py2.py3-none-any.whl", hash = "sha256:d1354868ae5449801115aa43ea7c10ce446964e04842b1d9aa3ef6ff8f045153"},
 ]
 django-split-settings = [
-    {file = "django-split-settings-1.0.1.tar.gz", hash = "sha256:2da16cd967cd38315ec7ff0ae0c9db8488f8528bb2e5de26cd898328dc4bbeac"},
-    {file = "django_split_settings-1.0.1-py3-none-any.whl", hash = "sha256:8d636649023289d0ef0ba08b0a4f37761adc94a29ee0ebfe65922c3cb0594ede"},
+    {file = "django-split-settings-1.1.0.tar.gz", hash = "sha256:6b3aed89667a95525152026eab93a9f038ff22df6883006318b8b4a3d0ca6888"},
+    {file = "django_split_settings-1.1.0-py3-none-any.whl", hash = "sha256:5d97ae64cf9ed14a831722d82ac725944667ac8c08307b7cfd22e91367b411d0"},
 ]
 djangorestframework = [
     {file = "djangorestframework-3.12.4-py3-none-any.whl", hash = "sha256:6d1d59f623a5ad0509fe0d6bfe93cbdfe17b8116ebc8eda86d45f6e16e819aaf"},
