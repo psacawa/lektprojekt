@@ -5,18 +5,17 @@ metadata:
   labels:
     app: lekt
   annotations:
-    # alb.ingress.kubernetes.io/load-balancer-name: todos-alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:886185890074:certificate/5e84032c-34b0-4bc2-9469-78424abd235b
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-2:886185890074:certificate/68c04a14-3f3b-485c-bf8b-8c1d2dbf1089
     alb.ingress.kubernetes.io/ssl-redirect: "443"
     alb.ingress.kubernetes.io/load-balancer-attributes: access_logs.s3.enabled=true,access_logs.s3.bucket=lektprojekt-logs,access_logs.s3.prefix=lekt-backend
     alb.ingress.kubernetes.io/healthcheck-path: /healthz
     kubernetes.io/ingress.class: alb
-    # external-dns.alpha.kubernetes.io/hostname: www.lex.quest
 spec:
   rules:
+    # production enviroment
     - host: www.lex.quest
       http:
         paths:
@@ -26,7 +25,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: frontend
+                name: frontend-production
                 port:
                   number: 80
     - host: api.lex.quest
@@ -36,6 +35,28 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: backend
+                name: backend-production
+                port:
+                  number: 8000
+
+    # staging enviroment
+    - host: www.dev.lex.quest
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend-staging
+                port:
+                  number: 80
+    - host: api.dev.lex.quest
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-staging
                 port:
                   number: 8000
