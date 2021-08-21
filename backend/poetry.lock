@@ -515,7 +515,7 @@ six = "*"
 
 [[package]]
 name = "django-ses"
-version = "2.2.0"
+version = "2.2.1"
 description = "A Django email backend for Amazon's Simple Email Service"
 category = "main"
 optional = false
@@ -1828,7 +1828,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "8e3fe355a21a6479ccb840cda9a01d91e5abfd48e2003561a14c094fc5089c58"
+content-hash = "c73b978902ea5bf7841392306136114f03789132921a035716ebdb7c77fb42e1"
 
 [metadata.files]
 alabaster = [
@@ -2136,8 +2136,8 @@ django-rest-polymorphic = [
     {file = "django_rest_polymorphic-0.1.9-py2.py3-none-any.whl", hash = "sha256:ae9dd7a104bd6d2faac3bb7cdc31d3c3c768a4bb25f75451e866d9fab66fb6eb"},
 ]
 django-ses = [
-    {file = "django-ses-2.2.0.tar.gz", hash = "sha256:5854237908b07648e6b2b961f6ec1e2271ca91205812aab10030fec8168e3e04"},
-    {file = "django_ses-2.2.0-py2.py3-none-any.whl", hash = "sha256:d1354868ae5449801115aa43ea7c10ce446964e04842b1d9aa3ef6ff8f045153"},
+    {file = "django-ses-2.2.1.tar.gz", hash = "sha256:deb8e0a9d3222db2d68548bdd51d17ca7ead06c2f93c29c06b61eab2d1f69deb"},
+    {file = "django_ses-2.2.1-py2.py3-none-any.whl", hash = "sha256:c184418844dee32d80f7baf9e808528f1c635d374a13cab961db02a7e683e5f4"},
 ]
 django-split-settings = [
     {file = "django-split-settings-1.0.1.tar.gz", hash = "sha256:2da16cd967cd38315ec7ff0ae0c9db8488f8528bb2e5de26cd898328dc4bbeac"},
