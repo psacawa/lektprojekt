@@ -1,6 +1,7 @@
 # lekt-frontend-image
 from node:16 as builder
 workdir /app
+env NODE_ENV=production
 copy yarn.lock package.json ./
 run yarn install
 copy . .
