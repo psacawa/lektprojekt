@@ -32,4 +32,4 @@ Tests
 For backend, run ``pytest``.
 For frontend, run ``yarn run test``.
 
-
+See corresponding sections in other articles.

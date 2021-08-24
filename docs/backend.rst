@@ -77,9 +77,6 @@ from vanilla Django.
 
   PhrasePair.objects.filter(base__text__like='%tip%', target__lang__lid ='fr')
 
-
-
-
 Backend Logging Config
 ----------------------
 
@@ -88,8 +85,10 @@ have ``FileHandler`` s attached to them with level ``DEBUG`` as well as ``Stream
 outputting to ``stderr`` with level ``ERROR``. Logs with a ``FileHandler`` are output 
 in ``logs``.
 
-Test Suite
-----------
+.. _pytest-backend-test-suite:
+
+Backend Test Suite
+--------------------
 
 The test suite can run with ``pytest-watch``. This runs it in "watch mode", just like ``jest``. The test database ``test_lektprojekt_db`` will need to be seeded with data first. The database state relative to which the tests are written is the attained by migrating and running
 

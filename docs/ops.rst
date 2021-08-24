@@ -46,8 +46,8 @@ build_backend/build_frontend
 If a pull request is merged  (or ``master`` is pushed), the corresponding image is build
 and pushed to  AWS ECR image repository
 
-Kubenetes Cluster
------------------
+Kubernetes Cluster
+--------------------
 
 TODO: Describe the cluster components, helm charts, etc.
 

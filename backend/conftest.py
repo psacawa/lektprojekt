@@ -62,6 +62,13 @@ def test_tracked_list(test_course):
     return tlist
 
 
+@pytest.fixture
+def client():
+    """This returns a fresh  API client. This is inmportant in cases where the client  build
+    up state, such as cookies"""
+    return APIClient()
+
+
 def jq(query: str, input):
     """simple wrapper around jq"""
     return jq_base(query).input(input).all()

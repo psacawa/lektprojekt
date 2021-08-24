@@ -109,6 +109,16 @@ In ``App.tsx`` and ``adminStyle.ts`` we have the important classes for the overa
 - **content** - the part with the content, has ``maxWidth`` set
 - **container** - ``div``  inseide conent, does something weird with margins
 
+
+.. _jest-frontend-test-suite:
+
+Frontend Test Suite
+--------------------
+
+``jest`` test of most compenents, views, and client-side routing.
+
+**TODO 23/08/20 psacawa: finish this**
+
 ReactQuery Typescript
 ---------------------
 
