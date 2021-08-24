@@ -25,3 +25,8 @@ yarn-error.log*
 .eslintcache
 
 *.pem
+
+cypress/plugins
+cypress/screenshots
+cypress/support
+cypress/videos

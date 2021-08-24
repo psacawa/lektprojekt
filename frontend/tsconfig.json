@@ -18,5 +18,5 @@
     "baseUrl": "src",
     "paths": {}
   },
-  "include": ["src"]
+  "include": ["src", "@testing-library/cypress"]
 }

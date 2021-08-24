@@ -155,8 +155,7 @@ module.exports = function (webpackEnv) {
   };
 
   /**
-   * @typedef { import('@types/webpack').Configuration } Configuration
-   * @type Configuration
+   * @type import('@types/webpack').Configuration
    */
   let config = {
     mode: isEnvProduction ? "production" : isEnvDevelopment && "development",
