@@ -59,8 +59,14 @@ stripe.api_key = (
 #####################
 # AWS SES
 #####################
-if DJANGO_SES_ENV in ["development", "test"]:
+if DJANGO_EMAIL_ENV in ["development", "test"]:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+elif DJANGO_EMAIL_ENV in ["cypress"]:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = "localhost"
+    EMAIL_PORT = 1025
+
+
 else:
     EMAIL_BACKEND = "django_ses.SESBackend"
     AWS_ACCESS_KEY_ID = environ.get("AWS_ACCESS_KEY_ID")

@@ -117,6 +117,9 @@ Frontend Test Suite
 
 ``jest`` test of most compenents, views, and client-side routing.
 
+Prefer when possible to use ``@testing-library/react`` queries. 
+Some elements with ``span`` tags inside will prevent ``getByText`` from working.  The work-around is to supply are regex or a callback.
+
 **TODO 23/08/20 psacawa: finish this**
 
 ReactQuery Typescript

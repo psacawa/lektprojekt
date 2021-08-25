@@ -103,7 +103,8 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
-    "cypress:test": "cypress run",
+    "cypress:run": "cypress run",
+    "cypress:open": "cypress open",
     "docker:build": "bash scripts/docker-build.sh",
     "docker:run": "bash scripts/docker-run.sh",
     "docker:push": "bash scripts/docker-push.sh",
@@ -118,7 +119,6 @@
     ],
     "extends": [
       "react-app",
-      "react-app/jest",
       "plugin:testing-library/react"
     ],
     "rules": {
@@ -139,6 +139,7 @@
     ]
   },
   "devDependencies": {
+    "@cypress/watch-preprocessor": "^1.0.1",
     "@testing-library/cypress": "^8.0.0",
     "@types/babel__core": "7.1.15",
     "@types/case-sensitive-paths-webpack-plugin": "2.1.4",

@@ -1,12 +1,31 @@
+const url = require("url");
+
 describe("General", () => {
-  it("page loads", () => {
-    cy.visit("/");
+  ["/", "/about", "/search", "/practice"].forEach((route) => {
+    it(`view at ${route} loads for non-authed user`, () => {
+      cy.visit(route)
+        .url()
+        .then((url) => {
+          const path = new URL(url).pathname;
+          expect(path).equal(route);
+        });
+    });
   });
+});
+
+describe("Routing", () => {
   it("navigate with sidebar", () => {
     cy.visit("/").contains("About").click().url().should("include", "/about/");
   });
   it("reload preverves location", () => {
     cy.visit("/about/").reload().url().should("include", "/about/");
+  });
+  it("fake path redirects to root", () => {
+    cy.visit("/fake/")
+      .location()
+      .should((loc) => {
+        expect(loc.pathname).eq("/");
+      });
   });
 });
 
@@ -26,8 +45,14 @@ describe("Home Page", () => {
       .url()
       .should("include", "/courses/");
   });
-  it("login", () => {
-    cy.visit("/");
+});
+
+describe("Small form factor", () => {
+  it("drawer invisible", () => {
+    cy.viewport("iphone-8")
+      .visit("/")
+      .contains("About")
+      .should("not.be.visible");
   });
 });
 

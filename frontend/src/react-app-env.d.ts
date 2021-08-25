@@ -10,6 +10,7 @@ declare namespace NodeJS {
     readonly REACT_DOMAIN: string;
     readonly REACT_AUDIO_CDN_DOMAIN: string;
     readonly REACT_NAME: string;
+    readonly REACT_SENTRY_ENV: string;
     readonly REACT_SENTRY_DSN: string;
     readonly REACT_SENTRY_SAMPLING_RATE: string;
     readonly REACT_GIT_HASH: string;

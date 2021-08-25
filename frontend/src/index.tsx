@@ -23,15 +23,16 @@ const logger = getLogger(__filebasename);
 const history = createBrowserHistory();
 
 // in development trace everything, in production, read from var, fallback to 0.2
-Sentry.init({
-  dsn: process.env.REACT_SENTRY_DSN,
-  integrations: [new Integrations.BrowserTracing()],
-  tracesSampleRate:
-    process.env.NODE_ENV === "development"
-      ? 0.5
-      : parseInt(process.env.REACT_SENTRY_SAMPLING_RATE) || 0.2,
-  environment: process.env.NODE_ENV,
-});
+if (process.env.REACT_SENTRY_ENV !== "none")
+  Sentry.init({
+    dsn: process.env.REACT_SENTRY_DSN,
+    integrations: [new Integrations.BrowserTracing()],
+    tracesSampleRate:
+      process.env.NODE_ENV === "development"
+        ? 0.5
+        : parseInt(process.env.REACT_SENTRY_SAMPLING_RATE) || 0.2,
+    environment: process.env.NODE_ENV,
+  });
 
 setupInfo();
 

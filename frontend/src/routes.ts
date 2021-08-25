@@ -194,13 +194,13 @@ const baseRoutes: AppRoute[] = [
     component: ResetPasswordView,
     icon: VpnKey,
   },
-  {
-    path: "/",
-    name: "404",
-    exact: false,
-    component: FallbackView,
-    icon: MUIError,
-  },
+  // {
+  //   path: "/",
+  //   name: "404",
+  //   exact: false,
+  //   component: FallbackView,
+  //   icon: MUIError,
+  // },
 ];
 
 if (process.env.NODE_ENV === "development") {

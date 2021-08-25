@@ -1251,6 +1251,13 @@
     tunnel-agent "^0.6.0"
     uuid "^8.3.2"
 
+"@cypress/watch-preprocessor@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@cypress/watch-preprocessor/-/watch-preprocessor-1.0.1.tgz#caf9e45f4dd7c77a4146e39bae2c8778e8acc25b"
+  integrity sha512-rUoSRVosKHuyuEd3WgX4Tc9OmIDAtIs8Mm0M3A8O7b/5skFSRkhWK5UipCvEaOLZeOmBxCWun4AFmF9wJMXfFA==
+  dependencies:
+    chokidar "^3.2.1"
+
 "@cypress/xvfb@^1.2.4":
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/@cypress/xvfb/-/xvfb-1.2.4.tgz#2daf42e8275b39f4aa53c14214e557bd14e7748a"
@@ -4169,7 +4176,7 @@ chokidar@^2.1.8:
   optionalDependencies:
     fsevents "^1.2.7"
 
-chokidar@^3.4.1, chokidar@^3.4.2:
+chokidar@^3.2.1, chokidar@^3.4.1, chokidar@^3.4.2:
   version "3.5.2"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.5.2.tgz#dba3976fcadb016f66fd365021d91600d01c1e75"
   integrity sha512-ekGhOnNVPgT77r4K/U3GDhu+FQ2S8TnK/s2KbIGXi0SZWuwkZ2QNyfWdZW+TVfn84DpEP7rLeCt2UI6bJ8GwbQ==

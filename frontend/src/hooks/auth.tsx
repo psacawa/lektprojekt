@@ -75,9 +75,9 @@ export const AuthProvider = (props: any) => {
   });
   const createAccount = useCreateAccount();
 
+  console.log("user", JSON.stringify(user));
   return (
     <>
-      {/* {!userQuery.isFetching ? ( */}
       {!userQuery.isFetching ? (
         <AuthContext.Provider
           value={{ user, login, logout, createAccount }}

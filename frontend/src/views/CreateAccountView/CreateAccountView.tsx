@@ -19,6 +19,7 @@ import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import { useAuth } from "hooks/auth";
 import { useState } from "react";
+import React from "react";
 import { Link, Redirect, useHistory } from "react-router-dom";
 import { CreateAccountServerErrors, CreateAccountValues } from "types";
 import * as yup from "yup";
@@ -52,9 +53,11 @@ const validationSchema: yup.SchemaOf<CreateAccountValues> = yup.object().shape({
 const SuccessDialog = ({ open }: { open: boolean }) => {
   const history = useHistory();
   return (
-    <Dialog open={open}>
+    <Dialog aria-labelledby="modal-title" open={open}>
       <DialogContent>
-        <DialogTitle>Confirmation Email Sent</DialogTitle>
+        <DialogTitle aria-labelledby="modal-title">
+          Confirmation Email Sent
+        </DialogTitle>
         <DialogContentText>
           A confirmation email has been sent and should arrive within five
           minutes. It contains a link to confirm your email address.{" "}

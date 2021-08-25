@@ -9,7 +9,7 @@ import { AdminNavbar } from "components/Navbars";
 import Sidebar from "components/Sidebar";
 import { useAuth } from "hooks";
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import { AppRoute, routes } from "routes";
 
 const useStyles = makeStyles(styles);
@@ -53,25 +53,12 @@ export default function App(
       }
       // NOTE 11/03/20 psacawa: here is the attach point for alternate layouts
       return (
-        <React.Fragment key={key}>
-          {route.login === "required" ? (
-            <AuthRedirect key={key}>
-              <Route
-                component={route.component}
-                exact={route.exact}
-                key={key}
-                path={route.path}
-              />
-            </AuthRedirect>
-          ) : (
-            <Route
-              component={route.component}
-              exact={route.exact}
-              key={key}
-              path={route.path}
-            />
-          )}
-        </React.Fragment>
+        <Route
+          component={route.component}
+          exact={route.exact}
+          key={key}
+          path={route.path}
+        />
       );
     });
   };
@@ -96,7 +83,7 @@ export default function App(
         open={mobileOpen}
         {...rest}
       />
-      <div className={mainPanelClasses} ref={mainPanel}>
+      <main className={mainPanelClasses} ref={mainPanel}>
         <AdminNavbar
           handleDrawerToggle={handleDrawerToggle}
           miniActive={miniActive}
@@ -105,25 +92,25 @@ export default function App(
         />
         <div className={classes.content}>
           <div className={classes.container}>
-            {/* routing */}
-            <Switch>
-              <ErrorBoundary
-                beforeCapture={(scope) => {
-                  scope.setTag("location", window.location.href);
-                }}
-                dialogOptions={{
-                  user: user ? { name: user.username, email: user.email } : {},
-                }}
-                fallback={<p>An error occured and has been reported.</p>}
-                showDialog
-              >
+            <ErrorBoundary
+              beforeCapture={(scope) => {
+                scope.setTag("location", window.location.href);
+              }}
+              dialogOptions={{
+                user: user ? { name: user.username, email: user.email } : {},
+              }}
+              fallback={<p>An error occured and has been reported.</p>}
+              showDialog
+            >
+              <Switch>
                 {getRoutes(routes)}
-              </ErrorBoundary>
-            </Switch>
+                <Route render={() => <Redirect to="/" />} />
+              </Switch>
+            </ErrorBoundary>
           </div>
         </div>
         <Footer fluid />
-      </div>
+      </main>
     </div>
   );
 }

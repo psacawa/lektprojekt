@@ -26,7 +26,5 @@ yarn-error.log*
 
 *.pem
 
-cypress/plugins
 cypress/screenshots
-cypress/support
 cypress/videos
