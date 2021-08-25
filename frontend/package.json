@@ -142,7 +142,7 @@
     "@cypress/watch-preprocessor": "^1.0.1",
     "@testing-library/cypress": "^8.0.0",
     "@types/babel__core": "7.1.15",
-    "@types/case-sensitive-paths-webpack-plugin": "2.1.4",
+    "@types/case-sensitive-paths-webpack-plugin": "2.1.6",
     "@types/debug": "^4.1.7",
     "@types/eslint": "^7.2.6",
     "@types/file-loader": "5.0.1",
