@@ -23,3 +23,5 @@ DEBUG_TOOLBAR_PANELS = PANELS_DEFAULTS
 #  and the server must be run: ./manage.py runserver --nothreading --noreload
 if "--nothreading" in sys.argv and "--noreload" in sys.argv:
     DEBUG_TOOLBAR_PANELS.append("djdt_flamegraph.FlamegraphPanel")
+
+import colored_traceback.auto

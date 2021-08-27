@@ -13,6 +13,12 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 from os import environ, mkdir, remove
 from os.path import abspath, dirname, isdir, join
 
+#  TODO 27/08/20 psacawa: figure out how to use this
+#  import environental variables with prefixes DJANGO or LOGGING
+for key, val in environ.items():
+    if key.startswith("DJANGO") or key.startswith("LOGGING"):
+        locals()[key] = "val"
+
 VERSION = "0.2.0"
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)

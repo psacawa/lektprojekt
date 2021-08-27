@@ -33,7 +33,9 @@ class CorpusManager(object):
         self.corpus = corpus
         self.connection = sqlite3.connect(f"file:{corpus}?mode=ro", uri=True)
         self.lids = self.connection.execute("select lang1, lang2 from meta").fetchone()
-        self.langs = [Language.objects.get(lid=lid) for lid in self.lids]
+        self.langs: List[Language] = [
+            Language.objects.get(lid=lid) for lid in self.lids
+        ]
         self.name = self.connection.execute("select name from meta").fetchone()[0]
         self.domain = self.connection.execute("select domain from meta").fetchone()[0]
         self.init_corpus()

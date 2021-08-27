@@ -1,6 +1,7 @@
 import logging
 
 from django.db import models
+from django.db.models.constraints import UniqueConstraint
 from django.db.models.manager import Manager
 from model_utils.managers import InheritanceManager
 from polymorphic.managers import PolymorphicManager
@@ -155,7 +156,9 @@ class Observable(PolymorphicModel, TimestampedModel):
     objects = PolymorphicManager()
 
     def __repr__(self):
-        return f"<Observable {self.polymorphic_ctype.name}, {str(self.get_real_instance())}>"
+        return (
+            f"<Observable {self.polymorphic_ctype.name}, {(self.get_real_instance())}>"
+        )
 
     __str__ = __repr__
 
@@ -187,6 +190,13 @@ class ObservableWeight(models.Model):
     class Meta:
         managed = True
         db_table = "lekt_observable_weight"
+        constraints = [
+            UniqueConstraint(
+                fields=["base_lang", "target_lang", "observable", "phrasepair"],
+                #  this becomes "lekt_observableweight_unique"
+                name="%(app_label)s_%(class)s_unique",
+            )
+        ]
 
 
 class Feature(Observable):
@@ -276,6 +286,12 @@ class FeatureWeight(models.Model):
     class Meta:
         managed = True
         db_table = "lekt_feature_weight"
+        constraints = [
+            UniqueConstraint(
+                fields=["base_lang", "target_lang", "feature", "phrasepair"],
+                name="%(app_label)s_%(class)s_unique",
+            )
+        ]
 
 
 class Lexeme(Observable):
@@ -340,6 +356,13 @@ class LexemeWeight(models.Model):
     class Meta:
         managed = True
         db_table = "lekt_lexeme_weight"
+        #  unique_together = ("base_lang", "target_lang", "lexeme", "phrasepair")
+        constraints = [
+            UniqueConstraint(
+                fields=["base_lang", "target_lang", "lexeme", "phrasepair"],
+                name="%(app_label)s_%(class)s_unique",
+            )
+        ]
 
     def __repr__(self):
         return (

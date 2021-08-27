@@ -4,11 +4,9 @@ import os
 import sys
 from typing import Dict, Text
 
-from dotenv import dotenv_values
-
 #  adding this import causes tracebacks to be rendered in colour
-if os.environ.get("DJANGO_ENV", None) == "development":
-    import colored_traceback.auto
+import colored_traceback.auto
+from dotenv import dotenv_values
 
 
 def main():

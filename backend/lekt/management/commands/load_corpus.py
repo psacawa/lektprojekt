@@ -29,6 +29,9 @@ class Command(BaseCommand):
 
     output_transaction = True
 
+    _base_lid: str
+    _target_lid: str
+
     def add_arguments(self, parser: ArgumentParser):
         parser.add_argument("corpus", help="SQLite database containing corpus")
         parser.add_argument(
@@ -124,11 +127,17 @@ class Command(BaseCommand):
                 lang2_size=lang2_size,
                 lang2_model=lang2_model,
             )
+            self._lids = [lang.lid for lang in corpus_manager.langs]
             corpus_manager.load(limit=limit, reload=reload)
 
         if not skip_weights:
             print("Recomputing search weights...")
-            call_command("compute_search_weights")
+            assert (
+                len(self._lids) == 2
+            ), f"lids={self._lids} doesn't have two lid entries"
+            call_command(
+                "compute_search_weights", self._lids[0], self._lids[1], "--both-ways"
+            )
 
     @staticmethod
     def resolve_corpus_file(filename):
@@ -150,6 +159,7 @@ class Command(BaseCommand):
 
     def remove(self, name: str):
         corpus = Corpus.objects.get(name__iexact=name)
+        self._lids = [x[0] for x in corpus.languages.values("lid")]
         Phrase.objects.filter(pair_from__source=corpus).delete()
         PhrasePair.objects.filter(source=corpus).delete()
         corpus.delete()
