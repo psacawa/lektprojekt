@@ -8,6 +8,7 @@ import {
   useQueryClient,
   UseQueryOptions,
 } from "react-query";
+import { getLogger } from "utils";
 
 import { authRoot } from "../constants";
 import {
@@ -18,9 +19,8 @@ import {
   LoginValues,
   User,
 } from "../types";
-// import { getLogger } from "utils";
 
-// const logger = getLogger(__filebasename);
+const logger = getLogger("auth");
 
 interface AuthContextContent {
   login: ReturnType<typeof useLogin>;
@@ -58,7 +58,7 @@ export const AuthProvider = (props: any) => {
       // logger("success:", data ? data.username : "no user");
       setUser(data);
     },
-    enabled: hasToken.current,
+    // enabled: hasToken.current,
   });
   const login = useLogin({
     onSuccess: (data: { key: string }) => {
@@ -75,7 +75,7 @@ export const AuthProvider = (props: any) => {
   });
   const createAccount = useCreateAccount();
 
-  console.log("user", JSON.stringify(user));
+  // logger("user", JSON.stringify(user));
   return (
     <>
       {!userQuery.isFetching ? (

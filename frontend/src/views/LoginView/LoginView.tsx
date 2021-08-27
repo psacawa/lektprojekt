@@ -14,9 +14,13 @@ import { Field, Form, Formik } from "formik";
 import { TextField } from "formik-material-ui";
 import { useAuth } from "hooks/auth";
 import { useState } from "react";
-import { Link, Redirect, useHistory, useParams } from "react-router-dom";
+import React from "react";
+import { Link, Redirect, useHistory, useLocation } from "react-router-dom";
 import { LoginServerErrors, LoginValues } from "types";
+import { getLogger } from "utils";
 import * as yup from "yup";
+
+const logger = getLogger("LoginView");
 
 const validationSchema: yup.SchemaOf<LoginValues> = yup.object().shape({
   email: yup
@@ -49,7 +53,8 @@ const useStyles = makeStyles((theme) => ({
 
 const LoginView = () => {
   const classes = useStyles();
-  const { next } = useParams<{ next: string | undefined }>();
+  const location = useLocation();
+  const next = new URLSearchParams(location.search).get("next");
   const history = useHistory();
   const [clientErrors, setClientErrors] = useState<LoginServerErrors>({});
   const { user, login } = useAuth();
@@ -132,7 +137,7 @@ const LoginView = () => {
                   <Grid item xs>
                     <MuiLink
                       component={Link}
-                      to="/reset-password"
+                      to="/reset-password/"
                       variant="body2"
                     >
                       Forgot password?

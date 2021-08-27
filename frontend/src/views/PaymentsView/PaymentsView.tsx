@@ -22,7 +22,7 @@ const PaymentsView = () => {
         text: "Payment canelled",
         allowEscapeKey: false,
       }).then((result) => {
-        history.push("/pricing");
+        history.push("/pricing/");
       });
     }
   } else {

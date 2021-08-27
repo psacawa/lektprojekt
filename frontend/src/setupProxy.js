@@ -2,6 +2,9 @@ const { createProxyMiddleware } = require("http-proxy-middleware");
 
 module.exports = function (app) {
   let path;
+  let proxymiddleware = createProxyMiddleware({
+    target: "http://localhost:8000",
+  });
   for (path of [
     "/api",
     "/auth",
@@ -11,11 +14,6 @@ module.exports = function (app) {
     // "/payments",
     "/stripe",
   ]) {
-    app.use(
-      path,
-      createProxyMiddleware({
-        target: "http://localhost:8000",
-      })
-    );
+    app.use(path, proxymiddleware);
   }
 };

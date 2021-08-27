@@ -1,7 +1,7 @@
 const url = require("url");
 
 describe("General", () => {
-  ["/", "/about", "/search", "/practice"].forEach((route) => {
+  ["/", "/about/", "/search/", "/practice/"].forEach((route) => {
     it(`view at ${route} loads for non-authed user`, () => {
       cy.visit(route)
         .url()
@@ -34,7 +34,7 @@ describe("Home Page", () => {
     // select target language
     cy.visit("/").contains("I'm learning...");
     cy.contains("English");
-    cy.contains("Spanish").click().should("not.exist");
+    cy.contains("Spanish").click();
     cy.contains("Spanish").should("not.exist");
 
     // select base language

@@ -156,11 +156,15 @@ const PricingView = () => {
                     </CardContent>
                     <CardActions>
                       {isFreePrice(price) ? (
-                        <Button component={RouterLink} fullWidth to="/practice">
+                        <Button
+                          component={RouterLink}
+                          fullWidth
+                          to="/practice/"
+                        >
                           Go!
                         </Button>
                       ) : !auth.user ? (
-                        <Button component={RouterLink} fullWidth to="/login">
+                        <Button component={RouterLink} fullWidth to="/login/">
                           Login
                         </Button>
                       ) : (

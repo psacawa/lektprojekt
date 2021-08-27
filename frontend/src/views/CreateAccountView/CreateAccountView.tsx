@@ -66,7 +66,7 @@ const SuccessDialog = ({ open }: { open: boolean }) => {
           <Button
             color="primary"
             onClick={() => {
-              history.push("/login");
+              history.push("/login/");
             }}
           >
             Goto Login Page
@@ -217,7 +217,7 @@ const CreateAccountView = () => {
                 </Button>
                 <Grid container justifyContent="flex-end">
                   <Grid item>
-                    <MuiLink component={Link} to="/login" variant="body2">
+                    <MuiLink component={Link} to="/login/" variant="body2">
                       Already have an account? Sign in
                     </MuiLink>
                   </Grid>

@@ -7,7 +7,7 @@ const AuthRedirect = (props: React.Props<{}>) => {
   // TODO 14/08/20 psacawa: this causes redirect  on F5 even when the user is authed.
   // Investigate
   // if (user === null) {
-  //   return <Redirect to="/login" />;
+  //   return <Redirect to="/login/" />;
   // } else {
   return <>{props.children}</>;
   // }

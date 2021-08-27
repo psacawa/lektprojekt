@@ -1,27 +1,30 @@
-import { getRoles, logRoles, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createMemoryHistory } from "history";
 import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Router } from "react-router-dom";
 
-import CreateAccountView from "./CreateAccountView";
+import LoginView from ".";
 
 describe("CreateAccountView", () => {
-  it("create account form", () => {
+  it("create account form", async () => {
     const client = new QueryClient();
     const history = createMemoryHistory();
     const result = render(
       <QueryClientProvider client={client}>
         <Router history={history}>
-          <CreateAccountView />
+          <LoginView />
         </Router>
       </QueryClientProvider>
     );
     // logRoles(result.container);
-    // screen.getByLabelText((text, elt) => text.startsWith("Username"))
-    // FIXME caching f*cked?
-    expect(screen.getByLabelText(/Username/i)).toHaveFocus();
-    expect(screen.getAllByRole("textbox")).toHaveLength(2);
+    const emailInput = await screen.findByLabelText(/Email Address/i);
+    const passwordInput = await screen.findByLabelText(/Password/i);
+    expect(emailInput).toBeInTheDocument().toHaveFocus();
+    expect(passwordInput).toBeInTheDocument();
+    // FIXME 26/08/20 psacawa: Error: "not wrapped in act"
+    // userEvent.type(emailInput, "user1@fake.com");
+    // userEvent.type(passwordInput, "sdfgsdfg");
   });
 });

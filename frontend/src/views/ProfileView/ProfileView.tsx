@@ -4,6 +4,9 @@ import { Card, CardBody, CardHeader } from "components/Card";
 import { Button } from "components/CustomButtons";
 import { useAuth } from "hooks";
 import { Redirect, useHistory, useLocation } from "react-router-dom";
+import { getLogger } from "utils";
+
+const logger = getLogger(__filebasename);
 
 const useStyles = makeStyles({
   cardCategoryWhite: {
@@ -43,62 +46,61 @@ const ProfileView = () => {
   const history = useHistory();
   const location = useLocation();
   const { user } = useAuth();
+  logger("user=", user);
   if (!user) {
-    return <Redirect to={`/?next=${location.pathname}`} />;
+    return <Redirect to={`/login/?next=${location.pathname}`} />;
   }
   return (
-    <>
-      <Grid container justifyContent="center" wrap="nowrap">
-        <Card>
-          <CardHeader color="primary">
-            <h4 className={classes.cardTitleWhite}>Profile</h4>
-            <p className={classes.cardCategoryWhite}>Complete your profile</p>
-          </CardHeader>
-          <CardBody className={classes.content}>
-            <Grid
-              container
-              justifyContent="center"
-              wrap="nowrap"
-              className={classes.content}
-            >
-              <Grid item className={classes.item} xs={12} sm={6}>
-                <Avatar className="" />
-              </Grid>
-              <Grid item className={classes.item} xs={12} sm={6}>
-                <h3 className={classes.field}>{user.username}</h3>
+    <Grid container justifyContent="center" wrap="nowrap">
+      <Card>
+        <CardHeader color="primary">
+          <h4 className={classes.cardTitleWhite}>Profile</h4>
+          <p className={classes.cardCategoryWhite}>Complete your profile</p>
+        </CardHeader>
+        <CardBody className={classes.content}>
+          <Grid
+            container
+            justifyContent="center"
+            wrap="nowrap"
+            className={classes.content}
+          >
+            <Grid item className={classes.item} xs={12} sm={6}>
+              <Avatar className="" />
+            </Grid>
+            <Grid item className={classes.item} xs={12} sm={6}>
+              <h3 className={classes.field}>{user.username}</h3>
+              <div>
+                <Typography className={classes.field} variant="body1">
+                  <span className={classes.faint}>Email:</span> {user.email}
+                </Typography>
                 <div>
                   <Typography className={classes.field} variant="body1">
-                    <span className={classes.faint}>Email:</span> {user.email}
+                    <span className={classes.faint}>Plan:</span> {user.level}
                   </Typography>
-                  <div>
-                    <Typography className={classes.field} variant="body1">
-                      <span className={classes.faint}>Plan:</span> {user.level}
-                    </Typography>
-                    {user.level === "plus" ? (
-                      <Button
-                        component="a"
-                        // TODO 21/08/20 psacawa: finish this
-                        href={`http://localhost:8000/stripe/portal/`}
-                      >
-                        Manage your subscription with stripe
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={(ev: React.MouseEvent<{}>) => {
-                          history.push("/pricing");
-                        }}
-                      >
-                        Order Now!
-                      </Button>
-                    )}
-                  </div>
+                  {user.level === "plus" ? (
+                    <Button
+                      component="a"
+                      // TODO 21/08/20 psacawa: finish this
+                      href={`http://localhost:8000/stripe/portal/`}
+                    >
+                      Manage your subscription with stripe
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={(ev: React.MouseEvent<{}>) => {
+                        history.push("/pricing/");
+                      }}
+                    >
+                      Order Now!
+                    </Button>
+                  )}
                 </div>
-              </Grid>
+              </div>
             </Grid>
-          </CardBody>
-        </Card>
-      </Grid>
-    </>
+          </Grid>
+        </CardBody>
+      </Card>
+    </Grid>
   );
 };
 

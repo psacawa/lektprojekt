@@ -24,10 +24,10 @@ let footerLinks: FooterItem[] = [
     text: "Home",
   },
   {
-    path: "/about",
+    path: "/about/",
     text: "About",
   },
-  { path: "/pricing", text: "Pricing" },
+  { path: "/pricing/", text: "Pricing" },
   {
     path: "/policies/#tos",
     text: "Terms of Service",

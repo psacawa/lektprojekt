@@ -151,7 +151,7 @@ const baseRoutes: AppRoute[] = [
     icon: AttachMoney,
   },
   {
-    path: "/policies",
+    path: "/policies/",
     name: "Policies",
     exact: false,
     component: PolicyView,
@@ -188,7 +188,7 @@ const baseRoutes: AppRoute[] = [
     component: ListPracticeView,
   },
   {
-    path: "/reset-password",
+    path: "/reset-password/",
     name: "Reset Password",
     exact: false,
     component: ResetPasswordView,
