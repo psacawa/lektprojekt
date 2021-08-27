@@ -19,13 +19,18 @@ spec:
     - host: www.lex.quest
       http:
         paths:
-          # main app
-          # fallback to frontend
           - path: /
             pathType: Prefix
             backend:
               service:
                 name: frontend-production
+                port:
+                  number: 80
+          - path: /auth
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-production
                 port:
                   number: 80
     - host: api.lex.quest
@@ -48,6 +53,13 @@ spec:
             backend:
               service:
                 name: frontend-staging
+                port:
+                  number: 80
+          - path: /auth
+            pathType: Prefix
+            backend:
+              service:
+                name: backend-staging
                 port:
                   number: 80
     - host: api.dev.lex.quest

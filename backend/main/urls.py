@@ -25,6 +25,7 @@ from rest_framework.routers import SimpleRouter
 from .views import (
     CheckoutSessionViewSet,
     GithubLoginView,
+    PasswordResetView,
     PriceViewSet,
     healthz,
     stripe_portal,
@@ -49,7 +50,7 @@ urlpatterns = [
     # TODO: i'm going to implement the frontend view with react router routing
     re_path(
         r"^auth/password/reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,32})/$",
-        TemplateView.as_view(template_name="password_reset_confirm.html"),
+        PasswordResetView.as_view(),
         name="password_reset_confirm",
     ),
     #  allauth is secondary, all paths must by manually set

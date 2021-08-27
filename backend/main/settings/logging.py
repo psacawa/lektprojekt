@@ -37,6 +37,7 @@ LEKTPROJEKT_LOGGED_MODULES = [
     "main.models",
     "main.signals",
     "main.views",
+    "main.forms",
     "main.webhooks",
 ]
 HANDLERS = {

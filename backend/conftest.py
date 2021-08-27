@@ -35,7 +35,7 @@ def test_feature():
 def test_user():
     """ gets fresh user account to test with """
     user = User.objects.create(
-        username="test_user", password="sdfgsdfg", email="test@a.com"
+        username="test_user", password="sdfgsdfg", email="test_user@a.com"
     )
     return user
 

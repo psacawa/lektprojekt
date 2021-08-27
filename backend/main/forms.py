@@ -1,6 +1,8 @@
 #  this is the same of dj_rest_auth.forms save for the one line FIX
 #  need to override dj-rest-auth serializer to fix email send from backend domain
 
+import logging
+
 from allauth.account import app_settings
 from allauth.account.adapter import get_adapter
 from allauth.account.forms import ResetPasswordForm as DefaultPasswordResetForm
@@ -14,6 +16,8 @@ from allauth.utils import build_absolute_uri
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
+
+logger = logging.getLogger(__name__)
 
 
 class AllAuthPasswordResetForm(DefaultPasswordResetForm):
@@ -41,7 +45,7 @@ class AllAuthPasswordResetForm(DefaultPasswordResetForm):
             #  FIX
             #  this is the only change
             # -  url = build_absolute_uri(request, path)
-            url = build_absolute_uri(request=None, location=path)
+            url = "{WEB_ORIGIN}{path}"
 
             context = {
                 "current_site": current_site,

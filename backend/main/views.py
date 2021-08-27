@@ -12,6 +12,7 @@ from django.http.request import HttpRequest
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from django.views.generic import TemplateView
 from djstripe.models import Customer, Price
 from djstripe.models.checkout import Session
 from rest_framework import mixins, viewsets
@@ -25,6 +26,20 @@ from .serializers import CheckoutSessionSerializer, PriceSerializer
 logger = logging.getLogger(__name__)
 
 HOUR = 60 * 60
+
+# AUTH
+
+
+class PasswordResetView(TemplateView):
+    """same as allauth, but override the origin"""
+
+    template_name = "password_reset_confirm.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["WEB_ORIGIN"] = settings.WEB_ORIGIN
+        return context
+
 
 #  STRIPE
 
@@ -116,7 +131,7 @@ def stripe_portal(request: HttpRequest):
         )
         raise e
     session = stripe.billing_portal.Session.create(
-        customer=customer.id, return_url=f"https://{settings.WEB_DOMAIN}/profile/"
+        customer=customer.id, return_url=f"{settings.WEB_ORIGIN}/profile/"
     )
     return redirect(session.url)
 

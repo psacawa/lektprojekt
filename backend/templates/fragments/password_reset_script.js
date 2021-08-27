@@ -1,13 +1,15 @@
-let url_elements = window.location.pathname.split("/");
+let url_elements = window.location.pathname.split("/").filter(Boolean);
 if (url_elements.length == 6) {
-  let uid = url_elements[url_elements.length - 3];
-  if (uid !== undefined) {
-    document.querySelector("input[name=uid]").value = uid;
-  }
-  let token = url_elements[url_elements.length - 2];
+  let token = url_elements.pop();
   if (token !== undefined) {
     document.querySelector("input[name=token]").value = token;
   }
+  let uid = url_elements.pop();
+  if (uid !== undefined) {
+    document.querySelector("input[name=uid]").value = uid;
+  }
+} else {
+  console.error("Invalid url path");
 }
 
 let error_response = function (data) {
@@ -53,7 +55,7 @@ document.querySelector("form").onsubmit = (event) => {
       if (success) {
         output.innerText = "Successfully changed password. Redirecting...";
         setTimeout(() => {
-          window.location = "https://{{ WEB_DOMAIN }}";
+          window.location = "{{ WEB_ORIGIN }}";
         }, 2000);
       } else {
         errors = JSON.stringify(body);
