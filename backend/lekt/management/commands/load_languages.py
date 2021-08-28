@@ -1,6 +1,7 @@
 from argparse import ArgumentParser
 from os.path import join
 
+import shtab
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
@@ -22,6 +23,7 @@ class Command(BaseCommand):
             default=join(settings.ASSET_DIR, "voices.json"),
             help="json file with language/voice data",
         )
+        shtab.add_argument_to(parser, ["--print-completions"])
 
     def handle(self, **kwargs):
         if Language.objects.count() != 0 or Voice.objects.count() != 0:

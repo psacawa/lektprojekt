@@ -1,3 +1,4 @@
+import shtab
 from django.apps import apps
 from django.core.management.base import BaseCommand
 from tabulate import tabulate
@@ -14,6 +15,7 @@ class Command(BaseCommand):
             type=str,
             help="App to show statistics for (default lekt)",
         )
+        shtab.add_argument_to(parser, ["--print-completions"])
 
     def handle(self, app, **options):
         models = list(apps.get_app_config(app).get_models())

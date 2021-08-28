@@ -3,6 +3,7 @@ import sys
 from argparse import ArgumentParser
 from os.path import isfile, join
 
+import shtab
 import spacy
 from django.conf import settings
 from django.contrib.sites.models import Site
@@ -33,6 +34,7 @@ class Command(BaseCommand):
     _target_lid: str
 
     def add_arguments(self, parser: ArgumentParser):
+        shtab.add_argument_to(parser, ["--print-completions"])
         parser.add_argument("corpus", help="SQLite database containing corpus")
         parser.add_argument(
             "--limit",

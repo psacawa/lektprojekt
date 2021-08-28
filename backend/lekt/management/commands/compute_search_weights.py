@@ -30,8 +30,9 @@ import sys
 from argparse import ArgumentParser
 from operator import xor
 from os.path import join
-from typing import Optional, Set, Tuple
+from typing import List, Optional, Set, Tuple
 
+import shtab
 from django.conf import settings
 from django.core.management import BaseCommand
 from django.db import connection
@@ -63,9 +64,11 @@ class Command(BaseCommand):
     cursor: DictCursor
 
     def add_arguments(self, parser: ArgumentParser):
-        parser.add_argument("base_lid", nargs="?")
-        parser.add_argument("target_lid", nargs="?")
+        lid_options: List[str] = [l.lid for l in Language.objects.filter(active=True)]
+        parser.add_argument("base_lid", nargs="?", choices=lid_options)
+        parser.add_argument("target_lid", nargs="?", choices=lid_options)
         parser.add_argument("-b", "--both-ways", action="store_true")
+        shtab.add_argument_to(parser, ["--print-completions"])
 
     def handle(  # type: ignore
         self,
