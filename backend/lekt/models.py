@@ -1,4 +1,5 @@
 import logging
+from typing import List, Optional
 
 from django.db import models
 from django.db.models.constraints import UniqueConstraint
@@ -489,11 +490,18 @@ class Phrase(TimestampedModel):
 
     objects = managers.LektManager()
 
-    def describe(self, attrs=[], add_attrs=True):
+    def describe(
+        self,
+        attrs: Optional[List[str]] = None,
+        add_attrs: bool = True,
+        features: bool = False,
+    ):
         """
         Brief description of phrase. `attrs` refers additional attributes to print, e.g.:
         `phrase.describe(["ent_type"])`
         """
+        if attrs is None:
+            attrs = []
 
         def nested_getattr(x, s: str):
             """getattr admitting dot syntax for atribute access"""
@@ -511,8 +519,18 @@ class Phrase(TimestampedModel):
         ]
         if add_attrs:
             attrs = base_attrs + attrs
-        word_query = self.words.all().order_by("phraseword__number")
-        table = [[nested_getattr(w, at) for at in attrs] for w in word_query]
+        words = list(self.words.all().order_by("phraseword__number"))
+        table: List[List[str]] = [
+            [nested_getattr(w, at) for at in attrs] for w in words
+        ]
+        if features:
+            for (idx, word) in enumerate(words):
+                feature_str = ", ".join(
+                    [f.description for f in Feature.objects.filter(word=word)]
+                )
+                table[idx].append(feature_str)
+            attrs.append("features")
+
         print(tabulate(table, headers=attrs))
 
     def __repr__(self):

@@ -39,10 +39,16 @@ let footerLinks: FooterItem[] = [
 ];
 
 if (process.env.NODE_ENV === "development") {
-  footerLinks.push({
-    path: "/throw-error",
-    text: "Throw Error",
-  });
+  footerLinks = footerLinks.concat([
+    {
+      path: "/throw-error",
+      text: "Throw Error",
+    },
+    {
+      path: "/scratch",
+      text: "Scratchpad",
+    },
+  ]);
 }
 
 export default function Footer({ fluid, white }: Props) {

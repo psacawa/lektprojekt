@@ -29,6 +29,7 @@ import { ListPracticeView, PracticeView } from "views/PracticeView";
 import PricingView from "views/PricingView";
 import ProfileView from "views/ProfileView";
 import ResetPasswordView from "views/ResetPasswordView";
+import ScratchpadView from "views/ScratchpadView";
 import TrackedListView from "views/TrackedListView";
 
 interface BaseRoute {
@@ -142,7 +143,7 @@ const baseDrawerRoutes: AppRoute[] = [
 
 // NOTE 19/08/20 psacawa: as these routes are not displayed in the drawer, the icons can
 // be removed once the direction is clearer
-const baseRoutes: AppRoute[] = [
+let baseRoutes: AppRoute[] = [
   {
     path: "/pricing/",
     name: "Pricing",
@@ -204,17 +205,26 @@ const baseRoutes: AppRoute[] = [
 ];
 
 if (process.env.NODE_ENV === "development") {
-  baseRoutes.push({
-    path: "/throw-error",
-    name: "Fubar",
-    exact: true,
-    component: () => {
-      console.error("error");
-      throw new Error("Manually thrown error");
-    },
+  baseRoutes = baseRoutes.concat([
+    {
+      path: "/throw-error",
+      name: "Fubar",
+      exact: true,
+      component: () => {
+        console.error("error");
+        throw new Error("Manually thrown error");
+      },
 
-    icon: MUIError,
-  });
+      icon: MUIError,
+    },
+    {
+      path: "/scratch",
+      name: "Scratchpad",
+      exact: true,
+      component: ScratchpadView,
+      icon: MUIError,
+    },
+  ]);
 }
 
 const loggedInRoutes: AppRoute[] = baseDrawerRoutes.filter(
