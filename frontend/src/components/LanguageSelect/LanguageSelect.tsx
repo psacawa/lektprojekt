@@ -1,4 +1,5 @@
-import { Grid, TextField } from "@material-ui/core";
+import { Grid, IconButton, TextField } from "@material-ui/core";
+import { SwapHoriz } from "@material-ui/icons";
 import { Autocomplete } from "@material-ui/lab";
 import { Language } from "types";
 
@@ -8,6 +9,9 @@ interface Props {
   languageOptions: Language[];
   handleBaseLanguageChange: (...args: any[]) => any;
   handleTargetLanguageChange: (...args: any[]) => any;
+  setBaseLanguage: React.Dispatch<Language | null>;
+  setTargetLanguage: React.Dispatch<Language | null>;
+  resetSearchObservables: () => void;
 }
 
 const LanguageSelect = ({
@@ -15,11 +19,14 @@ const LanguageSelect = ({
   targetLanguage,
   handleBaseLanguageChange,
   handleTargetLanguageChange,
+  setBaseLanguage,
+  setTargetLanguage,
   languageOptions,
+  resetSearchObservables,
 }: Props) => {
   return (
-    <>
-      <Grid item md={6} xs={12}>
+    <Grid container justifyContent="space-around">
+      <Grid item md={5} xs={12}>
         <Autocomplete
           getOptionLabel={(lang) => lang.name}
           onChange={handleBaseLanguageChange}
@@ -34,7 +41,17 @@ const LanguageSelect = ({
           value={baseLanguage}
         />
       </Grid>
-      <Grid item md={6} xs={12}>
+      <IconButton
+        onClick={(ev: React.MouseEvent<{}>) => {
+          setBaseLanguage(targetLanguage);
+          setTargetLanguage(baseLanguage);
+          resetSearchObservables();
+        }}
+      >
+        <SwapHoriz />
+      </IconButton>
+
+      <Grid item md={5} xs={12}>
         <Autocomplete
           getOptionLabel={(lang) => lang.name}
           onChange={handleTargetLanguageChange}
@@ -49,7 +66,7 @@ const LanguageSelect = ({
           value={targetLanguage}
         />
       </Grid>
-    </>
+    </Grid>
   );
 };
 

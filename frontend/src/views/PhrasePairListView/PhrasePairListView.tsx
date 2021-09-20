@@ -14,12 +14,14 @@ const PhrasePairListView = () => {
   const [features, setFeatures] = useState<Coloured<Feature>[]>([]);
   const [pageNumber, setPageNumber] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
+  const [lexemeOptions, setLexemeOptions] = useState<Lexeme[]>([]);
+  const [featureOptions, setFeatureOptions] = useState<Feature[]>([]);
 
   const languageQuery = useLanguages({
     refetchOnWindowFocus: false,
   });
   if (!baseLanguage && !targetLanguage && languageQuery.data) {
-    // on page load, english and spanish are the selected languages
+    // on page load, english and spanish are the selected default languages
     setBaseLanguage(
       languageQuery.data.find((lang) => lang.lid === "en") ?? null
     );
@@ -50,6 +52,13 @@ const PhrasePairListView = () => {
   const handleRowsPerPageChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => setRowsPerPage(parseInt(event.currentTarget.value));
+
+  const resetSearchObservables = () => {
+    setLexemeOptions([]);
+    setLexemes([]);
+    setFeatures([]);
+    setFeatureOptions([]);
+  };
   return (
     <>
       <Typography style={{ margin: 30 }} variant="h5">
@@ -70,9 +79,15 @@ const PhrasePairListView = () => {
               }}
               handleTargetLanguageChange={(ev, newLang) => {
                 setTargetLanguage(newLang);
+                resetSearchObservables();
               }}
               languageOptions={languageQuery!.data!}
               targetLanguage={targetLanguage}
+              {...{
+                setBaseLanguage,
+                setTargetLanguage,
+                resetSearchObservables,
+              }}
             />
             <PhrasePairSearchOptions
               features={features}
@@ -81,6 +96,12 @@ const PhrasePairListView = () => {
               setFeatures={setFeatures}
               setLexemes={setLexemes}
               setPageNumber={setPageNumber}
+              {...{
+                lexemeOptions,
+                setLexemeOptions,
+                featureOptions,
+                setFeatureOptions,
+              }}
             />
             <PhrasePairListTable
               {...{

@@ -17,6 +17,9 @@ import { useLexemes } from "hooks";
 import { isEqual, uniqWith } from "lodash";
 import React, { useState } from "react";
 import { Coloured, Language, Lexeme } from "types";
+import { getLogger } from "utils";
+
+const logger = getLogger("LexemeSelect");
 
 interface Props {
   language: Language | null;
@@ -25,8 +28,10 @@ interface Props {
   onChange: (
     ev: React.ChangeEvent<{}>,
     value: Coloured<Lexeme>[],
-    reason: any
+    reason: string
   ) => any;
+  options: Lexeme[];
+  setOptions: React.Dispatch<Lexeme[]>;
 }
 
 const useStyles = makeStyles(() => ({
@@ -35,9 +40,15 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const LexemeSelect = ({ language, value, setValue, onChange }: Props) => {
+const LexemeSelect = ({
+  language,
+  value,
+  setValue,
+  onChange,
+  options,
+  setOptions,
+}: Props) => {
   const classes = useStyles();
-  const [options, setOptions] = useState<Lexeme[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
 
   const lexemeQuery = useLexemes(
@@ -56,6 +67,7 @@ const LexemeSelect = ({ language, value, setValue, onChange }: Props) => {
       setInputValue(newInputValue),
     300
   );
+  logger(value);
 
   return (
     <Grid item md={6} xs={12}>
@@ -64,6 +76,7 @@ const LexemeSelect = ({ language, value, setValue, onChange }: Props) => {
         loading={lexemeQuery.isFetching}
         multiple
         onChange={onChange}
+        value={value}
         onInputChange={handleInputChange}
         options={options}
         renderInput={(params) => (

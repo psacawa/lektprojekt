@@ -50,13 +50,21 @@ export interface Language<ExpandVoice extends boolean = false> {
   voice_set: Voice[];
 }
 
-export interface TokenSpan {
+export interface BaseTokenSpan {
   number: number;
   start: number;
   end: number;
-  lexeme?: number;
-  feature?: number;
 }
+
+export interface LexemeTokenSpan extends BaseTokenSpan {
+  lexeme: number;
+}
+
+export interface FeatureTokenSpan extends BaseTokenSpan {
+  feature: number;
+}
+
+export type TokenSpan = LexemeTokenSpan | FeatureTokenSpan;
 
 export interface Lexeme {
   id: number;
@@ -90,8 +98,8 @@ export interface Phrase {
   id: number;
   text: string;
   lang: number;
-  lexeme_matches?: TokenSpan[];
-  feature_matches?: TokenSpan[];
+  lexeme_matches?: LexemeTokenSpan[];
+  feature_matches?: FeatureTokenSpan[];
   words?: Word[];
 }
 

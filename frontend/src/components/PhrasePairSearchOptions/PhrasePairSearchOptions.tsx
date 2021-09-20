@@ -4,6 +4,9 @@ import LexemeSelect from "components/LexemeSelect";
 import { difference, random } from "lodash";
 import React from "react";
 import { Coloured, Feature, Language, Lexeme } from "types";
+import { getLogger } from "utils";
+
+const logger = getLogger("PhrasePairSearchOptions");
 
 interface Props {
   language: Language | null;
@@ -12,6 +15,10 @@ interface Props {
   setLexemes: React.Dispatch<Lexeme[]>;
   setFeatures: React.Dispatch<Feature[]>;
   setPageNumber: React.Dispatch<number>;
+  lexemeOptions: Lexeme[];
+  setLexemeOptions: React.Dispatch<Lexeme[]>;
+  featureOptions: Feature[];
+  setFeatureOptions: React.Dispatch<Feature[]>;
 }
 
 const lightColours = [
@@ -48,8 +55,13 @@ const PhrasePairSearchOptions = ({
   setFeatures,
   language,
   setPageNumber,
+  lexemeOptions,
+  setLexemeOptions,
+  featureOptions,
+  setFeatureOptions,
 }: Props) => {
   const classes = useStyles();
+  // logger(lexemes);
 
   const getRandomUnusedColour = () => {
     let currentColours = (lexemes as Coloured<Lexeme | Feature>[])
@@ -67,12 +79,14 @@ const PhrasePairSearchOptions = ({
           if (newLexemes.length > lexemes.length) {
             let idx = newLexemes.length - 1;
             newLexemes[idx].colour = getRandomUnusedColour();
-            setLexemes(newLexemes);
             setPageNumber(0);
           }
+          setLexemes(newLexemes);
         }}
         setValue={setLexemes}
         value={lexemes}
+        options={lexemeOptions}
+        setOptions={setLexemeOptions}
       />
       <FeatureSelect
         language={language}
@@ -80,9 +94,9 @@ const PhrasePairSearchOptions = ({
           if (newFeatures.length > features.length) {
             let idx = newFeatures.length - 1;
             newFeatures[idx].colour = getRandomUnusedColour();
-            setFeatures(newFeatures);
             setPageNumber(0);
           }
+          setFeatures(newFeatures);
         }}
         setValue={setFeatures}
         value={features}
