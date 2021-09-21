@@ -19,9 +19,10 @@ FORMATTERS = {
 }
 
 LEKTPROJEKT_LOGGED_MODULES = [
+    "django.db.backends",
+    "django.server",
     "djstripe",
     "djstripe.views",
-    "django.db.backends",
     "lekt.apps",
     "lekt.decorators",
     "lekt.filters",
@@ -33,11 +34,11 @@ LEKTPROJEKT_LOGGED_MODULES = [
     "lekt.signals",
     "lekt.views",
     "main.apps",
+    "main.forms",
     "main.middleware",
     "main.models",
     "main.signals",
     "main.views",
-    "main.forms",
     "main.webhooks",
 ]
 HANDLERS = {
