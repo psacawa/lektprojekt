@@ -8,9 +8,7 @@ const LexemeDetailView = () => {
   return (
     <Grid container justifyContent="center">
       {isSuccess ? (
-        <>
-          <Typography variant="h5">{feature?.description}</Typography>
-        </>
+        <Typography variant="h5">{feature?.description}</Typography>
       ) : (
         <Grid item>
           <CircularProgress style={{ margin: "auto" }} />

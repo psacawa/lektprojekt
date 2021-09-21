@@ -32,8 +32,8 @@ const FeatureSelect = () => {
     targetLanguage: language,
     features,
     setFeatures,
-    setPageNumber,
     getRandomUnusedColour,
+    resetPagination,
   } = useSearchContext();
   const classes = useStyles();
 
@@ -60,23 +60,13 @@ const FeatureSelect = () => {
         loading={featureQuery.isFetching}
         multiple
         onChange={(event, newFeatures: Coloured<Feature>[], reason) => {
-          logger(
-            "newFeatures",
-            newFeatures.map((f) => f.colour)
-          );
           for (let feat of newFeatures) {
             if (feat.colour === undefined) {
-              let colour = getRandomUnusedColour();
-              logger("colour", colour);
-              feat.colour = colour;
+              feat.colour = getRandomUnusedColour();
             }
           }
-          logger(
-            "newFeatures",
-            newFeatures.map((f) => f.colour)
-          );
-          setPageNumber(0);
           setFeatures(newFeatures);
+          resetPagination();
         }}
         onInputChange={handleInputChange}
         options={featureQuery.data ?? []}
@@ -125,6 +115,7 @@ const FeatureSelect = () => {
                     (features, featureIdx) => idx !== featureIdx
                   );
                   setFeatures(newFeatures);
+                  resetPagination();
                 }}
               >
                 <Clear />

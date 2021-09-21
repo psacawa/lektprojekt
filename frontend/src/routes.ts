@@ -16,6 +16,7 @@ import AboutView from "views/AboutView";
 import CoursesView from "views/CoursesView";
 import CreateAccountView from "views/CreateAccountView";
 import FallbackView from "views/FallbackView";
+import FeatureDetailView from "views/FeatureDetailView";
 import HomeView from "views/HomeView";
 import LandingPageView from "views/LandingPageView";
 import LexemeDetailView from "views/LexemeDetailView";
@@ -175,6 +176,12 @@ let baseRoutes: AppRoute[] = [
     name: "Lexeme Detail View",
     exact: false,
     component: LexemeDetailView,
+  },
+  {
+    path: "/features/:id/",
+    name: "Feature Detail View",
+    exact: false,
+    component: FeatureDetailView,
   },
   {
     path: "/lists/:id",

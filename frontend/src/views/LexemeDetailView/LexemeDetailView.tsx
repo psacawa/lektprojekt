@@ -7,11 +7,15 @@ const LexemeDetailView = () => {
   const { id } = useParams<any>();
   const { isSuccess, data: lexeme } = useLexeme({ id });
   return (
-    <Grid container justifyContent="center">
+    <Grid container justifyContent="center" spacing={2}>
       {isSuccess ? (
         <>
-          <Typography variant="h5">{lexeme!.lemma}</Typography>
-          <Typography variant="caption">{lexeme!.pos}</Typography>
+          <Grid item>
+            <Typography variant="h5">{lexeme!.lemma}</Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="caption">{lexeme!.pos}</Typography>
+          </Grid>
           {/* <PhrasePairTable /> */}
         </>
       ) : (

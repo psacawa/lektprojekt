@@ -13,7 +13,7 @@ const PolicyView = () => {
           Terms of Service
         </Typography>
         <Typography className={classes.content} variant="body1">
-          Use the service, have fun, don't be abusive.
+          Use the service, have fun, don't be abusive, don't DOS the service.
         </Typography>
         <Typography id="policy" variant="h4">
           Privacy Policy

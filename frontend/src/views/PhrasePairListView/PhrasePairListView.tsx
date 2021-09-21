@@ -3,11 +3,59 @@ import { CircularProgress } from "@material-ui/core";
 import FeatureSelect from "components/FeatureSelect";
 import LanguageSelect from "components/LanguageSelect";
 import LexemeSelect from "components/LexemeSelect";
-import PhrasePairListTable from "components/PhrasePairListTable";
-import { useLanguages, usePairObservableSearch } from "hooks";
+import { useLanguages, usePairCounts, usePairObservableSearch } from "hooks";
 import React, { useEffect } from "react";
+import { Language } from "types";
+import { getLogger } from "utils";
 
+import PhrasePairListTable from "./PhrasePairListTable";
 import { SearchContextProvider, useSearchContext } from "./SearchContext";
+
+const logger = getLogger("PhrasePairListView");
+
+interface PhrasePairCountsNotificationProps {
+  baseLanguage: Language<false> | null;
+  targetLanguage: Language<false> | null;
+}
+
+/**
+ * Renders alerts: "1234 exmamples available"
+ * "Nothing for this language pair right now :("
+ */
+const PhrasePairCountsNotification = (
+  props: PhrasePairCountsNotificationProps
+) => {
+  const pairCountQuery = usePairCounts();
+  let count: number | undefined = undefined;
+  if (
+    pairCountQuery.isSuccess &&
+    !!props.baseLanguage &&
+    !!props.targetLanguage
+  ) {
+    count = pairCountQuery.data?.find(
+      (pairCount) =>
+        pairCount.base_lang === props.baseLanguage!.name &&
+        pairCount.target_lang === props.targetLanguage!.name
+    )?.count;
+  }
+  return (
+    <Grid item xs={12}>
+      <Grid container justifyContent="center">
+        <Grid item>
+          {pairCountQuery.data && (
+            <Typography variant="h5">
+              {typeof count === "number" ? (
+                <>{count} examples available</>
+              ) : (
+                "Nothing for this language pair right now :("
+              )}
+            </Typography>
+          )}
+        </Grid>
+      </Grid>
+    </Grid>
+  );
+};
 
 const PhrasePairListViewWrapped = () => {
   const {
@@ -16,17 +64,9 @@ const PhrasePairListViewWrapped = () => {
     targetLanguage,
     setTargetLanguage,
     lexemes,
-    setLexemes,
     features,
-    setFeatures,
     pageNumber,
-    setPageNumber,
     rowsPerPage,
-    setRowsPerPage,
-    lexemeOptions,
-    setLexemeOptions,
-    featureOptions,
-    setFeatureOptions,
   } = useSearchContext();
   const languageQuery = useLanguages({
     refetchOnWindowFocus: false,
@@ -59,65 +99,42 @@ const PhrasePairListViewWrapped = () => {
         lexemes.length + features.length > 0,
     }
   );
-  const handleChangePage = (event: React.ChangeEvent<{}>, page: number) => {
-    setPageNumber(page);
-  };
-  const handleRowsPerPageChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => setRowsPerPage(parseInt(event.currentTarget.value));
 
-  const resetSearchObservables = () => {
-    setLexemeOptions([]);
-    setLexemes([]);
-    setFeatures([]);
-    setFeatureOptions([]);
-  };
   return (
     <>
-      <Typography style={{ margin: 30 }} variant="h5">
-        Welcome to{" "}
-        <span style={{ color: "blue" }}>Semantically Enhanced Search</span> Mode
-      </Typography>
       <Grid container justifyContent="center" spacing={4}>
-        {languageQuery.isFetching ? (
+        <>
           <Grid item>
-            <CircularProgress />
+            <Typography variant="h4">Semantically Enhanced Search</Typography>
           </Grid>
-        ) : (
-          <>
-            <LanguageSelect
-              baseLanguage={baseLanguage}
-              handleBaseLanguageChange={(ev, newLang) => {
-                setBaseLanguage(newLang);
-              }}
-              handleTargetLanguageChange={(ev, newLang) => {
-                setTargetLanguage(newLang);
-                resetSearchObservables();
-              }}
-              languageOptions={languageQuery!.data!}
-              targetLanguage={targetLanguage}
-              {...{
-                setBaseLanguage,
-                setTargetLanguage,
-                resetSearchObservables,
-              }}
-            />
-            <LexemeSelect />
-            <FeatureSelect />
-            <PhrasePairListTable
-              {...{
-                phrasePairQuery,
-                onRowsPerPageChange: handleRowsPerPageChange,
-                onPageChange: handleChangePage,
-              }}
-            />
-          </>
-        )}
+          {languageQuery.isFetching ? (
+            <Grid item>
+              <CircularProgress />
+            </Grid>
+          ) : (
+            <>
+              <LanguageSelect languageOptions={languageQuery!.data!} />
+              <PhrasePairCountsNotification
+                {...{ baseLanguage, targetLanguage }}
+              />
+              <LexemeSelect />
+              <FeatureSelect />
+              <PhrasePairListTable
+                {...{
+                  phrasePairQuery,
+                }}
+              />
+            </>
+          )}
+        </>
       </Grid>
     </>
   );
 };
 
+/**
+ * Temporary  until all functionality is moved out out PhrasePairListViewWrapped
+ */
 const PhrasePairListView = () => {
   return (
     <SearchContextProvider>

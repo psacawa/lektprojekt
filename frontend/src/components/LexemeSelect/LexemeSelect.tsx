@@ -35,8 +35,8 @@ const LexemeSelect = () => {
     setLexemes,
     lexemeOptions: options,
     setLexemeOptions: setOptions,
-    setPageNumber,
     getRandomUnusedColour,
+    resetPagination,
   } = useSearchContext();
   const classes = useStyles();
   const [inputValue, setInputValue] = useState<string>("");
@@ -57,7 +57,6 @@ const LexemeSelect = () => {
       setInputValue(newInputValue),
     300
   );
-  logger(lexemes);
 
   return (
     <Grid item md={6} xs={12}>
@@ -67,23 +66,13 @@ const LexemeSelect = () => {
         multiple
         value={lexemes}
         onChange={(event, newLexemes: Coloured<Lexeme>[], reason) => {
-          logger(
-            "newLexemes",
-            newLexemes.map((f) => f.colour)
-          );
           for (let lex of newLexemes) {
             if (lex.colour === undefined) {
-              let colour = getRandomUnusedColour();
-              logger("colour", colour);
-              lex.colour = colour;
+              lex.colour = getRandomUnusedColour();
             }
           }
-          logger(
-            "newLexemes",
-            newLexemes.map((f) => f.colour)
-          );
-          setPageNumber(0);
           setLexemes([...newLexemes]);
+          resetPagination();
         }}
         onInputChange={handleInputChange}
         options={options}
@@ -137,6 +126,7 @@ const LexemeSelect = () => {
                     (lexeme, lexemeIdx) => idx !== lexemeIdx
                   );
                   setLexemes(newLexemes);
+                  resetPagination();
                 }}
               >
                 <Clear />

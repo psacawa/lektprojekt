@@ -18,16 +18,12 @@ import PhrasePairDetailTable from "components/PhrasePairDetailTable";
 import _ from "lodash";
 import React, { useState } from "react";
 import { QueryObserverResult } from "react-query";
+import { getLogger } from "utils";
 import { useSearchContext } from "views/PhrasePairListView/SearchContext";
 
-import {
-  Coloured,
-  Feature,
-  Language,
-  Lexeme,
-  Paginate,
-  PhrasePair,
-} from "../../types";
+import { Paginate, PhrasePair } from "../../types";
+
+const logger = getLogger("PhrasePairListTable");
 
 const useRowStyles = makeStyles({
   root: {
@@ -71,8 +67,6 @@ const PhrasePairTableRow = ({ phrasePair, colourMap }: RowProps) => {
 
 interface Props {
   phrasePairQuery: QueryObserverResult<Paginate<PhrasePair>>;
-  onPageChange: (event: any, page: number) => void;
-  onRowsPerPageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 // TODO 17/03/20 psacawa: figure out how to present the PhrasePairTable on xs
@@ -86,12 +80,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PhrasePairTable = ({
-  phrasePairQuery,
-  onPageChange,
-  onRowsPerPageChange,
-}: Props) => {
+const PhrasePairTable = ({ phrasePairQuery }: Props) => {
   const {
+    setPageNumber,
+    setRowsPerPage,
     baseLanguage,
     targetLanguage,
     lexemes,
@@ -140,8 +132,17 @@ const PhrasePairTable = ({
           <TablePagination
             component="div"
             count={data!.count}
-            onPageChange={onPageChange}
-            onRowsPerPageChange={onRowsPerPageChange}
+            onPageChange={(
+              event: React.MouseEvent<{}> | null,
+              page: number
+            ) => {
+              setPageNumber(page);
+            }}
+            onRowsPerPageChange={(
+              event: React.ChangeEvent<HTMLInputElement>
+            ) => {
+              setRowsPerPage(parseInt(event.target.value, 10));
+            }}
             page={pageNumber}
             rowsPerPage={rowsPerPage}
             rowsPerPageOptions={[10, 20, 30, 40, 50]}

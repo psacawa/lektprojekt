@@ -23,6 +23,8 @@ interface SearchContext {
   featureOptions: Feature[];
   setFeatureOptions: React.Dispatch<Feature[]>;
   getRandomUnusedColour: () => string | undefined;
+  resetSearch: () => void;
+  resetPagination: () => void;
 }
 
 const lightColours = [
@@ -54,7 +56,7 @@ export const SearchContextProvider = (props: any) => {
   const [lexemes, setLexemes] = useState<Coloured<Lexeme>[]>([]);
   const [features, setFeatures] = useState<Coloured<Feature>[]>([]);
   const [pageNumber, setPageNumber] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(20);
+  const [rowsPerPage, _setRowsPerPage] = useState(20);
   const [lexemeOptions, setLexemeOptions] = useState<Lexeme[]>([]);
   const [featureOptions, setFeatureOptions] = useState<Feature[]>([]);
 
@@ -66,6 +68,24 @@ export const SearchContextProvider = (props: any) => {
     // NOTE 21/09/20 psacawa: _.random is inclusive of both bounds
     return availableColours[random(availableColours.length - 1)];
   };
+
+  const resetSearch = () => {
+    setLexemeOptions([]);
+    setLexemes([]);
+    setFeatures([]);
+    setFeatureOptions([]);
+    resetPagination();
+  };
+
+  function resetPagination() {
+    setPageNumber(0);
+    _setRowsPerPage(20);
+  }
+
+  function setRowsPerPage(n: number) {
+    _setRowsPerPage(n);
+    setPageNumber(0);
+  }
 
   return (
     <SearchContext.Provider
@@ -87,6 +107,8 @@ export const SearchContextProvider = (props: any) => {
         featureOptions,
         setFeatureOptions,
         getRandomUnusedColour,
+        resetSearch,
+        resetPagination,
       }}
       {...props}
     ></SearchContext.Provider>

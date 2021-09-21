@@ -2,34 +2,28 @@ import { Grid, IconButton, TextField } from "@material-ui/core";
 import { SwapHoriz } from "@material-ui/icons";
 import { Autocomplete } from "@material-ui/lab";
 import { Language } from "types";
+import { useSearchContext } from "views/PhrasePairListView/SearchContext";
 
 interface Props {
-  baseLanguage: Language | null;
-  targetLanguage: Language | null;
   languageOptions: Language[];
-  handleBaseLanguageChange: (...args: any[]) => any;
-  handleTargetLanguageChange: (...args: any[]) => any;
-  setBaseLanguage: React.Dispatch<Language | null>;
-  setTargetLanguage: React.Dispatch<Language | null>;
-  resetSearchObservables: () => void;
 }
 
-const LanguageSelect = ({
-  baseLanguage,
-  targetLanguage,
-  handleBaseLanguageChange,
-  handleTargetLanguageChange,
-  setBaseLanguage,
-  setTargetLanguage,
-  languageOptions,
-  resetSearchObservables,
-}: Props) => {
+const LanguageSelect = ({ languageOptions }: Props) => {
+  const {
+    baseLanguage,
+    targetLanguage,
+    setBaseLanguage,
+    setTargetLanguage,
+    resetSearch,
+  } = useSearchContext();
   return (
     <Grid container justifyContent="space-around">
       <Grid item md={5} xs={12}>
         <Autocomplete
           getOptionLabel={(lang) => lang.name}
-          onChange={handleBaseLanguageChange}
+          onChange={(ev, newLang) => {
+            setBaseLanguage(newLang);
+          }}
           options={languageOptions}
           renderInput={(params) => (
             <TextField
@@ -45,7 +39,7 @@ const LanguageSelect = ({
         onClick={(ev: React.MouseEvent<{}>) => {
           setBaseLanguage(targetLanguage);
           setTargetLanguage(baseLanguage);
-          resetSearchObservables();
+          resetSearch();
         }}
       >
         <SwapHoriz />
@@ -54,7 +48,10 @@ const LanguageSelect = ({
       <Grid item md={5} xs={12}>
         <Autocomplete
           getOptionLabel={(lang) => lang.name}
-          onChange={handleTargetLanguageChange}
+          onChange={(ev, newLang) => {
+            setTargetLanguage(newLang);
+            resetSearch();
+          }}
           options={languageOptions}
           renderInput={(params) => (
             <TextField
