@@ -311,7 +311,7 @@ feature_description_dict = {
     ("Mood", "Imp"): "imperative mood",
     ("Mood", "Ind"): "indicative mood",
     ("Mood", "Sub"): "subjunctive mood",
-    ("NounType", "Prop"): "",
+    ("NounType", "Prop"): "proper noun",
     ("Number", "Plur"): "plural",
     ("Number", "Sing"): "singular",
     ("Number[psor]", "Plur"): "plural possessor",

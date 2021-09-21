@@ -18,6 +18,7 @@ import PhrasePairDetailTable from "components/PhrasePairDetailTable";
 import _ from "lodash";
 import React, { useState } from "react";
 import { QueryObserverResult } from "react-query";
+import { useSearchContext } from "views/PhrasePairListView/SearchContext";
 
 import {
   Coloured,
@@ -69,14 +70,8 @@ const PhrasePairTableRow = ({ phrasePair, colourMap }: RowProps) => {
 };
 
 interface Props {
-  baseLanguage: Language | null;
-  targetLanguage: Language | null;
   phrasePairQuery: QueryObserverResult<Paginate<PhrasePair>>;
-  lexemes: Coloured<Lexeme>[];
-  features: Coloured<Feature>[];
   onPageChange: (event: any, page: number) => void;
-  pageNumber: number;
-  rowsPerPage: number;
   onRowsPerPageChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -93,15 +88,17 @@ const useStyles = makeStyles((theme) => ({
 
 const PhrasePairTable = ({
   phrasePairQuery,
-  baseLanguage,
-  targetLanguage,
-  lexemes,
-  features,
   onPageChange,
-  pageNumber,
-  rowsPerPage,
   onRowsPerPageChange,
 }: Props) => {
+  const {
+    baseLanguage,
+    targetLanguage,
+    lexemes,
+    features,
+    pageNumber,
+    rowsPerPage,
+  } = useSearchContext();
   const classes = useStyles();
   const featureColourMap: Record<number, string | undefined> = _(features)
     .keyBy("id")

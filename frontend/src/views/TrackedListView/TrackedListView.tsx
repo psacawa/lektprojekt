@@ -163,7 +163,7 @@ const TrackedListView = ({ list }: Props) => {
   );
   const featureSearchQuery = useFeatures(
     {
-      lang: listQuery.data?.course.target_lang,
+      lang: listQuery.data!.course.target_lang,
     },
     {
       onSuccess: (results) => {

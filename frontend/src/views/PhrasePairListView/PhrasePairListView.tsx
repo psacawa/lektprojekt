@@ -1,34 +1,47 @@
 import { Grid, Typography } from "@material-ui/core";
 import { CircularProgress } from "@material-ui/core";
+import FeatureSelect from "components/FeatureSelect";
 import LanguageSelect from "components/LanguageSelect";
+import LexemeSelect from "components/LexemeSelect";
 import PhrasePairListTable from "components/PhrasePairListTable";
-import PhrasePairSearchOptions from "components/PhrasePairSearchOptions";
 import { useLanguages, usePairObservableSearch } from "hooks";
-import React, { useState } from "react";
-import { Coloured, Feature, Language, Lexeme } from "types";
+import React, { useEffect } from "react";
 
-const PhrasePairListView = () => {
-  const [baseLanguage, setBaseLanguage] = useState<Language | null>(null);
-  const [targetLanguage, setTargetLanguage] = useState<Language | null>(null);
-  const [lexemes, setLexemes] = useState<Coloured<Lexeme>[]>([]);
-  const [features, setFeatures] = useState<Coloured<Feature>[]>([]);
-  const [pageNumber, setPageNumber] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(20);
-  const [lexemeOptions, setLexemeOptions] = useState<Lexeme[]>([]);
-  const [featureOptions, setFeatureOptions] = useState<Feature[]>([]);
+import { SearchContextProvider, useSearchContext } from "./SearchContext";
 
+const PhrasePairListViewWrapped = () => {
+  const {
+    baseLanguage,
+    setBaseLanguage,
+    targetLanguage,
+    setTargetLanguage,
+    lexemes,
+    setLexemes,
+    features,
+    setFeatures,
+    pageNumber,
+    setPageNumber,
+    rowsPerPage,
+    setRowsPerPage,
+    lexemeOptions,
+    setLexemeOptions,
+    featureOptions,
+    setFeatureOptions,
+  } = useSearchContext();
   const languageQuery = useLanguages({
     refetchOnWindowFocus: false,
   });
-  if (!baseLanguage && !targetLanguage && languageQuery.data) {
-    // on page load, english and spanish are the selected default languages
-    setBaseLanguage(
-      languageQuery.data.find((lang) => lang.lid === "en") ?? null
-    );
-    setTargetLanguage(
-      languageQuery.data.find((lang) => lang.lid === "es") ?? null
-    );
-  }
+  useEffect(() => {
+    if (!baseLanguage && !targetLanguage && languageQuery.data) {
+      // on page load, english and spanish are the selected default languages
+      setBaseLanguage(
+        languageQuery.data.find((lang) => lang.lid === "en") ?? null
+      );
+      setTargetLanguage(
+        languageQuery.data.find((lang) => lang.lid === "es") ?? null
+      );
+    }
+  });
 
   const phrasePairQuery = usePairObservableSearch(
     {
@@ -89,29 +102,11 @@ const PhrasePairListView = () => {
                 resetSearchObservables,
               }}
             />
-            <PhrasePairSearchOptions
-              features={features}
-              language={targetLanguage}
-              lexemes={lexemes}
-              setFeatures={setFeatures}
-              setLexemes={setLexemes}
-              setPageNumber={setPageNumber}
-              {...{
-                lexemeOptions,
-                setLexemeOptions,
-                featureOptions,
-                setFeatureOptions,
-              }}
-            />
+            <LexemeSelect />
+            <FeatureSelect />
             <PhrasePairListTable
               {...{
-                baseLanguage,
-                targetLanguage,
-                pageNumber,
-                rowsPerPage,
                 phrasePairQuery,
-                lexemes,
-                features,
                 onRowsPerPageChange: handleRowsPerPageChange,
                 onPageChange: handleChangePage,
               }}
@@ -120,6 +115,14 @@ const PhrasePairListView = () => {
         )}
       </Grid>
     </>
+  );
+};
+
+const PhrasePairListView = () => {
+  return (
+    <SearchContextProvider>
+      <PhrasePairListViewWrapped />
+    </SearchContextProvider>
   );
 };
 

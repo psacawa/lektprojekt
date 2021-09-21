@@ -122,7 +122,7 @@ export const useLexeme = (
 
 export const useFeatures = (
   params: {
-    lang?: number;
+    lang: number;
   },
   options?: UseQueryOptions<Feature[]>
 ) =>

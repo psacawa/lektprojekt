@@ -18,21 +18,9 @@ import { isEqual, uniqWith } from "lodash";
 import React, { useState } from "react";
 import { Coloured, Language, Lexeme } from "types";
 import { getLogger } from "utils";
+import { useSearchContext } from "views/PhrasePairListView/SearchContext";
 
 const logger = getLogger("LexemeSelect");
-
-interface Props {
-  language: Language | null;
-  value: Coloured<Lexeme>[];
-  setValue: React.Dispatch<Lexeme[]>;
-  onChange: (
-    ev: React.ChangeEvent<{}>,
-    value: Coloured<Lexeme>[],
-    reason: string
-  ) => any;
-  options: Lexeme[];
-  setOptions: React.Dispatch<Lexeme[]>;
-}
 
 const useStyles = makeStyles(() => ({
   listItem: {
@@ -40,14 +28,16 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const LexemeSelect = ({
-  language,
-  value,
-  setValue,
-  onChange,
-  options,
-  setOptions,
-}: Props) => {
+const LexemeSelect = () => {
+  const {
+    targetLanguage: language,
+    lexemes,
+    setLexemes,
+    lexemeOptions: options,
+    setLexemeOptions: setOptions,
+    setPageNumber,
+    getRandomUnusedColour,
+  } = useSearchContext();
   const classes = useStyles();
   const [inputValue, setInputValue] = useState<string>("");
 
@@ -67,7 +57,7 @@ const LexemeSelect = ({
       setInputValue(newInputValue),
     300
   );
-  logger(value);
+  logger(lexemes);
 
   return (
     <Grid item md={6} xs={12}>
@@ -75,8 +65,26 @@ const LexemeSelect = ({
         getOptionLabel={(option) => option.lemma}
         loading={lexemeQuery.isFetching}
         multiple
-        onChange={onChange}
-        value={value}
+        value={lexemes}
+        onChange={(event, newLexemes: Coloured<Lexeme>[], reason) => {
+          logger(
+            "newLexemes",
+            newLexemes.map((f) => f.colour)
+          );
+          for (let lex of newLexemes) {
+            if (lex.colour === undefined) {
+              let colour = getRandomUnusedColour();
+              logger("colour", colour);
+              lex.colour = colour;
+            }
+          }
+          logger(
+            "newLexemes",
+            newLexemes.map((f) => f.colour)
+          );
+          setPageNumber(0);
+          setLexemes([...newLexemes]);
+        }}
         onInputChange={handleInputChange}
         options={options}
         renderInput={(params) => (
@@ -110,7 +118,7 @@ const LexemeSelect = ({
         renderTags={() => null}
       />
       <List dense>
-        {value.map((lexeme, idx) => (
+        {lexemes.map((lexeme, idx) => (
           <ListItem
             className={classes.listItem}
             key={idx}
@@ -125,10 +133,10 @@ const LexemeSelect = ({
             <ListItemSecondaryAction>
               <IconButton
                 onClick={(event: React.MouseEvent<{}>) => {
-                  let newValue = value.filter(
-                    (value, valueIdx) => idx !== valueIdx
+                  let newLexemes = lexemes.filter(
+                    (lexeme, lexemeIdx) => idx !== lexemeIdx
                   );
-                  setValue(newValue);
+                  setLexemes(newLexemes);
                 }}
               >
                 <Clear />
