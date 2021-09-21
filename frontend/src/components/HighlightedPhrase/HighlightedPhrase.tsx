@@ -35,17 +35,24 @@ function createColourMap(
  * Generate a style object for the span corresponding to a match. If there is more than
  * colour, use the repeating-linear-gradient() trick to get a pinstripe effect.
  * See: https://developer.mozilla.org/en-US/docs/Web/CSS/gradient/repeating-linear-gradient()
+ * Replicates, e.g. repeating-linear-gradient(45deg, #f88 0px, #f88 30px, #88f 30px, #88f 60px );
  */
-function getMatchStyle(colours: string[]): React.CSSProperties {
+function getMatchStyle(
+  colours: string[],
+  stripeWidth: number = 6
+): React.CSSProperties {
   let style: React.CSSProperties = { borderRadius: "3px" };
   if (colours.length !== 0) {
     if (colours.length === 1) {
       style.backgroundColor = colours[0];
     } else {
       let repeatedColours = _(colours)
-        .flatMap((col) => [col, col])
+        .flatMap((col, idx) => [
+          `${col} ${stripeWidth * idx}px`,
+          `${col} ${stripeWidth * (idx + 1)}px`,
+        ])
         .join(",");
-      style.background = `repeating-linear-gradient(-45deg,${repeatedColours} 12px)`;
+      style.background = `repeating-linear-gradient(-45deg,${repeatedColours})`;
     }
   }
 
@@ -74,7 +81,7 @@ const HighlightedPhrase = ({
     .value() as TokenSpan[];
   let breakpoints: number[] = _(matches)
     .flatMap((m) => [m.start, m.end] as number[])
-    .concat([0])
+    .concat([0, phrase.text.length]) // need these to render slices at start/end
     .uniq()
     .sort((a, b) => a - b) // sort numerically, not lexicographically, the JS default
     .value();
